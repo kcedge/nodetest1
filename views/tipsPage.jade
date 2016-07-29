@@ -1,0 +1,36 @@
+extends layout
+
+append body
+	.container(ng-controller="bodyTipHelperController" style="display:inline-block")
+		#navBarWrapper(style="float:left;width:150px;margin-left:-20px;")
+			#blockForMargin(style="height:60px;width:100%")
+			navBarItem.list-unstyled(ng-repeat="tip in tipArrayData")				
+				#tipNavItem.btn-xs.btn-primary(ng-click="tipNavBarClicked(tip)"){{tip.tipTitle}}
+		
+		.container(style="float:left;width:70%")
+			.tipsPageWrapper(ng-hide="addATip()")
+
+				#titleName= title
+				#tipsWrapper.contentWrapper
+					#tipTitle.titleWrapper
+						+panel-primary("{{tipTitle}}")						
+								{{tipDesc}}
+				#prvButton.keyButton(ng-click="prevButtonClicked()")
+					+btn("Previous")
+				#nxtButton.keyButton(ng-click="nextButtonClicked()")
+					+btn("Next")
+				#addATipButton.keyButton(ng-click="addATipClicked()")
+					+btn("Add")
+				#deleteATipButton.keyButton(ng-click="deleteATipClicked()")
+					+btn("Delete")
+			.addATipPageWrapper(ng-hide="!addATip()")
+				#tipsFormWrapper.contentWrapper
+					+input("text","tipTitleInput","Title","TipTitle")
+					textarea#textAreaTip.form-control(placeholder="Tip Description" required style="width:100%;margin-bottom:10px")
+					.backToTipsButtonDiv(style='float:left' ng-click="backToTipsClicked()")
+						+btn("Back")
+					.submitButtonDiv(style='float:right' ng-click="submitButtonClicked()")
+						+submit-primary("Submit")
+
+
+			.errorDiv(ng-bind="responseData")

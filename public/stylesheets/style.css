@@ -1,0 +1,33 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#keyButtonWrapper{
+  
+ 
+}
+#titleName{
+    font-size:x-large;
+    font-weight:bold;
+    margin: 5px;
+    
+}
+.titleBannerDiv{
+    margin-bottom: 20px;
+    
+}
+.keyButton{
+  display: inline-block;
+  margin: 5px;
+  
+  
+}
+.container{
+    margin-left: 5px;
+    margin-right:5px;
+}

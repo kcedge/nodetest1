@@ -1,0 +1,84 @@
+
+//- bootstrap.jade
+//- bootstrap mixins
+
+
+//- Including Icon mixins
+include ../bower_components/jade-bootstrap/components/icons
+//- Including Alert mixins
+include ../bower_components/jade-bootstrap/components/alerts
+//- Including Tooltip mixins
+include ../bower_components/jade-bootstrap/components/tooltips
+//- Including Accordion mixins
+include ../bower_components/jade-bootstrap/components/accordion
+//- Including Carousel mixins
+include ../bower_components/jade-bootstrap/components/carousel
+//- Including Table mixins
+include ../bower_components/jade-bootstrap/components/tables
+//- Including Navbar mixins
+include ../bower_components/jade-bootstrap/components/navbar
+//- Including Toggle Button mixins
+include ../bower_components/jade-bootstrap/components/toggle
+//- Including Nav mixins
+include ../bower_components/jade-bootstrap/components/navs
+//- Including Label mixins
+include ../bower_components/jade-bootstrap/components/labels
+//- Including Panel mixins
+include ../bower_components/jade-bootstrap/components/panels
+//- Including Tab mixins
+include ../bower_components/jade-bootstrap/components/tabs
+//- Including Dropdown mixins
+include ../bower_components/jade-bootstrap/components/dropdowns
+//- Including Form control mixins
+include ../bower_components/jade-bootstrap/components/forms
+//- Including Modal dialog mixins
+include ../bower_components/jade-bootstrap/components/modal
+//- Including List group mixins
+include ../bower_components/jade-bootstrap/components/list-groups
+//- Including Progress bar mixins
+include ../bower_components/jade-bootstrap/components/progress-bars
+//- Including Button mixins
+include ../bower_components/jade-bootstrap/components/buttons
+//- Including Image mixins
+include ../bower_components/jade-bootstrap/components/images
+//- Including Bootswatch theme mixins
+include ../bower_components/jade-bootstrap/components/bootswatch
+
+doctype html
+html(lang="en" ng-app='myApp')
+        head
+                meta(charset="UTF-8")
+                meta(http-equiv="X-UA-Compatible", content="IE=edge")
+                meta(name="viewport",content="width=device-width, initial-scale=1")
+                meta(name="description",content="")
+                meta(name="author",content="")
+                link(rel="icon",href="../../favicon.ico")
+                block styles
+                        link(rel="stylesheet",href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")
+                        link(rel="stylesheet",href="css/bootstrap.min.css")
+                        link(rel='stylesheet', href='/stylesheets/style.css')
+        body(data-spy="scroll",data-target=".scrollspy")
+               +navbar("Music Production Helper","dropdown_menu")
+                        +nav_item("index","active") Home
+                        +nav_item("tipsPage") Tips Library 
+                        +nav_item("about.html") About
+                        +nav_item_dropdown("#")(label="Connect")
+                                +nav_item("https://soundcloud.com/crazylegsmusic") SoundCloud
+                                +nav_item("https://www.facebook.com/crazylegsmusic/") Facebook
+                                +nav_item("https://twitter.com/crazylegsmusic") Twitter
+                                +nav_divider
+                                +nav_header Email
+                                +nav_item("#") Gmail
+                        //+nav_item_dropdown("#")(label="SoundCloud")
+                block body
+                block scripts
+                        script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js')
+                        script( src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' )
+                        script( src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js' )
+                        script(src='javascripts/jquery.canvasjs.min.js')
+                        script(src='javascripts/app.js')
+                        script(src='javascripts/services.js')
+                        script(src='javascripts/controllers.js')
+                        script(src='javascripts/filters.js')
+                        script(src='javascripts/directives.js')
+
