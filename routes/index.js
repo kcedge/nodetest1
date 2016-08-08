@@ -7,7 +7,8 @@ var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 
 // Connection URL. This is where your mongodb server is running.
-var url = 'mongodb://localhost:27017/tipsDb';
+//var url = 'mongodb://localhost:27017/tipsDb';
+var url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb'
 
 
 /* GET home page. */
@@ -17,9 +18,13 @@ router.get('/', function (req, res, next) {
 router.get('/index', function (req, res, next) {
     res.render('index', {title: 'Casey CrazyLegs Chromatic Wheel'});
 });
-/* GET Hello World page. */
-router.get('/helloworld', function (req, res) {
-    res.render('helloworld', {title: 'Hello, World!'});
+/* GET About page. */
+router.get('/about', function (req, res) {
+    res.render('about', {title: 'About This'});
+});
+/* GET Samples page. */
+router.get('/samplesPage', function (req, res) {
+    res.render('samplesPage', {title: 'Free Samples!'});
 });
 /* GET Hello World page. */
 router.get('/tipsPage', function (req, res) {
@@ -47,6 +52,7 @@ router.get('/tipsPageGet', function (req, res) {
     MongoClient.connect(url, function (err, db) {
 	if (err) {
 	    console.log('Unable to connect to the mongoDB server. Error:', err);
+		 res.status(500).send("unable to connect to mongo server");
 	} else {
 	    //HURRAY!! We are connected. :)
 	    console.log('Connection established to', url);
@@ -57,6 +63,9 @@ router.get('/tipsPageGet', function (req, res) {
 
 	    var itemsTest;
 	    var cursorArray = db.collection('tipsCollection').find().toArray(function(err,items){
+		if(err){
+		    res.status(500).send('error retreiving data')
+		}
 		 console.log("items");
 		 res.send(items);
 		

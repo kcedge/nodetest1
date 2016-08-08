@@ -64,6 +64,11 @@ append body
 						+btn("{{chordButton6}}")
 					#btnMajor.keyButton(ng-click="ChordVIIButtonClicked()")
 						+btn("{{chordButton7}}")
-
+				#chord7or9Wrapper(style="float:left;")
+					+label-info("7th or 9th")
+					#btnMajor.keyButton(ng-click="Chord7thClicked()")
+						+btn("7th")
+					#btnMajor.keyButton(ng-click="Chord9thClicked()")
+						+btn("9th")
 			#canvasDiv(ng-click="canvasClick()")
 				//canvas#noteCircleCanvas	

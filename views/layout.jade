@@ -61,14 +61,15 @@ html(lang="en" ng-app='myApp')
                +navbar("Music Production Helper","dropdown_menu")
                         +nav_item("index","active") Home
                         +nav_item("tipsPage") Tips Library 
-                        +nav_item("about.html") About
+                        +nav_item("about") About
+                        +nav_item("samplesPage") Samples
                         +nav_item_dropdown("#")(label="Connect")
-                                +nav_item("https://soundcloud.com/crazylegsmusic") SoundCloud
-                                +nav_item("https://www.facebook.com/crazylegsmusic/") Facebook
-                                +nav_item("https://twitter.com/crazylegsmusic") Twitter
-                                +nav_divider
-                                +nav_header Email
-                                +nav_item("#") Gmail
+                                +nav_item("https://soundcloud.com/crazylegsmusic","soundCloudLink") SoundCloud
+                                +nav_item("https://www.facebook.com/crazylegsmusic/","facebookLink") Facebook
+                                +nav_item("https://twitter.com/crazylegsmusic","twitterLink") Twitter
+                                +nav_divider                            
+                                +nav_item("signUp") Sign Up
+                                +nav_item("signIn") Sign In
                         //+nav_item_dropdown("#")(label="SoundCloud")
                 block body
                 block scripts

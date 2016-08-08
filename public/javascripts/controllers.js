@@ -5,6 +5,10 @@ $("#soundCloudLink").attr("href", 'https://soundcloud.com/crazylegsmusic');
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+$(".soundCloudLink").children().first().attr("target","_blank");
+$(".facebookLink").children().first().attr("target","_blank");
+$(".twitterLink").children().first().attr("target","_blank");
+
 angular.module('myApp').controller('bodyMelodyHelperController', ['$scope','$http', function($scope,$http) {
         
         $scope.hello = "HELLLOOO";
@@ -37,8 +41,45 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope','$htt
 	$scope.majorChordVIIFormula = [false,true,false,false,true,false,false,false,false,false,true,false];
 	$scope.minorChordVIIFormula = [false,true,false,false,true,false,false,false,false,true,false,false];
 	
+	//7th Chords 
+	$scope.majorChordIFormula7th = [false,false,false,true,false,false,true,false,false,false,true,true];
+	$scope.minorChordIFormula7th = [false,false,true,false,false,false,true,false,false,true,false,true];
+	$scope.majorChordIIFormula7th = [false,true,false,false,true,false,false,false,true,false,false,true];
+	$scope.minorChordIIFormula7th = [false,true,false,false,true,false,false,true,false,false,false,true];
+	$scope.majorChordIIIFormula7th = [false,true,false,true,false,false,true,false,false,false,true,false];
+	$scope.minorChordIIIFormula7th = [false,true,true,false,false,false,true,false,false,true,false,false];
+	$scope.majorChordIVFormula7th = [false,false,false,true,true,false,false,false,true,false,false,true];
+	$scope.minorChordIVFormula7th = [false,false,true,false,true,false,false,true,false,false,false,true];
+	$scope.majorChordVFormula7th = [false,true,false,false,true,false,true,false,false,false,true,false];
+	$scope.minorChordVFormula7th =  [false,true,false,false,true,false,true,false,false,true,false,false];
+	$scope.majorChordVIFormula7th = [false,false,false,true,false,false,true,false,true,false,false,true];
+	$scope.minorChordVIFormula7th = [false,false,true,false,false,false,true,true,false,false,false,true];
+	$scope.majorChordVIIFormula7th = [false,true,false,false,true,false,false,false,true,false,true,false];
+	$scope.minorChordVIIFormula7th = [false,true,false,false,true,false,false,true,false,true,false,false];
+	
+	//9th Chords 
+	$scope.majorChordIFormula9th = [false,true,false,true,false,false,true,false,false,false,true,true];
+	$scope.minorChordIFormula9th = [false,true,true,false,false,false,true,false,false,true,false,true];
+	$scope.majorChordIIFormula9th = [false,true,false,true,true,false,false,false,true,false,false,true];
+	$scope.minorChordIIFormula9th = [false,true,false,true,true,false,false,true,false,false,false,true];
+	$scope.majorChordIIIFormula9th = [false,true,false,true,true,false,true,false,false,false,true,false];
+	$scope.minorChordIIIFormula9th = [false,true,true,false,true,false,true,false,false,true,false,false];
+	$scope.majorChordIVFormula9th = [false,false,false,true,true,false,true,false,true,false,false,true];
+	$scope.minorChordIVFormula9th = [false,false,true,false,true,false,true,true,false,false,false,true];
+	$scope.majorChordVFormula9th = [false,true,false,false,true,false,true,false,true,false,true,false];
+	$scope.minorChordVFormula9th =  [false,true,false,false,true,false,true,true,false,true,false,false];
+	$scope.majorChordVIFormula9th = [false,false,false,true,false,false,true,false,true,false,true,true];
+	$scope.minorChordVIFormula9th = [false,false,true,false,false,false,true,true,false,true,false,true];
+	$scope.majorChordVIIFormula9th = [false,true,false,false,true,false,false,false,true,false,true,true];
+	$scope.minorChordVIIFormula9th = [false,true,false,false,true,false,false,true,false,true,false,true];
+	
+	
+		
 	$scope.noteOrderForChart = ["E","F","F#/Gb","G","G#/Ab","A","A#/Bb","B","C","C#/Db","D","D#/Eb"];
 	$scope.sharpOrFlat = "";
+	
+	$scope.chordNumberSelected = 0;
+	
 	$scope.hasKeyBeenSelected = function(){
 	    return ($scope.selectedKey != "" && ($scope.majorSelected || $scope.minorSelected));
 	};
@@ -49,7 +90,7 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope','$htt
 	    $scope.alertInformation = " selected. Major or Minor?";  
 	    $scope.keyHasBeenSelected = true;
 	    $scope.ScaleOrChord = "Scale";
-  
+	    $scope.chordNumberSelected = 0;
 	    if($scope.majorOrMinorString == "Major"){
 		 $scope.setColorSet($scope.majorFormula);
 	     }
@@ -177,7 +218,10 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope','$htt
 	    $scope.setColorSet($scope.minorFormula);
 	};
 	$scope.ChordIButtonClicked = function(){	  
-	    $scope.ScaleOrChord = "Chord " +$scope.chordButton1;	
+	    $scope.ScaleOrChord = "Chord " +$scope.chordButton1;
+	   
+	      $scope.chordNumberSelected = 1;
+	   
 	    if($scope.majorOrMinorString == "Major"){
 		$scope.setColorSet($scope.majorChordIFormula);
 	    }
@@ -186,7 +230,9 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope','$htt
 	    }
 	};
 	$scope.ChordIIButtonClicked = function(){
-	     $scope.ScaleOrChord = "Chord " + $scope.chordButton2;
+	     $scope.ScaleOrChord = "Chord " +$scope.chordButton2;
+	      $scope.chordNumberSelected = 2;
+	   
 	    if($scope.majorOrMinorString == "Major"){
 		$scope.setColorSet($scope.majorChordIIFormula);
 	    }
@@ -196,7 +242,9 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope','$htt
 	    
 	};
 	$scope.ChordIIIButtonClicked = function(){
-	     $scope.ScaleOrChord = "Chord "+ $scope.chordButton3;
+	    $scope.ScaleOrChord = "Chord " +$scope.chordButton3;
+	      $scope.chordNumberSelected = 3;
+	   
 	  
 	     if($scope.majorOrMinorString == "Major"){
 		$scope.setColorSet($scope.majorChordIIIFormula);
@@ -207,7 +255,9 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope','$htt
 	};
 	$scope.ChordIVButtonClicked = function(){
 	     $scope.ScaleOrChord = "Chord "+ $scope.chordButton4;
-	  
+	    
+	      $scope.chordNumberSelected = 4;
+	    
 	     if($scope.majorOrMinorString == "Major"){
 		$scope.setColorSet($scope.majorChordIVFormula);
 	    }
@@ -216,8 +266,9 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope','$htt
 	    }
 	};
 	$scope.ChordVButtonClicked = function(){
-	     $scope.ScaleOrChord = "Chord "+ $scope.chordButton5;
-	  
+	     $scope.ScaleOrChord = "Chord " +$scope.chordButton5;
+	      $scope.chordNumberSelected = 5;
+	   
 	     if($scope.majorOrMinorString == "Major"){
 		$scope.setColorSet($scope.majorChordVFormula);
 	    }
@@ -226,8 +277,9 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope','$htt
 	    }
 	};
 	$scope.ChordVIButtonClicked = function(){
-	     $scope.ScaleOrChord = "Chord "+ $scope.chordButton6;
-	  
+	     $scope.ScaleOrChord = "Chord " +$scope.chordButton6;
+	      $scope.chordNumberSelected = 6;
+	    
 	     if($scope.majorOrMinorString == "Major"){
 		$scope.setColorSet($scope.majorChordVIFormula);
 	    }
@@ -236,13 +288,133 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope','$htt
 	    }
 	};
 	$scope.ChordVIIButtonClicked = function(){
-	     $scope.ScaleOrChord = "Chord "+ $scope.chordButton7;
-	  
+	     $scope.ScaleOrChord = "Chord " +$scope.chordButton7;
+	      $scope.chordNumberSelected = 7;
+	    
 	     if($scope.majorOrMinorString == "Major"){
 		$scope.setColorSet($scope.majorChordVIIFormula);
 	    }
 	    if($scope.majorOrMinorString == "Minor"){
 		$scope.setColorSet($scope.minorChordVIIFormula);
+	    }
+	};
+	$scope.Chord7thClicked = function(){
+	    if ($scope.chordNumberSelected != 0) {
+		if ($scope.seventhOrNinth == "7th") {
+		    $scope.seventhOrNinth = "";
+		}
+		else {
+		    $scope.seventhOrNinth = "7th";
+		}
+
+		if ($scope.majorOrMinorString == "Major") {
+		    if($scope.chordNumberSelected == 1){
+			 $scope.setColorSet($scope.majorChordIFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 2){
+			 $scope.setColorSet($scope.majorChordIIFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 3){
+			 $scope.setColorSet($scope.majorChordIIIFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 4){
+			 $scope.setColorSet($scope.majorChordIVFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 5){
+			 $scope.setColorSet($scope.majorChordVFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 6){
+			 $scope.setColorSet($scope.majorChordVIFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 7){
+			 $scope.setColorSet($scope.majorChordVIIFormula7th);		
+		    }
+		   
+		}
+		else if ($scope.majorOrMinorString == "Minor") {
+		    if($scope.chordNumberSelected == 1){
+			 $scope.setColorSet($scope.minorChordIFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 2){
+			 $scope.setColorSet($scope.minorChordIIFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 3){
+			 $scope.setColorSet($scope.minorChordIIIFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 4){
+			 $scope.setColorSet($scope.minorChordIVFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 5){
+			 $scope.setColorSet($scope.minorChordVFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 6){
+			 $scope.setColorSet($scope.minorChordVIFormula7th);		
+		    }
+		     if($scope.chordNumberSelected == 7){
+			 $scope.setColorSet($scope.minorChordVIIFormula7th);		
+		    }
+		   
+		}
+	    }
+	   
+	};
+	$scope.Chord9thClicked = function(){
+	    if ($scope.chordNumberSelected != 0) {
+		if ($scope.seventhOrNinth == "9th") {
+		    $scope.seventhOrNinth = "";
+		}
+		else {
+		    $scope.seventhOrNinth = "9th";
+		}
+
+		if ($scope.majorOrMinorString == "Major") {
+		    if($scope.chordNumberSelected == 1){
+			 $scope.setColorSet($scope.majorChordIFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 2){
+			 $scope.setColorSet($scope.majorChordIIFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 3){
+			 $scope.setColorSet($scope.majorChordIIIFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 4){
+			 $scope.setColorSet($scope.majorChordIVFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 5){
+			 $scope.setColorSet($scope.majorChordVFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 6){
+			 $scope.setColorSet($scope.majorChordVIFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 7){
+			 $scope.setColorSet($scope.majorChordVIIFormula9th);		
+		    }
+		   
+		}
+		else if ($scope.majorOrMinorString == "Minor") {
+		    if($scope.chordNumberSelected == 1){
+			 $scope.setColorSet($scope.minorChordIFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 2){
+			 $scope.setColorSet($scope.minorChordIIFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 3){
+			 $scope.setColorSet($scope.minorChordIIIFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 4){
+			 $scope.setColorSet($scope.minorChordIVFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 5){
+			 $scope.setColorSet($scope.minorChordVFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 6){
+			 $scope.setColorSet($scope.minorChordVIFormula9th);		
+		    }
+		     if($scope.chordNumberSelected == 7){
+			 $scope.setColorSet($scope.minorChordVIIFormula9th);		
+		    }
+		   
+		}
 	    }
 	};
 	
@@ -588,6 +760,35 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope','$http',
 		$scope.responseData = response.data;
 		
 	    });
+	    
+	}
+	$scope.emailListSignUpUserEmail = "";
+	$scope.emailListSignUpUserPassword = "";
+	$scope.emailListSignUpUserPasswordVerify = "";
+	
+	$scope.signUpEmailReportSubmit = function () {
+	    var req = {
+		method: 'POST',
+		url: '../users/signUpTips',
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {userEmail: $scope.emailListSignUpUserEmail,
+		    userPassword: $scope.emailListSignUpUserPassword}
+
+	    }
+	    $http(req).then(function success(response) {
+		$scope.submitMessage = "Success"
+		$scope.responseData = response.data;
+
+	    }, function failure(response) {
+		$scope.submitMessage = "Failure"
+		$scope.responseData = response.data;
+
+	    });
+	}
+	$scope.signUpDisabled = function(){
+	    return ($scope.emailListSignUpUserEmail == "" || $scope.emailListSignUpUserPassword == "" || $scope.emailListSignUpUserPasswordVerify == "")
 	    
 	}
 }]);

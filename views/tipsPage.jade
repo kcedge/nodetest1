@@ -1,6 +1,8 @@
 extends layout
 
 append body
+	.container(style="text:center")
+		+alert-i-warning("The tips library is in development.  Eventually, I hope this can be a place for music producers to quickly reference a set of tips that may help them generate ideas.  The tips library will have filters for a number of categories allowing for a quick search(filter by Daw/Genre/Vst/Theory ect..) The library itself needs to be grown, so if you have tips please send them to me at crazylegsmusic@gmail.com, you will be credited!  Also if you have any ideas on how to make this page a more useful place for producers, please reach out to me as well. <3 Casey CrazyLegs","heart")
 	.container(ng-controller="bodyTipHelperController" style="display:inline-block")
 		#navBarWrapper(style="float:left;width:150px;margin-left:-20px;")
 			#blockForMargin(style="height:60px;width:100%")
@@ -11,6 +13,7 @@ append body
 			.tipsPageWrapper(ng-hide="addATip()")
 
 				#titleName= title
+				
 				#tipsWrapper.contentWrapper
 					#tipTitle.titleWrapper
 						+panel-primary("{{tipTitle}}")						
@@ -31,6 +34,24 @@ append body
 						+btn("Back")
 					.submitButtonDiv(style='float:right' ng-click="submitButtonClicked()")
 						+submit-primary("Submit")
-
-
+			.signUpForTipsEmailWrapper(style='margin-top:10px')
+				+accordion("Sign Up for tips email report")
+					+accordion-item-default("Tips Library Email Report","sample")
+						p.textWrapper If you would like to sign up for a monthly email report of the tips added to the library, please sign up with us below.  
+						form.well(id='form-signUp', ng-submit="signUpEmailReportSubmit()")
+							.form-group
+								label Email
+								input.form-control(type='text',id='userEmailId',name='userEmail',ng-model="emailListSignUpUserEmail")
+							.form-group
+								label Password
+								input.form-control(type='password',id='passwordId',name='userPass',ng-model="emailListSignUpUserPassword")
+							.form-group
+								label Password Verify
+								input.form-control(type='password',id='passwordVerifyId',name='userPassVerify',ng-model="emailListSignUpUserPasswordVerify")
+							button(type='button').btn.btn-default.button-rememember-me
+								span.glyphicon.glyphicon-unchecked.button-rememember-me-glyph
+								|  Remember Me
+							button(type='submit' ng-disabled="signUpDisabled()").btn.btn-primary.button-sign-in
+								span.glyphicon.glyphicon-ok
+								|  Sign Up
 			.errorDiv(ng-bind="responseData")
