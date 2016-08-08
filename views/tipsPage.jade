@@ -22,9 +22,9 @@ append body
 					+btn("Previous")
 				#nxtButton.keyButton(ng-click="nextButtonClicked()")
 					+btn("Next")
-				#addATipButton.keyButton(ng-click="addATipClicked()")
+				#addATipButton.keyButton(ng-click="addATipClicked()" ng-hide="true")
 					+btn("Add")
-				#deleteATipButton.keyButton(ng-click="deleteATipClicked()")
+				#deleteATipButton.keyButton(ng-click="deleteATipClicked()" ng-hide="true")
 					+btn("Delete")
 			.addATipPageWrapper(ng-hide="!addATip()")
 				#tipsFormWrapper.contentWrapper
