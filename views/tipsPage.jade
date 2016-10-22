@@ -16,24 +16,71 @@ append body
 				
 				#tipsWrapper.contentWrapper
 					#tipTitle.titleWrapper
-						+panel-primary("{{tipTitle}}")						
+						+panel-primary("{{tipTitle}}")
+							p.tipDescription
 								{{tipDesc}}
+				#imageWrapper
+					img(ng-src="resources/images/{{imageFileName}}" style='width:100%')				
+				//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])
 				#prvButton.keyButton(ng-click="prevButtonClicked()")
 					+btn("Previous")
 				#nxtButton.keyButton(ng-click="nextButtonClicked()")
 					+btn("Next")
-				#addATipButton.keyButton(ng-click="addATipClicked()" ng-hide="true")
+				#addATipButton.keyButton(ng-click="addATipClicked()" ng-hide="false")
 					+btn("Add")
-				#deleteATipButton.keyButton(ng-click="deleteATipClicked()" ng-hide="true")
+				#deleteATipButton.keyButton(ng-click="deleteATipClicked()" ng-hide="false")
 					+btn("Delete")
 			.addATipPageWrapper(ng-hide="!addATip()")
 				#tipsFormWrapper.contentWrapper
 					+input("text","tipTitleInput","Title","TipTitle")
 					textarea#textAreaTip.form-control(placeholder="Tip Description" required style="width:100%;margin-bottom:10px")
-					.backToTipsButtonDiv(style='float:left' ng-click="backToTipsClicked()")
-						+btn("Back")
-					.submitButtonDiv(style='float:right' ng-click="submitButtonClicked()")
-						+submit-primary("Submit")
+					.genereInputWrapper(style="")
+						h7 Genres
+						.btnWrapper(style="" ng-repeat = "genre in genreArray")
+							//+toggle-primary("{{genre.genreName}}")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='inputGenreId{{genre.genreName}}')
+							+label-primary("{{genre.genreName}}")
+							
+					.theoryInputWrapper(style="margin-top:5px;display:inline-block;")
+						h7 Tip Type
+						.btnWrapper							
+							input.inputClass(type="checkbox",data-toggle="toggle" name='theoryYes' id='theoryYes')
+							+label-primary("Theory")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='mixingYes' id='mixingYes')
+							+label-primary("Mixing")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='masteringYes' id='masteringYes')
+							+label-primary("Mastering")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='workFlowYes' id='workFlowYes')
+							+label-primary("Work Flow")
+					.vstInputWrapper(style="margin-top:5px;")
+						h7 VST
+						.btnWrapper(style="" ng-repeat = "vst in vstArray")							
+							input.inputClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='inputVstId{{vst.vstName}}')
+							+label-primary("{{vst.vstName}}")
+					.dawInputWrapper(style="margin-top:5px;")
+						h7 DAW
+						.btnWrapper(style="" ng-repeat = "daw in dawArray")							
+							input.inputClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}')
+							+label-primary("{{daw.dawName}}")
+					.imageUploaderInputWrapper(style="margin-top:5px;")
+						h7 Image Uploader						
+						.inputWrapper						
+							input.inputClass(type="file",nv-file-select uploader="uploader")
+							ul
+								li(ng-repeat="item in uploader.queue")
+									{{item.file.name}}
+									button.btn.btn-success.btn-xs(ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess")
+										span.glyphicon.glyphicon-upload										
+											
+					.viedoLinkInputWrapper(style="margin-top:5px;")
+						h7 Link Video							
+							+input("text","videoLink","https://www.youtube.com/","")
+										
+					.backAndSubmitWrapper()
+						.backToTipsButtonDiv(style='float:left' ng-click="backToTipsClicked()")
+							+btn("Back")
+						.submitButtonDiv(style='float:right' ng-click="submitButtonClicked()")
+							+submit-primary("Submit")
 			.signUpForTipsEmailWrapper(style='margin-top:10px')
 				+accordion("Sign Up for tips email report")
 					+accordion-item-default("Tips Library Email Report","sample")

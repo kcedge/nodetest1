@@ -1,4 +1,7 @@
 /data
+/node_modules/angular-file-upload
+/node_modules/
+
 
 # Windows image file caches
 Thumbs.db
