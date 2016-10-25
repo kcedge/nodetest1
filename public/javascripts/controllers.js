@@ -804,8 +804,15 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
         $scope.updateImageFileName = function () {
             if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("imageDataJson")) {
                 var imageObject = JSON.parse($scope.tipArrayData[$scope.tipCounter].imageDataJson);
-                $scope.hasImage = true;
-                $scope.imageFileName = imageObject[0].newFileName;
+                if (imageObject[0].hasOwnProperty('newFileName')) {
+                    $scope.hasImage = true;
+                    $scope.imageFileName = imageObject[0].newFileName;
+
+                } else {
+                    $scope.hasImage = false;
+                    $scope.imageFileName = "";
+                }
+
             } else {
                 $scope.hasImage = false;
                 $scope.imageFileName = "";
