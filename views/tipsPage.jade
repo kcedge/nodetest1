@@ -20,7 +20,7 @@ append body
 							p.tipDescription
 								{{tipDesc}}
 				#imageWrapper
-					img(ng-src="resources/images/{{imageFileName}}" style='width:100%')				
+					img(ng-show="hasImage" ng-src="resources/images/{{imageFileName}}" style='width:100%')				
 				//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])
 				#prvButton.keyButton(ng-click="prevButtonClicked()")
 					+btn("Previous")

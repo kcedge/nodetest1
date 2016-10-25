@@ -760,8 +760,7 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 	    $scope.tipCounter = $scope.findInTipArray(tip);
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-	    var imageObject = JSON.parse($scope.tipArrayData[$scope.tipCounter].imageDataJson);
-	    $scope.imageFileName = imageObject[0].newFileName;
+            $scope.updateImageFileName();            
 	    $scope.addATipToggle = false;
 	}
 
@@ -782,8 +781,7 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 		$scope.submitMessage = "Success"
 		$scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
 		$scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-		var imageObject = JSON.parse($scope.tipArrayData[$scope.tipCounter].imageDataJson);
-		$scope.imageFileName = imageObject[0].newFileName;
+                $scope.updateImageFileName();
 
 		$scope.navBarArray = "[";
 		for (var i = 0; i < $scope.tipArrayData.length; i++) {
@@ -803,7 +801,16 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 
 	}
 	$scope.getTipsFromMongo();
-
+        $scope.updateImageFileName = function () {
+            if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("imageDataJson")) {
+                var imageObject = JSON.parse($scope.tipArrayData[$scope.tipCounter].imageDataJson);
+                $scope.hasImage = true;
+                $scope.imageFileName = imageObject[0].newFileName;
+            } else {
+                $scope.hasImage = false;
+                $scope.imageFileName = "";
+            }
+        }
 	$scope.nextButtonClicked = function () {
 	    $scope.tipCounter++;
 	    if ($scope.tipCounter >= $scope.tipArrayData.length) {
@@ -811,9 +818,9 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 	    }
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-	    var imageObject = JSON.parse($scope.tipArrayData[$scope.tipCounter].imageDataJson);
-	    $scope.imageFileName = imageObject[0].newFileName;
-	}
+            $scope.updateImageFileName();
+            
+        }
 	$scope.prevButtonClicked = function () {
 	    $scope.tipCounter--;
 	    if ($scope.tipCounter < 0) {
@@ -821,9 +828,9 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 	    }
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-	    var imageObject = JSON.parse($scope.tipArrayData[$scope.tipCounter].imageDataJson);
-	    $scope.imageFileName = imageObject[0].newFileName;
-	}
+            $scope.updateImageFileName();
+	
+        }
 	$scope.backToTipsClicked = function () {   //dd tip to database
 	    $scope.addATipToggle = false;
 	}
