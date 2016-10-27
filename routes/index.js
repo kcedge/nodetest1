@@ -31,6 +31,12 @@ router.get('/about', function (req, res) {
 router.get('/samplesPage', function (req, res) {
     res.render('samplesPage', {title: 'Free Samples!'});
 });
+router.get('/signIn', function (req, res) {
+    res.render('signIn', {title: 'Sign In'});
+});
+router.get('/signUp', function (req, res) {
+    res.render('signUp', {title: 'Sign Up'});
+});
 /* GET Hello World page. */
 router.get('/tipsPage', function (req, res) {
     // Use connect method to connect to the Server

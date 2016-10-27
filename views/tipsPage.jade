@@ -4,16 +4,46 @@ append body
 	.container(style="text:center")
 		+alert-i-warning("The tips library is in development.  Eventually, I hope this can be a place for music producers to quickly reference a set of tips that may help them generate ideas.  The tips library will have filters for a number of categories allowing for a quick search(filter by Daw/Genre/Vst/Theory ect..) The library itself needs to be grown, so if you have tips please send them to me at crazylegsmusic@gmail.com, you will be credited!  Also if you have any ideas on how to make this page a more useful place for producers, please reach out to me as well. <3 Casey CrazyLegs","heart")
 	.container(ng-controller="bodyTipHelperController" style="display:inline-block")
+		
 		#navBarWrapper(style="float:left;width:150px;margin-left:-20px;")
 			#blockForMargin(style="height:60px;width:100%")
-			navBarItem.list-unstyled(ng-repeat="tip in tipArrayData")				
+			navBarItem.list-unstyled(ng-repeat="tip in tipArrayData" ng-show="showItem(tip)")				
 				#tipNavItem.btn-xs.btn-primary(ng-click="tipNavBarClicked(tip)"){{tip.tipTitle}}
 		
-		.container(style="float:left;width:70%")
+		.container(style="float:left;width:71%")
 			.tipsPageWrapper(ng-hide="addATip()")
-
 				#titleName= title
-				
+				#filterWrapper.filterBoxStyle(ng-style="filtersBoxStyle")
+					+label-info("Filters:")
+					tipTypeFilterWrapper(style="margin-top:5px;display:inline-block;")
+					.btnWrapper
+						+label-default("Type:")
+						input.inputClass(ng-click="theoryToggle()" type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
+						+label-primary("Theory")
+						input.inputClass(ng-click="mixingToggle()" type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
+						+label-primary("Mixing")
+						input.inputClass(type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
+						+label-primary("Mastering")
+						input.inputClass(type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
+						+label-primary("Work Flow")
+					tipGenreFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+						.btnWrapper(style="float:left")
+							+label-default("Genre:")
+						.genreButton(ng-repeat = "genre in genreArray" style="float:left")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='filterGenreId{{genre.genreName}}')
+							+label-primary("{{genre.genreName}}")
+					tipDAWFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+						.btnWrapper(style="float:left")
+							+label-default("DAW:")
+						.genreButton(style="float:left" ng-repeat = "daw in dawArray")							
+							input.inputClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}')
+							+label-primary("{{daw.dawName}}")
+					tipVSTFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+						.btnWrapper(style="float:left")
+							+label-default("VST:")
+						.genreButton(style="float:left" ng-repeat = "vst in vstArray")							
+							input.inputClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='inputDawId{{vst.vstName}}')
+							+label-primary("{{vst.vstName}}")
 				#tipsWrapper.contentWrapper
 					#tipTitle.titleWrapper
 						+panel-primary("{{tipTitle}}")

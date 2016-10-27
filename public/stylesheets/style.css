@@ -17,17 +17,52 @@ a {
     margin: 5px;
     
 }
+
 .titleBannerDiv{
-    margin-bottom: 20px;
-    
+    margin-bottom: 10px;
+    margin-left: -10px;
 }
 .keyButton{
   display: inline-block;
-  margin: 5px;
+  margin-top: 5px;
   
   
 }
 .container{
     margin-left: 5px;
     margin-right:5px;
+}
+
+.filterBoxStyle{
+    background-color: beige;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.label-default{
+    margin-right:5px;
+}
+.label-primary{
+    margin-right: 1px;
+}
+#titleName{
+    color:darkslategrey;
+}
+/*Sign In Style*/
+#signInWrapper{
+    margin: 0 auto;
+    width:40%;
+    min-width: 150px;
+   
+}
+#signInDetails{
+    
+}
+#btnSignInSubmit{
+    float:right;
+}
+#signInLinkWrapper{
+        font-size: smaller;
+	margin-top: 15px;
 }

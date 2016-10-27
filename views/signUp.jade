@@ -1,0 +1,23 @@
+<script>
+//Sound cloud script
+</script>
+extends layout
+append body
+	.container()
+		#signInWrapper
+			.titleBannerDiv()
+				#titleName= title
+			#signInDetails
+				+label-info("Email:")
+				br
+				input#signInInput.form-control
+				+label-info("Password:")
+				br
+				input#passWordInput.form-control
+				+label-info("Password Confirm:")
+				input#signInConfirmInput.form-control
+				#btnSignInSubmit.keyButton(ng-click="signUpSubmitClicked()")
+					+btn-primary("Submit")
+				#signInLinkWrapper
+					a#signInLink(href="/signIn")
+						span Already a member? Sign In			

@@ -718,6 +718,35 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 	$scope.BARS = "16";
 	$scope.tipArrayData = TipData;
 
+        //FILTER FUNCTIONS
+         $scope.theory_toggle = false;
+        $scope.theoryToggle=function(){
+            return $scope.theory_toggle = !$scope.theory_toggle;
+        };
+        
+         $scope.mixing_toggle = false;
+        $scope.mixingToggle=function(){
+            return $scope.mixing_toggle = !$scope.mixing_toggle;
+        };
+        
+        function testTipType(tip){
+            var tipTypeJson = JSON.parse(tip.tipTypeJson);
+            return (tipTypeJson["theoryTip"]||!$scope.theory_toggle)
+        }
+          function testTipMixing(tip){
+            var tipTypeJson = JSON.parse(tip.tipTypeJson);
+            return (tipTypeJson["mixingTip"]||! $scope.mixing_toggle)
+        }
+        $scope.showItem = function(tip){
+            
+            return testTipType(tip)&&testTipMixing(tip);
+        }
+           
+       
+        
+
+
+
 
 	$scope.addATipToggle = false;
 
@@ -958,35 +987,35 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 
 	}
 
-	$scope.genreArray = [{genreName: "HOUSE", subgenres: [{subGenreName: "PROGRESSIVE HOUSE"}]},
-	    {genreName: "TRANCE", subgenres: [{subGenreName: "ACID TRANCE"}, {subGenreName: "PROGRESSIVE TRANCE"}]},
-	    {genreName: "BREAKBEAT"},
-	    {genreName: "DOWNTEMPO"},
-	    {genreName: "TECHNO"},
-	    {genreName: "HARDCORE"},
-	    {genreName: "DRUM_AND_BASS"},
-	    {genreName: "DUBSTEP"},
-	    {genreName: "MINIMAL"},
-	    {genreName: "TRAP"},
+	$scope.genreArray = [{genreName: "House", subgenres: [{subGenreName: "Progressive House"}]},
+	    {genreName: "Trance", subgenres: [{subGenreName: "Acid Trance"}, {subGenreName: "Progressive Trance"}]},
+	    {genreName: "Breakbeat"},
+	    {genreName: "Downtempo"},
+	    {genreName: "Techno"},
+	    {genreName: "Hardcore"},
+	    {genreName: "Drum_and_bass"},
+	    {genreName: "Dubstep"},
+	    {genreName: "Minimal"},
+	    {genreName: "Trap"},
 	];
 
-	$scope.vstArray = [{vstName: "MASSIVE"},
-	    {vstName: "SERUM"},
-	    {vstName: "SYLENTH1"},
-	    {vstName: "KONTAKT"},
-	    {vstName: "OZONE"},
-	    {vstName: "NEXUS"},
-	    {vstName: "SPIRE"},
-	    {vstName: "OTHER"},
+	$scope.vstArray = [{vstName: "Massive"},
+	    {vstName: "Serum"},
+	    {vstName: "Sylenth1"},
+	    {vstName: "Kontakt"},
+	    {vstName: "Ozone"},
+	    {vstName: "Nexus"},
+	    {vstName: "Spire"},
+	    {vstName: "Other"},
 	];
 
-	$scope.dawArray = [{dawName: "FL_SUDIO"},
-	    {dawName: "ABLETON_LIVE"},
-	    {dawName: "LOGIC_PRO"},
-	    {dawName: "PRO_TOOLS"},
-	    {dawName: "BITWIG_STUDIO"},
-	    {dawName: "STUDIO_ONE"},
-	    {dawName: "OTHER"},
+	$scope.dawArray = [{dawName: "Fl_studio"},
+	    {dawName: "Ableton_Live"},
+	    {dawName: "Logic_Pro"},
+	    {dawName: "Pro_Tools"},
+	    {dawName: "Bitwig_Studio"},
+	    {dawName: "Studio_One"},
+	    {dawName: "Other"},
 	];
 
 	$scope.checkBoxArray = [{caption: "Checkbox1"}, {caption: "Checkbox2"}, {caption: "Checkbox3"}];
