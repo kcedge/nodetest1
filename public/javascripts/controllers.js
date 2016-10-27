@@ -744,9 +744,20 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
            
        
         
+	//Sort Functions for Nav Bar
+	$scope.sortType     = 'tipTitle'; // set the default sort type
+	$scope.sortReverse  = false;  // set the default sort order
+	$scope.searchTerm   = '';     // set the default search/filter term
 
-
-
+	$scope.getSortType = function(){
+	    if($scope.sortType === "tipTitle"){
+		return "Tip Title ";
+	    }
+	    return "NULL"
+	};
+	$scope.sortReverseClicked = function(){
+	    $scope.sortReverse = !$scope.sortReverse;	
+	}
 
 	$scope.addATipToggle = false;
 

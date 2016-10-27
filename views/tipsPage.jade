@@ -5,9 +5,18 @@ append body
 		+alert-i-warning("The tips library is in development.  Eventually, I hope this can be a place for music producers to quickly reference a set of tips that may help them generate ideas.  The tips library will have filters for a number of categories allowing for a quick search(filter by Daw/Genre/Vst/Theory ect..) The library itself needs to be grown, so if you have tips please send them to me at crazylegsmusic@gmail.com, you will be credited!  Also if you have any ideas on how to make this page a more useful place for producers, please reach out to me as well. <3 Casey CrazyLegs","heart")
 	.container(ng-controller="bodyTipHelperController" style="display:inline-block")
 		
-		#navBarWrapper(style="float:left;width:150px;margin-left:-20px;")
+		#navBarWrapper(style="float:left;width:20%;max-width:200px;margin-left:-20px;")
 			#blockForMargin(style="height:60px;width:100%")
-			navBarItem.list-unstyled(ng-repeat="tip in tipArrayData" ng-show="showItem(tip)")				
+			#sortNavBarWrapper(style="display:inline-block;width:100%;margin-bottom:5px;")
+				+label-info("Sort:")				
+				label.label.label-default#navBarSortBtn(ng-click="sortByClicked()")
+					{{getSortType()}}
+					span.glyphicon.glyphicon-menu-down
+				//label.label.label-default#navBarSortBtn(ng-click="sortByClicked()")
+				//	{{arrowUnicode}}
+				span.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
+				span.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
+			navBarItem.list-unstyled(ng-repeat="tip in tipArrayData | orderBy : 'tipTitle':sortReverse" ng-show="showItem(tip)")				
 				#tipNavItem.btn-xs.btn-primary(ng-click="tipNavBarClicked(tip)"){{tip.tipTitle}}
 		
 		.container(style="float:left;width:71%")
