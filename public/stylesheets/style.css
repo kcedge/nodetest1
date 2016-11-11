@@ -73,3 +73,7 @@ a {
 .arrowBtnClass{
     float:right;
 }
+
+#labelSort{
+    float:left;
+}

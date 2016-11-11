@@ -57,12 +57,13 @@ html(lang="en" ng-app='myApp')
                         link(rel="stylesheet",href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")
                         link(rel="stylesheet",href="css/bootstrap.min.css")
                         link(rel='stylesheet', href='/stylesheets/style.css')
-        body(data-spy="scroll",data-target=".scrollspy")
+        body(data-spy="scroll",data-target=".scrollspy" ng-controller="bodyController")
                +navbar("Music Production Helper","dropdown_menu")
                         +nav_item("index","active") Home
                         +nav_item("tipsPage") Tips Library 
                         //+nav_item("about") About
                         +nav_item("samplesPage") Samples
+                        +nav_item("profile")#profileButton Profile
                         +nav_item_dropdown("#")(label="Connect")
                                 +nav_item("https://soundcloud.com/crazylegsmusic","soundCloudLink") SoundCloud
                                 +nav_item("https://www.facebook.com/crazylegsmusic/","facebookLink") Facebook
@@ -71,6 +72,8 @@ html(lang="en" ng-app='myApp')
                                 +nav_item("signUp") Sign Up
                                 +nav_item("signIn") Sign In
                         //+nav_item_dropdown("#")(label="SoundCloud")
+                #profileLoggedIn(ng-show="isLoggedIn()" style="float:right")
+                        a(href="/logout" ng-click="signOutClicked()") Sign out
                 block body
                 block scripts
                         script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular.min.js')
@@ -78,6 +81,7 @@ html(lang="en" ng-app='myApp')
                         script( src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js' )
                         script(src='javascripts/jquery.canvasjs.min.js')
                         script(src='javascripts/angular-file-upload.min.js')
+                        script(src='javascripts/ngStorage.min.js')
                         script(src='javascripts/app.js')
                         script(src='javascripts/services.js')
                         script(src='javascripts/controllers.js')

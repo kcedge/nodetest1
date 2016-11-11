@@ -1,20 +1,26 @@
 
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 
+var bodyParser = require('body-parser');
+var passport = require('passport');
+var flash    = require('connect-flash');
+
+var mongoose = require('mongoose');
 // New Code
 var mongo = require('mongodb');
 var monk = require('monk');
 //var db = monk('localhost:27017/nodetest1');
-var db = monk('mongodb://kcedge3:Golions91!@localhost:27017/dummyDb');
+//Production
+//var db = monk('mongodb://kcedge3:Golions91!@localhost:27017/dummyDb');
+//Local
+var db = monk('mongodb://localhost:27017/tipsDb');
+mongoose.connect('mongodb://localhost:27017/tipsDb'); 
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var images = require('./routes/images');
 
 var app = express();
 
@@ -28,7 +34,21 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
 app.use(express.static(path.join(__dirname, 'public')));
+
+var routes = require('./routes/index');
+var users = require('./routes/users');
+var images = require('./routes/images');
+require('./routes/index')(app,passport);
+require('./config/passport')(passport); // pass passport for configuration
+//
+// required for passport
 
 // Make our db accessible to our router
 app.use(function(req,res,next){
@@ -36,8 +56,9 @@ app.use(function(req,res,next){
     next();
 });
 app.use('/', routes);
-app.use('/users', users);
-app.use('/images', images);
+app.use('/users.js', users);
+app.use('/images.js', images);
+//require('./routes/index.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -4,10 +4,12 @@
  * Module dependencies.
  */
 
+var passport = require('passport');
 var app = require('../app');
+
+require('../routes/index.js')(app, passport);
 var debug = require('debug')('nodetest1:server');
 var http = require('http');
-
 
 
 /**

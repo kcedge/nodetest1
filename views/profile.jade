@@ -1,0 +1,11 @@
+extends layout
+
+append body
+	.container(ng-controller="profileHelperController" style="margin:0 auto;width:90%")
+		.titleBannerDiv()
+				#titleName= "Welcome " + email
+				#userData(ng-hide="false")= localuser
+				#emailUser(ng-hide="false")=localuser.local.email
+		#headerWrapper.container(style="text-align: center;width:100%")
+			
+		

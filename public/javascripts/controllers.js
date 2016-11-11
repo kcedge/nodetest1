@@ -9,7 +9,63 @@ $(".soundCloudLink").children().first().attr("target", "_blank");
 $(".facebookLink").children().first().attr("target", "_blank");
 $(".twitterLink").children().first().attr("target", "_blank");
 
-angular.module('myApp').controller('bodyMelodyHelperController', ['$scope', '$http', function ($scope, $http) {
+//angular.module("myApp", ["$scope","$http", "ngCookies"]);
+
+
+angular.module("myApp").controller('bodyController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
+	$scope.isLoggedIn = function () {
+	    if ($localStorage.email != "") {
+		return true;
+	    }
+	    else {
+		return false;
+	    }
+	}
+
+	$scope.signOutClicked = function () {
+	    $localStorage.email = "";
+	    $localStorage.userSignedIn = false;
+	}
+    }]);
+angular.module("myApp").controller('signUpController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
+	$scope.signUpEmail = "";
+	$scope.signUpPassword = "";
+	$scope.signUpPasswordConfirm = "";
+	$scope.$storage = $localStorage.$default({
+	    email: "",
+	    userSignedIn: false
+	});
+
+
+
+
+    }]);
+angular.module("myApp").controller('signInController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
+	$scope.signUpEmail = "";
+	$scope.signUpPassword = "";
+	$scope.signUpPasswordConfirm = "";
+	$scope.$storage = $localStorage.$default({
+	    email: "",
+	    userSignedIn: false
+	});
+
+
+    }]);
+
+angular.module("myApp").controller('profileHelperController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
+	$scope.$storage = $localStorage.$default({
+	    email: "",
+	    userSignedIn: false
+	});
+
+	var emailOfUser = $("#emailUser").html();
+
+	$scope.$storage = $localStorage;
+	$scope.$storage.userSignedIn = true;
+	$scope.$storage.email = emailOfUser;
+
+    }]);
+angular.module("myApp").controller('bodyMelodyHelperController', ['$scope', '$http', function ($scope, $http) {
 
 	$scope.hello = "HELLLOOO";
 	$scope.hi = "HIIIIII"
@@ -327,7 +383,7 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope', '$ht
 	$scope.ChordVIIButtonClicked = function () {
 	    $scope.ScaleOrChord = "Chord " + $scope.chordButton7;
 	    $scope.chordNumberSelected = 7;
-	     if ($scope.chordButton7 === "VII") {
+	    if ($scope.chordButton7 === "VII") {
 		$scope.ScaleOrChord = "Chord " + $scope.chordButton7 + " (" + $scope.findRootNoteInChord($scope.chordNumberSelected) + " Major" + ")";
 	    }
 	    else if ($scope.chordButton7.includes("vii")) {
@@ -494,7 +550,7 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope', '$ht
 		return $scope.minorFormula;
 	    }
 	}
-	
+
 	$scope.findNoteIndex = function () {
 	    var noteIndex = 0;
 	    for (var i = 0; i < $scope.noteOrderForChart.length; i++) {
@@ -514,7 +570,7 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope', '$ht
 	    var noteCount = 0;
 	    var formulaArray = $scope.getCurrentScaleFormula();
 	    var indexForFormula = 0;
-	    for (var i = noteIndex+1; indexForFormula < formulaArray.length; i++, indexForFormula++)
+	    for (var i = noteIndex + 1; indexForFormula < formulaArray.length; i++, indexForFormula++)
 	    {
 		if (i == $scope.noteOrderForChart.length) {
 		    i = 0;
@@ -525,8 +581,8 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope', '$ht
 		    }
 		    noteCount++;
 		}
-		
-		
+
+
 	    }
 	}
 
@@ -695,12 +751,12 @@ angular.module('myApp').controller('bodyMelodyHelperController', ['$scope', '$ht
     }]);
 
 
-angular.module('myApp').factory('TipData', function () {
+angular.module("myApp").factory('TipData', function () {
     return [];
 });
 
 
-angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http', 'FileUploader', 'TipData', function ($scope, $http, FileUploader, TipData) {
+angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http', 'FileUploader', 'TipData', function ($scope, $http, FileUploader, TipData) {
 
 
 	$scope.title = "HELLLOOO";
@@ -718,45 +774,56 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 	$scope.BARS = "16";
 	$scope.tipArrayData = TipData;
 
-        //FILTER FUNCTIONS
-         $scope.theory_toggle = false;
-        $scope.theoryToggle=function(){
-            return $scope.theory_toggle = !$scope.theory_toggle;
-        };
-        
-         $scope.mixing_toggle = false;
-        $scope.mixingToggle=function(){
-            return $scope.mixing_toggle = !$scope.mixing_toggle;
-        };
-        
-        function testTipType(tip){
-            var tipTypeJson = JSON.parse(tip.tipTypeJson);
-            return (tipTypeJson["theoryTip"]||!$scope.theory_toggle)
-        }
-          function testTipMixing(tip){
-            var tipTypeJson = JSON.parse(tip.tipTypeJson);
-            return (tipTypeJson["mixingTip"]||! $scope.mixing_toggle)
-        }
-        $scope.showItem = function(tip){
-            
-            return testTipType(tip)&&testTipMixing(tip);
-        }
-           
-       
-        
-	//Sort Functions for Nav Bar
-	$scope.sortType     = 'tipTitle'; // set the default sort type
-	$scope.sortReverse  = false;  // set the default sort order
-	$scope.searchTerm   = '';     // set the default search/filter term
-
-	$scope.getSortType = function(){
-	    if($scope.sortType === "tipTitle"){
-		return "Tip Title ";
-	    }
-	    return "NULL"
+	//FILTER FUNCTIONS
+	$scope.theory_toggle = false;
+	$scope.theoryToggle = function () {
+	    return $scope.theory_toggle = !$scope.theory_toggle;
 	};
-	$scope.sortReverseClicked = function(){
-	    $scope.sortReverse = !$scope.sortReverse;	
+
+	$scope.mixing_toggle = false;
+	$scope.mixingToggle = function () {
+	    return $scope.mixing_toggle = !$scope.mixing_toggle;
+	};
+
+	function testTipType(tip) {
+	    if (tip.hasOwnProperty("tipTypeJson")) {		
+		return (tip.tipTypeJson["theoryTip"] || !$scope.theory_toggle)
+	    }
+	    else
+		return !$scope.theory_toggle;
+	}
+	function testTipMixing(tip) {
+	    if (tip.hasOwnProperty("tipTypeJson")) {
+		return (tip.tipTypeJson["mixingTip"] || !$scope.mixing_toggle)
+	    }
+	    else {
+		return !$scope.mixing_toggle;
+	    }
+	}
+	$scope.showItem = function (tip) {
+
+	    return testTipType(tip) && testTipMixing(tip);
+	}
+	$scope.navBarFilterClick = function (filter) {
+	    $scope.sortType = filter;
+
+
+	}
+
+	$scope.sortFiltersArray = ["Tip Title ", "Tip Type ", "Genre ", "Level ", "DAW "];
+
+
+
+	//Sort Functions for Nav Bar
+	$scope.sortType = $scope.sortFiltersArray[0]; // set the default sort type
+	$scope.sortReverse = false;  // set the default sort order
+	$scope.searchTerm = '';     // set the default search/filter term
+
+	$scope.getSortType = function () {
+	    return $scope.sortType;
+	};
+	$scope.sortReverseClicked = function () {
+	    $scope.sortReverse = !$scope.sortReverse;
 	}
 
 	$scope.addATipToggle = false;
@@ -765,7 +832,7 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 	    return $scope.addATipToggle;
 	}
 	$scope.addATipClicked = function () {
-	    $scope.addATipToggle = true;
+	    $scope.addATipToggle = !$scope.addATipToggle;
 	}
 
 	$scope.deleteATipClicked = function () {
@@ -788,6 +855,171 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 
 	    });
 	}
+
+
+	//EDIT A TIP
+	$scope.editATipToggle = false;
+	$scope.editATip = function () {
+	    return $scope.editATipToggle;
+	}
+
+	$scope.editATipClicked = function () {
+	    $scope.editATipToggle = !$scope.editATipToggle;
+	    $scope.addATipToggle = false;
+
+	    var tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
+	    var tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
+
+
+
+	    $("#tipTitleEditInput").val(tipTitle);
+	    $("#textAreaEditTip").text(tipDesc);
+
+	    for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].dawJson.length; i++) {
+		var dawName = $scope.tipArrayData[$scope.tipCounter].dawJson[i].dawName;
+
+		if ($scope.tipArrayData[$scope.tipCounter].dawJson[i].dawToggle) {
+		    if (dawName) {
+			$("#editInputDawId" + dawName).prop("checked", true);
+		    }
+		}
+		else {
+		    if (dawName) {
+			$("#editInputDawId" + dawName).prop("checked", false);
+		    }
+		}
+		
+	    }
+	    
+	    //Mark VST
+	    for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].vstJson.length; i++) {
+		var vstName = $scope.tipArrayData[$scope.tipCounter].vstJson[i].vstName;
+		if ($scope.tipArrayData[$scope.tipCounter].vstJson[i].vstToggle) {
+		    if (vstName) {
+			$("#editInputVstId" + vstName).prop("checked", true);
+		    }
+
+		}
+		else {
+		    $("#editInputVstId" + vstName).prop("checked", false);
+
+		}
+	    }
+	    //Mark Genre
+	    for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].genreJson.length; i++) {
+		var genreName = $scope.tipArrayData[$scope.tipCounter].genreJson[i].genreName;
+		if ($scope.tipArrayData[$scope.tipCounter].genreJson[i].genreToggle) {
+		    if (genreName) {
+			$("#editInputGenreId" + genreName).prop("checked", true);
+		    }
+		}
+		else {
+		    $("#editInputGenreId" + genreName).prop("checked", false);
+		}
+	    }
+	    //Mark Tip TYPE
+	    $("#editMixingYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.mixingTip);
+	    $("#editTheoryYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.theoryTip);
+	    $("#editMasteringYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.masteringTip);
+	    $("#editWorkFlowYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.workFlowTip);
+
+
+	}
+	$scope.editSubmitButtonClicked = function () {
+	    //dd tip to database
+	    var tipTitle = $("#tipTitleEditInput").val();
+	    var tipDescription = $("#textAreaEditTip").val();
+	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
+
+	    var genreObject = [{}]
+	    for (var i = 0; i < $scope.genreArray.length; i++) {
+
+		var genreToggle = $("#editInputGenreId" + $scope.genreArray[i].genreName)[0].checked;
+		genreObject[i] = {genreName: $scope.genreArray[i].genreName, genreToggle: genreToggle};
+
+	    }
+	    var genreObjectJson = JSON.stringify(genreObject);
+
+
+	    var theoryToggle = $("#editTheoryYes")[0].checked;
+	    var mixingToggle = $("#editMixingYes")[0].checked;
+	    var masteringToggle = $("#editMasteringYes")[0].checked;
+	    var workFlowToggle = $("#editWorkFlowYes")[0].checked;
+	    var tipTypeObject = {theoryTip: theoryToggle,
+		mixingTip: mixingToggle,
+		masteringTip: masteringToggle,
+		workFlowTip: workFlowToggle};
+
+	    var tipTypeObjectJson = JSON.stringify(tipTypeObject);
+
+
+	    var vstObject = [{}]
+	    for (var i = 0; i < $scope.vstArray.length; i++) {
+
+		var vstToggle = $("#editInputVstId" + $scope.vstArray[i].vstName)[0].checked;
+		vstObject[i] = {vstName: $scope.vstArray[i].vstName, vstToggle: vstToggle};
+	    }
+
+	    var vstObjectJson = JSON.stringify(vstObject);
+
+	    var dawObject = [{}]
+	    for (var i = 0; i < $scope.dawArray.length; i++) {
+
+		var dawToggle = $("#editInputDawId" + $scope.dawArray[i].dawName)[0].checked;
+		dawObject[i] = {dawName: $scope.dawArray[i].dawName, dawToggle: dawToggle};
+	    }
+	    var dawObjectJson = JSON.stringify(dawObject);
+
+
+	    var imageDataObject = [{}]
+	    for (var i = 0; i < $scope.uploader.queue.length; i++) {
+		imageDataObject[i] = {imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
+		    dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]};
+	    }
+
+	    var imageDataObjectJson = JSON.stringify(imageDataObject);
+
+	    var videoLink = $("#editVideoLink")[0].value;
+	    var videoLinkObject = {videoLink: videoLink};
+	    var videoLinkJson = JSON.stringify(videoLinkObject);
+
+	    var req = {
+		method: 'PUT',
+		url: '/tipsPagePut',
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {tipId: tipId,
+		    tipTitle: tipTitle,
+		    tipDesc: tipDescription,
+		    genreJson: genreObjectJson,
+		    tipTypeJson: tipTypeObjectJson,
+		    vstJson: vstObjectJson,
+		    dawJson: dawObjectJson,
+		    imageDataJson: imageDataObjectJson,
+		    videoLinkJson: videoLinkJson,
+		}
+
+	    }
+
+
+	    $http(req).then(function success(response) {
+		$scope.submitMessage = "Success"
+		$scope.responseData = response.data;
+		$scope.getTipsFromMongo();//add to current tips array
+
+	    }, function failure(response) {
+		$scope.submitMessage = "Failure"
+		$scope.responseData = response.data;
+
+	    });
+
+	}
+
+
+
+
+
 	$scope.findInTipArray = function (tip) {
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		if ($scope.tipArrayData[i]._id == tip._id) {
@@ -800,8 +1032,10 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 	    $scope.tipCounter = $scope.findInTipArray(tip);
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-            $scope.updateImageFileName();            
 	    $scope.addATipToggle = false;
+	    $scope.editATipToggle = false;
+	    $scope.updateImageFileName();
+	
 	}
 
 	$scope.getTipsFromMongo = function () {
@@ -816,12 +1050,33 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 		data: {}
 	    }
 
+	    var convertTipDataToJson = function () {
+		for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		    if ($scope.tipArrayData[i].dawJson) {
+			$scope.tipArrayData[i].dawJson = JSON.parse($scope.tipArrayData[i].dawJson);
+			$scope.tipArrayData[i].genreJson = JSON.parse($scope.tipArrayData[i].genreJson);
+			$scope.tipArrayData[i].imageDataJson = JSON.parse($scope.tipArrayData[i].imageDataJson);
+			$scope.tipArrayData[i].tipTypeJson = JSON.parse($scope.tipArrayData[i].tipTypeJson);
+			$scope.tipArrayData[i].videoLinkJson = JSON.parse($scope.tipArrayData[i].videoLinkJson);
+			$scope.tipArrayData[i].vstJson = JSON.parse($scope.tipArrayData[i].vstJson);
+		    }
+		}
+	    }
+	    function compare(a, b) {
+		if (a.tipTitle < b.tipTitle)
+		    return -1;
+		if (a.tipTitle > b.tipTitle)
+		    return 1;
+		return 0;
+	    }
 	    $http(req).then(function success(response) {
 		$scope.tipArrayData = response.data;
+		$scope.tipArrayData.sort(compare);
+		convertTipDataToJson();
 		$scope.submitMessage = "Success"
 		$scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
 		$scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-                $scope.updateImageFileName();
+		$scope.updateImageFileName();
 
 		$scope.navBarArray = "[";
 		for (var i = 0; i < $scope.tipArrayData.length; i++) {
@@ -841,43 +1096,63 @@ angular.module('myApp').controller('bodyTipHelperController', ['$scope', '$http'
 
 	}
 	$scope.getTipsFromMongo();
-        $scope.updateImageFileName = function () {
-            if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("imageDataJson")) {
-                var imageObject = JSON.parse($scope.tipArrayData[$scope.tipCounter].imageDataJson);
-                if (imageObject[0].hasOwnProperty('newFileName')) {
-                    $scope.hasImage = true;
-                    $scope.imageFileName = imageObject[0].newFileName;
+	$scope.updateImageFileName = function () {
+	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("imageDataJson")) {
+		var imageObject = JSON.parse($scope.tipArrayData[$scope.tipCounter].imageDataJson);
+		if (imageObject[0].hasOwnProperty('newFileName')) {
+		    $scope.hasImage = true;
+		    $scope.imageFileName = imageObject[0].newFileName;
 
-                } else {
-                    $scope.hasImage = false;
-                    $scope.imageFileName = "";
-                }
+		} else {
+		    $scope.hasImage = false;
+		    $scope.imageFileName = "";
+		}
 
-            } else {
-                $scope.hasImage = false;
-                $scope.imageFileName = "";
-            }
-        }
+	    } else {
+		$scope.hasImage = false;
+		$scope.imageFileName = "";
+	    }
+	}
 	$scope.nextButtonClicked = function () {
+	    var orginalTipCounter = $scope.tipCounter;
 	    $scope.tipCounter++;
 	    if ($scope.tipCounter >= $scope.tipArrayData.length) {
 		$scope.tipCounter = 0;
 	    }
+	    
+	    while(!$scope.showItem($scope.tipArrayData[$scope.tipCounter]) && orginalTipCounter!=$scope.tipCounter){
+		if($scope.tipCounter == $scope.tipArrayData.length){
+		     $scope.tipCounter = 0;
+		}
+		else{
+		    $scope.tipCounter++;
+		}
+	    }
+	    
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-            $scope.updateImageFileName();
-            
-        }
+	    $scope.updateImageFileName();
+
+	}
 	$scope.prevButtonClicked = function () {
+	    var orginalTipCounter = $scope.tipCounter;
 	    $scope.tipCounter--;
 	    if ($scope.tipCounter < 0) {
 		$scope.tipCounter = $scope.tipArrayData.length - 1;
 	    }
+	    while(!$scope.showItem($scope.tipArrayData[$scope.tipCounter]) && orginalTipCounter!=$scope.tipCounter){
+		if($scope.tipCounter == 0){
+		     $scope.tipCounter = $scope.tipArrayData.length;
+		}
+		else{
+		    $scope.tipCounter--;
+		}
+	    }
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-            $scope.updateImageFileName();
-	
-        }
+	    $scope.updateImageFileName();
+
+	}
 	$scope.backToTipsClicked = function () {   //dd tip to database
 	    $scope.addATipToggle = false;
 	}

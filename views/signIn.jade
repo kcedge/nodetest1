@@ -3,19 +3,21 @@
 </script>
 extends layout
 append body
-	.container()
+	.container(ng-controller="signInController")
 		#signInWrapper
 			.titleBannerDiv()
-				#titleName= title
-			#signInDetails
+				#titleName= title				
+				div.alert#note #{messages}
+			form#signInDetails(action="/signIn" method = "post")
 				+label-info("Email:")
 				br
-				input#signInInput.form-control
+				input#signInInput.form-control(name="email")
 				+label-info("Password:")
 				br
-				input#passWordInput.form-control
-				#btnSignInSubmit.keyButton(ng-click="signInSubmitClicked()")
-					+btn-primary("Submit")
+				input#passWordInput.form-control(type="password" name="password")
+				#btnSignInSubmit.keyButton
+					button.btn.btn-primary(type="submit")
+						span Sign In
 				#signInLinkWrapper
 					a#signInLink(href="/signUp")
 						span Not a member? Sign Up
