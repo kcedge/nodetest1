@@ -77,3 +77,8 @@ a {
 #labelSort{
     float:left;
 }
+
+.tipDescription{
+    white-space:pre-line;
+     text-indent: 50px;
+}

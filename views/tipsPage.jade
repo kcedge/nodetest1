@@ -60,9 +60,11 @@ append body
 							+label-primary("{{vst.vstName}}")
 				#tipsWrapper.contentWrapper
 					#tipTitle.titleWrapper
-						+panel-primary("{{tipTitle}}")
-							p.tipDescription
+						h2 {{tipTitle}}
+						#TipTitlePanel.panel.panel-primary						
+							p.tipDescription.panel-body(style="text-indent: 50px;")
 								{{tipDesc}}
+
 				#imageWrapper
 					img(ng-show="hasImage" ng-src="resources/images/{{imageFileName}}" style='width:100%')				
 				//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])

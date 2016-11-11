@@ -812,6 +812,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 
 	$scope.sortFiltersArray = ["Tip Title ", "Tip Type ", "Genre ", "Level ", "DAW "];
 
+	
 
 
 	//Sort Functions for Nav Bar
@@ -1131,6 +1132,9 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
+	    
+	    $(".tipDescription p").html($(".tipDescription p").value.replace(/\n/g, '<br/>'));
+	
 	    $scope.updateImageFileName();
 
 	}
