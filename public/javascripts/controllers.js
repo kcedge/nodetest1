@@ -784,6 +784,132 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	$scope.mixingToggle = function () {
 	    return $scope.mixing_toggle = !$scope.mixing_toggle;
 	};
+	
+	$scope.mastering_toggle = false;
+	$scope.masteringToggle = function () {
+	    return $scope.mastering_toggle = !$scope.mastering_toggle;
+	};
+	$scope.workflow_toggle = false;
+	$scope.workflowToggle = function () {
+	    return $scope.workflow_toggle = !$scope.workflow_toggle;
+	};
+	$scope.workflow_toggle = false;
+	$scope.workflowToggle = function () {
+	    return $scope.workflow_toggle = !$scope.workflow_toggle;
+	};
+	$scope.house_toggle = false;
+	$scope.trance_toggle = false;
+	$scope.breakbeat_toggle = false;
+	$scope.downtempo_toggle = false;
+	$scope.techno_toggle = false;
+	$scope.hardcore_toggle = false;
+	$scope.drumandbass_toggle = false;
+	$scope.dubstep_toggle = false;
+	$scope.minimal_toggle = false;
+	$scope.trap_toggle = false;
+	
+	$scope.filterGenreClicked = function (genreName) {
+	    if(genreName == "House"){
+		return $scope.house_toggle = !$scope.house_toggle;
+	    }
+	    if(genreName == "Trance"){
+		return $scope.trance_toggle = !$scope.trance_toggle;
+	    }
+	    if(genreName == "Breakbeat"){
+		return $scope.breakbeat_toggle = !$scope.breakbeat_toggle;
+	    }
+	    if(genreName == "Downtempo"){
+		return $scope.downtempo_toggle = !$scope.downtempo_toggle;
+	    }
+	    if(genreName == "Techno"){
+		return $scope.techno_toggle = !$scope.techno_toggle;
+	    }
+	    if(genreName == "Hardcore"){
+		return $scope.hardcore_toggle = !$scope.hardcore_toggle;
+	    }
+	    if(genreName == "Drum_and_bass"){
+		return $scope.drumandbass_toggle = !$scope.drumandbass_toggle;
+	    }
+	    if(genreName == "Dubstep"){
+		return $scope.dubstep_toggle = !$scope.dubstep_toggle;
+	    }
+	    if(genreName == "Minimal"){
+		return $scope.minimal_toggle = !$scope.minimal_toggle;
+	    }
+	    if(genreName == "Trap"){
+		return $scope.trap_toggle = !$scope.trap_toggle;
+	    }	    	    	    
+	};
+	
+	$scope.fl_studio_toggle = false;
+	$scope.ableton_live_toggle = false;
+	$scope.logic_pro_toggle = false;
+	$scope.pro_tools_toggle = false;
+	$scope.bitwig_studio_toggle = false;
+	$scope.studio_one_toggle = false;
+	$scope.other_toggle = false;
+	
+	$scope.filterDawClicked = function (dawName) {
+	    if(dawName == "Fl_studio"){
+		return $scope.fl_studio_toggle = !$scope.fl_studio_toggle;
+	    }
+	    if(dawName == "Ableton_Live"){
+		return $scope.ableton_live_toggle = !$scope.ableton_live_toggle;
+	    }
+	    if(dawName == "Logic_Pro"){
+		return $scope.logic_pro_toggle = !$scope.logic_pro_toggle;
+	    }
+	    if(dawName == "Pro_Tools"){
+		return $scope.pro_tools_toggle = !$scope.pro_tools_toggle;
+	    }
+	    if(dawName == "Bitwig_Studio"){
+		return $scope.bitwig_studio_toggle = !$scope.bitwig_studio_toggle;
+	    }
+	    if(dawName == "Studio_One"){
+		return $scope.studio_one_toggle = !$scope.studio_one_toggle;
+	    }
+	    if(dawName == "Other"){
+		return $scope.other_toggle = !$scope.other_toggle;
+	    }
+	  	    	    	    
+	};
+	
+	$scope.massive_toggle = false;
+	$scope.serum_toggle = false;
+	$scope.sylenth1_toggle = false;
+	$scope.kontakt_toggle = false;
+	$scope.ozone_toggle = false;
+	$scope.nexus_toggle = false;
+	$scope.spire_toggle = false;
+	$scope.othervst_toggle = false;
+	
+	$scope.filterVstClicked = function (vstName) {
+	    if(vstName == "Massive"){
+		return $scope.massive_toggle = !$scope.massive_toggle;
+	    }
+	    if(vstName == "Serum"){
+		return $scope.serum_toggle = !$scope.serum_toggle;
+	    }
+	    if(vstName == "Sylenth1"){
+		return $scope.sylenth1_toggle = !$scope.sylenth1_toggle;
+	    }
+	    if(vstName == "Kontakt"){
+		return $scope.kontakt_toggle = !$scope.kontakt_toggle;
+	    }
+	    if(vstName == "Ozone"){
+		return $scope.ozone_toggle = !$scope.ozone_toggle;
+	    }
+	    if(vstName == "Nexus"){
+		return $scope.nexus_toggle = !$scope.nexus_toggle;
+	    }
+	    if(vstName == "Spire"){
+		return $scope.spire_toggle = !$scope.spire_toggle;
+	    }
+	    if(vstName == "Other"){
+		return $scope.othervst_toggle = !$scope.othervst_toggle;
+	    }
+	  	    	    	    
+	};
 
 	function testTipType(tip) {
 	    if (tip.hasOwnProperty("tipTypeJson")) {		
@@ -800,10 +926,163 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 		return !$scope.mixing_toggle;
 	    }
 	}
-	$scope.showItem = function (tip) {
-
-	    return testTipType(tip) && testTipMixing(tip);
+	function testTipMastering(tip) {
+	    if (tip.hasOwnProperty("tipTypeJson")) {
+		return (tip.tipTypeJson["masteringTip"] || !$scope.mastering_toggle)
+	    }
+	    else {
+		return !$scope.mastering_toggle;
+	    }
 	}
+	function testTipWorkflow(tip) {
+	    if (tip.hasOwnProperty("tipTypeJson")) {
+		return (tip.tipTypeJson["workFlowTip"] || !$scope.workflow_toggle)
+	    }
+	    else {
+		return !$scope.workflow_toggle;
+	    }
+	}
+	
+	function testTipGenre(tip) {
+	    var passedHouse = true;
+	    var passedTrance = true;
+	    var passedBreakbeat = true;
+	    var passedDowntempo = true;
+	    var passedTechno = true;
+	    var passedHardcore = true;
+	    var passedDrumAndBass = true;
+	    var passedDubstep = true;
+	    var passedMinimal = true;
+	    var passedTrap = true;    
+	    if (tip.hasOwnProperty("genreJson")) {
+		for (var i = 0; i < tip.genreJson.length; i++) {
+		    if(tip.genreJson[i].genreName == "House"){
+			 passedHouse =  (tip.genreJson[i].genreToggle || !$scope.house_toggle)
+		    }		
+		    if(tip.genreJson[i].genreName == "Trance"){
+			 passedTrance =  (tip.genreJson[i].genreToggle || !$scope.trance_toggle)
+		    }	
+		    if(tip.genreJson[i].genreName == "Breakbeat"){
+			 passedBreakbeat =  (tip.genreJson[i].genreToggle || !$scope.breakbeat_toggle)
+		    }	
+		    if(tip.genreJson[i].genreName == "Downtempo"){
+			 passedDowntempo =  (tip.genreJson[i].genreToggle || !$scope.downtempo_toggle)
+		    }	
+		    if(tip.genreJson[i].genreName == "Techno"){
+			 passedTechno =  (tip.genreJson[i].genreToggle || !$scope.techno_toggle)
+		    }	
+		    if(tip.genreJson[i].genreName == "Hardcore"){
+			 passedHardcore =  (tip.genreJson[i].genreToggle || !$scope.hardcore_toggle)
+		    }	
+		    if(tip.genreJson[i].genreName == "Drum_and_bass"){
+			 passedDrumAndBass =  (tip.genreJson[i].genreToggle || !$scope.drumandbass_toggle)
+		    }	
+		    if(tip.genreJson[i].genreName == "Dubstep"){
+			 passedDubstep =  (tip.genreJson[i].genreToggle || !$scope.dubstep_toggle)
+		    }	
+		    if(tip.genreJson[i].genreName == "Minimal"){
+			 passedMinimal =  (tip.genreJson[i].genreToggle || !$scope.minimal_toggle)
+		    }	
+		    if(tip.genreJson[i].genreName == "Trap"){
+			 passedTrap =  (tip.genreJson[i].genreToggle || !$scope.trap_toggle)
+		    }			    
+		}
+		return passedHouse&&passedTrance&&passedBreakbeat&&passedDowntempo&&passedTechno&&passedHardcore&&passedDrumAndBass&&passedDubstep&&passedMinimal&&passedTrap;
+	    }
+	    else
+		return !$scope.house_toggle &&!$scope.trance_toggle &&!$scope.breakbeat_toggle &&!$scope.downtempo_toggle &&!$scope.techno_toggle &&!$scope.hardcore_toggle &&!$scope.drumandbass_toggle &&!$scope.dubstep_toggle &&!$scope.minimal_toggle &&!$scope.trap_toggle;
+
+	}
+	function testTipDaw(tip) {
+	    var passedFlStudio = true;
+	    var passedAbleton = true;
+	    var passedLogicPro = true;
+	    var passedProTools = true;
+	    var passedBitwigStudio = true;
+	    var passedStudioOne = true;
+	    var passedOther = true;
+
+	    if (tip.hasOwnProperty("dawJson")) {
+		for (var i = 0; i < tip.dawJson.length; i++) {
+		    if(tip.dawJson[i].dawName == "Fl_studio"){
+			 passedFlStudio =  (tip.dawJson[i].dawToggle || !$scope.fl_studio_toggle)
+		    }		
+		    if(tip.dawJson[i].dawName == "Ableton_Live"){
+			 passedAbleton =  (tip.dawJson[i].dawToggle || !$scope.ableton_live_toggle)
+		    }	
+		    if(tip.dawJson[i].dawName == "Logic_Pro"){
+			 passedLogicPro =  (tip.dawJson[i].dawToggle || !$scope.logic_pro_toggle)
+		    }	
+		    if(tip.dawJson[i].dawName == "Pro_Tools"){
+			 passedProTools =  (tip.dawJson[i].dawToggle || !$scope.pro_tools_toggle)
+		    }	
+		    if(tip.dawJson[i].dawName == "Bitwig_Studio"){
+			 passedBitwigStudio =  (tip.dawJson[i].dawToggle || !$scope.bitwig_studio_toggle)
+		    }	
+		    if(tip.dawJson[i].dawName == "Studio_One"){
+			 passedStudioOne =  (tip.dawJson[i].dawToggle || !$scope.studio_one_toggle)
+		    }	
+		    if(tip.dawJson[i].dawName == "Other"){
+			 passedOther =  (tip.dawJson[i].dawToggle || !$scope.other_toggle)
+		    }	
+		}
+		return passedFlStudio&&passedAbleton&&passedLogicPro&&passedProTools&&passedBitwigStudio&&passedStudioOne&&passedOther;
+	    }
+	    else
+		return !$scope.fl_studio_toggle &&!$scope.ableton_live_toggle &&!$scope.logic_pro_toggle &&!$scope.pro_tools_toggle &&!$scope.bitwig_studio_toggle &&!$scope.studio_one_toggle &&!$scope.other_toggle;
+
+	}
+	function testTipVst(tip) {
+	    var passedMassive = true;
+	    var passedSerum = true;
+	    var passedSylenth1 = true;
+	    var passedKontakt = true;
+	    var passedOzone = true;
+	    var passedNexus = true;
+	    var passedSpire = true;
+	    var passedOther = true;
+	    if (tip.hasOwnProperty("vstJson")) {
+		for (var i = 0; i < tip.vstJson.length; i++) {
+		    if(tip.vstJson[i].vstName == "Massive"){
+			 passedMassive =  (tip.vstJson[i].vstToggle || !$scope.massive_toggle)
+		    }		
+		    if(tip.vstJson[i].vstName == "Serum"){
+			 passedSerum =  (tip.vstJson[i].vstToggle || !$scope.serum_toggle)
+		    }	
+		    if(tip.vstJson[i].vstName == "Sylenth1"){
+			 passedSylenth1 =  (tip.vstJson[i].vstToggle || !$scope.sylenth1_toggle)
+		    }	
+		    if(tip.vstJson[i].vstName == "Kontakt"){
+			 passedKontakt =  (tip.vstJson[i].vstToggle || !$scope.kontakt_toggle)
+		    }	
+		    if(tip.vstJson[i].vstName == "Ozone"){
+			 passedOzone =  (tip.vstJson[i].vstToggle || !$scope.ozone_toggle)
+		    }	
+		    if(tip.vstJson[i].vstName == "Nexus"){
+			 passedNexus =  (tip.vstJson[i].vstToggle || !$scope.nexus_toggle)
+		    }	
+		    if(tip.vstJson[i].vstName == "Spire"){
+			 passedSpire =  (tip.vstJson[i].vstToggle || !$scope.spire_toggle)
+		    }	
+		    if(tip.vstJson[i].vstName == "Other"){
+			 passedOther =  (tip.vstJson[i].vstToggle || !$scope.othervst_toggle)
+		    }	
+		}
+		return passedMassive&&passedSerum&&passedSylenth1&&passedKontakt&&passedOzone&&passedNexus&&passedSpire&&passedOther;
+	    }
+	    else
+		return !$scope.massive_toggle &&!$scope.serum_toggle &&!$scope.sylenth1_toggle &&!$scope.kontakt_toggle &&!$scope.ozone_toggle &&!$scope.nexus_toggle &&!$scope.spire_toggle&&!$scope.othervst_toggle;
+
+	}
+	$scope.showItem = function (tip) {
+	    return testTipType(tip) && testTipMixing(tip) && testTipMastering(tip) && testTipWorkflow(tip) && testTipGenre(tip)&&testTipDaw(tip) && testTipVst(tip);
+	};
+	
+	
+	
+	
+	
+	//END FILTER FUNCTIONS
 	$scope.navBarFilterClick = function (filter) {
 	    $scope.sortType = filter;
 
@@ -1099,7 +1378,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	$scope.getTipsFromMongo();
 	$scope.updateImageFileName = function () {
 	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("imageDataJson")) {
-		var imageObject = JSON.parse($scope.tipArrayData[$scope.tipCounter].imageDataJson);
+		var imageObject =($scope.tipArrayData[$scope.tipCounter].imageDataJson);
 		if (imageObject[0].hasOwnProperty('newFileName')) {
 		    $scope.hasImage = true;
 		    $scope.imageFileName = imageObject[0].newFileName;
@@ -1122,7 +1401,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    }
 	    
 	    while(!$scope.showItem($scope.tipArrayData[$scope.tipCounter]) && orginalTipCounter!=$scope.tipCounter){
-		if($scope.tipCounter == $scope.tipArrayData.length){
+		if($scope.tipCounter == $scope.tipArrayData.length-1){
 		     $scope.tipCounter = 0;
 		}
 		else{
@@ -1133,7 +1412,6 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 	    
-	    $(".tipDescription p").html($(".tipDescription p").value.replace(/\n/g, '<br/>'));
 	
 	    $scope.updateImageFileName();
 
@@ -1146,7 +1424,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    }
 	    while(!$scope.showItem($scope.tipArrayData[$scope.tipCounter]) && orginalTipCounter!=$scope.tipCounter){
 		if($scope.tipCounter == 0){
-		     $scope.tipCounter = $scope.tipArrayData.length;
+		     $scope.tipCounter = $scope.tipArrayData.length-1;
 		}
 		else{
 		    $scope.tipCounter--;
