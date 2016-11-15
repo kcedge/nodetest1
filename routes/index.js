@@ -140,7 +140,7 @@ module.exports = function (router, passport) {
 
 	console.log("tipsPagePost");
 	var tipTitle = req.body['tipTitle'];
-	var tipDesc = req.body['tipDesc'];
+	var tipDescJson = req.body['tipDescJson'];
 	var genreJson = req.body['genreJson'];
 	var tipTypeJson = req.body['tipTypeJson'];
 	var vstJson = req.body['vstJson'];
@@ -148,7 +148,7 @@ module.exports = function (router, passport) {
 	var imageDataJson = req.body['imageDataJson'];
 	var videoLinkJson = req.body['videoLinkJson'];
 
-	console.log(tipDesc);
+	console.log(tipDescJson);
 	console.log(genreJson);
 	console.log(tipTypeJson);
 	console.log(vstJson);
@@ -166,7 +166,7 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		var collection = db.collection('tipsCollection');
-		collection.insert({tipTitle: tipTitle, tipDesc: tipDesc, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson}, function (err, db) {
+		collection.insert({tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson}, function (err, db) {
 		    if (err) {
 			console.log('Unable to add tip to tipsCollection', err);
 			res.send('Tip upload failed');
@@ -184,7 +184,7 @@ module.exports = function (router, passport) {
 	console.log("tipsPagePUT");
 	var tipId = req.body['tipId'];
 	var tipTitle = req.body['tipTitle'];
-	var tipDesc = req.body['tipDesc'];
+	var tipDescJson = req.body['tipDescJson'];
 	var genreJson = req.body['genreJson'];
 	var tipTypeJson = req.body['tipTypeJson'];
 	var vstJson = req.body['vstJson'];
@@ -202,7 +202,7 @@ module.exports = function (router, passport) {
 		// Get the documents collection
 		var collection = db.collection('tipsCollection');
 		console.log(tipId);
-		collection.update({_id:ObjectId(tipId)},{tipTitle: tipTitle, tipDesc: tipDesc, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson}, function (err, db) {
+		collection.update({_id:ObjectId(tipId)},{tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson}, function (err, db) {
 		    if (err) {
 			console.log('Unable to edit tip to tipsCollection', err);
 			res.send('Tip edit failed');

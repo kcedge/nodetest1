@@ -82,3 +82,8 @@ a {
     white-space:pre-line;
      text-indent: 50px;
 }
+.tipDescInput{
+    width:100%;
+    margin-bottom:10px
+    
+}

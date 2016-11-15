@@ -797,6 +797,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	$scope.workflowToggle = function () {
 	    return $scope.workflow_toggle = !$scope.workflow_toggle;
 	};
+	$scope.sound_design_toggle = false;
+	$scope.soundDesignToggle = function () {
+	    return $scope.sound_design_toggle = !$scope.sound_design_toggle;
+	};
 	$scope.house_toggle = false;
 	$scope.trance_toggle = false;
 	$scope.breakbeat_toggle = false;
@@ -942,6 +946,14 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 		return !$scope.workflow_toggle;
 	    }
 	}
+	function testTipSoundDesign(tip) {
+	    if (tip.hasOwnProperty("tipTypeJson")) {
+		return (tip.tipTypeJson["soundDesignTip"] || !$scope.sound_design_toggle)
+	    }
+	    else {
+		return !$scope.sound_design_toggle;
+	    }
+	}
 	
 	function testTipGenre(tip) {
 	    var passedHouse = true;
@@ -1075,7 +1087,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 
 	}
 	$scope.showItem = function (tip) {
-	    return testTipType(tip) && testTipMixing(tip) && testTipMastering(tip) && testTipWorkflow(tip) && testTipGenre(tip)&&testTipDaw(tip) && testTipVst(tip);
+	    return testTipType(tip) && testTipMixing(tip) && testTipMastering(tip) && testTipWorkflow(tip)&& testTipSoundDesign(tip) && testTipGenre(tip)&&testTipDaw(tip) && testTipVst(tip);
 	};
 	
 	
@@ -1112,6 +1124,9 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    return $scope.addATipToggle;
 	}
 	$scope.addATipClicked = function () {
+	    //Start with one description
+	    $scope.removeAllButOneTipDescriptions("Add");
+	    $scope.responseData = "";
 	    $scope.addATipToggle = !$scope.addATipToggle;
 	}
 
@@ -1146,14 +1161,35 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	$scope.editATipClicked = function () {
 	    $scope.editATipToggle = !$scope.editATipToggle;
 	    $scope.addATipToggle = false;
-
-	    var tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
+	    $scope.responseData = "";
+	  
 	    var tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
 
+	    //Start with one description
+	    $scope.removeAllButOneTipDescriptions("Edit");
 
-
+	   
 	    $("#tipTitleEditInput").val(tipTitle);
-	    $("#textAreaEditTip").text(tipDesc);
+	   
+	   //Update tip description
+	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipDescJson")) {
+		//starts at 2 because number of tips is in first array space
+		for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].tipDescJson.length; i++) {
+		    if(i == 1){
+			var tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription;
+			 $("#textAreaEditTip").val(tipDesc);
+		    }
+		    else{
+			 $scope.editAddDescription();//put text area elements into the DOM 
+			 $("#textAreaEditTip" + i).val($scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription);
+		    }		 
+		}
+	    }
+	    else{
+		 var tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
+		 $("#textAreaEditTip").val(tipDesc);
+	    }
+	  
 
 	    for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].dawJson.length; i++) {
 		var dawName = $scope.tipArrayData[$scope.tipCounter].dawJson[i].dawName;
@@ -1202,14 +1238,87 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    $("#editTheoryYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.theoryTip);
 	    $("#editMasteringYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.masteringTip);
 	    $("#editWorkFlowYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.workFlowTip);
-
+	     $("#editSoundDesignYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.soundDesignTip);
 
 	}
+	$scope.descriptionCounter = 1;
+	$scope.addDescription = function(){
+	    $scope.descriptionCounter++;
+	    var textArea = $('<textarea/>'); 
+	    textArea.prop("id","textAreaTip"+$scope.descriptionCounter);
+	    textArea.prop("placeholder","Tip Description "+$scope.descriptionCounter);
+	    textArea.addClass("form-control");
+	    textArea.addClass("tipDescInput");
+	    $("#descriptionWrapper").append(textArea);
+	}
+	$scope.subtractDescription = function(){
+	    if($scope.descriptionCounter>1){
+		$("#textAreaTip"+$scope.descriptionCounter).last().remove();
+		$scope.descriptionCounter--;
+	    }
+	}
+	$scope.editAddDescription = function(){
+	    $scope.descriptionCounter++;
+	    var textArea = $('<textarea/>'); 
+	    textArea.prop("id","textAreaEditTip"+$scope.descriptionCounter);
+	    textArea.prop("placeholder","Tip Description "+$scope.descriptionCounter);
+	    textArea.addClass("form-control");
+	    textArea.addClass("tipDescInput");
+	    $("#editDescriptionWrapper").append(textArea);
+	}
+	$scope.editSubtractDescription = function(){
+	    if($scope.descriptionCounter>1){
+		$("#textAreaEditTip"+$scope.descriptionCounter).last().remove();
+		$scope.descriptionCounter--;
+	    }
+	}
+	$scope.removeAllButOneTipDescriptions = function (editOrAdd) {
+	    if (editOrAdd == "Add") {
+		for (i = $scope.descriptionCounter; i > 1; i--) {
+		    $("#textAreaTip" + $scope.descriptionCounter).last().remove();
+		    $scope.descriptionCounter--;
+		}
+	    }
+	    else if (editOrAdd == "Edit") {
+		for (i = $scope.descriptionCounter; i > 1; i--) {
+		    $("#textAreaEditTip" + $scope.descriptionCounter).last().remove();
+		    $scope.descriptionCounter--;
+		}
+	    }
+	    $scope.descriptionCounter = 1;
+	}
+	
+	$scope.getDescription = function (tipNumber) {
+	    if ($scope.tipArrayData.length != 0) {
+		if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipDescJson")) {
+		    return $scope.tipArrayData[$scope.tipCounter].tipDescJson[tipNumber].tipDescription;
+		}
+		else {
+		    return $scope.tipDesc;
+		}
+	    }
+	    return false;
+	}
+	
 	$scope.editSubmitButtonClicked = function () {
 	    //dd tip to database
-	    var tipTitle = $("#tipTitleEditInput").val();
-	    var tipDescription = $("#textAreaEditTip").val();
-	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
+	    var tipTitle = $("#tipTitleEditInput").val();	 
+	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;   
+	    
+	    var tipDescObject = [{tipDescriptionCounter:$scope.descriptionCounter}]
+	    //Collect Tip Description JSON
+	    for(var i = 1; i <= $scope.descriptionCounter;i++){
+		if(i == 1){
+		    var tipDescriptionLocal = $("#textAreaEditTip").val();
+		    tipDescObject[i]={tipNumber:i,tipDescription:tipDescriptionLocal}	    
+		}
+		else{
+		    var tipDescriptionLocal = $("#textAreaEditTip"+i).val();
+		    tipDescObject[i]={tipNumber:i,tipDescription:tipDescriptionLocal}	    
+		}
+	    }
+	    var tipDescObjectJson = JSON.stringify(tipDescObject);
+
 
 	    var genreObject = [{}]
 	    for (var i = 0; i < $scope.genreArray.length; i++) {
@@ -1225,10 +1334,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    var mixingToggle = $("#editMixingYes")[0].checked;
 	    var masteringToggle = $("#editMasteringYes")[0].checked;
 	    var workFlowToggle = $("#editWorkFlowYes")[0].checked;
+	    var soundDesignToggle = $("#editSoundDesignYes")[0].checked;
 	    var tipTypeObject = {theoryTip: theoryToggle,
 		mixingTip: mixingToggle,
 		masteringTip: masteringToggle,
-		workFlowTip: workFlowToggle};
+		workFlowTip: workFlowToggle,
+		soundDesignTip:soundDesignToggle};
 
 	    var tipTypeObjectJson = JSON.stringify(tipTypeObject);
 
@@ -1271,7 +1382,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 		},
 		data: {tipId: tipId,
 		    tipTitle: tipTitle,
-		    tipDesc: tipDescription,
+		    tipDescJson: tipDescObjectJson,
 		    genreJson: genreObjectJson,
 		    tipTypeJson: tipTypeObjectJson,
 		    vstJson: vstObjectJson,
@@ -1309,13 +1420,14 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	}
 	$scope.tipNavBarClicked = function (tip) {
 	    var tipIdClicked = tip._id;
+	    
 	    $scope.tipCounter = $scope.findInTipArray(tip);
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 	    $scope.addATipToggle = false;
 	    $scope.editATipToggle = false;
 	    $scope.updateImageFileName();
-	
+	    updateBodyArray();
 	}
 
 	$scope.getTipsFromMongo = function () {
@@ -1333,6 +1445,9 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    var convertTipDataToJson = function () {
 		for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		    if ($scope.tipArrayData[i].dawJson) {
+			if ($scope.tipArrayData[i].hasOwnProperty("tipDescJson")) {
+			    $scope.tipArrayData[i].tipDescJson = JSON.parse($scope.tipArrayData[i].tipDescJson);
+			}
 			$scope.tipArrayData[i].dawJson = JSON.parse($scope.tipArrayData[i].dawJson);
 			$scope.tipArrayData[i].genreJson = JSON.parse($scope.tipArrayData[i].genreJson);
 			$scope.tipArrayData[i].imageDataJson = JSON.parse($scope.tipArrayData[i].imageDataJson);
@@ -1357,7 +1472,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 		$scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
 		$scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 		$scope.updateImageFileName();
-
+		updateBodyArray();
 		$scope.navBarArray = "[";
 		for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		    var object = '{text:"' + $scope.tipArrayData[i].tipTitle + '",href:"#"},';
@@ -1376,6 +1491,21 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 
 	}
 	$scope.getTipsFromMongo();
+	
+	var updateBodyArray = function () {
+	    $scope.tipBodyArray = [];
+	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipDescJson")) {
+		for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].tipDescJson.length; i++) {
+		    var tipDescriptionLocal = $scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription;
+		    var imageFileNameLocal = "";
+		    if($scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1]){
+			 imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1].newFileName;
+		    }
+		    var hasImage = (imageFileNameLocal!="");
+		    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal,hasImage:imageFileNameLocal})
+		}
+	    }
+	}
 	$scope.updateImageFileName = function () {
 	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("imageDataJson")) {
 		var imageObject =($scope.tipArrayData[$scope.tipCounter].imageDataJson);
@@ -1414,6 +1544,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    
 	
 	    $scope.updateImageFileName();
+	    updateBodyArray();
 
 	}
 	$scope.prevButtonClicked = function () {
@@ -1433,7 +1564,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 	    $scope.updateImageFileName();
-
+	    updateBodyArray();
 	}
 	$scope.backToTipsClicked = function () {   //dd tip to database
 	    $scope.addATipToggle = false;
@@ -1441,7 +1572,22 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	$scope.submitButtonClicked = function () {
 	    //dd tip to database
 	    var tipTitle = $("#tipTitleInput").val();
+	    
+	    var tipDescObject = [{tipDescriptionCounter:$scope.descriptionCounter}]
 	    var tipDescription = $("#textAreaTip").val();
+	    
+	    for(var i = 1; i <= $scope.descriptionCounter;i++){
+		if(i == 1){
+		    var tipDescriptionLocal = $("#textAreaTip").val();
+		    tipDescObject[i]={tipNumber:i,tipDescription:tipDescriptionLocal}	    
+		}
+		else{
+		    var tipDescriptionLocal = $("#textAreaTip"+i).val();
+		    tipDescObject[i]={tipNumber:i,tipDescription:tipDescriptionLocal}	    
+		}
+	    }
+	    var tipDescObjectJson = JSON.stringify(tipDescObject);
+	    	    
 	    var genreObject = [{}]
 	    for (var i = 0; i < $scope.genreArray.length; i++) {
 
@@ -1456,10 +1602,14 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    var mixingToggle = $("#mixingYes")[0].checked;
 	    var masteringToggle = $("#masteringYes")[0].checked;
 	    var workFlowToggle = $("#workFlowYes")[0].checked;
+	    var soundDesignToggle = $("#soundDesignYes")[0].checked;
+	    
 	    var tipTypeObject = {theoryTip: theoryToggle,
 		mixingTip: mixingToggle,
 		masteringTip: masteringToggle,
-		workFlowTip: workFlowToggle};
+		workFlowTip: workFlowToggle,
+		soundDesignTip:soundDesignToggle
+	    };
 
 	    var tipTypeObjectJson = JSON.stringify(tipTypeObject);
 
@@ -1501,7 +1651,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 		    'Content-Type': "application/json"
 		},
 		data: {tipTitle: tipTitle,
-		    tipDesc: tipDescription,
+		    tipDescJson: tipDescObjectJson,
 		    genreJson: genreObjectJson,
 		    tipTypeJson: tipTypeObjectJson,
 		    vstJson: vstObjectJson,

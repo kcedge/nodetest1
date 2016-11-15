@@ -28,7 +28,7 @@ append body
 			.tipsPageWrapper(ng-hide="addATip()")				
 				#titleName= title
 				
-				#filterWrapper.filterBoxStyle(ng-style="filtersBoxStyle")
+				#filterWrapper.filterBoxStyle(ng-style="filtersBoxStyle" )
 					+label-info("Filters:")
 					tipTypeFilterWrapper(style="margin-top:5px;display:inline-block;")
 					.btnWrapper
@@ -39,8 +39,11 @@ append body
 						+label-primary("Mixing")
 						input.inputClass(ng-click="masteringToggle()" type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
 						+label-primary("Mastering")
+						input.inputClass(ng-click="soundDesignToggle()" type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
+						+label-primary("Sound Design")
 						input.inputClass(ng-click="workflowToggle()" type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
 						+label-primary("Work Flow")
+						
 					tipGenreFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
 						.btnWrapper(style="float:left")
 							+label-default("Genre:")
@@ -72,18 +75,26 @@ append body
 				#tipsWrapper.contentWrapper
 					#tipTitle.titleWrapper
 						h2 {{tipTitle}}
-						#TipTitlePanel.panel.panel-primary						
-							p.tipDescription.panel-body(style="text-indent: 50px;")
-								{{tipDesc}}
-
-				#imageWrapper
-					img(ng-show="hasImage" ng-src="resources/images/{{imageFileName}}" style='width:100%')				
+						#TipTitlePanel.panel.panel-default						
+							div.tipDescription.panel-body(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tipBodyArray")			
+								p#descBody
+									{{tipPart.tipDescription}}
+									br
+									img(ng-show="tipPart.hasImage" ng-src="resources/images/{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
+				
 				//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])
 			
 			.addATipPageWrapper(ng-show="addATipToggle")
 				#tipsFormWrapper.contentWrapper
 					+input("text","tipTitleInput","Title","TipTitle")
-					textarea#textAreaTip.form-control(placeholder="Tip Description" required style="width:100%;margin-bottom:10px")
+					#descriptionWrapper
+						h6 Description 1
+						textarea#textAreaTip.form-control.tipDescInput(placeholder="Tip Description" required)
+					#descriptionButtonWrapper(style="display:inline-block")
+						button.btn(ng-click="addDescription()" style="float:left")
+							span.glyphicon.glyphicon-plus
+						button.btn(ng-click="subtractDescription()" style="float:left")
+							span.glyphicon.glyphicon-minus
 					.genereInputWrapper(style="")
 						h7 Genres
 						.btnWrapper(style="" ng-repeat = "genre in genreArray")
@@ -102,6 +113,8 @@ append body
 							+label-primary("Mastering")
 							input.inputClass(type="checkbox",data-toggle="toggle" name='workFlowYes' id='workFlowYes')
 							+label-primary("Work Flow")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='soundDesignYes' id='soundDesignYes')
+							+label-primary("Sound Design")
 					.vstInputWrapper(style="margin-top:5px;")
 						h7 VST
 						.btnWrapper(style="" ng-repeat = "vst in vstArray")							
@@ -134,7 +147,14 @@ append body
 			.editATipPageWrapper(ng-show="editATipToggle")
 				#tipsFormWrapper.contentWrapper
 					+input("text","tipTitleEditInput","Title","TipTitle")
-					textarea#textAreaEditTip.form-control(placeholder="Tip Description" required style="width:100%;margin-bottom:10px")
+					#editDescriptionWrapper
+						h6 Description 1
+						textarea#textAreaEditTip.form-control.tipDescInput(placeholder="Tip Description" required)
+					#editDescriptionButtonWrapper(style="display:inline-block")
+						button.btn(ng-click="editAddDescription()" style="float:left")
+							span.glyphicon.glyphicon-plus
+						button.btn(ng-click="editSubtractDescription()" style="float:left")
+							span.glyphicon.glyphicon-minus
 					.genereInputWrapper(style="")
 						h7 Genres
 						.btnWrapper(style="" ng-repeat = "genre in genreArray")
@@ -153,6 +173,8 @@ append body
 							+label-primary("Mastering")
 							input.inputClass(type="checkbox",data-toggle="toggle" name='workFlowYes' id='editWorkFlowYes')
 							+label-primary("Work Flow")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='soundDesignYes' id='editSoundDesignYes')
+							+label-primary("Sound Design")
 					.vstInputWrapper(style="margin-top:5px;")
 						h7 VST
 						.btnWrapper(style="" ng-repeat = "vst in vstArray")							
