@@ -21,7 +21,7 @@ append body
 				//	{{arrowUnicode}}
 				span.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
 				span.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
-			navBarItem.list-unstyled(ng-repeat="tip in tipArrayData | orderBy : 'tipTitle':sortReverse" ng-show="showItem(tip)")				
+			navBarItem.list-unstyled(ng-repeat="tip in tipArrayData | orderBy : 'tipTitle':sortReverse" ng-show="showItem(tip)")
 				#tipNavItem.btn-xs.btn-primary(ng-click="tipNavBarClicked(tip)"){{tip.tipTitle}}
 		
 		.container(style="float:left;width:75%;max-width:800px;")
@@ -66,22 +66,30 @@ append body
 					+btn-xs("Previous")
 				#nxtButton.keyButton(ng-click="nextButtonClicked()" style="float:right")
 					+btn-xs("Next")
-				#addATipButton.keyButton(ng-click="addATipClicked()" ng-hide="false")
+				#addATipButton.keyButton(ng-click="addATipClicked()"  ng-show="showButton('Add')")
 					+btn-xs("Add")
-				#editATipButton.keyButton(ng-click="editATipClicked()" ng-hide="false")
+				#editATipButton.keyButton(ng-click="editATipClicked()"  ng-show="showButton('Edit')")
 					+btn-xs("Edit")
-				#deleteATipButton.keyButton(ng-click="deleteATipClicked()" ng-hide="false")
+				#deleteATipButton.keyButton(ng-click="deleteATipClicked()"  ng-show="showButton('Delete')")
 					+btn-xs("Delete")
 				#tipsWrapper.contentWrapper
-					#tipTitle.titleWrapper
-						h2 {{tipTitle}}
-						#TipTitlePanel.panel.panel-default						
+					#tipTitle.titleWrapper(style="display:inline-block;width:100%")
+						h2(style="float:left") {{tipTitle}}
+						h3(style="float:right;margin-top:25px;")
+							button.btn.btn-default(style="margin-right:5px;")
+								span#likeButton.glyphicon.glyphicon-arrow-up(ng-click="likeButtonClicked()" style="color:black;")
+							button.btn.btn-default
+								span#loveButton.glyphicon.glyphicon-heart(ng-click="loveButtonClicked()" style="color:black")
+					#TipTitlePanel.panel.panel-default						
 							div.tipDescription.panel-body(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tipBodyArray")			
 								p#descBody
 									{{tipPart.tipDescription}}
 									br
-									img(ng-show="tipPart.hasImage" ng-src="resources/images/{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
-				
+									#imgDiv(ng-if="hasImage")
+										img(ng-show="hasImage" ng-src="resources/images/{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
+									#submittedByDiv.small
+										span Submitted By: 
+											a(href="/profile"){{tipPart.submittedBy}}
 				//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])
 			
 			.addATipPageWrapper(ng-show="addATipToggle")

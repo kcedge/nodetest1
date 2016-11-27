@@ -3,9 +3,9 @@ extends layout
 append body
 	.container(ng-controller="profileHelperController" style="margin:0 auto;width:90%")
 		.titleBannerDiv()
-				#titleName= "Welcome " + email
+				#titleName= "Welcome " + username
 				#userData(ng-hide="false")= localuser
-				#emailUser(ng-hide="false")=localuser.local.email
+				#usernameId(ng-hide="false")= localuser.local.username
 		#headerWrapper.container(style="text-align: center;width:100%")
 			
 		

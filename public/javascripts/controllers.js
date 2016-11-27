@@ -14,7 +14,7 @@ $(".twitterLink").children().first().attr("target", "_blank");
 
 angular.module("myApp").controller('bodyController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
 	$scope.isLoggedIn = function () {
-	    if ($localStorage.email != "") {
+	    if ($localStorage.username != "") {
 		return true;
 	    }
 	    else {
@@ -23,7 +23,7 @@ angular.module("myApp").controller('bodyController', ['$scope', '$http', '$local
 	}
 
 	$scope.signOutClicked = function () {
-	    $localStorage.email = "";
+	    $localStorage.username = "";
 	    $localStorage.userSignedIn = false;
 	}
     }]);
@@ -32,7 +32,7 @@ angular.module("myApp").controller('signUpController', ['$scope', '$http', '$loc
 	$scope.signUpPassword = "";
 	$scope.signUpPasswordConfirm = "";
 	$scope.$storage = $localStorage.$default({
-	    email: "",
+	    username: "",
 	    userSignedIn: false
 	});
 
@@ -45,7 +45,7 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 	$scope.signUpPassword = "";
 	$scope.signUpPasswordConfirm = "";
 	$scope.$storage = $localStorage.$default({
-	    email: "",
+	    username: "",
 	    userSignedIn: false
 	});
 
@@ -54,15 +54,15 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 
 angular.module("myApp").controller('profileHelperController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
 	$scope.$storage = $localStorage.$default({
-	    email: "",
+	    username: "",
 	    userSignedIn: false
 	});
 
-	var emailOfUser = $("#emailUser").html();
+	var username = $("#usernameId").html();
 
 	$scope.$storage = $localStorage;
 	$scope.$storage.userSignedIn = true;
-	$scope.$storage.email = emailOfUser;
+	$scope.$storage.username = username;
 
     }]);
 angular.module("myApp").controller('bodyMelodyHelperController', ['$scope', '$http', function ($scope, $http) {
@@ -756,7 +756,7 @@ angular.module("myApp").factory('TipData', function () {
 });
 
 
-angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http', 'FileUploader', 'TipData', function ($scope, $http, FileUploader, TipData) {
+angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http','$localStorage', 'FileUploader', 'TipData', function ($scope, $http,$localStorage, FileUploader, TipData) {
 
 
 	$scope.title = "HELLLOOO";
@@ -773,6 +773,36 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	$scope.BPM = "122";
 	$scope.BARS = "16";
 	$scope.tipArrayData = TipData;
+
+
+	//Display Functions
+	$scope.showButton = function (buttonName) {
+	    if (buttonName == "Add") {
+		if ($localStorage.username != "") {
+		    return true;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    else if (buttonName == "Edit") {
+		if ($localStorage.username == "kcedge") {
+		    return true;
+		}
+		else {
+		    return false;
+		}
+	    }
+	    else if (buttonName == "Delete") {
+		if ($localStorage.username == "kcedge") {
+		    return true;
+		}
+		else {
+		    return false;
+		}
+	    }
+	};
+
 
 	//FILTER FUNCTIONS
 	$scope.theory_toggle = false;
@@ -1102,7 +1132,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	}
 
 	$scope.sortFiltersArray = ["Tip Title ", "Tip Type ", "Genre ", "Level ", "DAW "];
-
+	
 	
 
 
@@ -1389,6 +1419,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 		    dawJson: dawObjectJson,
 		    imageDataJson: imageDataObjectJson,
 		    videoLinkJson: videoLinkJson,
+		    submittedBy: $localStorage.username
 		}
 
 	    }
@@ -1497,12 +1528,13 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipDescJson")) {
 		for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].tipDescJson.length; i++) {
 		    var tipDescriptionLocal = $scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription;
+		    var submittedByLocal = $scope.tipArrayData[$scope.tipCounter].submittedBy;
 		    var imageFileNameLocal = "";
 		    if($scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1]){
 			 imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1].newFileName;
 		    }
 		    var hasImage = (imageFileNameLocal!="");
-		    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal,hasImage:imageFileNameLocal})
+		    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal,hasImage:imageFileNameLocal,submittedBy:submittedByLocal})
 		}
 	    }
 	}
@@ -1569,6 +1601,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	$scope.backToTipsClicked = function () {   //dd tip to database
 	    $scope.addATipToggle = false;
 	}
+	//ADD a tip submit
 	$scope.submitButtonClicked = function () {
 	    //dd tip to database
 	    var tipTitle = $("#tipTitleInput").val();
@@ -1643,7 +1676,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    var videoLink = $("#videoLink")[0].value;
 	    var videoLinkObject = {videoLink: videoLink};
 	    var videoLinkJson = JSON.stringify(videoLinkObject);
-
+	 
 	    var req = {
 		method: 'POST',
 		url: '/tipsPagePost',
@@ -1658,6 +1691,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 		    dawJson: dawObjectJson,
 		    imageDataJson: imageDataObjectJson,
 		    videoLinkJson: videoLinkJson,
+		    submittedBy: $localStorage.username,
+		    points: 1
 		}
 
 	    }

@@ -87,3 +87,8 @@ a {
     margin-bottom:10px
     
 }
+
+#submittedByDiv{
+    float:right;
+    padding-bottom: 2px;
+}

@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
-//var passport = require('passport');
+var passport = require('passport');
+
+
 //lets require/import the mongodb native drivers.
 var mongodb = require('mongodb');
 
@@ -63,7 +65,7 @@ module.exports = function (router, passport) {
     }));
 
     router.get('/profile', isLoggedIn, function (req, res) {
-	res.render('profile', {email: req.user.local.email,
+	res.render('profile', {username: req.user.local.username,
 				localuser:req.user});
     });
 
@@ -72,7 +74,7 @@ module.exports = function (router, passport) {
     // =====================================
     router.get('/logout', function(req, res) {
         req.logout();
-        res.redirect('/');
+        //res.redirect('/');
     });
     
     /* GET Hello World page. */
@@ -147,7 +149,8 @@ module.exports = function (router, passport) {
 	var dawJson = req.body['dawJson'];
 	var imageDataJson = req.body['imageDataJson'];
 	var videoLinkJson = req.body['videoLinkJson'];
-
+	var submittedBy = req.body['submittedBy'];
+	
 	console.log(tipDescJson);
 	console.log(genreJson);
 	console.log(tipTypeJson);
@@ -155,7 +158,8 @@ module.exports = function (router, passport) {
 	console.log(dawJson);
 	console.log(imageDataJson);
 	console.log(videoLinkJson);
-
+	console.log(submittedBy);
+	
 	MongoClient.connect(url, function (err, db) {
 	    if (err) {
 		console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -166,7 +170,7 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		var collection = db.collection('tipsCollection');
-		collection.insert({tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson}, function (err, db) {
+		collection.insert({tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson, submittedBy:submittedBy}, function (err, db) {
 		    if (err) {
 			console.log('Unable to add tip to tipsCollection', err);
 			res.send('Tip upload failed');
@@ -191,6 +195,8 @@ module.exports = function (router, passport) {
 	var dawJson = req.body['dawJson'];
 	var imageDataJson = req.body['imageDataJson'];
 	var videoLinkJson = req.body['videoLinkJson'];
+	var submittedBy = req.body['submittedBy'];
+	
 	MongoClient.connect(url, function (err, db) {
 	    if (err) {
 		console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -202,7 +208,7 @@ module.exports = function (router, passport) {
 		// Get the documents collection
 		var collection = db.collection('tipsCollection');
 		console.log(tipId);
-		collection.update({_id:ObjectId(tipId)},{tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson}, function (err, db) {
+		collection.update({_id:ObjectId(tipId)},{tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson,submittedBy:submittedBy}, function (err, db) {
 		    if (err) {
 			console.log('Unable to edit tip to tipsCollection', err);
 			res.send('Tip edit failed');
