@@ -16,10 +16,11 @@ var mongo = require('mongodb');
 var monk = require('monk');
 //var db = monk('localhost:27017/nodetest1');
 //Production
-//var db = monk('mongodb://kcedge3:Golions91!@localhost:27017/dummyDb');
+var db = monk('mongodb://kcedge3:Golions91!@localhost:27017/dummyDb');
+mongoose.connect('mongodb://kcedge3:Golions91!@localhost:27017/dummyDb'); 
 //Local
-var db = monk('mongodb://localhost:27017/tipsDb');
-mongoose.connect('mongodb://localhost:27017/tipsDb'); 
+//var db = monk('mongodb://localhost:27017/tipsDb');
+//mongoose.connect('mongodb://localhost:27017/tipsDb'); 
 
 
 var app = express();

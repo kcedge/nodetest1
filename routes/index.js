@@ -11,9 +11,9 @@ var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 // Connection URL. This is where your mongodb server is running.
-var url = 'mongodb://localhost:27017/tipsDb';
+//var url = 'mongodb://localhost:27017/tipsDb';
 //Production DB
-//var url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb'
+var url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb'
 //Local
 //var url = 'mongodb://localhost:27017/tipsDb'
 
