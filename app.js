@@ -16,8 +16,8 @@ var mongo = require('mongodb');
 var monk = require('monk');
 //var db = monk('localhost:27017/nodetest1');
 //Production
-var db = monk('mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb');
-mongoose.connect('mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb'); 
+var db = monk('mongodb://kcedge3:Golions91!@localhost:27017/dummyDb');
+mongoose.connect('mongodb://kcedge3:Golions91!@localhost:27017/dummyDb'); 
 //Local
 //var db = monk('mongodb://localhost:27017/tipsDb');
 //mongoose.connect('mongodb://localhost:27017/tipsDb'); 
@@ -27,7 +27,7 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'jade');ls
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
