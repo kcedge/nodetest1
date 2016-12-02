@@ -55,24 +55,25 @@ html(lang="en" ng-app='myApp')
                 link(rel="icon",href="../../favicon.ico")
                 block styles
                         link(rel="stylesheet",href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")
-                        link(rel="stylesheet",href="css/bootstrap.min.css")
+                        //link(rel="stylesheet",href="css/bootstrap.min.css")
                         link(rel='stylesheet', href='/stylesheets/style.css')
         body(data-spy="scroll",data-target=".scrollspy" ng-controller="bodyController")
-               +navbar("Music Production Helper","dropdown_menu")
-                        +nav_item("index") Home
+               +navbar("Music Production Helper","navbar_menu")
+                        +nav_item("/") Chromatic Wheel
                         +nav_item("tipsPage") Tips Library 
                         //+nav_item("about") About
                         +nav_item("samplesPage") Samples
                         +nav_item("profile")#profileButton Profile
                         +nav_item_dropdown("#")(label="Connect")
-                                +nav_item("https://soundcloud.com/crazylegsmusic","soundCloudLink") SoundCloud
-                                +nav_item("https://www.facebook.com/crazylegsmusic/","facebookLink") Facebook
-                                +nav_item("https://twitter.com/crazylegsmusic","twitterLink") Twitter
-                                +nav_divider                            
+                                //+nav_item("https://soundcloud.com/crazylegsmusic","soundCloudLink") SoundCloud
+                                //+nav_item("https://www.facebook.com/crazylegsmusic/","facebookLink") Facebook
+                                //+nav_item("https://twitter.com/crazylegsmusic","twitterLink") Twitter
+                                //+nav_divider                            
                                 +nav_item("signUp") Sign Up
                                 +nav_item("signIn") Sign In
+                                +nav_item("contactMe") Contact
                         //+nav_item_dropdown("#")(label="SoundCloud")
-                #profileLoggedIn(ng-show="isLoggedIn()" style="float:right")
+                #profileLoggedIn(ng-show="isLoggedIn()" style="float:right;")
                         a(href="/logout" ng-click="signOutClicked()") Sign out
                 block body
                 block scripts

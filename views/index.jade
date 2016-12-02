@@ -1,8 +1,9 @@
 extends layout
 
 append body
-	.container(ng-controller="bodyMelodyHelperController" style="margin:0 auto;width:90%")
-		.titleBannerDiv()
+	.container(ng-controller="bodyMelodyHelperController" style="margin:0 auto;width:90%;max-width:966px;")
+		.titleBannerDiv(style="text-align:center")
+			h1
 				#titleName= title
 		#headerWrapper.container(style="text-align: center;width:100%")
 			

@@ -1,8 +1,29 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #f5f8fa;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+#navbar_menu{
+    background-color: white;
+    border-radius: 5px;
+}
+.pageController{
+    margin:0 auto;
+    width:90%;
+    max-width:966px;
+}
+.formInputWrapper{
+    background-color: white;
+    /* padding: 15px; */
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 15px;
+    border-radius: 5px;
+    border-color: white;
+    border-width: thick;
+    border-style:solid;
 
+}
 a {
   color: #00B7FF;
 }
@@ -11,12 +32,7 @@ a {
   
  
 }
-#titleName{
-    font-size:x-large;
-    font-weight:bold;
-    margin: 5px;
-    
-}
+
 
 .titleBannerDiv{
     margin-bottom: 10px;
@@ -34,21 +50,21 @@ a {
 }
 
 .filterBoxStyle{
-    background-color: beige;
+    background-color: white;
     padding: 5px;
     border-radius: 5px;
     margin-bottom: 5px;
+    border-style: solid;
+    border-width: thin;
+    border-color: #d1d2d2;
 }
 
 .label-default{
     margin-right:5px;
+    background-color: #8a8a8a;
 }
-.label-primary{
-    margin-right: 1px;
-}
-#titleName{
-    color:darkslategrey;
-}
+
+
 /*Sign In Style*/
 #signInWrapper{
     margin: 0 auto;
@@ -86,9 +102,152 @@ a {
     width:100%;
     margin-bottom:10px
     
-}
+} 
 
 #submittedByDiv{
     float:right;
     padding-bottom: 2px;
 }
+.label-info {
+    background-color: #777;
+    margin:1px;
+}
+
+.btn-primary.active, .btn-primary.focus, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open>.dropdown-toggle.btn-primary {
+    color: #fff;
+    background-color: #120129;
+    border-color: #204d74;
+    border-style: solid;
+    border-width: thin;
+    cursor: pointer;
+} 
+//.btn-default.active, .btn-default.focus, .btn-default:active, .btn-default:focus, .btn-default:hover, .open>.dropdown-toggle.btn-default {
+//   color: #fff;
+//    background-color: #120129;
+//    border-color: #204d74;
+//    border-style: solid;
+//    border-width: thin;
+//    cursor: pointer;
+//} 
+.btn-primary{
+   
+    color: #383838;
+    background-color: #ececec;
+    border-style: groove;
+    border-width: thin;
+    border-color: #bda8c3;
+    margin-bottom: 1px;
+    font-size: 75%;
+    font-weight: 700;
+}
+//.btn-default{
+//   
+//    color: #000;
+//    background-color: #e2e2e2;
+//    border-style: groove;
+//    border-width: thin;
+//    border-color: #bda8c3;
+//    margin-bottom: 1px;
+//    margin:3px;
+//}
+.label-primary {
+    margin-right: 1px;
+    background-color: #f6fff3;
+    border-style: double;
+    border-width: thin;
+    border-color: #4a8b2e;
+    border-radius: 3px;
+    color: #383838;
+}
+.label-primary:hover {
+    cursor:pointer;
+    
+}
+.label-default:hover {
+    cursor:pointer;
+    
+}
+.inputToggleClass{
+      cursor:pointer;
+}
+#sortReverseButton:hover{
+     cursor:pointer;
+}
+.panel-body{
+    background-color:  white;
+    border-radius: 5px;
+    border-color: #bda8c3;
+}
+
+.alert-info,.alert-warning {
+    color: #31708f;
+    background-color: #eeeaf3;
+    border-color: #bcc5f1;
+}
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #00cc66;
+}
+
+.canvasjs-chart-credit{
+    visibility: hidden;
+}
+
+#navBarWrapper{
+    float: left;
+    width: 20%;
+    max-width: 200px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 5px;
+    border-color: #d1d2d2;
+    border-style: solid;
+    border-width: thin;
+}
+#tipTitle{
+    
+    display: inline-block;
+    width: 100%;
+    background-color: #ececec;;
+    color:#383838;
+    border-radius: 5px;
+    border:#d4d4d4;
+    border-style: solid;
+    border-width: thin;
+    margin-bottom: -10px;
+    margin-top:10px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+        
+}
+.panel-heading{
+    background-color: white;
+}
+
+#loveButton.active, #loveButton.focus, #loveButton:active, #loveButton:focus, #loveButton:hover{
+    color: #fff;
+    background-color: #120129;
+    border-color: #204d74;
+    border-style: solid;
+    border-width: thin;
+    cursor: pointer;
+} 
+#likeButton.active, #likeButton.focus, #likeButton:active, #likeButton:focus, #likeButton:hover{
+    color: #fff;
+    background-color: #120129;
+    border-color: #204d74;
+    border-style: solid;
+    border-width: thin;
+    cursor: pointer;
+}
+#dislikeButton.active, #dislikeButton.focus, #dislikeButton:active, #dislikeButton:focus, #dislikeButton:hover{
+    color: #fff;
+    background-color: #120129;
+    border-color: #204d74;
+    border-style: solid;
+    border-width: thin;
+    cursor: pointer;
+} 

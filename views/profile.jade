@@ -1,11 +1,13 @@
 extends layout
 
 append body
-	.container(ng-controller="profileHelperController" style="margin:0 auto;width:90%")
-		.titleBannerDiv()
-				#titleName= "Welcome " + username
-				#userData(ng-hide="false")= localuser
-				#usernameId(ng-hide="false")= localuser.local.username
-		#headerWrapper.container(style="text-align: center;width:100%")
-			
+	.container.pageController(ng-controller="profileHelperController" style="margin:0 auto;width:90%")
+		#profileNotify(ng-show="!isLoggedIn()")
+		#profilePage(ng-show="isLoggedIn()")
+			.titleBannerDiv()
+				h2 Welcome {{username}}
+				+alert-i-warning("The profile page is still in development.  This page will display your 'loved' tips, your social network links, and your contributed tips and samples.","heart")
+
+				#profileDetails(ng-show="false")
+					#userName= username
 		

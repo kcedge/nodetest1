@@ -1,12 +1,12 @@
 extends layout
 
 append body
-	.container(ng-controller="bodyTipHelperController" style="display:inline-block;" )
-		.div(style="text:center;max-width:1000px;")
-			+alert-i-warning("The tips library is in development.  Eventually, I hope this can be a place for music producers to quickly reference a set of tips that may help them generate ideas.  The tips library will have filters for a number of categories allowing for a quick search(filter by Daw/Genre/Vst/Theory ect..) The library itself needs to be grown, so if you have tips please send them to me at crazylegsmusic@gmail.com, you will be credited!  Also if you have any ideas on how to make this page a more useful place for producers, please reach out to me as well. <3 Casey CrazyLegs","heart")
+	.container.pageController(ng-controller="bodyTipHelperController" style = 'margin:0 auto;width:90%;max-width:966px;' )
+		.div(style="text:center;max-width:880px;width:94%")
+			+alert-i-warning("The tips library is in its beta version. This is a place for music producers to quickly reference a set of tips, that will help them generate ideas.  The tips library has filters for a number of categories allowing for a quick search(filter by Daw/Genre/Vst/Theory ect..) The library itself needs to be grown, if you would like to contribute to the Tips Library sign up with Music Production Helper, navigate to the Tips Library and click the 'Add' button. You will be credited for your tip submitted!  Also if you have any ideas on how to make this page a more useful place for producers, please reach out to me at crazylegsmusic@gmail.com <3","heart")
 
 		#navBarWrapper(style="float:left;width:20%;max-width:200px;")
-			#blockForMargin(style="height:11px;width:100%")
+			//#blockForMargin(style="height:11px;width:100%")
 			#sortNavBarWrapper(style="display:inline-block;width:100%;margin-bottom:5px;")
 				#labelSort
 					+label-info("Sort by:")			
@@ -19,48 +19,49 @@ append body
 							a(ng-click="navBarFilterClick(sortFilter)"){{sortFilter}}
 				//label.label.label-default#navBarSortBtn(ng-click="sortByClicked()")
 				//	{{arrowUnicode}}
-				span.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
-				span.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
-			navBarItem.list-unstyled(ng-repeat="tip in tipArrayData | orderBy : 'tipTitle':sortReverse" ng-show="showItem(tip)")
-				#tipNavItem.btn-xs.btn-primary(ng-click="tipNavBarClicked(tip)"){{tip.tipTitle}}
+				span#sortReverseButton.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
+				span#sortReverseButton.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
+			navBarItem.list-unstyled(ng-repeat="tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse" ng-show="showItem(tip)")
+				#tipNavItem.btn-xs.btn-primary(ng-click="tipNavBarClicked(tip)" style=""){{tip.tipTitle}}
 		
 		.container(style="float:left;width:75%;max-width:800px;")
 			.tipsPageWrapper(ng-hide="addATip()")				
-				#titleName= title
+				//h2
+				//	#titleName= title
 				
 				#filterWrapper.filterBoxStyle(ng-style="filtersBoxStyle" )
 					+label-info("Filters:")
 					tipTypeFilterWrapper(style="margin-top:5px;display:inline-block;")
 					.btnWrapper
 						+label-default("Type:")
-						input.inputClass(ng-click="theoryToggle()" type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
+						input.inputToggleClass(ng-click="theoryToggle()" type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
 						+label-primary("Theory")
-						input.inputClass(ng-click="mixingToggle()" type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
+						input.inputToggleClass(ng-click="mixingToggle()" type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
 						+label-primary("Mixing")
-						input.inputClass(ng-click="masteringToggle()" type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
+						input.inputToggleClass(ng-click="masteringToggle()" type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
 						+label-primary("Mastering")
-						input.inputClass(ng-click="soundDesignToggle()" type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
+						input.inputToggleClass(ng-click="soundDesignToggle()" type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
 						+label-primary("Sound Design")
-						input.inputClass(ng-click="workflowToggle()" type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
+						input.inputToggleClass(ng-click="workflowToggle()" type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
 						+label-primary("Work Flow")
 						
 					tipGenreFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
 						.btnWrapper(style="float:left")
 							+label-default("Genre:")
 						.genreButton(ng-repeat = "genre in genreArray" style="float:left")
-							input.inputClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='filterGenreId{{genre.genreName}}' ng-click="filterGenreClicked(genre.genreName)")
+							input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='filterGenreId{{genre.genreName}}' ng-click="filterGenreClicked(genre.genreName)")
 							+label-primary("{{genre.genreName}}")
 					tipDAWFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
 						.btnWrapper(style="float:left")
 							+label-default("DAW:")
 						.dawButton(style="float:left" ng-repeat = "daw in dawArray")							
-							input.inputClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}' ng-click="filterDawClicked(daw.dawName)")
+							input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}' ng-click="filterDawClicked(daw.dawName)")
 							+label-primary("{{daw.dawName}}")
 					tipVSTFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
 						.btnWrapper(style="float:left")
 							+label-default("VST:")
 						.vstButton(style="float:left" ng-repeat = "vst in vstArray")							
-							input.inputClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='inputDawId{{vst.vstName}}' ng-click="filterVstClicked(vst.vstName)")
+							input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='inputDawId{{vst.vstName}}' ng-click="filterVstClicked(vst.vstName)")
 							+label-primary("{{vst.vstName}}")
 				#prvButton.keyButton(ng-click="prevButtonClicked()")
 					+btn-xs("Previous")
@@ -73,23 +74,42 @@ append body
 				#deleteATipButton.keyButton(ng-click="deleteATipClicked()"  ng-show="showButton('Delete')")
 					+btn-xs("Delete")
 				#tipsWrapper.contentWrapper
-					#tipTitle.titleWrapper(style="display:inline-block;width:100%")
-						h2(style="float:left") {{tipTitle}}
-						h3(style="float:right;margin-top:25px;")
-							button.btn.btn-default(style="margin-right:5px;")
-								span#likeButton.glyphicon.glyphicon-arrow-up(ng-click="likeButtonClicked()" style="color:black;")
-							button.btn.btn-default
-								span#loveButton.glyphicon.glyphicon-heart(ng-click="loveButtonClicked()" style="color:black")
-					#TipTitlePanel.panel.panel-default						
-							div.tipDescription.panel-body(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tipBodyArray")			
+					#tipTitleBlock.titleWrapper
+						#tipTitle.titleWrapper.page-header(style="display:inline-block;width:100%;padding-bottom:3px;")
+							
+									
+							h2(style="float:left;max-width:450px;margin-left: 3px;margin-top:15px;") {{tipTitle}}
+							span#currentTipId(ng-show="false")
+								{{currentTipId}}
+							#pointsDiv(style="float:right;margin-left:5px;margin-right:-13px;")
+								+label-default("{{currentTipPoints}}")
+							h3(style="float:right;margin-top:20px;margin-top:15px;")
+								button.btn.btn-default#dislikeButton(style="margin-right:5px;" ng-click="dislikeButtonClicked()")
+									span.glyphicon.glyphicon-arrow-down
+								button.btn.btn-default#likeButton(style="margin-right:5px;" ng-click="likeButtonClicked()")
+									span.glyphicon.glyphicon-arrow-up
+								button.btn.btn-default#loveButton(ng-click="loveButtonClicked()")
+									span.glyphicon.glyphicon-heart
+							
+					#TipTitlePanel.panel.panel-default
+						#panelBody.panel-body.panel-body(style="text-indent: 0px;padding-bottom:0px;")
+							div.tipDescription#tipBody(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tipBodyArray")			
 								p#descBody
 									{{tipPart.tipDescription}}
+									
 									br
 									#imgDiv(ng-if="hasImage")
 										img(ng-show="hasImage" ng-src="resources/images/{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
-									#submittedByDiv.small
-										span Submitted By: 
-											a(href="/profile"){{tipPart.submittedBy}}
+							div#TagsAndSubmittedBy(style="text-indent: 0px;padding-bottom:0px;")
+								
+								#tipTagsDiv(ng-repeat='tipTag in tipTagsArray track by $index' style='display:inline-block;')
+									span(ng-if='($index==0)' style='float:left')
+										+label-info("Filters:")
+									span(style='float:left')
+										+label-primary("{{tipTag}}")
+								#submittedByDiv.small(style="padding-top:5px")
+									span Submitted By: 
+										a(href="/profile"){{submittedBy}}		
 				//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])
 			
 			.addATipPageWrapper(ng-show="addATipToggle")
@@ -212,6 +232,20 @@ append body
 							+btn("Back")
 						.submitButtonDiv(style='float:right' ng-click="editSubmitButtonClicked()")
 							+submit-primary("Submit")
+				
+			#ButtonWrapper(style="display:inline-block;width:100%")
+				#prvButton.keyButton(ng-click="prevButtonClicked()")
+					+btn-xs("Previous")
+				#nxtButton.keyButton(ng-click="nextButtonClicked()" style="float:right")
+					+btn-xs("Next")
+				#addATipButton.keyButton(ng-click="addATipClicked()"  ng-show="showButton('Add')")
+					+btn-xs("Add")
+				#editATipButton.keyButton(ng-click="editATipClicked()"  ng-show="showButton('Edit')")
+					+btn-xs("Edit")
+				#deleteATipButton.keyButton(ng-click="deleteATipClicked()"  ng-show="showButton('Delete')")
+					+btn-xs("Delete")
+				#erasePoints.keyButton(ng-click="updateTipPoints(0)"  ng-show="showButton('ErasePoints')")
+					+btn-xs("0 Points")
 			.signUpForTipsEmailWrapper(style='margin-top:10px')
 				+accordion("Sign Up for tips email report")
 					+accordion-item-default("Tips Library Email Report","sample")
