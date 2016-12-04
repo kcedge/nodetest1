@@ -19,7 +19,18 @@ var url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amaz
 
 //For storing images in the file system
 var multer = require('multer');
-var upload = multer({dest: '../public/resources/images'})
+
+var storage =   multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, '../public/resources/images');
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now());
+  }
+});
+var upload = multer({ storage : storage}).single('file');
+
+//var upload = multer({dest: '../public/resources/images'})
 
 
 module.exports = function (router, passport) {
@@ -302,41 +313,43 @@ module.exports = function (router, passport) {
 	});
     
     });
-    router.post('/uploadImage', upload.single('file'), function (req, res) {
-
-	console.log("Server: got file ");
-	console.log(req.body);
-	console.log(req.file);
-	MongoClient.connect(url, function (err, db) {
+    router.post('/uploadImage', function (req, res) {
+	upload(req, res, function (err) {
 	    if (err) {
-		console.log('Unable to connect to the mongoDB server. Error:', err);
-	    } else {
-		//HURRAY!! We are connected. :)
-		console.log('Connection established to', url);
-
-		// do some work here with the database.
-		// Get the documents collection
-		var collection = db.collection('imageCollection');
-		collection.insert({fieldName: req.file.fieldname,
-		    originalName: req.file.originalname,
-		    encoding: req.file.encoding,
-		    mimetype: req.file.mimetype,
-		    destination: req.file.destination,
-		    fileName: req.file.filename,
-		    path: req.file.path,
-		    imageSize: req.file.size},
-		function (err, db) {
-		    if (err) {
-			console.log('Unable to add image to image collection', err);
-			res.send('Image uploaded failed');
-		    }
-		    else {
-			res.send(req.file.filename);
-		    }
-		});
-
+		return res.end("Error uploading file.");
 	    }
+	    MongoClient.connect(url, function (err, db) {
+		if (err) {
+		    console.log('Unable to connect to the mongoDB server. Error:', err);
+		} else {
+		    //HURRAY!! We are connected. :)
+		    console.log('Connection established to', url);
+
+		    // do some work here with the database.
+		    // Get the documents collection
+		    var collection = db.collection('imageCollection');
+		    collection.insert({fieldName: req.file.fieldname,
+			originalName: req.file.originalname,
+			encoding: req.file.encoding,
+			mimetype: req.file.mimetype,
+			destination: req.file.destination,
+			fileName: req.file.filename,
+			path: req.file.path,
+			imageSize: req.file.size},
+		    function (err, db) {
+			if (err) {
+			    console.log('Unable to add image to image collection', err);
+			    res.send('Image uploaded failed');
+			}
+			else {
+			    res.send(req.file.filename);
+			}
+		    });
+
+		}
+	    });
 	});
+	
 
     });
 
