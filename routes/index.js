@@ -316,6 +316,7 @@ module.exports = function (router, passport) {
     router.post('/uploadImage', function (req, res) {
 	upload(req, res, function (err) {
 	    if (err) {
+		console.log(err);
 		return res.end("Error uploading file.");
 	    }
 	    MongoClient.connect(url, function (err, db) {
