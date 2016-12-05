@@ -99,7 +99,7 @@ append body
 									
 									br
 									#imgDiv(ng-if="hasImage")
-										img(ng-show="hasImage" ng-src="resources/images/{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
+										img(ng-show="hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
 							div#TagsAndSubmittedBy(style="text-indent: 0px;padding-bottom:0px;")
 								
 								#tipTagsDiv(ng-repeat='tipTag in tipTagsArray track by $index' style='display:inline-block;')

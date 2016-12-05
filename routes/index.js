@@ -20,19 +20,39 @@ var url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amaz
 //For storing images in the file system
 var multer = require('multer');
 
-var storage =   multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, '../public/resources/images');
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + '-' + Date.now());
-  },
-  onError : function(err, next) {
-      console.log('error', err);
-      next(err);
+//LOCAL
+//var storage =   multer.diskStorage({
+//  destination: function (req, file, callback) {
+//    callback(null, '../public/resources/images');
+//  },
+//  filename: function (req, file, callback) {
+//    callback(null, file.fieldname + '-' + Date.now());
+//  },
+//  onError : function(err, next) {
+//      console.log('error', err);
+//      next(err);
+//    }
+//});
+//PRODUCTION
+var AWS = require('aws-sdk');
+var multerS3 = require('multer-s3');
+AWS.config.loadFromPath('./aws-config.json');
+// assume you already have the S3 Bucket created, and it is called ierg4210-shopxx-photos
+var photoBucket = new AWS.S3({params: {Bucket: 'tip-photos-bucket'}});
+console.log("Photo Bucket is")
+console.log(photoBucket);
+var upload = multer({ storage : multerS3({
+    s3: photoBucket,
+    bucket: 'tip-photos-bucket',
+    acl: 'public-read',
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString())
     }
-});
-var upload = multer({ storage : storage}).single('file');
+  })
+}).single('file');
 
 //var upload = multer({dest: '../public/resources/images'})
 
@@ -347,7 +367,7 @@ module.exports = function (router, passport) {
 			    res.send('Image uploaded failed');
 			}
 			else {
-			    res.send(req.file.filename);
+			    res.send(req.file.location);
 			}
 		    });
 
@@ -357,6 +377,8 @@ module.exports = function (router, passport) {
 	
 
     });
+   
+	
 
     router.delete('/tipsPageDelete', function (req, res) {
 
