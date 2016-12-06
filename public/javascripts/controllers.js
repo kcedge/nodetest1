@@ -14,7 +14,7 @@ var runningProduction = true;
 
 angular.module("myApp").controller('bodyController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
 	$scope.isLoggedIn = function () {
-	    if ($localStorage.username != "") {
+	    if ($localStorage.username != "" && $localStorage.username) {
 		return true;
 	    }
 	    else {
