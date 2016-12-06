@@ -10,7 +10,7 @@ $(".facebookLink").children().first().attr("target", "_blank");
 $(".twitterLink").children().first().attr("target", "_blank");
 
 //angular.module("myApp", ["$scope","$http", "ngCookies"]);
-var runningProduction = false;
+var runningProduction = true;
 
 angular.module("myApp").controller('bodyController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
 	$scope.isLoggedIn = function () {
