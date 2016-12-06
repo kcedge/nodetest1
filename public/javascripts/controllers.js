@@ -781,12 +781,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	//Display Functions
 	$scope.showButton = function (buttonName) {
 	    if (buttonName == "Add") {
-		if ($localStorage.username != "") {
-		    return true;
-		}
-		else {
-		    return false;
-		}
+		return $scope.isLoggedIn();
 	    }
 	    else if (buttonName == "Edit") {
 		if ($localStorage.username == "kcedge") {
