@@ -43,7 +43,7 @@ var multer = require('multer');
 //	next(err);
 //    }
 //});
-var upload = multer({storage:storage}).single('file');
+//var upload = multer({storage:storage}).single('file');
 //PRODUCTION
 var AWS = require('aws-sdk');
 var multerS3 = require('multer-s3');
