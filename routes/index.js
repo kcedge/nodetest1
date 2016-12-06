@@ -143,7 +143,7 @@ module.exports = function (router, passport) {
 
 	    }
 	});
-	res.render('tipsPage', {title: 'Tips Library', dbCursor: cursor});
+	res.render('tipsPage', {title: 'Tip Library', dbCursor: cursor});
     });
     router.get('/tipsPageGet', function (req, res) {
 

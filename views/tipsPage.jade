@@ -3,7 +3,7 @@ extends layout
 append body
 	.container.pageController(ng-controller="bodyTipHelperController" style = 'margin:0 auto;width:90%;max-width:966px;' )
 		.div(style="text:center;max-width:880px;width:94%")
-			+alert-i-warning("The tips library is in its beta version. This is a place for music producers to quickly reference a set of tips, that will help them generate ideas.  The tips library has filters for a number of categories allowing for a quick search(filter by Daw/Genre/Vst/Theory ect..) The library itself needs to be grown, if you would like to contribute to the Tips Library sign up with Music Production Helper, navigate to the Tips Library and click the 'Add' button. You will be credited for your tip submitted!  Also if you have any ideas on how to make this page a more useful place for producers, please reach out to me at crazylegsmusic@gmail.com <3","heart")
+			+alert-i-warning("The tip library is in its beta version. This is a place for music producers to quickly reference a set of tips, that will help them generate ideas.  The tip library has filters for a number of categories allowing for a quick search(filter by Daw/Genre/Vst/Theory ect..) The library itself needs to be grown, if you would like to contribute to the Tip Library sign up with Music Production Helper, navigate to the Tip Library and click the 'Add' button. You will be credited for your tip submitted!  Also if you have any ideas on how to make this page a more useful place for producers, please reach out to me at crazylegsmusic@gmail.com <3","heart")
 
 		#navBarWrapper(style="float:left;width:20%;max-width:200px;")
 			//#blockForMargin(style="height:11px;width:100%")
@@ -285,7 +285,7 @@ append body
 					+btn-xs("0 Points")
 			.signUpForTipsEmailWrapper(style='margin-top:10px' ng-hide="addATip()||editATipToggle")
 				+accordion("Sign Up for tips email report")
-					+accordion-item-default("Tips Library Email Report","sample")
+					+accordion-item-default("Tip Library Email Report","sample")
 						p.textWrapper If you would like to sign up for a monthly email report of the tips added to the library, please sign up with us below.  
 						form.well(id='form-signUp', ng-submit="signUpEmailReportSubmit()")
 							.form-group
