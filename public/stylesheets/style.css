@@ -223,6 +223,9 @@ a {
     padding-right: 10px;
         
 }
+#textAreaTip#textAreaTip{
+    resize:vertical ;
+}
 .panel-heading{
     background-color: white;
 }
@@ -242,6 +245,9 @@ a {
     border-style: solid;
     border-width: thin;
     cursor: pointer;
+}
+.btn:disabled{
+    //background-color: lightpink;
 }
 #dislikeButton.active, #dislikeButton.focus, #dislikeButton:active, #dislikeButton:focus, #dislikeButton:hover{
     color: #fff;

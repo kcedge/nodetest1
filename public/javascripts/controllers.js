@@ -10,7 +10,7 @@ $(".facebookLink").children().first().attr("target", "_blank");
 $(".twitterLink").children().first().attr("target", "_blank");
 
 //angular.module("myApp", ["$scope","$http", "ngCookies"]);
-
+var runningProduction = true;
 
 angular.module("myApp").controller('bodyController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
 	$scope.isLoggedIn = function () {
@@ -1189,6 +1189,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    $scope.removeAllButOneTipDescriptions("Add");
 	    $scope.responseData = "";
 	    $scope.addATipToggle = !$scope.addATipToggle;
+	    $scope.tipTitleAdd = "";
+	    $scope.tipDescAdd = "";
 	}
 
 	$scope.deleteATipClicked = function () {
@@ -1615,6 +1617,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 		    if ($scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1]) {
 			imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1].newFileName;
 		    }
+		    
+		    if(!runningProduction){
+			imageFileNameLocal = "resources/images/" + imageFileNameLocal;
+		    }
 		    var hasImage = (imageFileNameLocal != "");
 		    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: imageFileNameLocal, submittedBy: submittedByLocal})
 		}
@@ -1921,6 +1927,32 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	}
 	$scope.backToTipsClicked = function () {   //dd tip to database
 	    $scope.addATipToggle = false;
+	}
+	
+	$scope.isReadyForSubmit = function(){
+	    var imagesUploaded = true;
+	    var passedDescriptionTest = ($scope.tipDescAdd != "" && $scope.tipDescAdd);
+	    for(var i = 0; i <$scope.uploader.queue.length;i++){
+		if(!$scope.uploader.queue[i].isUploaded){
+		    imagesUploaded = false;
+		}
+	    }
+	    if($scope.tipTitleAdd == ""){
+		$scope.readyForSubmitMessage = "Add title before submit"
+	    }
+	    else if(!passedDescriptionTest){
+		$scope.readyForSubmitMessage = "Add description before submit"
+	    }
+	    else if(imagesUploaded == false){
+		$scope.readyForSubmitMessage = "Upload images before submit"
+	    }
+	    else{
+		$scope.readyForSubmitMessage = ""
+	    }
+	    	    
+	    return $scope.tipTitleAdd!= "" &&
+		   ($scope.tipDescAdd != "" && $scope.tipDescAdd) &&
+		   imagesUploaded;
 	}
 	//ADD a tip submit
 	$scope.submitButtonClicked = function () {

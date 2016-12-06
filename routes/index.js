@@ -10,29 +10,40 @@ var mongodb = require('mongodb');
 //We need to work with "MongoClient" interface in order to connect to a mongodb server.
 var MongoClient = mongodb.MongoClient;
 var ObjectId = require('mongodb').ObjectID;
+
+//switch for production and local
+var runningProduction = true;
+var url = "";
 // Connection URL. This is where your mongodb server is running.
+if(runningProduction){
+     url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb';
+}
+else{
+     url = 'mongodb://localhost:27017/tipsDb';
+}
+
 //var url = 'mongodb://localhost:27017/tipsDb';
 //Production DB
-var url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb'
+//var url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb'
 //Local
-//var url = 'mongodb://localhost:27017/tipsDb'
 
 //For storing images in the file system
 var multer = require('multer');
 
 //LOCAL
-//var storage =   multer.diskStorage({
-//  destination: function (req, file, callback) {
-//    callback(null, '../public/resources/images');
-//  },
-//  filename: function (req, file, callback) {
-//    callback(null, file.fieldname + '-' + Date.now());
-//  },
-//  onError : function(err, next) {
-//      console.log('error', err);
-//      next(err);
+//var storage = multer.diskStorage({
+//    destination: function (req, file, callback) {
+//	callback(null, '../public/resources/images');
+//    },
+//    filename: function (req, file, callback) {
+//	callback(null, file.fieldname + '-' + Date.now());
+//    },
+//    onError: function (err, next) {
+//	console.log('error', err);
+//	next(err);
 //    }
 //});
+var upload = multer({storage:storage}).single('file');
 //PRODUCTION
 var AWS = require('aws-sdk');
 var multerS3 = require('multer-s3');
@@ -367,7 +378,19 @@ module.exports = function (router, passport) {
 			    res.send('Image uploaded failed');
 			}
 			else {
-			    res.send(req.file.location);
+			    console.log('Added image to collection', err);
+			    console.log('Added image to collection', err);
+			    //Production
+			    if(runningProduction){
+				res.send(req.file.location);
+			    }
+			    else{
+				 //Local
+				res.send(req.file.filename);
+			    }
+			   
+			   
+			    
 			}
 		    });
 
