@@ -10,7 +10,7 @@ $(".facebookLink").children().first().attr("target", "_blank");
 $(".twitterLink").children().first().attr("target", "_blank");
 
 //angular.module("myApp", ["$scope","$http", "ngCookies"]);
-var runningProduction = true;
+var runningProduction = false;
 
 angular.module("myApp").controller('bodyController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
 	$scope.isLoggedIn = function () {
@@ -1751,109 +1751,136 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	$scope.dislikedTipsArray = [];
 
 	$scope.loveButtonClicked = function () {
-	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
-	    var lovedIndex = $scope.lovedTipsArray.indexOf(tipId);
-	    var likedIndex = $scope.likedTipsArray.indexOf(tipId);
-	    var dislikedIndex = $scope.dislikedTipsArray.indexOf(tipId);
-	    //var currentPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints; 
-	    var updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
-	    //Not found in loved array push it on
-	    if (lovedIndex == -1) {
-		$scope.lovedTipsArray.push(tipId)
+	    if (!$scope.isLoggedIn()) {
+		$scope.likedTipsArray = [];
+		$scope.lovedTipsArray = [];
+		$scope.dislikedTipsArray = [];
+		$(location).attr('href', '/signUp');
+		
 	    }
 	    else {
-		$scope.lovedTipsArray.splice(lovedIndex, 1);
-		updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints - 2;
-	    }
-	    if (likedIndex > -1) {
-		$scope.likedTipsArray.splice(likedIndex, 1);
-		$scope.tipArrayData[$scope.tipCounter].tipPoints--;
-	    }
-	    if (dislikedIndex > -1) {
-		$scope.dislikedTipsArray.splice(dislikedIndex, 1);
-		$scope.tipArrayData[$scope.tipCounter].tipPoints++;
-	    }
-
-	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty('tipPoints')) {
+		var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
+		var lovedIndex = $scope.lovedTipsArray.indexOf(tipId);
+		var likedIndex = $scope.likedTipsArray.indexOf(tipId);
+		var dislikedIndex = $scope.dislikedTipsArray.indexOf(tipId);
+		//var currentPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints; 
+		var updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
+		//Not found in loved array push it on
 		if (lovedIndex == -1) {
-		    updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints + 2;
+		    $scope.lovedTipsArray.push(tipId)
 		}
+		else {
+		    $scope.lovedTipsArray.splice(lovedIndex, 1);
+		    updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints - 2;
+		}
+		if (likedIndex > -1) {
+		    $scope.likedTipsArray.splice(likedIndex, 1);
+		    $scope.tipArrayData[$scope.tipCounter].tipPoints--;
+		}
+		if (dislikedIndex > -1) {
+		    $scope.dislikedTipsArray.splice(dislikedIndex, 1);
+		    $scope.tipArrayData[$scope.tipCounter].tipPoints++;
+		}
+
+		if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty('tipPoints')) {
+		    if (lovedIndex == -1) {
+			updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints + 2;
+		    }
+		}
+		else {
+		    updatedPoints = 2;
+		}
+		$scope.updateTipPoints(updatedPoints);
+		$scope.updateProfileLikes();
 	    }
-	    else {
-		updatedPoints = 2;
-	    }
-	    $scope.updateTipPoints(updatedPoints);
-	    $scope.updateProfileLikes();
 	}
 	$scope.likeButtonClicked = function () {
-	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
-	    var lovedIndex = $scope.lovedTipsArray.indexOf(tipId);
-	    var likedIndex = $scope.likedTipsArray.indexOf(tipId);
-	    var dislikedIndex = $scope.dislikedTipsArray.indexOf(tipId);
-
-	    var updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
-	    //Not found in loved array push it on
-	    if (likedIndex == -1) {
-		$scope.likedTipsArray.push(tipId)
+	    if(!$scope.isLoggedIn()){
+		$scope.likedTipsArray = [];
+		$scope.lovedTipsArray = [];
+		$scope.dislikedTipsArray = [];
+		$(location).attr('href', '/signUp');
+		
 	    }
 	    else {
-		$scope.likedTipsArray.splice(likedIndex, 1);
-		updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints - 1;
-	    }
-	    if (lovedIndex > -1) {
-		$scope.lovedTipsArray.splice(lovedIndex, 1);
-		$scope.tipArrayData[$scope.tipCounter].tipPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints - 2;
-	    }
-	    if (dislikedIndex > -1) {
-		$scope.dislikedTipsArray.splice(dislikedIndex, 1);
-		$scope.tipArrayData[$scope.tipCounter].tipPoints++;
-	    }
+		var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
+		var lovedIndex = $scope.lovedTipsArray.indexOf(tipId);
+		var likedIndex = $scope.likedTipsArray.indexOf(tipId);
+		var dislikedIndex = $scope.dislikedTipsArray.indexOf(tipId);
 
-	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty('tipPoints')) {
+		var updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
+		//Not found in loved array push it on
 		if (likedIndex == -1) {
-		    updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints + 1;
+		    $scope.likedTipsArray.push(tipId)
 		}
-	    }
-	    else {
-		updatedPoints = 1;
-	    }
-	    $scope.updateTipPoints(updatedPoints);
-	    $scope.updateProfileLikes();
-	}
-	$scope.dislikeButtonClicked = function () {
-	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
-	    var lovedIndex = $scope.lovedTipsArray.indexOf(tipId);
-	    var likedIndex = $scope.likedTipsArray.indexOf(tipId);
-	    var dislikedIndex = $scope.dislikedTipsArray.indexOf(tipId);
-	    var currentPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
-	    var updatedPoints;
-	    //Not found in loved array push it on
-	    if (dislikedIndex == -1) {
-		$scope.dislikedTipsArray.push(tipId)
-	    }
-	    else {
-		$scope.dislikedTipsArray.splice(dislikedIndex, 1);
-		updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints + 1;
-	    }
-	    if (lovedIndex > -1) {
-		$scope.lovedTipsArray.splice(lovedIndex, 1);
-		$scope.tipArrayData[$scope.tipCounter].tipPoints = currentPoints - 2;
-	    }
-	    if (likedIndex > -1) {
-		$scope.likedTipsArray.splice(likedIndex, 1);
-		$scope.tipArrayData[$scope.tipCounter].tipPoints--;
-	    }
-
-	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty('tipPoints')) {
-		if (dislikedIndex == -1) {
+		else {
+		    $scope.likedTipsArray.splice(likedIndex, 1);
 		    updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints - 1;
 		}
+		if (lovedIndex > -1) {
+		    $scope.lovedTipsArray.splice(lovedIndex, 1);
+		    $scope.tipArrayData[$scope.tipCounter].tipPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints - 2;
+		}
+		if (dislikedIndex > -1) {
+		    $scope.dislikedTipsArray.splice(dislikedIndex, 1);
+		    $scope.tipArrayData[$scope.tipCounter].tipPoints++;
+		}
+
+		if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty('tipPoints')) {
+		    if (likedIndex == -1) {
+			updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints + 1;
+		    }
+		}
+		else {
+		    updatedPoints = 1;
+		}
+		$scope.updateTipPoints(updatedPoints);
+		$scope.updateProfileLikes();
 	    }
-	    else {
-		updatedPoints = 1;
+	}
+	$scope.dislikeButtonClicked = function () {
+	    if(!$scope.isLoggedIn()){
+		$scope.likedTipsArray = [];
+		$scope.lovedTipsArray = [];
+		$scope.dislikedTipsArray = [];
+		$(location).attr('href', '/signUp');
+		
 	    }
-	    $scope.updateTipPoints(updatedPoints);
-	    $scope.updateProfileLikes();
+	    else{
+		var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
+		var lovedIndex = $scope.lovedTipsArray.indexOf(tipId);
+		var likedIndex = $scope.likedTipsArray.indexOf(tipId);
+		var dislikedIndex = $scope.dislikedTipsArray.indexOf(tipId);
+		var currentPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
+		var updatedPoints;
+		//Not found in loved array push it on
+		if (dislikedIndex == -1) {
+		    $scope.dislikedTipsArray.push(tipId)
+		}
+		else {
+		    $scope.dislikedTipsArray.splice(dislikedIndex, 1);
+		    updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints + 1;
+		}
+		if (lovedIndex > -1) {
+		    $scope.lovedTipsArray.splice(lovedIndex, 1);
+		    $scope.tipArrayData[$scope.tipCounter].tipPoints = currentPoints - 2;
+		}
+		if (likedIndex > -1) {
+		    $scope.likedTipsArray.splice(likedIndex, 1);
+		    $scope.tipArrayData[$scope.tipCounter].tipPoints--;
+		}
+
+		if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty('tipPoints')) {
+		    if (dislikedIndex == -1) {
+			updatedPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints - 1;
+		    }
+		}
+		else {
+		    updatedPoints = 1;
+		}
+		$scope.updateTipPoints(updatedPoints);
+		$scope.updateProfileLikes();
+	    }
 	}
 
 	$scope.updateTipPoints = function (updatedPoints) {
