@@ -6,8 +6,12 @@ append body
 		#profilePage(ng-show="isLoggedIn()")
 			.titleBannerDiv()
 				h2 Welcome {{username}}
-				+alert-i-warning("The profile page is still in development.  This page will display your 'loved' tips, your social network links, and your contributed tips and samples.","heart")
-
+				+alert-i-warning("The profile page is still in development.  This page will display your saved and contributed tips and samples, your comments, your social network links, stats, and much more!","heart")
+				a(href='/tipsPage')
+					span Go to Tip Library 
+				br
+				a(href='/')
+					span Go to Chromatic Wheel
 				#profileDetails(ng-show="false")
 					#userName= username
 		
