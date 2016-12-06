@@ -126,7 +126,7 @@ module.exports = function (router, passport) {
     });
     
     /* GET Hello World page. */
-    router.get('/tipsPage', function (req, res) {
+    router.get('/tipLib', function (req, res) {
 	// Use connect method to connect to the Server
 	var cursor;
 	MongoClient.connect(url, function (err, db) {
@@ -143,7 +143,7 @@ module.exports = function (router, passport) {
 
 	    }
 	});
-	res.render('tipsPage', {title: 'Tip Library', dbCursor: cursor});
+	res.render('tipLib', {title: 'Tip Library', dbCursor: cursor});
     });
     router.get('/tipsPageGet', function (req, res) {
 
