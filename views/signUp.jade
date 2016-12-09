@@ -3,14 +3,22 @@
 </script>
 extends layout
 append body
-	.container(ng-controller="signUpController")
-		#signInWrapper
+	.container.pageController(ng-controller="signUpController" style="margin:0 auto;width:90%;max-width:966px;")
+		+alert-i-warning("Signing up with Music Production Helper allows you to view your profile page.  With a profile on mphelper.io you can: Contribute to the Tip Library, comment on tips, view your loved tips, link your soundcloud account and download samples from the Samples Library")
+
+		#signInWrapper.formInputWrapper
+
 			.titleBannerDiv()
-				#titleName= title
+				h3
+					#titleName= title
 			form#signInDetails(action="/signUp" method = "post")
+
+				+label-info("Username:")
+				br
+				input#usernameInput.form-control(name="username" ng-model="signUpUsername")
 				+label-info("Email:")
 				br
-				input#signUpInput.form-control(name="email" ng-model="signUpEmail")
+				input#emailInput.form-control(name="email" ng-model="signUpEmail")
 				+label-info("Password:")
 				br
 				input#passWordInput.form-control(type="password" name="password" ng-model="signUpPassword")

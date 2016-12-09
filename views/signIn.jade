@@ -3,15 +3,16 @@
 </script>
 extends layout
 append body
-	.container(ng-controller="signInController")
-		#signInWrapper
+	.container.pageController(ng-controller="signInController" style="margin:0 auto;width:90%;max-width:966px;")
+		#signInWrapper.formInputWrapper
 			.titleBannerDiv()
-				#titleName= title				
-				div.alert#note #{messages}
+				h3
+					#titleName= title				
+				//div.alert#note #{messages}
 			form#signInDetails(action="/signIn" method = "post")
-				+label-info("Email:")
+				+label-info("Username:")
 				br
-				input#signInInput.form-control(name="email")
+				input#signInInput.form-control(name="username")
 				+label-info("Password:")
 				br
 				input#passWordInput.form-control(type="password" name="password")

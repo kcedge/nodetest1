@@ -1,0 +1,306 @@
+extends layout
+
+append body
+	.container.pageController(ng-controller="bodyTipHelperController" style = 'margin:0 auto;width:90%;max-width:966px;' )
+		.div(style="text:center;max-width:880px;width:94%")
+			+alert-i-warning("The tip library is in its beta version. This is a place for music producers to quickly reference a set of tips, that will help them generate ideas.  The tip library has filters for a number of categories allowing for a quick search(filter by Daw/Genre/Vst/Theory ect..) The library itself needs to be grown, if you would like to contribute to the Tip Library sign up with Music Production Helper, navigate to the Tip Library and click the 'Add' button.  Also, if you have any ideas on how to make this page a more useful place for producers, please reach out to me, my info is on the contact page under connect. <3","heart")
+
+		#navBarWrapper(style="float:left;width:20%;max-width:200px;")
+			//#blockForMargin(style="height:11px;width:100%")
+			#sortNavBarWrapper(style="display:inline-block;width:100%;margin-bottom:5px;")
+				#labelSort
+					+label-info("Sort by:")			
+				#dropdownWrapper.dropdown(style="float:left")
+					span.label.label-default.dropdown-toggle#navBarSortDropdown(data-toggle='dropdown')
+						{{getSortType()}}
+						span.glyphicon.glyphicon-menu-down
+					ul.dropdown-menu(aria-labelledby="navBarSortDropdown")
+						li(ng-repeat='sortFilter in sortFiltersArray')
+							a(ng-click="navBarFilterClick(sortFilter)"){{sortFilter}}
+				//label.label.label-default#navBarSortBtn(ng-click="sortByClicked()")
+				//	{{arrowUnicode}}
+				span#sortReverseButton.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
+				span#sortReverseButton.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
+			navBarItem.list-unstyled(ng-repeat="tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse" ng-show="showItem(tip)")
+				#tipNavItem.btn-xs.btn-primary(ng-click="tipNavBarClicked(tip)" style=""){{tip.tipTitle}}
+		
+		.container(style="float:left;width:75%;max-width:800px;")
+			.tipsPageWrapper(ng-hide="addATip()")				
+				//h2
+				//	#titleName= title
+				
+				#filterWrapper.filterBoxStyle(ng-style="filtersBoxStyle" )
+					+label-info("Filters:")
+					tipTypeFilterWrapper(style="margin-top:5px;display:inline-block;")
+					.btnWrapper
+						+label-default("Type:")
+						input.inputToggleClass(ng-click="theoryToggle()" type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
+						+label-primary("Theory")
+						input.inputToggleClass(ng-click="mixingToggle()" type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
+						+label-primary("Mixing")
+						input.inputToggleClass(ng-click="masteringToggle()" type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
+						+label-primary("Mastering")
+						input.inputToggleClass(ng-click="soundDesignToggle()" type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
+						+label-primary("Sound Design")
+						input.inputToggleClass(ng-click="workflowToggle()" type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
+						+label-primary("Work Flow")
+						
+					tipGenreFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+						.btnWrapper(style="float:left")
+							+label-default("Genre:")
+						.genreButton(ng-repeat = "genre in genreArray" style="float:left")
+							input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='filterGenreId{{genre.genreName}}' ng-click="filterGenreClicked(genre.genreName)")
+							+label-primary("{{genre.genreName}}")
+					tipDAWFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+						.btnWrapper(style="float:left")
+							+label-default("DAW:")
+						.dawButton(style="float:left" ng-repeat = "daw in dawArray")							
+							input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}' ng-click="filterDawClicked(daw.dawName)")
+							+label-primary("{{daw.dawName}}")
+					tipVSTFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+						.btnWrapper(style="float:left")
+							+label-default("VST:")
+						.vstButton(style="float:left" ng-repeat = "vst in vstArray")							
+							input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='inputDawId{{vst.vstName}}' ng-click="filterVstClicked(vst.vstName)")
+							+label-primary("{{vst.vstName}}")
+				#prvButton.keyButton(ng-click="prevButtonClicked()")
+					+btn-xs("Previous")
+				#nxtButton.keyButton(ng-click="nextButtonClicked()" style="float:right")
+					+btn-xs("Next")
+				#addATipButton.keyButton(ng-click="addATipClicked()"  ng-show="showButton('Add')")
+					+btn-xs("Add")
+				#editATipButton.keyButton(ng-click="editATipClicked()"  ng-show="showButton('Edit')")
+					+btn-xs("Edit")
+				#deleteATipButton.keyButton(ng-click="deleteATipClicked()"  ng-show="showButton('Delete')")
+					+btn-xs("Delete")
+				#tipsWrapper.contentWrapper
+					#tipTitleBlock.titleWrapper
+						#tipTitle.titleWrapper.page-header(style="display:inline-block;width:100%;padding-bottom:3px;")
+							
+									
+							h2(style="float:left;max-width:450px;margin-left: 3px;margin-top:15px;") {{tipTitle}}
+							span#currentTipId(ng-show="false")
+								{{currentTipId}}
+							#pointsDiv(style="float:right;margin-left:5px;margin-right:-13px;")
+								+label-default("{{currentTipPoints}}")
+							h3(style="float:right;margin-top:20px;margin-top:15px;")
+								button.btn.btn-default#dislikeButton(style="margin-right:5px;" ng-click="dislikeButtonClicked()")
+									span.glyphicon.glyphicon-arrow-down
+								button.btn.btn-default#likeButton(style="margin-right:5px;" ng-click="likeButtonClicked()")
+									span.glyphicon.glyphicon-arrow-up
+								button.btn.btn-default#loveButton(ng-click="loveButtonClicked()")
+									span.glyphicon.glyphicon-heart
+							
+					#TipTitlePanel.panel.panel-default
+						#panelBody.panel-body.panel-body(style="text-indent: 0px;padding-bottom:0px;")
+							div.tipDescription#tipBody(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tipBodyArray")			
+								p#descBody
+									{{tipPart.tipDescription}}
+									
+									br
+									#imgDiv(ng-if="hasImage")
+										img(ng-show="hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
+							div#TagsAndSubmittedBy(style="text-indent: 0px;padding-bottom:0px;")
+								
+								#tipTagsDiv(ng-repeat='tipTag in tipTagsArray track by $index' style='display:inline-block;')
+									span(ng-if='($index==0)' style='float:left')
+										+label-info("Filters:")
+									span(style='float:left')
+										+label-primary("{{tipTag}}")
+								#submittedByDiv.small(style="padding-top:5px")
+									span Submitted By: 
+										a(href="/profile"){{submittedBy}}		
+				//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])
+			
+			.addATipPageWrapper(ng-show="addATipToggle")
+				#tipsFormWrapper.contentWrapper
+					#TipTitleDescription
+						input.form-control(type="text" id ="tipTitleInput" placeholder="*Title" style="margin-bottom:10px;" ng-model="tipTitleAdd")
+						#descriptionWrapper(style="font-size:large")
+							//span Description 1
+							textarea#textAreaTip.form-control.tipDescInput(placeholder="*Tip Description" required ng-model="tipDescAdd")
+						#descriptionButtonWrapper(style="display:inline-block; margin-bottom:5px;")
+							
+							button.btn(ng-click="subtractDescription()" style="float:left")
+								span.glyphicon.glyphicon-minus
+							button.btn(ng-click="addDescription()" style="float:left")
+								span.glyphicon.glyphicon-plus
+							#noteWrapper(style="float:left;margin-left:5%;width:80%;")
+								span(style="font-style:italic;") Note: For now, images are displayed in the order they are uploaded.  If you want an image between paragraphs, add a description.  The first image uploaded is displayed after the first description, the second image after the second description.. and so on.
+					.imageUploaderInputWrapper(style="margin-top:5px;")
+						.headerImageInput(style="font-size:small;color:#777777")
+							span Image Uploader						
+						.inputWrapper						
+							input.inputClass(type="file",nv-file-select uploader="uploader")
+							ul
+								li(ng-repeat="item in uploader.queue")
+									{{item.file.name}}
+									//button.btn.btn-success.btn-xs(ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess")
+									//	span.glyphicon.glyphicon-upload
+									//button.btn.btn-warning.btn-xs(ng-click="item.cancel()" ng-disabled="item.isUploading")
+									//	span.glyphicon.glyphicon-ban-circle
+									button.btn.btn-default.btn-xs(ng-click="item.remove()" style=";color:black;margin-left:5px;")
+										span.glyphicon.glyphicon-remove
+						.progress
+							.progress-bar(role="progressbar" ng-style="{width:uploader.progress + '%'}" style="width:0%;")
+						#imgUploadButtonsDiv(ng-show="uploader.queue.length > 0" style='margin-bottom:5px;')
+							button.btn.btn-danger.btn-xs(ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length" )
+											span.glyphicon.glyphicon-trash 
+											&nbsp Remove all
+							button.btn.btn-warning.btn-xs(ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading" style='margin-left:5px;')
+											span.glyphicon.glyphicon-ban-circle 
+											&nbsp Cancel
+							button.btn.btn-success.btn-xs(ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length" style='margin-left:5px;')
+											span.glyphicon.glyphicon-upload
+											&nbsp Upload 
+							
+					.headerFilterInput(style="font-size:small;color:#777777")
+							span Add Filter Tags
+					.filterBoxStyle(style='display:inline-block;width:100%;')
+						
+							
+						.genereInputWrapper(style="float:left;width:26%;margin-left:2%;margin-bottom:5px;")
+							h7 Genres
+							.btnWrapper(style="" ng-repeat = "genre in genreArray")
+								//+toggle-primary("{{genre.genreName}}")
+								input.inputClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='inputGenreId{{genre.genreName}}')
+								+label-primary("{{genre.genreName}}")
+
+						.theoryInputWrapper(style="float:left;width:25%;")
+							h7 Tip Type
+							.btnWrapper
+								input.inputClass(type="checkbox",data-toggle="toggle" name='theoryYes' id='theoryYes')
+								+label-primary("Theory")
+							.btnWrapper
+								input.inputClass(type="checkbox",data-toggle="toggle" name='mixingYes' id='mixingYes')
+								+label-primary("Mixing")
+							.btnWrapper
+								input.inputClass(type="checkbox",data-toggle="toggle" name='masteringYes' id='masteringYes')
+								+label-primary("Mastering")
+							.btnWrapper
+								input.inputClass(type="checkbox",data-toggle="toggle" name='workFlowYes' id='workFlowYes')
+								+label-primary("Work Flow")
+							.btnWrapper
+								input.inputClass(type="checkbox",data-toggle="toggle" name='soundDesignYes' id='soundDesignYes')
+								+label-primary("Sound Design")
+						.vstInputWrapper(style="float:left;width:22%;")
+							h7 VST
+							.btnWrapper(ng-repeat = "vst in vstArray")							
+								input.inputClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='inputVstId{{vst.vstName}}')
+								+label-primary("{{vst.vstName}}")
+						.dawInputWrapper(style="float:left;width:25%;")
+							h7 DAW
+							.btnWrapper( ng-repeat = "daw in dawArray")							
+								input.inputClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}')
+								+label-primary("{{daw.dawName}}")
+					
+
+						.viedoLinkInputWrapper(style="margin-top:5px;" ng-show='false')
+							h7 Link Video							
+								+input("text","videoLink","https://www.youtube.com/","")
+						br
+					.backAndSubmitWrapper(style='margin-top:5px;')
+						.backToTipsButtonDiv(style='float:left' ng-click="backToTipsClicked()")
+							+btn("Back")
+						.submitButtonDiv(style='float:right;')
+							input.btn.btn-success(value="Submit" type="submit" ng-click="submitButtonClicked()" ng-disabled="!isReadyForSubmit()")
+						#readyForSubmitMessage(style='float:right;margin-right:15px;margin-top:6px;color:#383838')
+								span {{readyForSubmitMessage}}
+						
+							
+			.editATipPageWrapper(ng-show="editATipToggle")
+				#tipsFormWrapper.contentWrapper
+					+input("text","tipTitleEditInput","Title","TipTitle")
+					#editDescriptionWrapper
+						h6 Description 1
+						textarea#textAreaEditTip.form-control.tipDescInput(placeholder="Tip Description" required)
+					#editDescriptionButtonWrapper(style="display:inline-block")
+						button.btn(ng-click="editAddDescription()" style="float:left")
+							span.glyphicon.glyphicon-plus
+						button.btn(ng-click="editSubtractDescription()" style="float:left")
+							span.glyphicon.glyphicon-minus
+						
+					.genereInputWrapper(style="")
+						h7 Genres
+						.btnWrapper(style="" ng-repeat = "genre in genreArray")
+							//+toggle-primary("{{genre.genreName}}")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='editInputGenreId{{genre.genreName}}')
+							+label-primary("{{genre.genreName}}")
+							
+					.theoryInputWrapper(style="margin-top:5px;display:inline-block;")
+						h7 Tip Type
+						.btnWrapper							
+							input.inputClass(type="checkbox",data-toggle="toggle" name='theoryYes' id='editTheoryYes')
+							+label-primary("Theory")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='mixingYes' id='editMixingYes')
+							+label-primary("Mixing")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='masteringYes' id='editMasteringYes')
+							+label-primary("Mastering")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='workFlowYes' id='editWorkFlowYes')
+							+label-primary("Work Flow")
+							input.inputClass(type="checkbox",data-toggle="toggle" name='soundDesignYes' id='editSoundDesignYes')
+							+label-primary("Sound Design")
+					.vstInputWrapper(style="margin-top:5px;")
+						h7 VST
+						.btnWrapper(style="" ng-repeat = "vst in vstArray")							
+							input.inputClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='editInputVstId{{vst.vstName}}')
+							+label-primary("{{vst.vstName}}")
+					.dawInputWrapper(style="margin-top:5px;")
+						h7 DAW
+						.btnWrapper(style="" ng-repeat = "daw in dawArray")							
+							input.inputClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='editInputDawId{{daw.dawName}}')
+							+label-primary("{{daw.dawName}}")
+					.imageUploaderInputWrapper(style="margin-top:5px;")
+						h7 Image Uploader						
+						.inputWrapper						
+							input.inputClass(type="file",nv-file-select uploader="uploader")
+							ul
+								li(ng-repeat="item in uploader.queue")
+									{{item.file.name}}
+									button.btn.btn-success.btn-xs(ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess")
+										span.glyphicon.glyphicon-upload										
+											
+					.viedoLinkInputWrapper(style="margin-top:5px;")
+						h7 Link Video							
+							+input("text","editVideoLink","https://www.youtube.com/","")
+										
+					.backAndSubmitWrapper()
+						.backToTipsButtonDiv(style='float:left' ng-click="backToTipsClicked()")
+							+btn("Back")
+						.submitButtonDiv(style='float:right' ng-click="editSubmitButtonClicked()")
+							+submit-primary("Submit")
+				
+			#ButtonWrapper(style="display:inline-block;width:100%" ng-hide="addATip()")
+				#prvButton.keyButton(ng-click="prevButtonClicked()")
+					+btn-xs("Previous")
+				#nxtButton.keyButton(ng-click="nextButtonClicked()" style="float:right")
+					+btn-xs("Next")
+				#addATipButton.keyButton(ng-click="addATipClicked()"  ng-show="showButton('Add')")
+					+btn-xs("Add")
+				#editATipButton.keyButton(ng-click="editATipClicked()"  ng-show="showButton('Edit')")
+					+btn-xs("Edit")
+				#deleteATipButton.keyButton(ng-click="deleteATipClicked()"  ng-show="showButton('Delete')")
+					+btn-xs("Delete")
+				#erasePoints.keyButton(ng-click="updateTipPoints(0)"  ng-show="showButton('ErasePoints')")
+					+btn-xs("0 Points")
+			.signUpForTipsEmailWrapper(style='margin-top:10px' ng-hide="true")
+				+accordion("Sign Up for tips email report")
+					+accordion-item-default("Tip Library Email Report","sample")
+						p.textWrapper If you would like to sign up for a monthly email report of the tips added to the library, please sign up with us below.  
+						form.well(id='form-signUp', ng-submit="signUpEmailReportSubmit()")
+							.form-group
+								label Email
+								input.form-control(type='text',id='userEmailId',name='userEmail',ng-model="emailListSignUpUserEmail")
+							.form-group
+								label Password
+								input.form-control(type='password',id='passwordId',name='userPass',ng-model="emailListSignUpUserPassword")
+							.form-group
+								label Password Verify
+								input.form-control(type='password',id='passwordVerifyId',name='userPassVerify',ng-model="emailListSignUpUserPasswordVerify")
+							button(type='button').btn.btn-default.button-rememember-me
+								span.glyphicon.glyphicon-unchecked.button-rememember-me-glyph
+								|  Remember Me
+							button(type='submit' ng-disabled="signUpDisabled()").btn.btn-primary.button-sign-in
+								span.glyphicon.glyphicon-ok
+								|  Sign Up
+			.errorDiv(ng-bind="responseData")
