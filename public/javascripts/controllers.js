@@ -21,6 +21,8 @@ angular.module("myApp").controller('bodyController', ['$scope', '$http', '$local
 		return false;
 	    }
 	}
+	console.log("MYAPP");
+	console.log(angular.module("myApp"));
 
 	$scope.signOutClicked = function () {
 	    $localStorage.username = "";
@@ -694,7 +696,7 @@ angular.module("myApp").controller('bodyMelodyHelperController', ['$scope', '$ht
 //		
 //		}
 //		
-//		CanvasJS.addColorSet("colorSet",
+//		CanvasJS.addColorSet("colorSet", 
 //			colorSetArray);
 //	    }
 	    $scope.chart.render();
@@ -1420,14 +1422,17 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    }
 	    var dawObjectJson = JSON.stringify(dawObject);
 
-
-	    var imageDataObject = [{}]
-	    for (var i = 0; i < $scope.uploader.queue.length; i++) {
-		imageDataObject[i] = {imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
-		    dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]};
+	    var updatingImages = false;
+	    if ($scope.uploader.queue.length > 0) {
+		var imageDataObject = [{}]
+		for (var i = 0; i < $scope.uploader.queue.length; i++) {
+		    imageDataObject[i] = {imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
+			dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]};
+		}
+		var imageDataObjectJson = JSON.stringify(imageDataObject);
+		updatingImages == true;
 	    }
-
-	    var imageDataObjectJson = JSON.stringify(imageDataObject);
+	   
 
 	    var videoLink = $("#editVideoLink")[0].value;
 	    var videoLinkObject = {videoLink: videoLink};
@@ -1440,29 +1445,50 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    else {
 		tipPoints = 1;
 	    }
+	    var req = "";
+	    if (updatingImages) {
+		req = {
+		    method: 'PUT',
+		    url: '/tipsPagePut',
+		    headers: {
+			'Content-Type': "application/json"
+		    },
+		    data: {tipId: tipId,
+			tipTitle: tipTitle,
+			tipDescJson: tipDescObjectJson,
+			genreJson: genreObjectJson,
+			tipTypeJson: tipTypeObjectJson,
+			vstJson: vstObjectJson,
+			dawJson: dawObjectJson,
+			imageDataJson: imageDataObjectJson,
+			videoLinkJson: videoLinkJson,
+			submittedBy: $localStorage.username,
+			points: tipPoints
+		    }
 
-
-	    var req = {
-		method: 'PUT',
-		url: '/tipsPagePut',
-		headers: {
-		    'Content-Type': "application/json"
-		},
-		data: {tipId: tipId,
-		    tipTitle: tipTitle,
-		    tipDescJson: tipDescObjectJson,
-		    genreJson: genreObjectJson,
-		    tipTypeJson: tipTypeObjectJson,
-		    vstJson: vstObjectJson,
-		    dawJson: dawObjectJson,
-		    imageDataJson: imageDataObjectJson,
-		    videoLinkJson: videoLinkJson,
-		    submittedBy: $localStorage.username,
-		    points: tipPoints
 		}
-
 	    }
+	    else{
+		req = {
+		    method: 'PUT',
+		    url: '/tipsPagePut',
+		    headers: {
+			'Content-Type': "application/json"
+		    },
+		    data: {tipId: tipId,
+			tipTitle: tipTitle,
+			tipDescJson: tipDescObjectJson,
+			genreJson: genreObjectJson,
+			tipTypeJson: tipTypeObjectJson,
+			vstJson: vstObjectJson,
+			dawJson: dawObjectJson,
+			imageDataJson: imageDataObjectJson,
+			submittedBy: $localStorage.username,
+			points: tipPoints
+		    }
 
+		}
+	    }
 
 	    $http(req).then(function success(response) {
 		$scope.submitMessage = "Success"

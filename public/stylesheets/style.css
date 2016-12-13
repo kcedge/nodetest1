@@ -257,3 +257,6 @@ a {
     border-width: thin;
     cursor: pointer;
 } 
+#descBody{
+    white-space: pre-wrap;
+}

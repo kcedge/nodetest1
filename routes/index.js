@@ -11,16 +11,19 @@ var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 
-//switch for production and local
-var runningProduction = true;
-var url = "";
+//DB CONFIG
+var path = require('path');
+var dbConfig = require(appRoot + '/config/configDb');
+var runningProduction = dbConfig.dbSettings().runningProd;
+var url = dbConfig.dbSettings().url;
+
 // Connection URL. This is where your mongodb server is running.
-if(runningProduction){
-     url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb';
-}
-else{
-     url = 'mongodb://localhost:27017/tipsDb';
-}
+//if(runningProduction){
+//     url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb';
+//}
+//else{
+//     url = 'mongodb://localhost:27017/tipsDb';
+//}
 
 //var url = 'mongodb://localhost:27017/tipsDb';
 //Production DB
@@ -52,21 +55,24 @@ AWS.config.loadFromPath('./aws-config.json');
 var photoBucket = new AWS.S3({params: {Bucket: 'tip-photos-bucket'}});
 console.log("Photo Bucket is")
 console.log(photoBucket);
-var upload = multer({ storage : multerS3({
-    s3: photoBucket,
-    bucket: 'tip-photos-bucket',
-    acl: 'public-read',
-    metadata: function (req, file, cb) {
-      cb(null, {fieldName: file.fieldname});
-    },
-    key: function (req, file, cb) {
-      cb(null, Date.now().toString())
-    }
-  })
-}).single('file');
-
-//var upload = multer({dest: '../public/resources/images'})
-
+var upload = "";
+if(runningProduction){
+     upload = multer({ storage : multerS3({
+	s3: photoBucket,
+	bucket: 'tip-photos-bucket',
+	acl: 'public-read',
+	metadata: function (req, file, cb) {
+	  cb(null, {fieldName: file.fieldname});
+	},
+	key: function (req, file, cb) {
+	  cb(null, Date.now().toString())
+	}
+      })
+    }).single('file');
+}
+else{
+    upload = multer({dest: appRoot + '/public/resources/images'}).single('file');
+}
 
 module.exports = function (router, passport) {
 
@@ -318,7 +324,14 @@ module.exports = function (router, passport) {
 	var tipTypeJson = req.body['tipTypeJson'];
 	var vstJson = req.body['vstJson'];
 	var dawJson = req.body['dawJson'];
-	var imageDataJson = req.body['imageDataJson'];
+	
+	var updatingImages = false;
+	var imageDataJson = "";
+	if(req.body['imageDataJson']){
+	    imageDataJson = req.body['imageDataJson'];
+	    updatingImages = true;
+	}
+	
 	var videoLinkJson = req.body['videoLinkJson'];
 	var submittedBy = req.body['submittedBy'];
 	var tipPoints = req.body['points'];
@@ -334,16 +347,28 @@ module.exports = function (router, passport) {
 		// Get the documents collection
 		var collection = db.collection('tipsCollection');
 		console.log(tipId);
-		collection.update({_id:ObjectId(tipId)},{tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson,submittedBy:submittedBy,tipPoints:tipPoints}, function (err, db) {
-		    if (err) {
-			console.log('Unable to edit tip to tipsCollection', err);
-			res.send('Tip edit failed');
-		    }
-		    else {
-			res.send('Tip edit successfuly submitted');
-		    }
-		});
-
+		if (updatingImages) {
+		    collection.update({_id: ObjectId(tipId)}, {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson, submittedBy: submittedBy, tipPoints: tipPoints}, function (err, db) {
+			if (err) {
+			    console.log('Unable to edit tip to tipsCollection', err);
+			    res.send('Tip edit failed');
+			}
+			else {
+			    res.send('Tip edit successfuly submitted');
+			}
+		    });
+		}
+		else{
+		        collection.update({_id: ObjectId(tipId)}, {$set: {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, videoLinkJson: videoLinkJson, submittedBy: submittedBy, tipPoints: tipPoints}}, function (err, db) {
+			if (err) {
+			    console.log('Unable to edit tip to tipsCollection', err);
+			    res.send('Tip edit failed');
+			}
+			else {
+			    res.send('Tip edit successfuly submitted');
+			}
+		    });
+		}
 	    }
 	});
     

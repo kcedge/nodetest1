@@ -14,21 +14,24 @@ var mongoose = require('mongoose');
 // New Code
 var mongo = require('mongodb');
 var monk = require('monk');
-//var db = monk('localhost:27017/nodetest1');
-//Production
-var url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb'
-//Local
-//var url = 'mongodb://localhost:27017/tipsDb';
+
+var dbConfig = require('./config/configDb');
+console.log("db Config");
+console.log(dbConfig.dbSettings());
+var runningProduction = dbConfig.dbSettings().runningProd;
+var url = dbConfig.dbSettings().url;
+
+//Set global root path
+global.appRoot = path.resolve(__dirname);
 
 var db = monk(url);
 mongoose.connect(url); 
 
-
-//var db = monk('mongodb://localhost:27017/tipsDb');
-//mongoose.connect('mongodb://localhost:27017/tipsDb'); 
-
-
 var app = express();
+
+app.set('runningProd',runningProduction);
+app.set('dbUrl',url);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
