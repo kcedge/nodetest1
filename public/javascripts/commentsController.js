@@ -14,6 +14,7 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 	    console.log('Posting a comment');
 	    var username = $localStorage.username;
 	    var comment = $scope.postCommentAdd;
+	    $scope.postCommentAdd = "";
 	    var tipId = $("#currentTipId").html();
 	    console.log(username);
 	    console.log(comment);
