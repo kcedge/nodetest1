@@ -170,13 +170,13 @@ a {
 .inputToggleClass{
       cursor:pointer;
 }
-#sortReverseButton:hover{
+.hoverButton:hover{
      cursor:pointer;
 }
 .panel-body{
     background-color:  white;
     border-radius: 5px;
-    border-color: #bda8c3;
+
 }
 
 .alert-info,.alert-warning {
@@ -223,7 +223,7 @@ a {
     padding-right: 10px;
         
 }
-#textAreaTip#textAreaTip{
+.textAreaTip#textAreaTip{
     resize:vertical ;
 }
 .panel-heading{

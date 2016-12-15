@@ -54,7 +54,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var images = require('./routes/images');
+var comments = require('./routes/comments');
+
 require('./routes/index')(app,passport);
+require('./routes/comments')(app,passport);
 require('./config/passport')(passport); // pass passport for configuration
 //
 // required for passport
@@ -67,6 +70,7 @@ app.use(function(req,res,next){
 app.use('/', routes);
 app.use('/users.js', users);
 app.use('/images.js', images);
+app.use('/comments.js', comments);
 //require('./routes/index.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 // catch 404 and forward to error handler

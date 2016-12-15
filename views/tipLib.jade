@@ -19,8 +19,8 @@ append body
 							a(ng-click="navBarFilterClick(sortFilter)"){{sortFilter}}
 				//label.label.label-default#navBarSortBtn(ng-click="sortByClicked()")
 				//	{{arrowUnicode}}
-				span#sortReverseButton.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
-				span#sortReverseButton.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
+				span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
+				span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
 			navBarItem.list-unstyled(ng-repeat="tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse" ng-show="showItem(tip)")
 				#tipNavItem.btn-xs.btn-primary(ng-click="tipNavBarClicked(tip)" style=""){{tip.tipTitle}}
 		
@@ -270,19 +270,7 @@ append body
 						.submitButtonDiv(style='float:right' ng-click="editSubmitButtonClicked()")
 							+submit-primary("Submit")
 				
-			#ButtonWrapper(style="display:inline-block;width:100%" ng-hide="addATip()")
-				#prvButton.keyButton(ng-click="prevButtonClicked()")
-					+btn-xs("Previous")
-				#nxtButton.keyButton(ng-click="nextButtonClicked()" style="float:right")
-					+btn-xs("Next")
-				#addATipButton.keyButton(ng-click="addATipClicked()"  ng-show="showButton('Add')")
-					+btn-xs("Add")
-				#editATipButton.keyButton(ng-click="editATipClicked()"  ng-show="showButton('Edit')")
-					+btn-xs("Edit")
-				#deleteATipButton.keyButton(ng-click="deleteATipClicked()"  ng-show="showButton('Delete')")
-					+btn-xs("Delete")
-				#erasePoints.keyButton(ng-click="updateTipPoints(0)"  ng-show="showButton('ErasePoints')")
-					+btn-xs("0 Points")
+			
 			.signUpForTipsEmailWrapper(style='margin-top:10px' ng-hide="true")
 				+accordion("Sign Up for tips email report")
 					+accordion-item-default("Tip Library Email Report","sample")
@@ -303,4 +291,18 @@ append body
 							button(type='submit' ng-disabled="signUpDisabled()").btn.btn-primary.button-sign-in
 								span.glyphicon.glyphicon-ok
 								|  Sign Up
+			comment-list(content-id='1')
+			#ButtonWrapper(style="display:inline-block;width:100%" ng-hide="addATip()")
+				#prvButton.keyButton(ng-click="prevButtonClicked()")
+					+btn-xs("Previous")
+				#nxtButton.keyButton(ng-click="nextButtonClicked()" style="float:right")
+					+btn-xs("Next")
+				#addATipButton.keyButton(ng-click="addATipClicked()"  ng-show="showButton('Add')")
+					+btn-xs("Add")
+				#editATipButton.keyButton(ng-click="editATipClicked()"  ng-show="showButton('Edit')")
+					+btn-xs("Edit")
+				#deleteATipButton.keyButton(ng-click="deleteATipClicked()"  ng-show="showButton('Delete')")
+					+btn-xs("Delete")
+				#erasePoints.keyButton(ng-click="updateTipPoints(0)"  ng-show="showButton('ErasePoints')")
+					+btn-xs("0 Points")
 			.errorDiv(ng-bind="responseData")

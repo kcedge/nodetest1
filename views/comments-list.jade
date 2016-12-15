@@ -1,0 +1,27 @@
+
+textarea.textAreaTip#commentInput.form-control(style='width:100%;height:100px;margin-top:10px;resize:vertical' placeholder="Add a comment" ng-model="postCommentAdd")
+div.buttonWrapper
+	a.btn.btn-default.btn-post-comment.pull-left#postCommentButton(style='margin-top:5px;' ng-click='postACommentClicked()') Save
+	br
+h3.comments-title		
+ul.panel-body.comment-detail-list(style='margin-top:25px;')
+	li.media(ng-repeat="comment in $parent.comments| orderBy:'-commentPoints'")
+		div#commentWrapper( style='display:inline-block; width:100%;')
+			div#commentVoteWrapper.pull-left(style='width:4%')
+				span.glyphicon.glyphicon-arrow-up.hoverButton(ng-click='commentUpVote(comment)')
+				span.glyphicon.glyphicon-arrow-down.hoverButton(ng-click='commentDownVote(comment)')
+			div.commentHeader.pull-left(style='display:inline-block;width:96%;')
+				a.pull-left(style='margin-top:-3px;' href='profile') {{ comment.username }}
+				time.small.pull-right(style='margin-left:5px;'){{comment.datePublished|date:"MM/dd/yyyy"}}
+				span.pull-left.small(style='margin-left:10px;') {{getPoints(comment)}}
+				time.small.italics.pull-left(style='margin-left:10px;font-style: italic;'){{getTime(comment)}}
+			div.commentBody.pull-left(style='width:96%;margin-top:5px;white-space:pre-wrap')
+				p {{comment.comment}}
+			div#commentButtons.pull-left.hoverButton(ng-show='false' style='margin-left:4%;margin-top:-8px;' ng-click='replyCommentClicked(comment)')
+				a(style='font-size:small') reply
+			div#replyBox.pull-left(style='margin-left:4%;width:96%;')
+				div#replyWrapper(ng-show="showReplyComment(comment)")
+					textarea.textAreaTip.form-control(id='commentReply{{comment._id}}' style='width:100%;height:100px;margin-top:10px;resize:vertical' placeholder="reply to comment" ng-model="replyCommentAdd")
+					div.buttonWrapper
+						a.btn.btn-default.btn-post-comment.pull-left#replyCommentButton(style='margin-top:5px;' ng-click='replyCommentSavedClicked(comment)') Save
+			

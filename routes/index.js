@@ -96,6 +96,11 @@ module.exports = function (router, passport) {
 	res.render('signIn', {title: 'Sign In',
 				messages: req.flash('loginMessage') });
     });
+    /* GET Comments Template. */
+    router.get('/comments-list', function (req, res) {
+	console.log('loading comment templates');
+	res.render('comments-list', {title: 'comment template'});
+    });
 
       // process the login form
     router.post('/signIn', passport.authenticate('local-login', {

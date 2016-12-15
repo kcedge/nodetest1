@@ -761,7 +761,7 @@ angular.module("myApp").factory('TipData', function () {
 });
 
 
-angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http', '$localStorage', 'FileUploader', 'TipData', function ($scope, $http, $localStorage, FileUploader, TipData) {
+angular.module("myApp").controller('bodyTipHelperController', ['$scope','$rootScope','$http', '$localStorage', 'FileUploader', 'TipData','CommentsService', function ($scope,$rootScope, $http, $localStorage, FileUploader, TipData,CommentsService) {
 
 
 	$scope.title = "HELLLOOO";
@@ -1717,7 +1717,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	    else {
 		$('#dislikeButton').removeClass("active");
 	    }
+	    //Update comments
+	    CommentsService.getComments($scope.currentTipId).then(function (response) {
+		$scope.comments  = response.data;
+	    });
 	}
+	
 	$scope.updateImageFileName = function () {
 	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("imageDataJson")) {
 		var imageObject = ($scope.tipArrayData[$scope.tipCounter].imageDataJson);
@@ -2236,6 +2241,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$http'
 	$scope.getTipsFromMongo();
 	$scope.profileDataFromMongo();
     }]);
+
 
 
 
