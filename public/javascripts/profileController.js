@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', '$localStorage', function ($scope, $rootScope, $http, ProfileService, $localStorage) {
 
 	$scope.$storage = $localStorage.$default({
@@ -72,6 +73,37 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 	    $scope.showSaved = !$scope.showSaved;
 	}
 
+	$scope.updateTip = function(tip){
+	    $scope.tipTitle = tip.tipTitle;
+	    $scope.currentTipId = tip._id;
+	    $scope.currentTipPoints = tip.points;
+	    $scope.tipBodyArray = [];
+	    $scope.submittedBy = tip.submittedBy;
+	    if (tip.hasOwnProperty("tipDescJson")) {
+		var descJson = JSON.parse(tip.tipDescJson);
+		var imgJson = JSON.parse(tip.imageDataJson);
+		for (var i = 1; i < descJson.length; i++) {
+		    var tipDescriptionLocal =descJson[i].tipDescription;
+		    var submittedByLocal = tip.submittedBy;
+		    var imageFileNameLocal = "";
+		    if (imgJson[i - 1]) {
+			imageFileNameLocal = imgJson[i - 1].newFileName;
+		    }
+		    
+		    if(!runningProduction && imageFileNameLocal){
+			imageFileNameLocal = "resources/images/" + imageFileNameLocal;
+		    }
+		    $scope.hasImage = (imageFileNameLocal != "" && imageFileNameLocal);
+		    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: imageFileNameLocal, submittedBy: submittedByLocal})
+		}
+	    }
+	    
+	    
+	    
+	    $('html, body').animate({
+		scrollTop: $("#tipWrapper").offset().top
+	    }, 1000);
+	};
 
     }]);
 

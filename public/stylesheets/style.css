@@ -275,7 +275,7 @@ a {
        it as hidden. */
     display:block!important;
 }
-.ng-hide-remove {
+.animate-show.ng-hide-remove {
     animation:0.5s flipInX ease;
     //transition: 0.5s linear opacity;
     //opacity: 0;
@@ -287,8 +287,8 @@ a {
     opacity: 1;
 }
 
-.ng-hide-add {
-    animation:0.5s flipOutX ease;
+.animate-show.ng-hide-add {
+    animation:0.5s flipOutX ease-in-out;
     //transition: 0.5s linear opacity;
    // opacity: 1;
 }
@@ -314,4 +314,8 @@ a {
     margin:0 auto;
     width:90%;
     max-width:966px;
+}
+
+#tipWrapper{
+    transition: all 1s ease-in-out;
 }

@@ -20,7 +20,7 @@ append body
 				h5.col-md-6.col-sm-6.col-xs-6(style='float:left;') {{numberOfTipsSaved}} saved tips
 				//h5(style='float:left;') {{totalpoints}} total points
 			div.animate-show(ng-show="showSaved" style='max-height:200px;overflow: auto;')
-				#savedTips(ng-repeat='tip in lovedTipsData | orderBy: tip.dateSubmitted')
+				#savedTips(ng-repeat='tip in lovedTipsData | orderBy: tip.dateSubmitted' ng-click = 'updateTip(tip)')
 					#tipHeader.row(style="display:inline-block;width:100%;background-color: white;padding: 5px;border-radius: 5px;border-style: solid;border-width:thin;border-color: #ececec;")
 						span.col-md-6.col-sm-6.col-xs-6(style='float:left') {{tip.tipTitle}}
 						#tipPointsWrapper.col-md-2(style='margin-right:5px;float:left')
@@ -31,14 +31,47 @@ append body
 		.tipsWrapperClick#submittedTipsWrapper.contentWrapper(style='border-radius: 5px;padding-right: 0px;padding-left: 0px;border-width: thin;')
 			div.tipMetaClick.row(ng-click='toggleShowSubmitted()' style='width:100%;border-bottom: lightgray;border-bottom-style: solid;border-width:thin;background-color:#ececec;')
 				h5.col-md-6.col-sm-6.col-xs-6(style='float:left;') {{numberOfTipsSubmitted}} submitted tips
-				h5(style='float:left;') {{totalpoints}} total points
+				h5(style='float:right;margin-right:15px;') {{totalpoints}} total points
 			div.animate-show(ng-show="showSubmitted" style='height:250px;overflow: auto;')
-				#submittedTips(ng-repeat='tip in tipsSubmitted | orderBy: tip.dateSubmitted')
+				#submittedTips(ng-repeat='tip in tipsSubmitted | orderBy: tip.dateSubmitted' ng-click = 'updateTip(tip)')
 					#tipHeader.row(style="display:inline-block;width:100%;background-color: white;padding: 5px;border-radius: 5px;border-style: solid;border-width:thin;border-color: #ececec;")
 						span.col-md-6.col-sm-6.col-xs-6(style='float:left') {{tip.tipTitle}}
 						#tipPointsWrapper.col-md-2(style='margin-right:5px;float:left')
 							span.small(style='') {{tip.tipPoints}} points
 						#tipPointsData(style='float:left;margin-left:5px')
 							span.small {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
-		
-		
+		.tipsWrapper.contentWrapper#tipWrapper
+					.tipTitleBlock.titleWrapper
+						.tipTitle.titleWrapper.page-header(style="display:inline-block;width:100%;padding-bottom:3px;")
+							h2(style="float:left;max-width:450px;margin-left: 3px;margin-top:15px;") {{tipTitle}}
+							span#currentTipId(ng-show="false")
+								{{currentTipId}}
+							#pointsDiv(style="float:right;margin-left:5px;margin-right:-13px;")
+								+label-default("{{currentTipPoints}}")
+							h3(style="float:right;margin-top:20px;margin-top:15px;")
+								button.btn.btn-default#dislikeButton(style="margin-right:5px;" ng-click="dislikeButtonClicked()")
+									span.glyphicon.glyphicon-arrow-down
+								button.btn.btn-default#likeButton(style="margin-right:5px;" ng-click="likeButtonClicked()")
+									span.glyphicon.glyphicon-arrow-up
+								button.btn.btn-default#loveButton(ng-click="loveButtonClicked()")
+									span.glyphicon.glyphicon-heart
+							
+					#TipTitlePanel.panel.panel-default
+						#panelBody.panel-body.panel-body(style="text-indent: 0px;padding-bottom:0px;")
+							div.tipDescription#tipBody(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tipBodyArray")			
+								p#descBody
+									{{tipPart.tipDescription}}
+									
+									br
+									#imgDiv(ng-if="hasImage")
+										img(ng-show="hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
+							div#TagsAndSubmittedBy(style="text-indent: 0px;padding-bottom:0px;")
+								
+								#tipTagsDiv(ng-repeat='tipTag in tipTagsArray track by $index' style='display:inline-block;')
+									span(ng-if='($index==0)' style='float:left')
+										+label-info("Filters:")
+									span(style='float:left')
+										+label-primary("{{tipTag}}")
+								#submittedByDiv.small(style="padding-top:5px")
+									span Submitted By: 
+										a(href="/profile/{{submittedBy}}"){{submittedBy}}
