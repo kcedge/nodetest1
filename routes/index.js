@@ -125,6 +125,14 @@ module.exports = function (router, passport) {
 	res.render('profile', {username: req.user.local.username,
 				localuser:req.user});
     });
+    
+     router.get('/profile/:username', function (req, res) {
+	console.log('getting profile for ')
+	var userName = req.params.username;
+	console.log(userName);
+	res.render('profile', {username: userName,
+				localuser:req.user});
+    });
 
  // =====================================
     // LOGOUT ==============================
@@ -221,13 +229,15 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		var collection = db.collection('tipsCollection');
-		collection.insert({tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson, submittedBy:submittedBy,tipPoints:points,dateSubmitted:dateSubmitted}, function (err, db) {
+		collection.insert({tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson, submittedBy:submittedBy,tipPoints:points,dateSubmitted:dateSubmitted}, function (err, docsInserted) {
 		    if (err) {
+
 			console.log('Unable to add tip to tipsCollection', err);
 			res.send('Tip upload failed');
 		    }
 		    else {
-			res.send('Tip successfuly submitted');
+			console.log(docsInserted.ops[0]._id);
+			res.send(docsInserted.ops[0]);
 		    }
 		});
 
@@ -235,10 +245,12 @@ module.exports = function (router, passport) {
 	});
 
     });
-    router.post("/profileInfoPostGet",function(req,res){
+    router.post("/profileInfoPostGet/:username",function(req,res){
 	console.log('profileInfoGetHere');
-	var userName = req.body['userName'];
+	var userName = req.params.username;
+	var userNameTest = req.body['username'];
 	console.log(userName);
+	console.log(userNameTest);
 	MongoClient.connect(url, function (err, db) {
 	    if (err) {
 		console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -263,12 +275,15 @@ module.exports = function (router, passport) {
 	    }
 	});	
     });
-    router.put('/tipsPageUpdateProfileLikes',function(req,res){
+    router.put('/tipsPageUpdateProfile',function(req,res){
 	console.log("tips page profile update");
+	
 	var userName = req.body['username'];
 	var lovedTipsJson = req.body['lovedTips'];
 	var likedTipsJson = req.body['likedTips'];
 	var dislikedTipsJson = req.body['dislikedTips'];
+	var submittedTipsJson = req.body['submittedTips'];
+	
 	MongoClient.connect(url, function (err, db) {
 	    if (err) {
 		console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -279,7 +294,7 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		var collection = db.collection('profileCollection');
-		collection.update({userName:userName},{$set:{lovedTipsJson: lovedTipsJson,likedTipsJson: likedTipsJson,dislikedTipsJson: dislikedTipsJson}}, {upsert: true}, function (err, db) {
+		collection.update({userName:userName},{$set:{lovedTipsJson: lovedTipsJson,likedTipsJson: likedTipsJson,dislikedTipsJson: dislikedTipsJson,submittedTips:submittedTipsJson}}, {upsert: true}, function (err, db) {
 		    if (err) {
 			console.log('Unable to edit profile', err);
 			res.send('Tip edit failed');

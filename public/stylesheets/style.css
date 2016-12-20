@@ -260,3 +260,58 @@ a {
 #descBody{
     white-space: pre-wrap;
 }
+.row{
+    margin-left:0px;
+}
+
+#tipHeader.active, #tipHeader.focus, #tipHeader:active, #tipHeader:focus, #tipHeader:hover{
+    background-color: #ececec;
+    cursor: pointer;
+} 
+.ng-hide-add, 
+.ng-hide-remove {
+    /* this needs to be here to make it visible during the animation
+       since the .ng-hide class is already on the element rendering
+       it as hidden. */
+    display:block!important;
+}
+.ng-hide-remove {
+    animation:0.5s flipInX ease;
+    //transition: 0.5s linear opacity;
+    //opacity: 0;
+    
+}
+
+
+.ng-hide-remove-active {
+    opacity: 1;
+}
+
+.ng-hide-add {
+    animation:0.5s flipOutX ease;
+    //transition: 0.5s linear opacity;
+   // opacity: 1;
+}
+
+
+.ng-hide-add-active {
+    opacity: 0;
+}
+.tipMetaClick{
+     width:100%;
+    border-radius:5px;
+    border-bottom: lightgray;
+    border-bottom-style: solid;
+    border-width:thin;
+    background-color:#ececec;
+}
+.tipMetaClick.active, .tipMetaClick.focus, .tipMetaClick:active, .tipMetaClick:focus, .tipMetaClick:hover{
+    cursor: pointer;
+   
+}
+
+.pageController{
+    margin:0 auto;
+    width:90%;
+    max-width:966px;
+}

@@ -83,9 +83,15 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 	    }
 	    return comment.commentPoints + " points";
 	}
-	$scope.getTime = function(comment){
+	$scope.getTime = function (comment) {
 	    var now = new Date();
-	    var difference =  ((now.getTime() - comment.datePublished.getTime())/(3600000));
+	    function parseDate(input) {
+		var parts = input.match(/(\d+)/g);
+		// new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
+		return new Date(parts[0], parts[1] - 1, parts[2],parts[3],parts[4],parts[5]); // months are 0-based
+	    }
+	    var datePublished = parseDate(comment.datePublished).getTime();
+	    var difference =  ((now.getTime() - datePublished)/(3600000));
 	    if(difference < 24 && difference > 0){
 		if(difference < 1){
 		    if(difference < .2){
@@ -107,7 +113,8 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 		
 	    }
 	    else{
-		return "";
+		var days = Math.round(difference / 24);
+		return days +" days ago";
 	    }
 	    
 	    

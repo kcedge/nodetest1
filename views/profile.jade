@@ -1,11 +1,11 @@
 extends layout
 
 append body
-	.container.pageController(ng-controller="profileHelperController" style="margin:0 auto;width:90%")
+	.pageController.container(ng-controller="ProfileCtrl" style="margin:0 auto;width:90%")
 		#profileNotify(ng-show="!isLoggedIn()")
-		#profilePage(ng-show="isLoggedIn()")
-			.titleBannerDiv()
-				h2 Welcome {{username}}
+		#profilePage.contentWrapper(ng-show="isLoggedIn()")
+			.div()
+				h2 {{username}}
 				+alert-i-warning("The profile page is still in development.  This page will display your saved and contributed tips and samples, your comments, your social network links, stats, and much more!","heart")
 				a(href='/tipLib')
 					span Go to Tip Library 
@@ -14,4 +14,31 @@ append body
 					span Go to Chromatic Wheel
 				#profileDetails(ng-show="false")
 					#userName= username
+		br
+		.tipsWrapperClick#savedTipsWrapper.contentWrapper(style='padding-right: 0px;padding-left: 0px;border-width: thin;')
+			div.tipMetaClick.row(ng-click='toggleShowSaved()' style='')
+				h5.col-md-6.col-sm-6.col-xs-6(style='float:left;') {{numberOfTipsSaved}} saved tips
+				//h5(style='float:left;') {{totalpoints}} total points
+			div.animate-show(ng-show="showSaved" style='max-height:200px;overflow: auto;')
+				#savedTips(ng-repeat='tip in lovedTipsData | orderBy: tip.dateSubmitted')
+					#tipHeader.row(style="display:inline-block;width:100%;background-color: white;padding: 5px;border-radius: 5px;border-style: solid;border-width:thin;border-color: #ececec;")
+						span.col-md-6.col-sm-6.col-xs-6(style='float:left') {{tip.tipTitle}}
+						#tipPointsWrapper.col-md-2(style='margin-right:5px;float:left')
+							span.small(style='') {{tip.tipPoints}} points
+						#tipPointsData(style='float:left;margin-left:5px')
+							span.small {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
+		br
+		.tipsWrapperClick#submittedTipsWrapper.contentWrapper(style='border-radius: 5px;padding-right: 0px;padding-left: 0px;border-width: thin;')
+			div.tipMetaClick.row(ng-click='toggleShowSubmitted()' style='width:100%;border-bottom: lightgray;border-bottom-style: solid;border-width:thin;background-color:#ececec;')
+				h5.col-md-6.col-sm-6.col-xs-6(style='float:left;') {{numberOfTipsSubmitted}} submitted tips
+				h5(style='float:left;') {{totalpoints}} total points
+			div.animate-show(ng-show="showSubmitted" style='height:250px;overflow: auto;')
+				#submittedTips(ng-repeat='tip in tipsSubmitted | orderBy: tip.dateSubmitted')
+					#tipHeader.row(style="display:inline-block;width:100%;background-color: white;padding: 5px;border-radius: 5px;border-style: solid;border-width:thin;border-color: #ececec;")
+						span.col-md-6.col-sm-6.col-xs-6(style='float:left') {{tip.tipTitle}}
+						#tipPointsWrapper.col-md-2(style='margin-right:5px;float:left')
+							span.small(style='') {{tip.tipPoints}} points
+						#tipPointsData(style='float:left;margin-left:5px')
+							span.small {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
+		
 		

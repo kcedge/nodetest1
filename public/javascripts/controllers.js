@@ -55,19 +55,7 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 
     }]);
 
-angular.module("myApp").controller('profileHelperController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
-	$scope.$storage = $localStorage.$default({
-	    username: "",
-	    userSignedIn: false
-	});
 
-	var username = $("#userName").html();
-	$scope.username = username;
-	$scope.$storage = $localStorage;
-	$scope.$storage.userSignedIn = true;
-	$scope.$storage.username = username;
-
-    }]);
 angular.module("myApp").controller('bodyMelodyHelperController', ['$scope', '$http', function ($scope, $http) {
 
 	$scope.hello = "HELLLOOO";
@@ -1597,7 +1585,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope','$rootSc
 	    var username = $localStorage.username;
 	    var req = {
 		method: 'POST',
-		url: '/profileInfoPostGet',
+		url: '/profileInfoPostGet/' + username,
 		headers: {
 		    'Content-Type': "application/json"
 		},
@@ -1612,6 +1600,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope','$rootSc
 			$scope.likedTipsArray = JSON.parse(responseData.likedTipsJson);
 		    if (responseData.hasOwnProperty('dislikedTipsJson'))
 			$scope.dislikedTipsArray = JSON.parse(responseData.dislikedTipsJson);
+		    if(responseData.hasOwnProperty('submittedTips'))
+			$scope.submittedTipsArray = JSON.parse(responseData.submittedTips);
 		}
 	    }, function failure(response) {
 
@@ -1740,23 +1730,26 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope','$rootSc
 		$scope.imageFileName = "";
 	    }
 	}
-	$scope.updateProfileLikes = function () {
+	
+	$scope.updateProfile = function () {
 	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
 	    var userName = $localStorage.username;
 	    var likedTipsJson = JSON.stringify($scope.likedTipsArray);
 	    var lovedTipsJson = JSON.stringify($scope.lovedTipsArray);
 	    var dislikedTipsJson = JSON.stringify($scope.dislikedTipsArray);
-
+	    var tipsSubmittedJson = JSON.stringify($scope.submittedTipsArray);
+	    
 	    var req = {
 		method: 'PUT',
-		url: '/tipsPageUpdateProfileLikes',
+		url: '/tipsPageUpdateProfile',
 		headers: {
 		    'Content-Type': "application/json"
 		},
 		data: {username: userName,
 		    lovedTips: lovedTipsJson,
 		    likedTips: likedTipsJson,
-		    dislikedTips: dislikedTipsJson
+		    dislikedTips: dislikedTipsJson,
+		    submittedTips: tipsSubmittedJson
 		}
 	    }
 
@@ -1775,6 +1768,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope','$rootSc
 	$scope.likedTipsArray = [];
 	$scope.lovedTipsArray = [];
 	$scope.dislikedTipsArray = [];
+	$scope.submittedTipsArray = [];
 
 	$scope.loveButtonClicked = function () {
 	    if (!$scope.isLoggedIn()) {
@@ -1817,7 +1811,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope','$rootSc
 		    updatedPoints = 2;
 		}
 		$scope.updateTipPoints(updatedPoints);
-		$scope.updateProfileLikes();
+		$scope.updateProfile();
 	    }
 	}
 	$scope.likeButtonClicked = function () {
@@ -1861,7 +1855,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope','$rootSc
 		    updatedPoints = 1;
 		}
 		$scope.updateTipPoints(updatedPoints);
-		$scope.updateProfileLikes();
+		$scope.updateProfile();
 	    }
 	}
 	$scope.dislikeButtonClicked = function () {
@@ -1905,7 +1899,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope','$rootSc
 		    updatedPoints = 1;
 		}
 		$scope.updateTipPoints(updatedPoints);
-		$scope.updateProfileLikes();
+		$scope.updateProfile();
 	    }
 	}
 
@@ -2098,7 +2092,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope','$rootSc
 		    imageDataJson: imageDataObjectJson,
 		    videoLinkJson: videoLinkJson,
 		    submittedBy: $localStorage.username,
-		    points: 1,
+		    points: 0,
 		    dateSubmitted:new Date(),
 		}
 
@@ -2107,7 +2101,9 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope','$rootSc
 
 	    $http(req).then(function success(response) {
 		$scope.submitMessage = "Success"
-		$scope.responseData = response.data;
+		 var responseDataId = response.data._id;
+		$scope.submittedTipsArray.push(responseDataId);
+		$scope.updateProfile();
 		$scope.getTipsFromMongo();//add to current tips array
 
 	    }, function failure(response) {
@@ -2115,6 +2111,11 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope','$rootSc
 		$scope.responseData = response.data;
 
 	    });
+	     //Send Request to update profile info 
+	     
+	     
+	     
+	    
 
 	}
 	$scope.emailListSignUpUserEmail = "";

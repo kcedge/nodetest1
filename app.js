@@ -54,10 +54,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var images = require('./routes/images');
+var profile = require('./routes/profile');
+var tips = require('./routes/tips');
 var comments = require('./routes/comments');
 
 require('./routes/index')(app,passport);
 require('./routes/comments')(app,passport);
+require('./routes/profile')(app,passport);
 require('./config/passport')(passport); // pass passport for configuration
 //
 // required for passport
@@ -70,6 +73,8 @@ app.use(function(req,res,next){
 app.use('/', routes);
 app.use('/users.js', users);
 app.use('/images.js', images);
+app.use('/profile.js', profile);
+app.use('/tips.js', tips);
 app.use('/comments.js', comments);
 //require('./routes/index.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
