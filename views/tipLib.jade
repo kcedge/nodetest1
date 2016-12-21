@@ -94,8 +94,8 @@ append body
 					#TipTitlePanel.panel.panel-default
 						#panelBody.panel-body.panel-body(style="text-indent: 0px;padding-bottom:0px;")
 							div.tipDescription#tipBody(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tipBodyArray")			
-								p#descBody(ng-bind-html="tipPart.tipDescription | to_trusted")
-									
+								p#descBody
+									{{tipPart.tipDescription}}
 									
 									br
 									#imgDiv(ng-if="hasImage")
