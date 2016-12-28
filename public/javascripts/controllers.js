@@ -57,7 +57,27 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 	    username: "",
 	    userSignedIn: false
 	});
+	$scope.signInWithSoundCloud = function () {
+	    var req = {
+		method: 'GET',
+		url: '/soundCloudAuth',
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {}
+	    }
 
+	    $http(req).then(function success(response) {
+		$scope.authres = response.data;
+
+	    }, function failure(response) {
+		$scope.authres = response.data;
+
+	    });
+	}
+	
+
+	
 
     }]);
 
@@ -783,17 +803,26 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		if ($localStorage.username == "kcedge") {
 		    return true;
 		}
-		else {
-		    return false;
-		}
+		if($scope.tipArrayData.length){
+		    if($scope.tipArrayData[$scope.tipCounter].submittedBy == $localStorage.username){
+			 return true;
+		    }	   
+		}	
+		return false;
+		
 	    }
 	    else if (buttonName == "Delete") {
 		if ($localStorage.username == "kcedge") {
 		    return true;
 		}
-		else {
-		    return false;
+		if($scope.tipArrayData.length){
+		    if($scope.tipArrayData[$scope.tipCounter].submittedBy == $localStorage.username){
+			 return true;
+		    }	   
 		}
+		
+		return false;
+		
 	    }
 	    else if (buttonName == "ErasePoints") {
 		if ($localStorage.username == "kcedge") {
@@ -1226,18 +1255,21 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 	    $("#tipTitleEditInput").val(tipTitle);
-
+	    
 	    //Update tip description
 	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipDescJson")) {
 		//starts at 2 because number of tips is in first array space
 		for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].tipDescJson.length; i++) {
 		    if (i == 1) {
 			var tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription;
-			$("#textAreaEditTip").val(tipDesc);
+			var mce = tinyMCE.get('textAreaEditTip');
+				mce.setContent(tipDesc);
+			//$("#textAreaEditTip").val(tipDesc);
 		    }
 		    else {
 			$scope.editAddDescription();//put text area elements into the DOM 
-			$("#textAreaEditTip" + i).val($scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription);
+			tinyMCE.get('textAreaEditTip'+i).setContent($scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription);
+			//$("#textAreaEditTip" + i).val($scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription);
 		    }
 		}
 	    }
@@ -1306,11 +1338,25 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    textArea.addClass("form-control");
 	    textArea.addClass("tipDescInput");
 	    $("#descriptionWrapper").append(textArea);
+	    tinyMCE.init({
+		selector: '#textAreaTip' + $scope.descriptionCounter,
+		plugins: "link",
+		menubar: 'file edit insert view format table tools',
+		toolbar: "link | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+		target_list: [
+		    {title: 'None', value: ''},
+		    {title: 'Same page', value: '_self'},
+		    {title: 'New page', value: '_blank'},
+		    {title: 'LIghtbox', value: '_lightbox'}
+		]
+	    });
 	}
 	$scope.subtractDescription = function () {
 	    if ($scope.descriptionCounter > 1) {
-		$("#textAreaTip" + $scope.descriptionCounter).last().remove();
+		tinyMCE.remove('#textAreaTip'+ $scope.descriptionCounter);
+		$("#textAreaTip" + $scope.descriptionCounter).last().remove();	
 		$scope.descriptionCounter--;
+		
 	    }
 	}
 	$scope.editAddDescription = function () {
@@ -1321,8 +1367,21 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    textArea.addClass("form-control");
 	    textArea.addClass("tipDescInput");
 	    $("#editDescriptionWrapper").append(textArea);
+	    tinyMCE.init({
+		selector: '#textAreaEditTip' + $scope.descriptionCounter,
+		plugins: "link",
+		menubar: 'file edit insert view format table tools',
+		toolbar: "link | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+		target_list: [
+		    {title: 'None', value: ''},
+		    {title: 'Same page', value: '_self'},
+		    {title: 'New page', value: '_blank'},
+		    {title: 'LIghtbox', value: '_lightbox'}
+		]
+	    });
 	}
 	$scope.editSubtractDescription = function () {
+	    tinyMCE.remove('#textAreaEditTip'+ $scope.descriptionCounter);
 	    if ($scope.descriptionCounter > 1) {
 		$("#textAreaEditTip" + $scope.descriptionCounter).last().remove();
 		$scope.descriptionCounter--;
@@ -1331,12 +1390,14 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.removeAllButOneTipDescriptions = function (editOrAdd) {
 	    if (editOrAdd == "Add") {
 		for (i = $scope.descriptionCounter; i > 1; i--) {
+		    tinyMCE.remove('#textAreaTip'+ $scope.descriptionCounter);
 		    $("#textAreaTip" + $scope.descriptionCounter).last().remove();
 		    $scope.descriptionCounter--;
 		}
 	    }
 	    else if (editOrAdd == "Edit") {
 		for (i = $scope.descriptionCounter; i > 1; i--) {
+		    tinyMCE.remove('#textAreaEditTip'+ $scope.descriptionCounter);
 		    $("#textAreaEditTip" + $scope.descriptionCounter).last().remove();
 		    $scope.descriptionCounter--;
 		}
@@ -1365,11 +1426,13 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    //Collect Tip Description JSON
 	    for (var i = 1; i <= $scope.descriptionCounter; i++) {
 		if (i == 1) {
-		    var tipDescriptionLocal = $("#textAreaEditTip").val();
+		   // var tipDescriptionLocal = $("#textAreaEditTip").val();
+		    var tipDescriptionLocal = tinyMCE.get('textAreaEditTip').getContent();
 		    tipDescObject[i] = {tipNumber: i, tipDescription: tipDescriptionLocal}
 		}
 		else {
-		    var tipDescriptionLocal = $("#textAreaEditTip" + i).val();
+		    //var tipDescriptionLocal = $("#textAreaEditTip" + i).val();
+		    var tipDescriptionLocal = tinyMCE.get('textAreaEditTip'+i).getContent();
 		    tipDescObject[i] = {tipNumber: i, tipDescription: tipDescriptionLocal}
 		}
 	    }
@@ -1489,7 +1552,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.submitMessage = "Success"
 		$scope.responseData = response.data;
 		$scope.getTipsFromMongo();//add to current tips array
-
+		$scope.editATipToggle = false;
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
 		$scope.responseData = response.data;
@@ -1718,10 +1781,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    CommentsService.getComments($scope.currentTipId).then(function (response) {
 		$scope.comments = response.data;
 	    });
-
-	    $('html, body').animate({
-		scrollTop: $("#filterWrapper").offset().top
-	    }, 1000);
+	    
+	    $scope.showButton('Edit');
+	    $scope.showButton('Delete');
+	    //$('html, body').animate({
+	//	scrollTop: $("#filterWrapper").offset().top
+	 //   }, 1000);
 	}
 
 	$scope.updateImageFileName = function () {
@@ -1985,11 +2050,32 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	}
 	$scope.backToTipsClicked = function () {   //dd tip to database
 	    $scope.addATipToggle = false;
+	    $scope.editATipToggle = false;
 	}
 
-
 	tinyMCE.init({
-	    selector: '#textAreaTip'
+	    selector: '#textAreaTip',
+	    plugins: "link image",
+	    menubar: 'file edit insert view format table tools',
+	    toolbar: "link | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+	    target_list: [
+		{title: 'None', value: ''},
+		{title: 'Same page', value: '_self'},
+		{title: 'New page', value: '_blank'},
+		{title: 'LIghtbox', value: '_lightbox'}
+	    ]
+	});
+	tinyMCE.init({
+	    selector: '#textAreaEditTip',
+	    plugins: "link image",
+	    menubar: 'file edit insert view format table tools',
+	    toolbar: "link | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+	    target_list: [
+		{title: 'None', value: ''},
+		{title: 'Same page', value: '_self'},
+		{title: 'New page', value: '_blank'},
+		{title: 'LIghtbox', value: '_lightbox'}
+	    ]
 	});
 	$scope.isReadyForSubmit = function () {
 	    var content =  "";
@@ -2020,7 +2106,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    }
 
 	    return $scope.tipTitleAdd != "" &&
-		    ($scope.tipDescAdd != "" && $scope.tipDescAdd) &&
+		   // ($scope.tipDescAdd != "" && $scope.tipDescAdd) &&
 		    imagesUploaded;
 	}
 	//ADD a tip submit
@@ -2038,7 +2124,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    tipDescObject[i] = {tipNumber: i, tipDescription: tipDescriptionLocal}
 		}
 		else {
-		    var tipDescriptionLocal = $("#textAreaTip" + i).val();
+		    var tipDescriptionLocal = tinyMCE.get('textAreaTip'+i).getContent();
+		    //var tipDescriptionLocal = $("#textAreaTip" + i).val();
 		    tipDescObject[i] = {tipNumber: i, tipDescription: tipDescriptionLocal}
 		}
 	    }
@@ -2128,6 +2215,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.submittedTipsArray.push(responseDataId);
 		$scope.updateProfile();
 		$scope.getTipsFromMongo();//add to current tips array
+		$scope.addATipToggle = false;
 
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
@@ -2212,7 +2300,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	var uploader = $scope.uploader = new FileUploader({
 	    url: '/uploadImage'
 	});
-
+	
 	// FILTERS
 
 	uploader.filters.push({
@@ -2221,15 +2309,29 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		return this.queue.length < 10;
 	    }
 	});
+	
+	uploader.filters.push({
+	    name: 'sizeFilter',
+	    fn: function (item /*{File|FileLikeObject}*/, options) {
+		console.log(item);
+		return item.size <= 1000000;
+	    }
+	});
+
 
 	// CALLBACKS
 	$scope.uploadedImages = [];
 	var numberOfImages = 0;
 
 	uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+	    $scope.fileErrorMessage = "";
+	    if(filter.name = 'sizeFilter'){
+		$scope.fileErrorMessage = "File too big. Upload file limit 1 MB";
+	    }
 	    console.info('onWhenAddingFileFailed', item, filter, options);
 	};
 	uploader.onAfterAddingFile = function (fileItem) {
+	    $scope.fileErrorMessage = "";
 	    console.info('onAfterAddingFile', fileItem);
 	};
 	uploader.onAfterAddingAll = function (addedFileItems) {
