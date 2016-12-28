@@ -2,6 +2,7 @@
 
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
+var SoundCloudTokenStrategy = require('passport-soundcloud-token');
 
 // load up the user model
 var User            = require('../models/user');
@@ -26,7 +27,17 @@ module.exports = function(passport) {
             done(err, user);
         });
     });
-
+    
+  //  //SOUND CLOUD SIGN UP
+  //  passport.use(new SoundCloudTokenStrategy({
+//	clientID: SOUND_CLOUD_CLIENT_ID,
+//	clientSecret: SOUND_CLOUD_CLIENT_SECRET,
+//	passReqToCallback: true
+  //  }, function (req, accessToken, refreshToken, profile, next) {
+//	User.findOrCreate({'soundcloud.id': profile.id}, function (error, user) {
+//	    return next(error, user);
+//	});
+//  }));
     // =========================================================================
     // LOCAL SIGNUP ============================================================
     // =========================================================================

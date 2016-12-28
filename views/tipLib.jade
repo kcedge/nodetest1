@@ -25,7 +25,7 @@ append body
 				#tipNavItem.btn-xs.btn-primary(ng-click="tipNavBarClicked(tip)" style=""){{tip.tipTitle}}
 		
 		.container(style="float:left;width:75%;max-width:800px;")
-			.tipsPageWrapper(ng-hide="addATip()")				
+			.tipsPageWrapper(ng-hide="addATip()||editATip()")				
 				//h2
 				//	#titleName= title
 				
@@ -129,7 +129,8 @@ append body
 								span(style="font-style:italic;") Note: For now, images are displayed in the order they are uploaded.  If you want an image between paragraphs, add a description.  The first image uploaded is displayed after the first description, the second image after the second description.. and so on.
 					.imageUploaderInputWrapper(style="margin-top:5px;")
 						.headerImageInput(style="font-size:small;color:#777777")
-							span Image Uploader						
+							span Image Uploader
+							span(style='float:right') {{fileErrorMessage}}
 						.inputWrapper						
 							input.inputClass(type="file",nv-file-select uploader="uploader")
 							ul
@@ -159,14 +160,14 @@ append body
 					.filterBoxStyle(style='display:inline-block;width:100%;')
 						
 							
-						.genereInputWrapper(style="float:left;width:26%;margin-left:2%;margin-bottom:5px;")
+						.genereInputWrapper(style="")
 							h7 Genres
 							.btnWrapper(style="" ng-repeat = "genre in genreArray")
 								//+toggle-primary("{{genre.genreName}}")
 								input.inputClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='inputGenreId{{genre.genreName}}')
 								+label-primary("{{genre.genreName}}")
 
-						.theoryInputWrapper(style="float:left;width:25%;")
+						.theoryInputWrapper(style="")
 							h7 Tip Type
 							.btnWrapper
 								input.inputClass(type="checkbox",data-toggle="toggle" name='theoryYes' id='theoryYes')
@@ -183,12 +184,12 @@ append body
 							.btnWrapper
 								input.inputClass(type="checkbox",data-toggle="toggle" name='soundDesignYes' id='soundDesignYes')
 								+label-primary("Sound Design")
-						.vstInputWrapper(style="float:left;width:22%;")
+						.vstInputWrapper(style="")
 							h7 VST
 							.btnWrapper(ng-repeat = "vst in vstArray")							
 								input.inputClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='inputVstId{{vst.vstName}}')
 								+label-primary("{{vst.vstName}}")
-						.dawInputWrapper(style="float:left;width:25%;")
+						.dawInputWrapper(style="")
 							h7 DAW
 							.btnWrapper( ng-repeat = "daw in dawArray")							
 								input.inputClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}')
@@ -210,63 +211,88 @@ append body
 							
 			.editATipPageWrapper(ng-show="editATipToggle")
 				#tipsFormWrapper.contentWrapper
-					+input("text","tipTitleEditInput","Title","TipTitle")
+				
+					input.form-control(type='text' id='tipTitleEditInput' placeholder='Title')
 					#editDescriptionWrapper
-						h6 Description 1
+						//h6 Description
 						textarea#textAreaEditTip.form-control.tipDescInput(placeholder="Tip Description" required)
 					#editDescriptionButtonWrapper(style="display:inline-block")
 						button.btn(ng-click="editAddDescription()" style="float:left")
 							span.glyphicon.glyphicon-plus
 						button.btn(ng-click="editSubtractDescription()" style="float:left")
 							span.glyphicon.glyphicon-minus
-						
-					.genereInputWrapper(style="")
-						h7 Genres
-						.btnWrapper(style="" ng-repeat = "genre in genreArray")
-							//+toggle-primary("{{genre.genreName}}")
-							input.inputClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='editInputGenreId{{genre.genreName}}')
-							+label-primary("{{genre.genreName}}")
-							
-					.theoryInputWrapper(style="margin-top:5px;display:inline-block;")
-						h7 Tip Type
-						.btnWrapper							
-							input.inputClass(type="checkbox",data-toggle="toggle" name='theoryYes' id='editTheoryYes')
-							+label-primary("Theory")
-							input.inputClass(type="checkbox",data-toggle="toggle" name='mixingYes' id='editMixingYes')
-							+label-primary("Mixing")
-							input.inputClass(type="checkbox",data-toggle="toggle" name='masteringYes' id='editMasteringYes')
-							+label-primary("Mastering")
-							input.inputClass(type="checkbox",data-toggle="toggle" name='workFlowYes' id='editWorkFlowYes')
-							+label-primary("Work Flow")
-							input.inputClass(type="checkbox",data-toggle="toggle" name='soundDesignYes' id='editSoundDesignYes')
-							+label-primary("Sound Design")
-					.vstInputWrapper(style="margin-top:5px;")
-						h7 VST
-						.btnWrapper(style="" ng-repeat = "vst in vstArray")							
-							input.inputClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='editInputVstId{{vst.vstName}}')
-							+label-primary("{{vst.vstName}}")
-					.dawInputWrapper(style="margin-top:5px;")
-						h7 DAW
-						.btnWrapper(style="" ng-repeat = "daw in dawArray")							
-							input.inputClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='editInputDawId{{daw.dawName}}')
-							+label-primary("{{daw.dawName}}")
+						#noteWrapper(style="float:left;margin-left:5%;width:80%;")
+								span(style="font-style:italic;") Note: For now, images are displayed in the order they are uploaded.  If you want an image between paragraphs, add a description.  The first image uploaded is displayed after the first description, the second image after the second description.. and so on.
 					.imageUploaderInputWrapper(style="margin-top:5px;")
-						h7 Image Uploader						
+						.headerImageInput(style="font-size:small;color:#777777")
+							span Image Uploader
+							span(style='float:right') {{fileErrorMessage}}
 						.inputWrapper						
 							input.inputClass(type="file",nv-file-select uploader="uploader")
 							ul
 								li(ng-repeat="item in uploader.queue")
 									{{item.file.name}}
-									button.btn.btn-success.btn-xs(ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess")
-										span.glyphicon.glyphicon-upload										
-											
-					.viedoLinkInputWrapper(style="margin-top:5px;")
+									//button.btn.btn-success.btn-xs(ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess")
+									//	span.glyphicon.glyphicon-upload
+									//button.btn.btn-warning.btn-xs(ng-click="item.cancel()" ng-disabled="item.isUploading")
+									//	span.glyphicon.glyphicon-ban-circle
+									button.btn.btn-default.btn-xs(ng-click="item.remove()" style=";color:black;margin-left:5px;")
+										span.glyphicon.glyphicon-remove
+						.progress
+							.progress-bar(role="progressbar" ng-style="{width:uploader.progress + '%'}" style="width:0%;")
+						#imgUploadButtonsDiv(ng-show="uploader.queue.length > 0" style='margin-bottom:5px;')
+							button.btn.btn-danger.btn-xs(ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length" )
+											span.glyphicon.glyphicon-trash 
+											&nbsp Remove all
+							button.btn.btn-warning.btn-xs(ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading" style='margin-left:5px;')
+											span.glyphicon.glyphicon-ban-circle 
+											&nbsp Cancel
+							button.btn.btn-success.btn-xs(ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length" style='margin-left:5px;')
+											span.glyphicon.glyphicon-upload
+											&nbsp Upload 
+					.filterBoxStyle(style='display:inline-block;width:100%;')
+						.genereInputWrapper(style="")
+							h7 Genres
+							.btnWrapper(style="" ng-repeat = "genre in genreArray")
+								//+toggle-primary("{{genre.genreName}}")
+								input.inputClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='editInputGenreId{{genre.genreName}}')
+								+label-primary("{{genre.genreName}}")
+
+						.theoryInputWrapper(style="")
+							h7 Tip Type
+							.btnWrapper							
+								input.inputClass(type="checkbox",data-toggle="toggle" name='theoryYes' id='editTheoryYes')
+								+label-primary("Theory")
+							.btnWrapper
+								input.inputClass(type="checkbox",data-toggle="toggle" name='mixingYes' id='editMixingYes')
+								+label-primary("Mixing")
+							.btnWrapper
+								input.inputClass(type="checkbox",data-toggle="toggle" name='masteringYes' id='editMasteringYes')
+								+label-primary("Mastering")
+							.btnWrapper
+								input.inputClass(type="checkbox",data-toggle="toggle" name='workFlowYes' id='editWorkFlowYes')
+								+label-primary("Work Flow")
+							.btnWrapper
+								input.inputClass(type="checkbox",data-toggle="toggle" name='soundDesignYes' id='editSoundDesignYes')
+								+label-primary("Sound Design")
+						.vstInputWrapper()
+							h7 VST
+							.btnWrapper(style="" ng-repeat = "vst in vstArray")							
+								input.inputClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='editInputVstId{{vst.vstName}}')
+								+label-primary("{{vst.vstName}}")
+						.dawInputWrapper(style="margin-top:5px;")
+							h7 DAW
+							.btnWrapper(style="" ng-repeat = "daw in dawArray")							
+								input.inputClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='editInputDawId{{daw.dawName}}')
+								+label-primary("{{daw.dawName}}")
+					
+					.viedoLinkInputWrapper(style="margin-top:5px;" ng-show='false')
 						h7 Link Video							
 							+input("text","editVideoLink","https://www.youtube.com/","")
 										
-					.backAndSubmitWrapper()
+					.backAndSubmitWrapper(style='display:inline-block;width:100%')
 						.backToTipsButtonDiv(style='float:left' ng-click="backToTipsClicked()")
-							+btn("Back")
+							+btn-primary("Back")
 						.submitButtonDiv(style='float:right' ng-click="editSubmitButtonClicked()")
 							+submit-primary("Submit")
 				
@@ -291,7 +317,6 @@ append body
 							button(type='submit' ng-disabled="signUpDisabled()").btn.btn-primary.button-sign-in
 								span.glyphicon.glyphicon-ok
 								|  Sign Up
-			comment-list(content-id='1')
 			#ButtonWrapper(style="display:inline-block;width:100%" ng-hide="addATip()")
 				#prvButton.keyButton(ng-click="prevButtonClicked()")
 					+btn-xs("Previous")
@@ -305,4 +330,5 @@ append body
 					+btn-xs("Delete")
 				#erasePoints.keyButton(ng-click="updateTipPoints(0)"  ng-show="showButton('ErasePoints')")
 					+btn-xs("0 Points")
+			comment-list(content-id='1' ng-hide='addATip()')
 			.errorDiv(ng-bind="responseData")

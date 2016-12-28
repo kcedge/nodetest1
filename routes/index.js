@@ -133,7 +133,12 @@ module.exports = function (router, passport) {
 	res.render('profile', {username: userName,
 				localuser:req.user});
     });
-
+    
+    router.get('/soundCloudAuth',passport.authenticate('soundcloud-token', {
+	successRedirect: '/profile', // redirect to the secure profile section
+	failureRedirect: '/signUp', // redirect back to the signup page if there is an error
+	failureFlash: true // allow flash messages
+     }));
  // =====================================
     // LOGOUT ==============================
     // =====================================
