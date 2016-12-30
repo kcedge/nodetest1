@@ -40,11 +40,37 @@ angular.module("myApp").controller('signUpController', ['$scope', '$http', '$loc
 	$scope.signUpEmail = "";
 	$scope.signUpPassword = "";
 	$scope.signUpPasswordConfirm = "";
+	$scope.signUpUsername = "";
 	$scope.$storage = $localStorage.$default({
 	    username: "",
 	    userSignedIn: false
 	});
-
+	
+	$scope.signUpGood = function(){
+	    if($scope.signUpUsername.length == 0){
+		$scope.signUpErrorMessage = "enter username";
+		return false;
+	    }
+	    else if($scope.signUpUsername.length < 3){
+		$scope.signUpErrorMessage = "make username >= 3 characters";
+		return false;
+	    }
+	    else if($scope.signUpPassword.length < 6){
+		$scope.signUpErrorMessage = "make password >= 6 characters";
+		return false;
+	    }
+	    else if($scope.signUpPasswordConfirm.length == 0){
+		$scope.signUpErrorMessage = "confirm password";
+		return false;
+	    }
+	    else if($scope.signUpPassword != $scope.signUpPasswordConfirm){
+		$scope.signUpErrorMessage = "passwords do not match"
+		return false;
+	    }
+	    
+	    $scope.signUpErrorMessage = "";
+	    return true;
+	}
 
 
 
@@ -1211,6 +1237,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.addATipToggle = !$scope.addATipToggle;
 	    $scope.tipTitleAdd = "";
 	    $scope.tipDescAdd = "";
+	    $scope.tipBodyArray = [];
+	    $scope.tipImageArray = [];
 	    tinyMCE.get('textAreaTip').setContent('');
 	}
 
@@ -1237,6 +1265,32 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 	//EDIT A TIP
+	$scope.imageSelectedData = "";
+	$scope.imageSelected = false;
+	$scope.selectedImgObj = "";
+	$scope.selectedImgObjIndex = "";
+	$scope.editImageClicked = function ($index) {
+	    $scope.selectedImgObj = $('.imageAttached' + $index);
+	    if ($scope.selectedImgObj.hasClass('active')) {
+		$scope.selectedImgObj.removeClass('active');
+		$scope.imageSelected = false;
+	    }
+	    else {
+		//$scope.imageSelectedData = $scope.tipBodyArray[$index].imageFileName;
+		$('.imageThumbNail').removeClass('active');
+		$scope.selectedImgObj.addClass('active');
+		$scope.imageSelected = true;
+		$scope.selectedImgObjIndex = $index;
+	    }
+	}
+	$scope.removeImageBodyArray = false;
+	$scope.removeSelectedImage = function(){
+	     var removeImageBodyArray = $scope.tipImageArray[$scope.selectedImgObjIndex];
+	     var spliceReturn = $scope.tipImageArray.splice($scope.selectedImgObjIndex,1);
+	     $scope.removeImageBodyArray = true;
+	   
+	}
+	
 	$scope.editATipToggle = false;
 	$scope.editATip = function () {
 	    return $scope.editATipToggle;
@@ -1246,7 +1300,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.editATipToggle = !$scope.editATipToggle;
 	    $scope.addATipToggle = false;
 	    $scope.responseData = "";
-
+	    $scope.imageSelected = false;
 	    var tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
 
 
@@ -1481,15 +1535,34 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    var dawObjectJson = JSON.stringify(dawObject);
 
 	    var updatingImages = false;
-	    if ($scope.uploader.queue.length > 0) {
-		var imageDataObject = [{}]
-		for (var i = 0; i < $scope.uploader.queue.length; i++) {
-		    imageDataObject[i] = {imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
-			dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]};
+	    
+	    //if(($scope.tipBodyArray.length != $scope.tipArrayData[$scope.tipCounter].imageDataJson.length) || $scope.removeImageBodyArray){
+		var imageDataObject = [];
+		for (var i = 0; i < $scope.tipImageArray.length; i++) {
+		    var imageName = "";
+		    if(!runningProduction){
+			imageName =  $scope.tipImageArray[i].imageFileName.replace("resources/images/", "");
+		    }
+		    else{
+			imageName = $scope.tipImageArray[i].imageFileName
+		    }
+		    imageDataObject.push({imageName:imageName, imageSize:0,
+			dateModified: 0, newFileName: imageName});
 		}
 		var imageDataObjectJson = JSON.stringify(imageDataObject);
-		updatingImages == true;
-	    }
+		updatingImages = true;	
+	    //}
+	    
+	    
+	 /*   if ($scope.uploader.queue.length > 0) {
+		var imageDataObject = $scope.tipArrayData[$scope.tipCounter].imageDataJson;
+		for (var i = 0; i < $scope.uploader.queue.length; i++) {
+		    imageDataObject.push({imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
+			dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]});
+		}
+		var imageDataObjectJson = JSON.stringify(imageDataObject);
+		updatingImages = true;
+	    }*/
 
 
 	    var videoLink = $("#editVideoLink")[0].value;
@@ -1582,7 +1655,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	    $scope.addATipToggle = false;
 	    $scope.editATipToggle = false;
-	    $scope.updateImageFileName();
+	 //   $scope.updateImageFileName();
 	    $scope.updateBodyArray();
 	}
 
@@ -1630,7 +1703,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
 		$scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 		$scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
-		$scope.updateImageFileName();
+	//	$scope.updateImageFileName();
 		$scope.updateBodyArray();
 		$scope.navBarArray = "[";
 		for (var i = 0; i < $scope.tipArrayData.length; i++) {
@@ -1687,9 +1760,11 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	//Update Tip arrays when the tip is changed
 	$scope.updateBodyArray = function () {
 	    $scope.tipBodyArray = [];
+	    $scope.tipImageArray = [];
 	    $scope.currentTipId = $scope.tipArrayData[$scope.tipCounter]._id
 	    $scope.currentTipPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
-
+	    $scope.removeImageBodyArray = false;
+	    
 	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipDescJson")) {
 		for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].tipDescJson.length; i++) {
 		    var tipDescriptionLocal = $scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription;
@@ -1702,10 +1777,35 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    if (!runningProduction) {
 			imageFileNameLocal = "resources/images/" + imageFileNameLocal;
 		    }
-		    var hasImage = (imageFileNameLocal != "");
-		    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: imageFileNameLocal, submittedBy: submittedByLocal})
+		    var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/" && imageFileNameLocal != "resources/images/undefined");
+		    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal})
+		    if(hasImage){
+			 $scope.tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal});
+		    }
 		}
 	    }
+	    if(($scope.tipArrayData[$scope.tipCounter].tipDescJson.length) <= $scope.tipArrayData[$scope.tipCounter].imageDataJson.length){
+		var i = $scope.tipArrayData[$scope.tipCounter].tipDescJson.length-1;
+		for (var i; i < $scope.tipArrayData[$scope.tipCounter].imageDataJson.length; i++) {
+		    var tipDescriptionLocal = "";
+		    var submittedByLocal = $scope.tipArrayData[$scope.tipCounter].submittedBy;
+		    var imageFileNameLocal = "";
+		    if ($scope.tipArrayData[$scope.tipCounter].imageDataJson[i]) {
+			imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i].newFileName;
+		    }
+		    if (!runningProduction) {
+			imageFileNameLocal = "resources/images/" + imageFileNameLocal;
+		    }
+		    var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/");
+		    if(hasImage){
+			    $scope.tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal})
+			    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal})
+		    }
+		}
+	    }
+	    
+	    
+	    
 	    $scope.tipTagsArray = [];
 	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipTypeJson")) {
 		var isMastering = $scope.tipArrayData[$scope.tipCounter].tipTypeJson['masteringTip'];
@@ -1789,23 +1889,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	 //   }, 1000);
 	}
 
-	$scope.updateImageFileName = function () {
-	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("imageDataJson")) {
-		var imageObject = ($scope.tipArrayData[$scope.tipCounter].imageDataJson);
-		if (imageObject[0].hasOwnProperty('newFileName')) {
-		    $scope.hasImage = true;
-		    $scope.imageFileName = imageObject[0].newFileName;
-
-		} else {
-		    $scope.hasImage = false;
-		    $scope.imageFileName = "";
-		}
-
-	    } else {
-		$scope.hasImage = false;
-		$scope.imageFileName = "";
-	    }
-	}
+	
 
 	$scope.updateProfile = function () {
 	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
@@ -2024,7 +2108,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 	    $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
 
-	    $scope.updateImageFileName();
+	   // $scope.updateImageFileName();
 	    $scope.updateBodyArray();
 
 	}
@@ -2045,7 +2129,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 	    $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
-	    $scope.updateImageFileName();
+	  //  $scope.updateImageFileName();
 	    $scope.updateBodyArray();
 	}
 	$scope.backToTipsClicked = function () {   //dd tip to database
@@ -2174,14 +2258,28 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    }
 	    var dawObjectJson = JSON.stringify(dawObject);
 
-
-	    var imageDataObject = [{}]
+	    //if(($scope.tipBodyArray.length != $scope.tipArrayData[$scope.tipCounter].imageDataJson.length) || $scope.removeImageBodyArray){
+		var imageDataObject = [];
+		for (var i = 0; i < $scope.tipImageArray.length; i++) {
+		    var imageName = "";
+		    if(!runningProduction){
+			imageName =  $scope.tipImageArray[i].imageFileName.replace("resources/images/", "");
+		    }
+		    else{
+			imageName = $scope.tipImageArray[i].imageFileName
+		    }
+		    imageDataObject.push({imageName:imageName, imageSize:0,
+			dateModified: 0, newFileName: imageName});
+		}
+		var imageDataObjectJson = JSON.stringify(imageDataObject);
+	    //}
+	   /* var imageDataObject = [{}]
 	    for (var i = 0; i < $scope.uploader.queue.length; i++) {
 		imageDataObject[i] = {imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
 		    dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]};
 	    }
-
-	    var imageDataObjectJson = JSON.stringify(imageDataObject);
+	    */
+	
 
 	    var videoLink = $("#videoLink")[0].value;
 	    var videoLinkObject = {videoLink: videoLink};
@@ -2348,6 +2446,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	};
 	uploader.onSuccessItem = function (fileItem, response, status, headers) {
 	    console.info('onSuccessItem', fileItem, response, status, headers);
+	    
 	};
 	uploader.onErrorItem = function (fileItem, response, status, headers) {
 	    console.info('onErrorItem', fileItem, response, status, headers);
@@ -2357,8 +2456,17 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	};
 	uploader.onCompleteItem = function (fileItem, response, status, headers) {
 	    console.info('onCompleteItem', fileItem, response, status, headers);
+
+
 	    $scope.uploadedImages[numberOfImages] = response;
+	    
+	    var imageFileNameLocal = response;
+	    if (!runningProduction) {
+			imageFileNameLocal = "resources/images/" + response;
+		}
+	    $scope.tipImageArray.push({tipImageNumber: numberOfImages, tipDescription: "doesn'tmatter", imageFileName: imageFileNameLocal, hasImage: true, submittedBy: "submittedBy"})
 	    numberOfImages++;
+
 	};
 	uploader.onCompleteAll = function () {
 	    console.info('onCompleteAll');

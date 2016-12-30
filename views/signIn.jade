@@ -9,8 +9,8 @@ append body
 				h3
 					#titleName= title				
 				//div.alert#note #{messages}
-			#soundCloudWrapper(ng-click='signInWithSoundCloud()')
-				img(src='http://connect.soundcloud.com/2/btn-connect-sc-s.png')
+			//#soundCloudWrapper(ng-click='signInWithSoundCloud()')
+			//	img(src='http://connect.soundcloud.com/2/btn-connect-sc-s.png')
 			form#signInDetails(action="/signIn" method = "post")
 				+label-info("Username:")
 				br

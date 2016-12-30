@@ -1,6 +1,6 @@
 body {
   padding: 50px;
-  background-color: #f5f8fa;
+  background-color: #f1f1f1;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 #navbar_menu{
@@ -328,4 +328,22 @@ float:left;width:22%;
 
 #tipWrapper{
     transition: all 1s ease-in-out;
+}
+.imageThumbNail{
+    max-height: 130px;
+    max-width:116px;
+}
+.imageThumbNail.active,.imageThumbNail:active,.imageThumbNail:hover{
+    background-color: darkgreen;
+}
+.btn:disabled {
+    background-color: darkgray;
+    border-color: darkslateblue;
+}
+
+
+
+//ABOUT
+.aboutImg{
+    width:457px;
 }

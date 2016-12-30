@@ -98,8 +98,8 @@ append body
 									
 									
 									br
-									#imgDiv(ng-if="hasImage")
-										img(ng-show="hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
+									#imgDiv(ng-if="tipPart.hasImage")
+										img(ng-show="tipPart.hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
 							div#TagsAndSubmittedBy(style="text-indent: 0px;padding-bottom:0px;")
 								
 								#tipTagsDiv(ng-repeat='tipTag in tipTagsArray track by $index' style='display:inline-block;')
@@ -126,7 +126,15 @@ append body
 							button.btn(ng-click="addDescription()" style="float:left")
 								span.glyphicon.glyphicon-plus
 							#noteWrapper(style="float:left;margin-left:5%;width:80%;")
-								span(style="font-style:italic;") Note: For now, images are displayed in the order they are uploaded.  If you want an image between paragraphs, add a description.  The first image uploaded is displayed after the first description, the second image after the second description.. and so on.
+								span(style="font-style:italic;") Note: Images are displayed in the order they are uploaded.  If you want an image between paragraphs, add a description.  The first image uploaded is displayed after the first description, the second image after the second description.. and so on.
+					#uploadedImagesWrapper(style='display:inline-block;')
+						#imageWrapper(ng-if='tipBodyArray' style='float:left;' ng-repeat='tipPart in tipImageArray' )
+							img.img-thumbnail.imageThumbNail(class='imageAttached{{$index}}' ng-show="{{tipPart.hasImage}}" src='{{tipPart.imageFileName}}' ng-click='editImageClicked($index);')
+						#imageSelectedData(style='')
+							{{imageSelectedData}}
+							button.btn.btn-danger.btn-xs(ng-click='removeSelectedImage($index)' ng-disabled='!imageSelected')
+								span.glyphicon.glyphicon-remove-sign
+								span &nbsp Remove
 					.imageUploaderInputWrapper(style="margin-top:5px;")
 						.headerImageInput(style="font-size:small;color:#777777")
 							span Image Uploader
@@ -223,6 +231,14 @@ append body
 							span.glyphicon.glyphicon-minus
 						#noteWrapper(style="float:left;margin-left:5%;width:80%;")
 								span(style="font-style:italic;") Note: For now, images are displayed in the order they are uploaded.  If you want an image between paragraphs, add a description.  The first image uploaded is displayed after the first description, the second image after the second description.. and so on.
+					#uploadedImagesWrapper(style='display:inline-block;')
+						#imageWrapper(style='float:left; width:130px; height:130px' ng-repeat='tipPart in tipImageArray' )
+							img.img-thumbnail.imageThumbNail(class='imageAttached{{$index}}' ng-show="tipPart.hasImage" src='{{tipPart.imageFileName}}' ng-click='editImageClicked($index);')
+						#imageSelectedData(style='')
+							{{imageSelectedData}}
+							button.btn.btn-danger.btn-xs(ng-show = 'tipImageArray.length>0' ng-click='removeSelectedImage()' ng-disabled='!imageSelected')
+								span.glyphicon.glyphicon-remove-sign
+								span &nbsp Remove
 					.imageUploaderInputWrapper(style="margin-top:5px;")
 						.headerImageInput(style="font-size:small;color:#777777")
 							span Image Uploader

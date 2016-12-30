@@ -85,7 +85,7 @@ module.exports = function (router, passport) {
     });
     /* GET About page. */
     router.get('/about', function (req, res) {
-	res.render('about', {title: 'About This'});
+	res.render('about', {title: 'About Music Production Helper'});
     });
     /* GET Samples page. */
     router.get('/samplesPage', function (req, res) {
@@ -123,7 +123,8 @@ module.exports = function (router, passport) {
 
     router.get('/profile', isLoggedIn, function (req, res) {
 	res.render('profile', {username: req.user.local.username,
-				localuser:req.user});
+				localuser:req.user,
+				greeting:"Welcome "});
     });
     
      router.get('/profile/:username', function (req, res) {

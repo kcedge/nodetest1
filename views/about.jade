@@ -1,11 +1,28 @@
 extends layout
 
 append body
-	.container(style="text:center")
+	.pageController.container(style="text:center")
 		.titleBannerDiv()
+			h1
 				#titleName= title
-		#contentWrapper()
-			+panel-primary("Casey CrazyLegs","user")
-				p Hi, I'm a Software Engineer and Music Producer from Ann Arbor MI.  My DJ name currently is Casey Crazylegs. Long story short, as a kid I was a fool with crazy legs. 
-				p The sites main goal is to help other music producers/artists like myself on their journey with music.  I hope to develop tools that help these artists do what they do best, be creative and create good music.
-				p Please contact me at crazylegsmusic@gmail.com if you would like to help!
+		#contentWrapper().filterBoxStyle(style='padding:10px')
+			div#pWrapper
+				p Music Production Helper's goal is to help music producers.  The MPH plan is write as many cool/creative applications we can think of to help music producers learn what the need to know.  If you would like to help on this project that would be awesome, email me at musicproductionhelper@gmail.com.
+				p In order to become a better producer quickly, it is very important to collaborate with other producers to gain knowledge from each other.  The idea of the MPH Tip Library is to create a network of users that can create blog style tips to help other users. With a WYSIWIG editor it is very easy for producers to quickly create tips, upload images and share. Using AngularJs filtering, users searching for a tip can quickly sort through the library to find what they are looking for, without a page load. Users can save tips to their profile for reference later, and comment on tips for collaboration.  Users can view others profiles to check out the tips they have submitted, liked, and how to find their music.
+			#imgAboutDiv(style="display:inline-block")
+				#leftDiv(style='float:left;width:49%;')
+					h2 Editor
+					img.img-rounded.aboutImg(style='width:100%' src="https://s3-us-west-2.amazonaws.com/tip-photos-bucket/1483118361410")
+				span.glyphicon.glyphicon-arrow-right(style='width:2%;margin-top:50%;')
+				#rightdDiv(style='float:right;width:49%;')
+					h2 Tip
+					img.img-rounded.aboutImg(style='width:100%' src="https://s3-us-west-2.amazonaws.com/tip-photos-bucket/1483118362372")
+			#imgAboutProfile
+				h2 Example Profile
+				img.img-rounded(style='width:100%' src='https://s3-us-west-2.amazonaws.com/tip-photos-bucket/1483120072289')
+
+
+			//+panel-primary("Casey CrazyLegs","user")
+			//	p Hi, I'm a Software Engineer and Music Producer from Ann Arbor MI.  My DJ name currently is Casey Crazylegs. Long story short, as a kid I was a fool with crazy legs. 
+			//	p The sites main goal is to help other music producers/artists like myself on their journey with music.  I hope to develop tools that help these artists do what they do best, be creative and create good music.
+			//	p Please contact me at crazylegsmusic@gmail.com if you would like to help!
