@@ -84,23 +84,23 @@ append body
 							#pointsDiv(style="float:right;margin-left:5px;margin-right:-13px;")
 								+label-default("{{currentTipPoints}}")
 							h3(style="float:right;margin-top:20px;margin-top:15px;")
-								button.btn.btn-default#dislikeButton(style="margin-right:5px;" ng-click="dislikeButtonClicked()")
+								button.btn.btn-default#dislikeButton(title="downvote tip" style="margin-right:5px;" ng-click="dislikeButtonClicked()")
 									span.glyphicon.glyphicon-arrow-down
-								button.btn.btn-default#likeButton(style="margin-right:5px;" ng-click="likeButtonClicked()")
+								button.btn.btn-default#likeButton(title="upvote tip" style="margin-right:5px;" ng-click="likeButtonClicked()")
 									span.glyphicon.glyphicon-arrow-up
-								button.btn.btn-default#loveButton(ng-click="loveButtonClicked()")
+								button.btn.btn-default#loveButton(title="save tip" ng-click="loveButtonClicked()")
 									span.glyphicon.glyphicon-heart
 							
 					#TipTitlePanel.panel.panel-default
 						#panelBody.panel-body.panel-body(style="text-indent: 0px;padding-bottom:0px;")
 							div.tipDescription#tipBody(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tipBodyArray")			
-								p#descBody(ng-bind-html="tipPart.tipDescription | to_trusted")
+								div#descBody(ng-bind-html="tipPart.tipDescription | to_trusted")
 									
 									
 									br
-									#imgDiv(ng-if="tipPart.hasImage")
+									.imgDiv(ng-if="tipPart.hasImage")
 										img(ng-show="tipPart.hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
-							div#TagsAndSubmittedBy(style="text-indent: 0px;padding-bottom:0px;")
+							div#TagsAndSubmittedBy(style="text-indent: 0px;padding-bottom:0px;padding-top:10px;")
 								
 								#tipTagsDiv(ng-repeat='tipTag in tipTagsArray track by $index' style='display:inline-block;')
 									span(ng-if='($index==0)' style='float:left')
@@ -109,7 +109,8 @@ append body
 										+label-primary("{{tipTag}}")
 								#submittedByDiv.small(style="padding-top:5px")
 									span Submitted By: 
-										a(href="/profile/{{submittedBy}}"){{submittedBy}}		
+										a(href="/profile/{{submittedBy}}"){{submittedBy}}
+									time.small(style='margin-left:2px'){{submittedDate|date:"MM/dd/yyyy"}}
 				//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])
 			
 			.addATipPageWrapper(ng-show="addATipToggle")
@@ -123,7 +124,7 @@ append body
 							
 							button.btn(ng-click="subtractDescription()" style="float:left")
 								span.glyphicon.glyphicon-minus
-							button.btn(ng-click="addDescription()" style="float:left")
+							button.btn(title="add description" ng-click="addDescription()" style="float:left")
 								span.glyphicon.glyphicon-plus
 							#noteWrapper(style="float:left;margin-left:5%;width:80%;")
 								span(style="font-style:italic;") Note: Images are displayed in the order they are uploaded.  If you want an image between paragraphs, add a description.  The first image uploaded is displayed after the first description, the second image after the second description.. and so on.

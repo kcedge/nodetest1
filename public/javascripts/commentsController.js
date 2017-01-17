@@ -92,9 +92,12 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 	    }
 	    var datePublished = parseDate(comment.datePublished).getTime();
 	    var difference =  ((now.getTime() - datePublished)/(3600000));
-	    if(difference < 24 && difference > 0){
+	    if(difference < 24){
 		if(difference < 1){
-		    if(difference < .2){
+		    if(difference < 0){
+			return "just now"
+		    }
+		    else if(difference < .2){
 			return "a few minutes ago"
 		    }
 		    else if(difference >= .2 && difference < .4){

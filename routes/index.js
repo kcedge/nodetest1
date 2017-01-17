@@ -361,6 +361,7 @@ module.exports = function (router, passport) {
 	var videoLinkJson = req.body['videoLinkJson'];
 	var submittedBy = req.body['submittedBy'];
 	var tipPoints = req.body['points'];
+	var dateSubmitted = req.body['dateSubmitted'];
 	
 	MongoClient.connect(url, function (err, db) {
 	    if (err) {
@@ -374,7 +375,7 @@ module.exports = function (router, passport) {
 		var collection = db.collection('tipsCollection');
 		console.log(tipId);
 		if (updatingImages) {
-		    collection.update({_id: ObjectId(tipId)}, {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson, submittedBy: submittedBy, tipPoints: tipPoints}, function (err, db) {
+		    collection.update({_id: ObjectId(tipId)}, {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson, submittedBy: submittedBy, tipPoints: tipPoints,dateSubmitted:dateSubmitted}, function (err, db) {
 			if (err) {
 			    console.log('Unable to edit tip to tipsCollection', err);
 			    res.send('Tip edit failed');
@@ -385,7 +386,7 @@ module.exports = function (router, passport) {
 		    });
 		}
 		else{
-		        collection.update({_id: ObjectId(tipId)}, {$set: {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, videoLinkJson: videoLinkJson, submittedBy: submittedBy, tipPoints: tipPoints}}, function (err, db) {
+		        collection.update({_id: ObjectId(tipId)}, {$set: {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, videoLinkJson: videoLinkJson, submittedBy: submittedBy, tipPoints: tipPoints,dateSubmitted:dateSubmitted}}, function (err, db) {
 			if (err) {
 			    console.log('Unable to edit tip to tipsCollection', err);
 			    res.send('Tip edit failed');

@@ -3,6 +3,10 @@ body {
   background-color: #f1f1f1;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+p {
+    margin: 0;
+    padding:0;
+}
 #navbar_menu{
     background-color: white;
     border-radius: 5px;
@@ -125,7 +129,7 @@ float:left;width:22%;
 
 .btn-primary.active, .btn-primary.focus, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open>.dropdown-toggle.btn-primary {
     color: #fff;
-    background-color: #120129;
+    background-color: darkslateblue;
     border-color: #204d74;
     border-style: solid;
     border-width: thin;
@@ -239,18 +243,25 @@ float:left;width:22%;
 .panel-heading{
     background-color: white;
 }
-
-#loveButton.active, #loveButton.focus, #loveButton:active, #loveButton:focus, #loveButton:hover{
+.btn.btn-default:hover{
     color: #fff;
-    background-color: #120129;
+    background-color: darkslateblue;
+    border-color: #204d74;
+    border-style: solid;
+    border-width: thin;
+    cursor: pointer;
+}
+#loveButton.active, #loveButton.focus, #loveButton:active, #loveButton:focus{
+    color: #fff;
+    background-color: darkslateblue;
     border-color: #204d74;
     border-style: solid;
     border-width: thin;
     cursor: pointer;
 } 
-#likeButton.active, #likeButton.focus, #likeButton:active, #likeButton:focus, #likeButton:hover{
+#likeButton.active, #likeButton.focus, #likeButton:active, #likeButton:focus {
     color: #fff;
-    background-color: #120129;
+    background-color: darkslateblue;
     border-color: #204d74;
     border-style: solid;
     border-width: thin;
@@ -259,9 +270,9 @@ float:left;width:22%;
 .btn:disabled{
     //background-color: lightpink;
 }
-#dislikeButton.active, #dislikeButton.focus, #dislikeButton:active, #dislikeButton:focus, #dislikeButton:hover{
+#dislikeButton.active, #dislikeButton.focus, #dislikeButton:active, #dislikeButton:focus {
     color: #fff;
-    background-color: #120129;
+    background-color: darkslateblue;
     border-color: #204d74;
     border-style: solid;
     border-width: thin;
@@ -302,7 +313,21 @@ float:left;width:22%;
     //transition: 0.5s linear opacity;
    // opacity: 1;
 }
+ul,ol{
+    display:inline-block;   
+     overflow: hidden;
+    
+}
+div > ul{
+    margin-top: -40px;
+}
+li > ul{
+    margin-top: -15px;
+}
 
+li{
+    float:left;
+}
 
 .ng-hide-add-active {
     opacity: 0;
@@ -336,6 +361,10 @@ float:left;width:22%;
 .imageThumbNail.active,.imageThumbNail:active,.imageThumbNail:hover{
     background-color: darkgreen;
 }
+.imgDiv{
+    margin-top:10px;
+}
+
 .btn:disabled {
     background-color: darkgray;
     border-color: darkslateblue;

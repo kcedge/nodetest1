@@ -1396,13 +1396,15 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		selector: '#textAreaTip' + $scope.descriptionCounter,
 		plugins: "link",
 		menubar: 'file edit insert view format table tools',
-		toolbar: "link | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+		toolbar: "link | fontselect| undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
 		target_list: [
 		    {title: 'None', value: ''},
 		    {title: 'Same page', value: '_self'},
 		    {title: 'New page', value: '_blank'},
 		    {title: 'LIghtbox', value: '_lightbox'}
-		]
+		],
+		font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n'
+
 	    });
 	}
 	$scope.subtractDescription = function () {
@@ -1425,13 +1427,14 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		selector: '#textAreaEditTip' + $scope.descriptionCounter,
 		plugins: "link",
 		menubar: 'file edit insert view format table tools',
-		toolbar: "link | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+		toolbar: "link |fontselect| undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
 		target_list: [
 		    {title: 'None', value: ''},
 		    {title: 'Same page', value: '_self'},
 		    {title: 'New page', value: '_blank'},
 		    {title: 'LIghtbox', value: '_lightbox'}
-		]
+		],
+		font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n'
 	    });
 	}
 	$scope.editSubtractDescription = function () {
@@ -1577,6 +1580,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		tipPoints = 1;
 	    }
 	    var req = "";
+	    
+	    var date = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
 	    if (updatingImages) {
 		req = {
 		    method: 'PUT',
@@ -1594,7 +1599,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			imageDataJson: imageDataObjectJson,
 			videoLinkJson: videoLinkJson,
 			submittedBy: $localStorage.username,
-			points: tipPoints
+			points: tipPoints,
+			dateSubmitted:date
 		    }
 
 		}
@@ -1615,7 +1621,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			dawJson: dawObjectJson,
 			imageDataJson: imageDataObjectJson,
 			submittedBy: $localStorage.username,
-			points: tipPoints
+			points: tipPoints,
+			dateSubmitted:date
 		    }
 
 		}
@@ -1756,7 +1763,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	}
 
-
+	$scope.submittedDate = "";
 	//Update Tip arrays when the tip is changed
 	$scope.updateBodyArray = function () {
 	    $scope.tipBodyArray = [];
@@ -1764,12 +1771,15 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.currentTipId = $scope.tipArrayData[$scope.tipCounter]._id
 	    $scope.currentTipPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
 	    $scope.removeImageBodyArray = false;
+	    $scope.submittedDate = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
 	    
 	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipDescJson")) {
 		for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].tipDescJson.length; i++) {
 		    var tipDescriptionLocal = $scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription;
 		    var submittedByLocal = $scope.tipArrayData[$scope.tipCounter].submittedBy;
+		    var submittedDateLocal = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
 		    var imageFileNameLocal = "";
+		    
 		    if ($scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1]) {
 			imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1].newFileName;
 		    }
@@ -1778,9 +1788,9 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			imageFileNameLocal = "resources/images/" + imageFileNameLocal;
 		    }
 		    var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/" && imageFileNameLocal != "resources/images/undefined");
-		    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal})
+		    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal,submittedDate:submittedDateLocal})
 		    if(hasImage){
-			 $scope.tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal});
+			 $scope.tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal,submittedDate:submittedDateLocal});
 		    }
 		}
 	    }
@@ -1789,6 +1799,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		for (var i; i < $scope.tipArrayData[$scope.tipCounter].imageDataJson.length; i++) {
 		    var tipDescriptionLocal = "";
 		    var submittedByLocal = $scope.tipArrayData[$scope.tipCounter].submittedBy;
+		    var submittedDateLocal = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
 		    var imageFileNameLocal = "";
 		    if ($scope.tipArrayData[$scope.tipCounter].imageDataJson[i]) {
 			imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i].newFileName;
@@ -1798,8 +1809,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    }
 		    var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/");
 		    if(hasImage){
-			    $scope.tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal})
-			    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal})
+			    $scope.tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal,submittedDate:submittedDateLocal})
+			    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal,submittedDate:submittedDateLocal})
 		    }
 		}
 	    }
@@ -1877,6 +1888,9 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    else {
 		$('#dislikeButton').removeClass("active");
 	    }
+	    
+	    
+	    
 	    //Update comments
 	    CommentsService.getComments($scope.currentTipId).then(function (response) {
 		$scope.comments = response.data;
@@ -1889,7 +1903,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	 //   }, 1000);
 	}
 
-	
+
 
 	$scope.updateProfile = function () {
 	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
@@ -2139,27 +2153,37 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	tinyMCE.init({
 	    selector: '#textAreaTip',
-	    plugins: "link image",
+	    plugins: "link image paste lists advlist",
 	    menubar: 'file edit insert view format table tools',
-	    toolbar: "link | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+	    toolbar: "link | undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
 	    target_list: [
 		{title: 'None', value: ''},
 		{title: 'Same page', value: '_self'},
 		{title: 'New page', value: '_blank'},
 		{title: 'LIghtbox', value: '_lightbox'}
-	    ]
+	    ], paste_as_text: false,
+	    forced_root_block : '' ,force_br_newlines : true,
+   force_p_newlines : false,
+	    
+    advlist_bullet_styles: "square"
+	 
+	     //font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n',
 	});
 	tinyMCE.init({
 	    selector: '#textAreaEditTip',
-	    plugins: "link image",
+	    plugins: "link image  paste lists advlist",
 	    menubar: 'file edit insert view format table tools',
-	    toolbar: "link | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+	    toolbar: "link | undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
 	    target_list: [
 		{title: 'None', value: ''},
 		{title: 'Same page', value: '_self'},
 		{title: 'New page', value: '_blank'},
 		{title: 'LIghtbox', value: '_lightbox'}
-	    ]
+	    ],
+	    paste_as_text: false,
+	    forced_root_block : '' ,
+	    force_br_newlines : true,
+   force_p_newlines : false// Needed for 3.x
 	});
 	$scope.isReadyForSubmit = function () {
 	    var content =  "";
