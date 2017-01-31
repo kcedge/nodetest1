@@ -1,0 +1,8 @@
+		
+ul.panel-body.comment-detail-list(style='margin-top:25px;')
+	div(ng-repeat="pack in $parent.packs" style='display:inline:block')
+		div.packWrapper.cursor(style='float:left' ng-click='packClicked(pack)' id='pack{{pack._id}}' ng-class="{'active':pack.active}")
+			div#packName
+				span {{pack.packname}}
+			
+		

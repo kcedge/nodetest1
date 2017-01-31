@@ -9,7 +9,7 @@
 /* global angular */
 
 // Declare app level module which depends on filters, and services ['ngAnimate']
-var myApp = angular.module('myApp', ['angularFileUpload','ngStorage','ngAnimate']);
+var myApp = angular.module('myApp', ['angularFileUpload','ngStorage','ngAnimate','ngTagsInput','ngAudio']);
  
 myApp.directive('commentList', [
   function () {
@@ -22,6 +22,33 @@ myApp.directive('commentList', [
       templateUrl: '/comments-list',
       controller: 'CommentsCtrl',
       controllerAs: 'comments'
+    };
+  }]);
+  
+  myApp.directive('samplesList', [
+  function () {
+    return {
+      restrict: 'E',
+      scope: {
+        contentId: '=',
+        contentTitle: '='
+      },
+      templateUrl: '/samples-list',
+      controller: 'samplesCtrl',
+      controllerAs: 'samples'
+    };
+  }]);
+  myApp.directive('packsList', [
+  function () {
+    return {
+      restrict: 'E',
+      scope: {
+        contentId: '=',
+        contentTitle: '='
+      },
+      templateUrl: '/packs-list',
+      controller: 'packsCtrl',
+      controllerAs: 'packs'
     };
   }]);
 

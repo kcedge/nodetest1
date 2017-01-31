@@ -4,7 +4,41 @@ append body
 	.container.pageController(ng-controller="bodyTipHelperController" style = 'margin:0 auto;width:90%;max-width:966px;' )
 		.div(style="text:center;max-width:880px;width:94%")
 			+alert-i-warning("The tip library is still in early development. This is a place for music producers to quickly reference a set of tips, that will help them generate ideas.  The tip library has filters for a number of categories allowing for a quick search(filter by Daw/Genre/Vst/Theory ect..) The library itself needs to be grown, if you would like to contribute to the Tip Library sign up with Music Production Helper, navigate to the Tip Library and click the 'Add' button.  Also, if you have any ideas on how to make this page a more useful place for producers, please reach out to me, my info is on the contact page under connect.","heart")
+		
+		#filterWrapper.filterBoxStyle(ng-style="filtersBoxStyle" )
+							+label-info("Filters:")
+							tipTypeFilterWrapper(style="margin-top:5px;display:inline-block;")
+							.btnWrapper
+								+label-default("Type:")
+								input.inputToggleClass(ng-click="theoryToggle()" type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
+								+label-primary("Theory")
+								input.inputToggleClass(ng-click="mixingToggle()" type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
+								+label-primary("Mixing")
+								input.inputToggleClass(ng-click="masteringToggle()" type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
+								+label-primary("Mastering")
+								input.inputToggleClass(ng-click="soundDesignToggle()" type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
+								+label-primary("Sound Design")
+								input.inputToggleClass(ng-click="workflowToggle()" type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
+								+label-primary("Work Flow")
 
+							tipGenreFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+								.btnWrapper(style="float:left")
+									+label-default("Genre:")
+								.genreButton(ng-repeat = "genre in genreArray" style="float:left")
+									input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='filterGenreId{{genre.genreName}}' ng-click="filterGenreClicked(genre.genreName)")
+									+label-primary("{{genre.genreName}}")
+							tipDAWFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+								.btnWrapper(style="float:left")
+									+label-default("DAW:")
+								.dawButton(style="float:left" ng-repeat = "daw in dawArray")							
+									input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}' ng-click="filterDawClicked(daw.dawName)")
+									+label-primary("{{daw.dawName}}")
+							tipVSTFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+								.btnWrapper(style="float:left")
+									+label-default("VST:")
+								.vstButton(style="float:left" ng-repeat = "vst in vstArray")							
+									input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='inputDawId{{vst.vstName}}' ng-click="filterVstClicked(vst.vstName)")
+									+label-primary("{{vst.vstName}}")
 		#navBarWrapper(style="float:left;width:20%;max-width:200px;")
 			//#blockForMargin(style="height:11px;width:100%")
 			#sortNavBarWrapper(style="display:inline-block;width:100%;margin-bottom:5px;")
@@ -29,40 +63,7 @@ append body
 				//h2
 				//	#titleName= title
 				
-				#filterWrapper.filterBoxStyle(ng-style="filtersBoxStyle" )
-					+label-info("Filters:")
-					tipTypeFilterWrapper(style="margin-top:5px;display:inline-block;")
-					.btnWrapper
-						+label-default("Type:")
-						input.inputToggleClass(ng-click="theoryToggle()" type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
-						+label-primary("Theory")
-						input.inputToggleClass(ng-click="mixingToggle()" type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
-						+label-primary("Mixing")
-						input.inputToggleClass(ng-click="masteringToggle()" type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
-						+label-primary("Mastering")
-						input.inputToggleClass(ng-click="soundDesignToggle()" type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
-						+label-primary("Sound Design")
-						input.inputToggleClass(ng-click="workflowToggle()" type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
-						+label-primary("Work Flow")
-						
-					tipGenreFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
-						.btnWrapper(style="float:left")
-							+label-default("Genre:")
-						.genreButton(ng-repeat = "genre in genreArray" style="float:left")
-							input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='filterGenreId{{genre.genreName}}' ng-click="filterGenreClicked(genre.genreName)")
-							+label-primary("{{genre.genreName}}")
-					tipDAWFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
-						.btnWrapper(style="float:left")
-							+label-default("DAW:")
-						.dawButton(style="float:left" ng-repeat = "daw in dawArray")							
-							input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}' ng-click="filterDawClicked(daw.dawName)")
-							+label-primary("{{daw.dawName}}")
-					tipVSTFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
-						.btnWrapper(style="float:left")
-							+label-default("VST:")
-						.vstButton(style="float:left" ng-repeat = "vst in vstArray")							
-							input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='inputDawId{{vst.vstName}}' ng-click="filterVstClicked(vst.vstName)")
-							+label-primary("{{vst.vstName}}")
+				
 				#prvButton.keyButton(ng-click="prevButtonClicked()")
 					+btn-xs("Previous")
 				#nxtButton.keyButton(ng-click="nextButtonClicked()" style="float:right")
@@ -81,6 +82,8 @@ append body
 							h2(style="float:left;max-width:450px;margin-left: 3px;margin-top:15px;") {{tipTitle}}
 							span#currentTipId(ng-show="false")
 								{{currentTipId}}
+							span#currentTipIdToLoad(ng-show="false")
+								#{id}
 							#pointsDiv(style="float:right;margin-left:5px;margin-right:-13px;")
 								+label-default("{{currentTipPoints}}")
 							h3(style="float:right;margin-top:20px;margin-top:15px;")

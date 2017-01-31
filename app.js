@@ -34,7 +34,10 @@ app.set('dbUrl',url);
 
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views',[__dirname + '/views']);
+console.log("VIEWS");
+console.log(app.get('views'));
+
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
@@ -51,16 +54,20 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-var routes = require('./routes/index');
+/*var routes = require('./routes/index');
 var users = require('./routes/users');
 var images = require('./routes/images');
 var profile = require('./routes/profile');
 var tips = require('./routes/tips');
 var comments = require('./routes/comments');
+var sampleLib = require('./routes/sampleLibRoutes');*/
+
 
 require('./routes/index')(app,passport);
 require('./routes/comments')(app,passport);
 require('./routes/profile')(app,passport);
+require('./routes/sampleLibRoutes')(app,passport);
+
 require('./config/passport')(passport); // pass passport for configuration
 //
 // required for passport
@@ -70,12 +77,13 @@ app.use(function(req,res,next){
     req.db = db;
     next();
 });
-app.use('/', routes);
+/*app.use('/', routes);
 app.use('/users.js', users);
 app.use('/images.js', images);
 app.use('/profile.js', profile);
 app.use('/tips.js', tips);
 app.use('/comments.js', comments);
+app.use('/sampleLibRoutes.js', sampleLib);*/
 //require('./routes/index.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 // catch 404 and forward to error handler

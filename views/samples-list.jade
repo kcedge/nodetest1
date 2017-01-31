@@ -1,0 +1,48 @@
+		
+ul.panel-body.comment-detail-list(style='margin-top:25px;')
+	//input(type="text" class="form-control" placeholder="Search da Fish" ng-model="searchSample")
+
+	div#samplesHeader.row.sampleRowWrapper
+		div(style='float:left;width:43px;height:30px;')
+			
+		div.col-xs-3.col-sm-3.col-md-3.col-lg-3()
+				span Durantion
+		
+		div#sampleNameAndTags.col-xs-4.col-sm-4.col-md-4.col-lg-4.hover(ng-click="sortType = 'originalName';sortReverse = !sortReverse")
+				span Filename	
+				span.glyphicon.glyphicon-menu-down.small(ng-show="sortType == 'originalName'&&!sortReverse")
+				span.glyphicon.glyphicon-menu-up.small(ng-show="sortType == 'originalName'&&sortReverse")
+		
+		div.key.col-xs-1.col-sm-1.col-md-1.col-lg-1.hover(ng-click="sortType = 'key';sortReverse = !sortReverse")
+				span Key	
+				span.glyphicon.glyphicon-menu-down.small(ng-show="sortType == 'key'&&!sortReverse" )
+				span.glyphicon.glyphicon-menu-up.small(ng-show="sortType == 'key'&&sortReverse" )
+
+		div.bpm.col-xs-1.col-sm-1.col-md-1.col-lg-1.hover(ng-click="sortType = 'bpm';sortReverse = !sortReverse")
+				span BPM	
+				span.glyphicon.glyphicon-menu-down.small(ng-show="sortType == 'bpm'&&!sortReverse")
+				span.glyphicon.glyphicon-menu-up.small(ng-show="sortType == 'bpm'&&sortReverse" class="fa fa-caret-up")
+	div(ng-repeat="sample in $parent.samples | orderBy:sortType:sortReverse| filter:searchSample")
+		div.sampleRowWrapper.row(ng-show='sample.show')
+			div.playbtn.btn.btn-primary(style='float:left' ng-click='samplePlayClicked(sample)')
+				span(ng-show='sample.audio.paused' style='margin-top:5px;').glyphicon.glyphicon-play-circle
+				span(ng-show='!sample.audio.paused' style='margin-top:5px;').glyphicon.glyphicon-pause
+			div.col-xs-3.col-sm-3.col-md-3.col-lg-3.hover(id="duration{{sample._id}}" style='height:40px' ng-click="progressInputClicked(sample,$event)")
+					div(style='height:10px; border-style:solid; width:0px;' ng-style="{ 'width': sample.audio.progress*100 + '%' }" type="range" min="0" max="1" step="0.01" ng-model="sample.audio.progress")
+					div#sampleAudio(style='')
+						span {{sample.audio.currentTime| number : fractionSize}} / {{sample.audio.currentTime+sample.audio.remaining| number : fractionSize}}
+			div#sampleNameAndTags.small.col-xs-4.col-sm-4.col-md-4.col-lg-4(style='overflow:hidden')
+				div#sampleName.hover
+					{{sample.originalName}}
+				div#tags(style='display:inline-block')
+					div(ng-repeat='tag in sample.tags' style='float:left')
+						label.label-primary(style='margin-right:3px;') {{tag.text}}
+			div.key.col-xs-1.col-sm-1.col-md-1.col-lg-1
+				span {{sample.key}}
+			div.bpm.col-xs-1.col-sm-1.col-md-1.col-lg-1
+				span {{sample.bpm}}
+			div.other(style='float:right')
+				span.hover.glyphicon.glyphicon-heart(style='margin-right:5px;')
+				a(target="_self" id='download{{sample._id}}' ng-click='downloadClicked(sample)' href="resources/samples/{{sample.fileName}}")
+					span.hover.glyphicon.glyphicon-download(style='margin-right:5px;')
+				span.hover.glyphicon.glyphicon-menu-hamburger(style='margin-right:5px;')

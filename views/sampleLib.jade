@@ -1,0 +1,53 @@
+extends layout
+
+append body
+	div(ng-controller="bodySampleController" )
+		div().row
+			+alert-i-warning("The sample library is still in early development. This is a place for music producers to quickly reference a set of tips, that will help them generate ideas.  The tip library has filters for a number of categories allowing for a quick search(filter by Daw/Genre/Vst/Theory ect..) The library itself needs to be grown, if you would like to contribute to the Tip Library sign up with Music Production Helper, navigate to the Tip Library and click the 'Add' button.  Also, if you have any ideas on how to make this page a more useful place for producers, please reach out to me, my info is on the contact page under connect.","heart")
+		
+		div.packListWrapper
+			packs-list#packList
+		div#packAndSampleWidget.row
+			div.sampleListWrapper.col-xs-12.col-sm-12.col-lg-12.col-md-12
+				samples-list(contentId = '1')
+			
+		div#addContent.container
+			.imageUploaderInputWrapper(style="margin-top:5px;")
+						.inputWrapper
+							h4 Upload a pack
+							input.form-control(type='text' ng-model='packname' placeholder="Enter pack name")
+							.headerImageInput(style="font-size:small;color:#777777")
+								h5 Audio Uploader
+								span(style='float:right') {{fileErrorMessage}}
+							input.inputClass(type="file" multiple nv-file-select uploader="uploader")
+							div(ng-repeat="item in uploader.queue")
+								{{item.file.name}}
+								
+								div#audioMetaData(class='row' style='margin-left:10px;width:100%')
+									div#bpmWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
+										span.small BPM
+										input.form-control(ng-model='item.bpm' type='number')
+									div#keyWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
+										span.small KEY
+										select.form-control(ng-model='item.key' ng-options="k as k for k in keyValues")
+									div#keyWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
+										span.small Type
+										select.form-control(ng-model='item.type' ng-options="t as t for t in typeValues")
+									div#tagInputWrapper(class='col-sm-5 col-md-5 col-lg-5 col-xs-5')
+										tags-input(ng-model='item.tags')
+											auto-complete(source='getTags($query)')
+									div#cancelButton(class='col-sm-1 col-md-1 col-lg-1 col-xs-1')
+										button.btn.btn-default.btn-xs(ng-click="item.remove()" style=";color:black;margin-left:5px;")
+											span.glyphicon.glyphicon-remove
+						.progress
+							.progress-bar(role="progressbar" ng-style="{width:uploader.progress + '%'}" style="width:0%;")
+						#audioUploadButtonsDiv(ng-show="uploader.queue.length > 0" style='margin-bottom:5px;')
+							button.btn.btn-danger.btn-xs(ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length" )
+											span.glyphicon.glyphicon-trash 
+											&nbsp Remove all
+							button.btn.btn-warning.btn-xs(ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading" style='margin-left:5px;')
+											span.glyphicon.glyphicon-ban-circle 
+											&nbsp Cancel
+							button.btn.btn-success.btn-xs(ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length" style='margin-left:5px;')
+											span.glyphicon.glyphicon-upload
+											&nbsp Upload 

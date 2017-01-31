@@ -101,7 +101,15 @@ module.exports = function (router, passport) {
 	console.log('loading comment templates');
 	res.render('comments-list', {title: 'comment template'});
     });
-
+    /* GET Samples Template. */
+    router.get('/samples-list', function (req, res) {
+	console.log('loading samples template');
+	res.render('samples-list', {title: 'sample template'});
+    });
+    router.get('/packs-list', function (req, res) {
+	console.log('loading packs template');
+	res.render('packs-list', {title: 'pack template'});
+    });
       // process the login form
     router.post('/signIn', passport.authenticate('local-login', {
         successRedirect : '/profile', // redirect to the secure profile section
@@ -169,6 +177,34 @@ module.exports = function (router, passport) {
 	    }
 	});
 	res.render('tipLib', {title: 'Tip Library', dbCursor: cursor});
+    });
+    /* GET Hello World page. */
+    router.get('/tipLib/:id', function (req, res) {
+	var id = req.params.id;
+	console.log("loading tip " + id);
+	// Use connect method to connect to the Server
+	var cursor;
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('tipsCollection');
+		cursor = collection.find({_id:ObjectId(id)}).toArray(function (err, item) {
+		    if (err) {
+			console.log('Unable to get tip', err);
+		    }
+		    else {
+			res.render('tipLib', {title: 'Tip Library with Id', item: item, id:id});
+		    }
+		});
+	    }
+	});
+	
     });
     router.get('/tipsPageGet', function (req, res) {
 

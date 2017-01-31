@@ -52,34 +52,39 @@ html(lang="en" ng-app='myApp')
                 meta(name="viewport",content="width=device-width, initial-scale=1")
                 meta(name="description",content="")
                 meta(name="author",content="")
-                link(rel="icon",href="../../favicon.ico")
+                //link(rel="icon",href="../../favicon.ico")
                 block styles
-                        link(rel="stylesheet",href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")
+                        link(rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")
                         //link(rel="stylesheet",href="css/bootstrap.min.css")
-                        link(rel='stylesheet', href='/stylesheets/style.css')
-                        link(rel='stylesheet', href='/stylesheets/animate.css')
+                        link(rel='stylesheet' type="text/css"  href='/stylesheets/style.css')
+                        link(rel='stylesheet' type="text/css"  href='/stylesheets/animate.css')
+                        link(rel='stylesheet' type="text/css"  href='/stylesheets/ng-tags-input.css')
+                        link(rel='stylesheet' type="text/css"  href='/stylesheets/ng-tags-input.bootstrap.css')
                 base(href="/")
                 block scripts
                         script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js')
-                        script( src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' )
+                        script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' )
                         script(src='//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
                         script(src='//cdn.tinymce.com/4/tinymce.min.js')
+                        script(src='javascripts/ng-tags-input.min.js')
                         script(src='javascripts/jquery.canvasjs.min.js')
                         script(src='javascripts/angular-file-upload.min.js')
                         script(src='javascripts/ngStorage.min.js')
                         script(src='javascripts/angular-animate.min.js')
+                        script(src='javascripts/angular.audio.js')
                         script(src='javascripts/app.js')
                         script(src='javascripts/services.js')
                         script(src='javascripts/controllers.js')
                         script(src='javascripts/commentsController.js')
                         script(src='javascripts/profileController.js')
+                        script(src='javascripts/sampleLibController.js')
                         script(src='javascripts/filters.js')
                         script(src='javascripts/directives.js')
         body(data-spy="scroll",data-target=".scrollspy" ng-controller="bodyController")
                +navbar("Music Production Helper","navbar_menu")
                         +nav_item("/") Chromatic Wheel
                         +nav_item("tipLib") Tip Library 
-                        //+nav_item("samplesPage") Samples
+                        +nav_item("sampleLib") Sample Library 
                         +nav_item("profile")#profileButton Profile
                         +nav_item("about") About
                         +nav_item_dropdown("#")(label="Connect")
@@ -90,7 +95,6 @@ html(lang="en" ng-app='myApp')
                                 +nav_item("signUp") Sign Up
                                 +nav_item("signIn") Sign In
                                 +nav_item("contactMe") Contact
-                        //+nav_item_dropdown("#")(label="SoundCloud")
                 #profileLoggedIn(ng-show="isLoggedIn()" style="float:right;")
                         a(href="/logout" ng-click="signOutClicked()") Sign out
                 block body
