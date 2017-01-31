@@ -62,6 +62,8 @@ if(runningProduction){
 	bucket: 'mphelper-samples-bucket',
 	acl: 'public-read',
 	metadata: function (req, file, cb) {
+	  console.log('metadata...');	
+	  console.dir(file);
 	  cb(null, {fieldName: file.fieldname});
 	},
 	key: function (req, file, cb) {
@@ -175,12 +177,14 @@ module.exports = function (router, passport) {
 
 		    // do some work here with the database.
 		    // Get the documents collection
+		    console.log("uploading sample..");
+		    console.dir(req);
 		    var collection = db.collection('sampleCollection');
 		    collection.insert({fieldName: req.file.fieldname,
 			originalName: req.file.originalname,
 			encoding: req.file.encoding,
 			mimetype: req.file.mimetype,
-			destination: req.file.destination,
+			destination: req.file.location,
 			fileName: req.file.filename,
 			path: req.file.path,
 			fileSize: req.file.size,
