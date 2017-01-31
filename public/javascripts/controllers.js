@@ -818,6 +818,14 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.BPM = "122";
 	$scope.BARS = "16";
 	$scope.tipArrayData = TipData;
+	
+	//$(document).ready(function(){
+	  // var objectIdToLoad = $('#currentTipId2')[0].innerText;
+	   //objectIdToLoad = objectIdToLoad.replace('<','');
+	   //objectIdToLoad = objectIdToLoad.replace('>','');
+	   //$scope.tipCounter = $scope.findInTipArray(objectIdToLoad);
+	   //$scope.updateBodyArray();
+	//});
 
 
 	//Display Functions
@@ -1706,6 +1714,15 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.tipArrayData = response.data;
 		$scope.tipArrayData.sort(compare);
 		convertTipDataToJson();
+		
+		var objectIdToLoad = $('#currentTipIdToLoad')[0].innerText;
+		if (objectIdToLoad) {
+		    objectIdToLoad = objectIdToLoad.replace('<', '');
+		    objectIdToLoad = objectIdToLoad.replace('>', '');
+		    $scope.tipCounter = $scope.findInTipArray(objectIdToLoad);
+		    $scope.updateBodyArray();
+		}
+		
 		$scope.submitMessage = "Success"
 		$scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
 		$scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
