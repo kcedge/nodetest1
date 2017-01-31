@@ -200,9 +200,20 @@ angular.module("myApp").controller('samplesCtrl', ['$scope', '$rootScope', '$htt
 	$scope.getName = function(sample){
 	    return sample.orginalName;
 	}
-	$scope.downloadClicked = function(sample){
-	    $("#download"+sample._id).attr('download',sample.originalName);
+	
+	$scope.downloadClicked = function (sample) {
+	    $("#download" + sample._id).attr('download', sample.originalName);
+	    var xhr = new XMLHttpRequest();
+	    xhr.open('GET', sample.destination, true);
+	    xhr.responseType = "blob";
+	    xhr.onreadystatechange = function () {
+		if (xhr.readyState == 4) {
+		   var blob = xhr.response;
+		}
+	    };
+	    xhr.send(null);
 	}
+	
 	$scope.progressInputClicked = function(sample,e){
 	    var width = $("#duration"+sample._id).width();
 	    var x = e;
