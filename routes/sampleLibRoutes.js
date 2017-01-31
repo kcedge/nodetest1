@@ -59,7 +59,7 @@ var upload = "";
 if(runningProduction){
      upload = multer({ storage : multerS3({
 	s3: sampleBucket,
-	bucket: 'tip-samples-bucket',
+	bucket: 'mphelper-samples-bucket',
 	acl: 'public-read',
 	metadata: function (req, file, cb) {
 	  cb(null, {fieldName: file.fieldname});
