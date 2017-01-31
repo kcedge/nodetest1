@@ -205,7 +205,7 @@ module.exports = function (router, passport) {
 			   
 			    //Production
 			   if(runningProduction){
-				res.send(req.file.location);
+				res.send(docsInserted.ops[0]._id);
 			    }
 			    else{
 				 //Local

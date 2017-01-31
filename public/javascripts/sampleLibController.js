@@ -162,7 +162,13 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	$scope.updateSamples = function (pack) {
 
 	    for (var s = 0; s < $scope.samples.length; s++) {
-		$scope.samples[s].audio = ngAudio.load("resources/samples/"+$scope.samples[s].fileName);
+		if(!runningProduction){
+			//$scope.samples[s].audio = ngAudio.load("resources/samples/"+$scope.samples[s].fileName);
+			 $scope.samples[s].audio = ngAudio.load($scope.samples[s].destination);
+		}
+		else{
+		    $scope.samples[s].audio = ngAudio.load($scope.samples[s].destination);
+		}
 		$scope.samples[s].tags = JSON.parse($scope.samples[s].tagJson);
 		if (typeof pack != 'undefined' && pack.active) {
 		    if (($scope.samples[s].packname == pack.packname)) {
