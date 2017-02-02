@@ -17,7 +17,7 @@ var dbConfig = require(appRoot + '/config/configDb');
 var runningProduction = dbConfig.dbSettings().runningProd;
 var url = dbConfig.dbSettings().url;
 
-var request = require('request');
+//var request = require('request');
 // Connection URL. This is where your mongodb server is running.
 //if(runningProduction){
 //     url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb';
