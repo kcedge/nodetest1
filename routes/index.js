@@ -75,7 +75,19 @@ else{
 }
 
 module.exports = function (router, passport) {
+    router.get('/authenticated', function (req, res) {
+	// If this function gets called, authentication was successful.
+	// `req.user` contains the authenticated user.
+	console.log("checking authentication")
+	if (req.user) {
+	    res.send(req.user.local.username);
+	}
+	else {
+	    res.send(false);
+	}
 
+    }
+    );
     /* GET home page. */
     router.get('/', function (req, res, next) {
 	res.render('index', {title: ''});
@@ -96,6 +108,12 @@ module.exports = function (router, passport) {
 	res.render('signIn', {title: 'Sign In',
 				messages: req.flash('loginMessage') });
     });
+    router.get('/signIn/:redirect', function (req, res) {
+	var redirect = req.params.redirect;
+	res.render('signIn', {title: 'Sign In',
+			      message: req.flash('signupMessage'),
+			      redirect:redirect});
+    });
     /* GET Comments Template. */
     router.get('/comments-list', function (req, res) {
 	console.log('loading comment templates');
@@ -112,22 +130,34 @@ module.exports = function (router, passport) {
     });
       // process the login form
     router.post('/signIn', passport.authenticate('local-login', {
-        successRedirect : '/profile', // redirect to the secure profile section
+        // redirect to the secure profile section
         failureRedirect : '/signIn', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
-    }));
+    }),function(req,res){
+	console.log("Sign in success redirecting to " + req.body['redirect']);
+	res.redirect('/' + req.body['redirect']);
+    });
 
     router.get('/signUp', function (req, res) {
 	res.render('signUp', {title: 'Sign Up',
-				message: req.flash('signupMessage')});
+			      message: req.flash('signupMessage'),
+			      redirect:"profile"});
+    });
+    router.get('/signUp/:redirect', function (req, res) {
+	var redirect = req.params.redirect;
+	res.render('signUp', {title: 'Sign Up',
+			      message: req.flash('signupMessage'),
+			      redirect:redirect});
     });
 
 //process the signup form
-    router.post('/signUp', passport.authenticate('local-signup', {
-	successRedirect: '/profile', // redirect to the secure profile section
+    router.post('/signUp', passport.authenticate('local-signup', { // redirect to the secure profile section
 	failureRedirect: '/signUp', // redirect back to the signup page if there is an error
 	failureFlash: true // allow flash messages
-    }));
+    }),function(req,res){
+	console.log("Sign up success redirecting to " + req.body['redirect']);
+	res.redirect('/' + req.body['redirect']);
+    });
 
     router.get('/profile', isLoggedIn, function (req, res) {
 	res.render('profile', {username: req.user.local.username,

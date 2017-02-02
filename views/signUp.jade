@@ -13,7 +13,8 @@ append body
 					a(href='/profile/kcedge') Sample profile
 				h3
 					#titleName= title
-			form#signInDetails(action="/signUp" method = "post")
+				#redirect(ng-hide='true' ng-model='redirect')= redirect
+			form#signInDetails()
 
 				+label-info("Username:")
 				br
@@ -27,10 +28,10 @@ append body
 				+label-info("Password Confirm:")
 				input#signUpConfirmInput.form-control(type="password" ng-model="signUpPasswordConfirm" ng-required)
 				#btnSignInSubmit.keyButton(ng-click="signUpSubmitClicked()" )
-					button.btn.btn-primary(type="submit" ng-disabled='!signUpGood()')
+					button.btn.btn-primary(type="submit" ng-disabled='!signUpGood()' ng-click='signUpClicked()')
 						span Sign Up
 				#signInLinkWrapper
-					a#signInLink(href="/signIn")
+					a#signInLink(ng-click='gotoSignInClicked()')
 						span Already a member? Sign In	
 				#signUpError.small(style='color:red')
 					{{signUpErrorMessage}}

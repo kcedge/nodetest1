@@ -9,17 +9,19 @@ append body
 				h3
 					#titleName= title				
 				//div.alert#note #{messages}
+				#redirect(ng-hide='true' ng-model='redirect')= redirect
+
 			//#soundCloudWrapper(ng-click='signInWithSoundCloud()')
 			//	img(src='http://connect.soundcloud.com/2/btn-connect-sc-s.png')
-			form#signInDetails(action="/signIn" method = "post")
+			form#signInDetails()
 				+label-info("Username:")
 				br
-				input#signInInput.form-control(name="username")
+				input#signInInput.form-control(name="username" ng-model='signInUsername')
 				+label-info("Password:")
 				br
-				input#passWordInput.form-control(type="password" name="password")
+				input#passWordInput.form-control(type="password" name="password" ng-model='signInPassword')
 				#btnSignInSubmit.keyButton
-					button.btn.btn-primary(type="submit")
+					button.btn.btn-primary(type="submit" ng-click='signInClicked()')
 						span Sign In
 				#signInLinkWrapper
 					a#signInLink(href="/signUp")

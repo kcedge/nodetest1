@@ -42,7 +42,27 @@ ul.panel-body.comment-detail-list(style='margin-top:25px;')
 			div.bpm.col-xs-1.col-sm-1.col-md-1.col-lg-1
 				span {{sample.bpm}}
 			div.other(style='float:right')
+				span.hover.glyphicon.glyphicon-edit(style='margin-right:5px;' ng-click='editSampleClicked(sample)' ng-show='adminAuth')
 				span.hover.glyphicon.glyphicon-heart(style='margin-right:5px;')
-				a(target="_self" id='download{{sample._id}}' ng-click='downloadClicked(sample)')
 					span.hover.glyphicon.glyphicon-download(style='margin-right:5px;')
 				span.hover.glyphicon.glyphicon-menu-hamburger(style='margin-right:5px;')
+	div#editSampleWrapper(ng-show='editToggle')
+		div#audioMetaData(class='row' style='margin-left:10px')
+			div#bpmWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
+				span.small BPM
+				input.form-control(ng-model='editSample.bpm' type='number')
+			div#keyWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
+				span.small KEY
+				select.form-control(ng-model='editSample.key' ng-options="k as k for k in keyValues")
+			div#keyWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
+				span.small Type
+				select.form-control(ng-model='editSample.type' ng-options="t as t for t in typeValues")
+			div#tagInputWrapper(class='col-sm-5 col-md-5 col-lg-5 col-xs-5')
+				tags-input(ng-model='editSample.tags')
+					auto-complete(source='getTags($query)')
+			div#saveButton(class='col-sm-1 col-md-1 col-lg-1 col-xs-1' style='color:green')
+				button.btn.btn-default.btn-xs(ng-click="editSaveSample()" style=";color:black;margin-left:5px;")
+					span.glyphicon.glyphicon-ok
+			div#cancelButton(class='col-sm-1 col-md-1 col-lg-1 col-xs-1' style='color:red')
+				button.btn.btn-default.btn-xs(ng-click="item.remove()" style=";color:black;margin-left:5px;")
+					span.glyphicon.glyphicon-remove

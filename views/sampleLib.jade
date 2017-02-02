@@ -15,7 +15,7 @@ append body
 			.imageUploaderInputWrapper(style="margin-top:5px;")
 						.inputWrapper
 							h4 Upload a pack
-							input.form-control(type='text' ng-model='packname' placeholder="Enter pack name")
+							input.form-control(type='text' ng-model='packname' placeholder="Enter pack name" ng-required)
 							.headerImageInput(style="font-size:small;color:#777777")
 								h5 Audio Uploader
 								span(style='float:right') {{fileErrorMessage}}
@@ -48,6 +48,6 @@ append body
 							button.btn.btn-warning.btn-xs(ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading" style='margin-left:5px;')
 											span.glyphicon.glyphicon-ban-circle 
 											&nbsp Cancel
-							button.btn.btn-success.btn-xs(ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length" style='margin-left:5px;')
+							button.btn.btn-success.btn-xs(ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length || packname == ''" style='margin-left:5px;')
 											span.glyphicon.glyphicon-upload
 											&nbsp Upload 

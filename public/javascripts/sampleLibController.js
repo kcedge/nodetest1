@@ -10,7 +10,7 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	$scope.sortReverse  = false;
 	$scope.sortType     = 'originalName';
 	$scope.searchSample   = '';
-	
+	$scope.packname = "";
 	var uploader = $scope.uploader = new FileUploader({
 	    url: '/uploadSample'
 	});
@@ -48,6 +48,8 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    $http(req).then(function success(response) {
 		$scope.submitMessage = "Success"
 		$scope.responseData = response.data;
+		$scope.packname = "";
+		
 		
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
@@ -163,8 +165,8 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 
 	    for (var s = 0; s < $scope.samples.length; s++) {
 		if(!runningProduction){
-			//$scope.samples[s].audio = ngAudio.load("resources/samples/"+$scope.samples[s].fileName);
-			 $scope.samples[s].audio = ngAudio.load($scope.samples[s].destination);
+			$scope.samples[s].audio = ngAudio.load("resources/samples/"+$scope.samples[s].fileName);
+		
 		}
 		else{
 		    $scope.samples[s].audio = ngAudio.load($scope.samples[s].destination);
@@ -197,22 +199,41 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
     }]);
 
 angular.module("myApp").controller('samplesCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', '$localStorage', "ngAudio", function ($scope, $rootScope, $http, ProfileService, $localStorage,ngAudio ) {
+	$scope.editToggle = false;
+	$scope.keyValues = ["C","C#/Db","D","D#/Eb","E","F","F#/Gb","G","G#/Ab","A","A#/Bb","B"];
+	$scope.typeValues = ["One Shot","Loop"];
+	$scope.adminAuth = false;
+	$scope.authenticated = false;
+	
+	//Second Parm is route to sign in
+	isAuthenticated($http,false,function(username){
+	    if(username == 'kcedge'){
+		$scope.adminAuth = true;
+		$scope.authenticated = true;
+	    }
+	    if(username != 0){
+		$scope.authenticated = true;
+		$scope.username = username;
+	    }    
+	});
+	
 	$scope.getName = function(sample){
 	    return sample.orginalName;
 	}
 	
 	$scope.downloadClicked = function (sample) {
-	    $("#download" + sample._id).attr('download', sample.originalName);
-	    var xhr = new XMLHttpRequest();
-	    xhr.open('GET', sample.destination, true);
-	    xhr.responseType = "blob";
-	    xhr.onreadystatechange = function () {
-		if (xhr.readyState == 4) {
-		   var blob = xhr.response;
-		}
-	    };
-	    xhr.send(null);
+	    if ($scope.authenticated) {
+		var link = document.createElement("a");
+		link.target = '_self';
+		link.href = sample.destination;
+		link.click();
+	    }
+	    else{
+		window.location.href = '/signUp/sampleLib';
+	    }
 	}
+	
+	
 	
 	$scope.progressInputClicked = function(sample,e){
 	    var width = $("#duration"+sample._id).width();
@@ -223,6 +244,36 @@ angular.module("myApp").controller('samplesCtrl', ['$scope', '$rootScope', '$htt
 	}
 	$scope.samplePlayClicked = function(sample){
 	    sample.audio.paused ? sample.audio.play() : sample.audio.pause();
+	}
+	
+	$scope.editSampleClicked = function(sample){
+	    $scope.editToggle = true;
+	    $scope.editSample = sample;
+	    $scope.editSample.bpm = parseInt($scope.editSample.bpm);
+	}
+	
+	$scope.editSaveSample = function (sample) {
+	    var req = {
+		method: 'PUT',
+		url: '/sample',
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {sampleId: $scope.editSample._id,
+		    bpm: $scope.editSample.bpm,
+		    key: $scope.editSample.key,
+		    tagJson: JSON.stringify($scope.editSample.tags)}}
+
+	    $http(req).then(function success(response) {
+		var resdata = response.data;
+		$scope.editSample = "";
+		$scope.editToggle = false;
+		$scope.updateSamples();
+
+	    }, function failure(response) {
+		$scope.submitMessage = "Failure"
+		$scope.failureData = response.data;
+	    });
 	}
     }]);
 

@@ -11,7 +11,33 @@ $(".twitterLink").children().first().attr("target", "_blank");
 
 //angular.module("myApp", ["$scope","$http", "ngCookies"]);
 var runningProduction = true;
+function isAuthenticated($http,routeToSignUp ,callback) {
+    var req = {
+	method: 'GET',
+	url: '/authenticated',
+	headers: {
+	    'Content-Type': "application/json"
+	},
+	data: {
+	}
+    }
+    $http(req).then(function success(response) {
+	if (response.data) {
+	    return callback(response.data);
+	}
+	else {
+	    if(routeToSignUp)
+		window.location.href = '/signUp';
+	    else{
+		callback(0);//calls back with false if no need to route to sign in
+	    }
+	}
+    }, function failure(response) {
+	window.location.href = '/signUp';
+	return false;
+    });
 
+}
 angular.module('myApp')
     .filter('to_trusted', ['$sce', function($sce){
         return function(text) {
@@ -45,6 +71,9 @@ angular.module("myApp").controller('signUpController', ['$scope', '$http', '$loc
 	    username: "",
 	    userSignedIn: false
 	});
+	$scope.gotoSignInClicked = function(){
+	    window.location.href = '/signIn/'+$('#redirect').text();
+	}
 	
 	$scope.signUpGood = function(){
 	    if($scope.signUpUsername.length == 0){
@@ -72,7 +101,28 @@ angular.module("myApp").controller('signUpController', ['$scope', '$http', '$loc
 	    return true;
 	}
 
+	$scope.signUpClicked = function(){
+	    var req = {
+		method: 'POST',
+		url: '/signUp',
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {username:$scope.signUpUsername,
+		    email: $scope.signUpEmail,
+		    password: $scope.signUpPassword,
+		    redirect: $("#redirect").text()}
+	    }
 
+	    $http(req).then(function success(response) {
+		window.location.href = '/'+$('#redirect').text();
+		$scope.authres = response.data;
+
+	    }, function failure(response) {
+		$scope.authres = response.data;
+
+	    });
+	}
 
     }]);
 angular.module("myApp").controller('signInController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
@@ -94,6 +144,7 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 	    }
 
 	    $http(req).then(function success(response) {
+		window.location.href = '/'+$('#redirect').text();
 		$scope.authres = response.data;
 
 	    }, function failure(response) {
@@ -101,7 +152,27 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 
 	    });
 	}
-	
+	$scope.signInClicked = function(){
+	    var req = {
+		method: 'POST',
+		url: '/signIn',
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {username:$scope.signInUsername,
+		    password: $scope.signInPassword,
+		    redirect: $("#redirect").text()}
+	    }
+
+	    $http(req).then(function success(response) {
+		window.location.href = '/'+$('#redirect').text();
+		$scope.authres = response.data;
+
+	    }, function failure(response) {
+		$scope.authres = response.data;
+
+	    });
+	}
 
 	
 

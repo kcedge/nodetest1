@@ -3,7 +3,7 @@ var router = express.Router();
 var fs = require('fs');
 var passport = require('passport');
 
-
+var http = require('http');
 //lets require/import the mongodb native drivers.
 var mongodb = require('mongodb');
 
@@ -17,6 +17,7 @@ var dbConfig = require(appRoot + '/config/configDb');
 var runningProduction = dbConfig.dbSettings().runningProd;
 var url = dbConfig.dbSettings().url;
 
+var request = require('request');
 // Connection URL. This is where your mongodb server is running.
 //if(runningProduction){
 //     url = 'mongodb://kcedge3:Golions91!@ec2-54-218-53-245.us-west-2.compute.amazonaws.com:27017/dummyDb';
@@ -56,20 +57,28 @@ var sampleBucket = new AWS.S3({params: {Bucket: 'mphelper-samples-bucket'}});
 console.log("Samples Bucket is")
 console.log(sampleBucket);
 var upload = "";
-if(runningProduction){
-     upload = multer({ storage : multerS3({
-	s3: sampleBucket,
-	bucket: 'mphelper-samples-bucket',
-	acl: 'public-read',
-	metadata: function (req, file, cb) {
-	  console.log('metadata...');	
-	  console.dir(file);
-	  cb(null, {fieldName: file.fieldname});
-	},
-	key: function (req, file, cb) {
-	  cb(null, Date.now().toString())
-	}
-      })
+if (runningProduction) {
+    upload = multer({storage: multerS3({
+	    s3: sampleBucket,
+	    bucket: 'mphelper-samples-bucket',
+	    acl: 'public-read',
+	    contentDisposition: 'attachment',
+	    metadata: function (req, file, cb) {
+		console.log('metadata...');
+		console.dir(file);
+		cb(null, {fieldName: file.fieldname});
+	    },
+	    key: function (req, file, cb) {
+		console.log('file and req');
+		console.dir(file);
+		console.dir(req);
+		var name = file.originalname.replace(".wav","");
+		var pack =req.body['packname'].replace("Pack","")
+		//Date.now().toString().substring(7,9)
+		cb(null, pack + "_"+ name +".wav");
+	    }
+	    
+	})
     }).single('file');
 }
 else{
@@ -79,7 +88,22 @@ else{
 
 module.exports = function (router, passport) {
  /* GET Hello World page. */
-  
+    router.post('/downloadSample',function(req ,res){
+	console.log("downloading sample");
+	console.log(req.body['url'])
+	http.get(req.body['url'], function (response) {
+	    if (response.statusCode == 200) {
+		console.dir(response);
+		res.pipe(response);
+		// Continue with your processing here.
+	    }
+	    else{
+		console.dir(response);
+		res.send("fail");
+	    }
+	});
+	res.send("getting img");
+    });
     router.get('/sampleLib', function (req, res) {
 	console.log('getting sample lib YES');
 	// Use connect method to connect to the Server
@@ -147,6 +171,7 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		var collection = db.collection('packCollection');
+		collection.createIndex( { "packname": 1 }, { unique: true } )
 		collection.insert({packname: packname, sampleArrayJson: sampleArrayJson}, function (err, docsInserted) {
 		    if (err) {
 
@@ -161,6 +186,7 @@ module.exports = function (router, passport) {
 	    }
 	});
     });
+    
     router.post('/uploadSample', function (req, res) {
 	upload(req, res, function (err) {
 	    if (err) {
@@ -188,7 +214,7 @@ module.exports = function (router, passport) {
 			fileName: req.file.filename,
 			path: req.file.path,
 			fileSize: req.file.size,
-			bpm: req.body.bpm,
+			bpm: Number(req.body.bpm),
 			key: req.body.key,
 			points:req.body.points,
 			tagJson:req.body.tagJson,
@@ -221,7 +247,37 @@ module.exports = function (router, passport) {
 	    });
 	});
 	
+    });
+    //EDIT A SAMPLE
+     router.put('/sample',function(req,res){
+	
+	console.log("uploading pack");
+	var sampleId = req.body['sampleId'];
+	var bpm = req.body['bpm'];
+	var key = req.body['key'];
+	var tagJson = req.body['tagJson'];
+	
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
 
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('sampleCollection');
+		collection.update({_id:ObjectId(sampleId)},{$set:{bpm: bpm,key:key,tagJson:tagJson}}, {upsert: true}, function (err, db) {
+		    if (err) {
+			console.log('Unable to edit tip to tipsCollection', err);
+			res.send(points);
+		    }
+		    else {
+			res.send('Sample edit successfuly submitted');
+		    }
+		});
+	    }
+	});
     });
     
 };
