@@ -902,7 +902,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	//Display Functions
 	$scope.showButton = function (buttonName) {
 	    if (buttonName == "Add") {
-		return $scope.isLoggedIn();
+		return true;
+		//return $scope.isLoggedIn();
 	    }
 	    else if (buttonName == "Edit") {
 		if ($localStorage.username == "kcedge") {
@@ -1303,6 +1304,19 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.sortReverseClicked = function () {
 	    $scope.sortReverse = !$scope.sortReverse;
 	}
+	$scope.getImageSrc = function(tip){
+	    if(tip.imageDataJson.length){
+		var tipImg = tip.imageDataJson[0];
+		return tipImg['imageName'];
+		}
+	    else
+		return ""
+	}
+	
+	
+	
+	
+	
 
 	$scope.addATipToggle = false;
 
@@ -1374,7 +1388,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.editATip = function () {
 	    return $scope.editATipToggle;
 	}
-
+	
 	$scope.editATipClicked = function () {
 	    $scope.editATipToggle = !$scope.editATipToggle;
 	    $scope.addATipToggle = false;
@@ -1730,6 +1744,20 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    return i;
 		}
 	    }
+	}
+	$scope.navBarHoverMouseOver = function(tip){
+	    $("#navBarBottomRow"+tip._id).removeClass('slideOutLeft');
+	    $("#navBarBottomRow"+tip._id).addClass('animated');
+	    $("#navBarBottomRow"+tip._id).addClass('slideInLeft');
+	    
+	    
+	    
+	    
+	    tip.hoverActive = true;
+	}
+	$scope.navBarHoverMouseLeave = function(tip){
+	     $("#navBarBottomRow"+tip._id).removeClass('animated');
+	    tip.hoverActive = false;
 	}
 	$scope.tipNavBarClicked = function (tip) {
 	    var tipIdClicked = tip._id;

@@ -11,7 +11,8 @@ module.exports = {dbSettings: function () {
 	var runningProd = true;
 	var url = "";
 	if (runningProd) {
-	    url = "mongodb://mphelperDbUser:mphelper91!@ec2-54-174-236-80.compute-1.amazonaws.com:27017/mphelperDb"
+	   // url = "mongodb://mphelperDbUser:mphelper91!@ec2-54-174-236-80.compute-1.amazonaws.com:27017/mphelperDb"
+	   url = "mongodb://mphelperDbUser:mphelper91!@ec2-54-174-236-80.compute-1.amazonaws.com:27017/mphelperDb";
 	}
 	else {
 	    url = "mongodb://localhost:27017/tipsDb"

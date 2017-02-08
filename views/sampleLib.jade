@@ -3,7 +3,7 @@ extends layout
 append body
 	div(ng-controller="bodySampleController" )
 		div().row
-			+alert-i-warning("The sample library is still in early development. This is a place for music producers to quickly reference a set of tips, that will help them generate ideas.  The tip library has filters for a number of categories allowing for a quick search(filter by Daw/Genre/Vst/Theory ect..) The library itself needs to be grown, if you would like to contribute to the Tip Library sign up with Music Production Helper, navigate to the Tip Library and click the 'Add' button.  Also, if you have any ideas on how to make this page a more useful place for producers, please reach out to me, my info is on the contact page under connect.","heart")
+			+alert-i-warning("The Sample Library is a place to upload or download your favorite samples!","heart")
 		
 		div.packListWrapper
 			packs-list#packList
@@ -13,7 +13,7 @@ append body
 			
 		div#addContent.container
 			.imageUploaderInputWrapper(style="margin-top:5px;")
-						.inputWrapper
+						.inputWrapper(ng-show='adminAuth')
 							h4 Upload a pack
 							input.form-control(type='text' ng-model='packname' placeholder="Enter pack name" ng-required)
 							.headerImageInput(style="font-size:small;color:#777777")

@@ -11,6 +11,21 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	$scope.sortType     = 'originalName';
 	$scope.searchSample   = '';
 	$scope.packname = "";
+	
+	$scope.adminAuth = false;
+	$scope.authenticated = false;
+	isAuthenticated($http,false,function(username){
+	    if(username == 'kcedge'){
+		$scope.adminAuth = true;
+		$scope.authenticated = true;
+	    }
+	    if(username != 0){
+		$scope.authenticated = true;
+		$scope.username = username;
+	    }    
+	});
+	
+	
 	var uploader = $scope.uploader = new FileUploader({
 	    url: '/uploadSample'
 	});
