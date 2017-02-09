@@ -5,9 +5,9 @@ append body
 		.div(style="")
 			+alert-i-warning("Find your favorite music production tutorials and tips here!","heart")
 		
-		#filterWrapper.row.filterBoxStyle(ng-style="filtersBoxStyle" )
-							+label-info("Filters:")
-							tipTypeFilterWrapper(style="margin-top:5px;display:inline-block;")
+		#filterWrapper.row.filterBoxStyle(ng-style="filtersBoxStyle")
+					div.col-xs-offset-3.col-sm-offset-3.col-md-offset-3.col-lg-offset-3.col-xs-6.col-sm-6.col-md-6.col-lg-6()
+							div#tipTypeFilterWrapper(style="margin-top:5px;display:inline-block;")
 							.btnWrapper
 								+label-default("Type:")
 								input.inputToggleClass(ng-click="theoryToggle()" type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
@@ -21,19 +21,19 @@ append body
 								input.inputToggleClass(ng-click="workflowToggle()" type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
 								+label-primary("Work Flow")
 
-							tipGenreFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+							div#tipGenreFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
 								.btnWrapper(style="float:left")
 									+label-default("Genre:")
 								.genreButton(ng-repeat = "genre in genreArray" style="float:left")
 									input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='filterGenreId{{genre.genreName}}' ng-click="filterGenreClicked(genre.genreName)")
 									+label-primary("{{genre.genreName}}")
-							tipDAWFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+							div#tipDAWFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
 								.btnWrapper(style="float:left")
 									+label-default("DAW:")
 								.dawButton(style="float:left" ng-repeat = "daw in dawArray")							
 									input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}' ng-click="filterDawClicked(daw.dawName)")
 									+label-primary("{{daw.dawName}}")
-							tipVSTFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
+							div#tipVSTFilterWrapper(style="margin-top:5px;display:inline-block;").btnWrapper
 								.btnWrapper(style="float:left")
 									+label-default("VST:")
 								.vstButton(style="float:left" ng-repeat = "vst in vstArray")							
@@ -58,15 +58,17 @@ append body
 					span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
 					span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
 				navBarItem.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse" ng-show="showItem(tip)")
-					.tipNavItem.row.animated(ng-click="tipNavBarClicked(tip)"  ng-mouseleave='navBarHoverMouseLeave(tip)')
-						.div.navBarTopDiv.row(ng-mouseover='navBarHoverMouseOver(tip)' style='')
+					.tipNavItem.row.animated(ng-click="tipNavBarClicked(tip)" ng-mouseover='navBarHoverMouseOver(tip)'  ng-mouseleave='navBarHoverMouseLeave(tip)')
+						.div.navBarTopDiv.row( ng-show='true' ng-class='{navBarTipActive:tip.isActive}' )
 							.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
 								
 								span#navTipTitle(){{tip.tipTitle}}
 								span#navTipTitle(style='float:right'){{tip.tipPoints}}
-						.div.row.animated.navBarBottomRow(id='navBarBottomRow{{tip._id}}' ng-show='tip.hoverActive')
-							div.col-xs-6.col-sm-6.col-md-6.col-lg-6#imgNavWrapper(mang-show='tip.imageDataJson.length > 0' style='padding:0px')
-								img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(src='{{getImageSrc(tip)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
+						.div.row.animated.navBarBottomRow(id='navBarBottomRow{{tip._id}}' ng-show='true')
+							div.col-xs-6.col-sm-6.col-md-6.col-lg-6#imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px')
+								img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 105px;margin-top:10px;padding:0px;')
+							div.col-xs-6.col-sm-6.col-md-6.col-lg-6#imgNavWrapper(ng-show='tip.imageDataJson.length > 1' style='padding:0px')
+								img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,1)}}' style='max-height: 105px;margin-top:10px;padding:0px;')
 						.div.row.navBarBottomRowOverlap(id='navBarBottomRowOverlap{{tip._id}}' ng-show='tip.hoverActive')
 							div.col-xs-12.col-sm-12.col-md-12.col-lg-12
 								div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
@@ -142,7 +144,7 @@ append body
 									span(style="font-style:italic;") Note: Images are displayed in the order they are uploaded.  If you want an image between paragraphs, add a description.  The first image uploaded is displayed after the first description, the second image after the second description.. and so on.
 						#uploadedImagesWrapper(style='display:inline-block;')
 							#imageWrapper(ng-if='tipBodyArray' style='float:left;' ng-repeat='tipPart in tipImageArray' )
-								img.img-thumbnail.imageThumbNail(class='imageAttached{{$index}}' ng-show="{{tipPart.hasImage}}" src='{{tipPart.imageFileName}}' ng-click='editImageClicked($index);')
+								img.img-thumbnail.imageThumbNail(class='imageAttached{{$index}}' ng-show="{{tipPart.hasImage}}" ng-src='{{tipPart.imageFileName}}' ng-click='editImageClicked($index);')
 							#imageSelectedData(style='')
 								{{imageSelectedData}}
 								button.btn.btn-danger.btn-xs(ng-click='removeSelectedImage($index)' ng-disabled='!imageSelected')
@@ -246,7 +248,7 @@ append body
 									span(style="font-style:italic;") Note: For now, images are displayed in the order they are uploaded.  If you want an image between paragraphs, add a description.  The first image uploaded is displayed after the first description, the second image after the second description.. and so on.
 						#uploadedImagesWrapper(style='display:inline-block;')
 							#imageWrapper(style='float:left; width:130px; height:130px' ng-repeat='tipPart in tipImageArray' )
-								img.img-thumbnail.imageThumbNail(class='imageAttached{{$index}}' ng-show="tipPart.hasImage" src='{{tipPart.imageFileName}}' ng-click='editImageClicked($index);')
+								img.img-thumbnail.imageThumbNail(class='imageAttached{{$index}}' ng-show="tipPart.hasImage" ng-src='{{tipPart.imageFileName}}' ng-click='editImageClicked($index);')
 							#imageSelectedData(style='')
 								{{imageSelectedData}}
 								button.btn.btn-danger.btn-xs(ng-show = 'tipImageArray.length>0' ng-click='removeSelectedImage()' ng-disabled='!imageSelected')
@@ -361,3 +363,32 @@ append body
 						+btn-xs("0 Points")
 				comment-list(content-id='1' ng-hide='addATip()')
 				.errorDiv(ng-bind="responseData")
+			.col-xs-3.col-sm-3.col-md-3.col-lg-3#rightWidgetContainer.contentWrapper
+				.rightWidetWrapper
+					#header(style='display:inline-block')
+						#labelSort
+							.label.label-info Top Tips
+						#dropdownWrapper.dropdown(style="float:left")
+							span.label.label-default.dropdown-toggle#rightBarWidgetDropdown(data-toggle='dropdown')
+								{{getRightBarSortType()}}
+								span.glyphicon.glyphicon-menu-down
+							ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown" display='')
+								li(ng-repeat='sortFilter in rightBarSortFiltersArray')
+									a(ng-click="navBarFilterClick(sortFilter)"){{sortFilter}}
+					div.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : 'tipPoints':true | limitTo:10" ng-show="true")
+						.rightBarNavItem.row(ng-click="tipNavBarClicked(tip)" ng-mouseleave='navBarHoverRightMouseLeave(tip)')
+							.div.navBarTopDiv.row(ng-show='tip.hoverRightActive' ng-mouseover='rightBarWidgetMouseOver(tip)' style='')
+								.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
+									span#navTipTitle(){{tip.tipTitle}}
+									span#navTipTitle(style='float:right'){{tip.tipPoints}}
+							.div.row(ng-show='true' style='height:125px;')
+								div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px;height:125px')
+									img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
+								div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 1' style='padding:0px;height:125px')
+									img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,1)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
+							.div.row(ng-show='tip.hoverRightActive')
+								div.col-xs-12.col-sm-12.col-md-12.col-lg-12
+									div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
+				.rightWidetWrapper
+					#header
+						.label.label-info Top Users

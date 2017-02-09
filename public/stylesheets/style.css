@@ -226,12 +226,12 @@ float:left;width:22%;
        
 }
 .navBarTopDiv{
-    background-color:#f1f1f1;
+    background-color:#525252;
     z-index:1;
     position:relative;
-    opacity: 0.9;
-    color:black;
+    color:white;
     padding:5px;
+    border-radius: 5px;
 }
 #navBarWrapper{  
     background-color: white;
@@ -241,13 +241,47 @@ float:left;width:22%;
     border-style: solid;
     border-width: thin;
 }
-.tipNavItem{
+.rightWidetWrapper{
+    background-color: white;
+    border-radius: 5px;
+    padding: 5px;
+    border-color: #d1d2d2;
+    border-style: solid;
+    border-width: thin;
+}
+#rightWidgetContainer{
+    
+    padding-left: 15px;
+}
+
+.navBarTipActive{
+    background-color:green;
+}
+.rightBarNavItem{
     max-height: 40px;
+    overflow: hidden;
+    border-bottom-style: solid;
+    border-bottom-width:  thin;
+    border-bottom-color: #d4d4d4;
+    transition: max-height 0.5s ease-out;
+}
+
+.rightBarNavItem:hover{
+    max-height: 125px;
+    transition: max-height 0.5s ease-in;
+}
+
+.filterBoxStyle{
+    text-align: center
+}
+.tipNavItem{
+    max-height: 60px;
     transition: max-height 0.15s ease-out;
     overflow: hidden;
     border-bottom-style: solid;
     border-bottom-width:  thin;
     border-bottom-color: #d4d4d4;
+    transition: max-height 0.5s ease-out;
 
 }
 .tipNavItem:hover{
@@ -259,8 +293,8 @@ float:left;width:22%;
     
     display: inline-block;
     width: 100%;
-    background-color: #ececec;;
-    color:#383838;
+    color: white;
+    background-color: #777777;
     border-radius: 5px;
     border:#d4d4d4;
     border-style: solid;
