@@ -1270,6 +1270,9 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 	$scope.sortFiltersArray = ["Tip Title ", "Latest", "Rating"/*, "Tip Type ", "Genre ", "Level ", "DAW "*/];
+	
+	$scope.rightBarSortFiltersArray = ["Week", "Month", "All Time"];
+	
 	$scope.getOrderByNavBar = function () {
 	    if ($scope.sortType == "Tip Title") {
 		return "tipTitle";
@@ -1294,21 +1297,36 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 	//Sort Functions for Nav Bar
-	$scope.sortType = $scope.sortFiltersArray[0]; // set the default sort type
+	$scope.sortType = $scope.sortFiltersArray[1]; // set the default sort type
+	$scope.rightBarSortType = $scope.rightBarSortFiltersArray[0]; 
+	
 	$scope.sortReverse = false;  // set the default sort order
 	$scope.searchTerm = '';     // set the default search/filter term
 
 	$scope.getSortType = function () {
 	    return $scope.sortType;
 	};
+	$scope.getRightBarSortType = function () {
+	    return $scope.rightBarSortType;
+	};
 	$scope.sortReverseClicked = function () {
 	    $scope.sortReverse = !$scope.sortReverse;
 	}
-	$scope.getImageSrc = function(tip){
-	    if(tip.imageDataJson.length){
-		var tipImg = tip.imageDataJson[0];
-		return tipImg['imageName'];
+	$scope.getImageSrc = function(tip,imgIndex){
+	    
+	    if (tip && tip.imageDataJson.length) {
+		if (imgIndex < tip.imageDataJson.length && tip.imageDataJson.length != 0) {
+		    var tipImg = tip.imageDataJson[imgIndex];
+
+		    if (runningProduction) {
+			return tipImg['imageName'];
+		    }
+		    else {
+			return "resources/images/" + tipImg['imageName'];
+		    }
 		}
+		else return "";
+	    }
 	    else
 		return ""
 	}
@@ -1746,18 +1764,26 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    }
 	}
 	$scope.navBarHoverMouseOver = function(tip){
-	    $("#navBarBottomRow"+tip._id).removeClass('slideOutLeft');
-	    $("#navBarBottomRow"+tip._id).addClass('animated');
-	    $("#navBarBottomRow"+tip._id).addClass('slideInLeft');
-	    
-	    
-	    
-	    
+	   // $("#navBarBottomRow"+tip._id).removeClass('slideOutLeft');
+	   // $("#navBarBottomRow"+tip._id).addClass('animated');
+	   // $("#navBarBottomRow"+tip._id).addClass('slideInLeft');
+
+
+
+// $("#navBarBottomRow"+tip._id).removeClass('slideOutLeft');
 	    tip.hoverActive = true;
+	}
+	$scope.rightBarWidgetMouseOver = function (tip) {
+	    tip.hoverRightActive = true;
+
 	}
 	$scope.navBarHoverMouseLeave = function(tip){
 	     $("#navBarBottomRow"+tip._id).removeClass('animated');
 	    tip.hoverActive = false;
+	}
+	$scope.navBarHoverRightMouseLeave = function(tip){
+	    // $("#navBarBottomRow"+tip._id).removeClass('animated');
+	    tip.hoverRightActive = false;
 	}
 	$scope.tipNavBarClicked = function (tip) {
 	    var tipIdClicked = tip._id;
@@ -1769,6 +1795,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	    $scope.addATipToggle = false;
 	    $scope.editATipToggle = false;
+	    
+	    
 	 //   $scope.updateImageFileName();
 	    $scope.updateBodyArray();
 	}
@@ -1884,6 +1912,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.updateBodyArray = function () {
 	    $scope.tipBodyArray = [];
 	    $scope.tipImageArray = [];
+	    
+	    for(var i = 0; i < $scope.tipArrayData.length;i++){
+		$scope.tipArrayData[i].isActive = false;
+	    }
+	    $scope.tipArrayData[$scope.tipCounter].isActive = true;
+	    
 	    $scope.currentTipId = $scope.tipArrayData[$scope.tipCounter]._id
 	    $scope.currentTipPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
 	    $scope.removeImageBodyArray = false;
