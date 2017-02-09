@@ -271,9 +271,7 @@ float:left;width:22%;
     transition: max-height 0.5s ease-in;
 }
 
-.filterBoxStyle{
-    text-align: center
-}
+
 .tipNavItem{
     max-height: 60px;
     transition: max-height 0.15s ease-out;
