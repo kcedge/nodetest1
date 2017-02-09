@@ -944,7 +944,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	//FILTER FUNCTIONS
 	$scope.theory_toggle = false;
 	$scope.theoryToggle = function () {
-	    return $scope.theory_toggle = !$scope.theory_toggle;
+	   
 	};
 
 	$scope.mixing_toggle = false;
