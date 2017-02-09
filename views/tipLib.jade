@@ -7,7 +7,7 @@ append body
 		
 		#filterWrapper.row.filterBoxStyle(ng-style="filtersBoxStyle")
 					.col-xs-12.col-sm-12.col-md-12.col-lg-12()
-							div#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;")
+							div.filterWrapper#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;")
 								+label-default("Type:")
 								input.inputToggleClass(ng-click="theoryToggle()" type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
 								+label-primary("Theory")
@@ -20,19 +20,19 @@ append body
 								input.inputToggleClass(ng-click="workflowToggle()" type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
 								+label-primary("Work Flow")
 
-							div#tipGenreFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
+							div.filterWrapper#tipGenreFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
 								.btnWrapper(style="float:left")
 									+label-default("Genre:")
 								.genreButton(ng-repeat = "genre in genreArray" style="float:left")
 									input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='filterGenreId{{genre.genreName}}' ng-click="filterGenreClicked(genre.genreName)")
 									+label-primary("{{genre.genreName}}")
-							div#tipDAWFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
+							div.filterWrapper#tipDAWFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
 								.btnWrapper(style="float:left")
 									+label-default("DAW:")
 								.dawButton(style="float:left" ng-repeat = "daw in dawArray")							
 									input.inputToggleClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}' ng-click="filterDawClicked(daw.dawName)")
 									+label-primary("{{daw.dawName}}")
-							div#tipVSTFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
+							div.filterWrapper#tipVSTFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
 								.btnWrapper(style="float:left")
 									+label-default("VST:")
 								.vstButton(style="float:left" ng-repeat = "vst in vstArray")							

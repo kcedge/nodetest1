@@ -123,6 +123,15 @@ float:left;width:22%;
     background-color: #777;
     margin:1px;
 }
+.filterWrapper{
+    border-right-style: solid;
+    padding-left:15px;
+    border-color:  #8a8a8a;
+    height:62.73px;
+}
+#tipTypeFilterWrapper{
+    border-left-style: solid;
+}
 
 .btn-primary.active, .btn-primary.focus, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open>.dropdown-toggle.btn-primary {
     color: #fff;
