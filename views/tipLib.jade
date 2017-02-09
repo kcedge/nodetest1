@@ -7,17 +7,18 @@ append body
 		
 		#filterWrapper.row.filterBoxStyle(ng-style="filtersBoxStyle")
 							div.filterWrapper#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;")
-								+label-default("Type:")
-								input.inputToggleClass(ng-click="theoryToggle()" type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
-								+label-primary("Theory")
-								input.inputToggleClass(ng-click="mixingToggle()" type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
-								+label-primary("Mixing")
-								input.inputToggleClass(ng-click="masteringToggle()" type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
-								+label-primary("Mastering")
-								input.inputToggleClass(ng-click="soundDesignToggle()" type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
-								+label-primary("Sound Design")
-								input.inputToggleClass(ng-click="workflowToggle()" type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
-								+label-primary("Work Flow")
+								
+								.label.label-default() Type:
+								input.inputToggleClass(ng-model='theory_toggle' ng-click="theoryToggle()" type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
+								.label.label-primary(ng-click="theoryToggle()" ng-class='{active:theory_toggle}') Theory
+								input.inputToggleClass(ng-model='mixing_toggle' ng-click="mixingToggle()" type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
+								.label.label-primary(ng-click="mixingToggle()" ng-class='{active:mixing_toggle}') Mixing
+								input.inputToggleClass(ng-model='mastering_toggle' ng-click="masteringToggle()" type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
+								.label.label-primary(ng-click="masteringToggle()" ng-class='{active:mastering_toggle}') Mastering
+								input.inputToggleClass(ng-model='sound_design_toggle' ng-click="soundDesignToggle()" type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
+								.label.label-primary(ng-click="soundDesignToggle()" ng-class='{active:sound_design_toggle}') Sound Design
+								input.inputToggleClass(ng-model='workflow_toggle' ng-click="workflowToggle()" type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
+								.label.label-primary(ng-click="workflowToggle()" ng-class='{active:workflow_toggle}') Work Flow
 
 							div.filterWrapper#tipGenreFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
 								.btnWrapper(style="float:left")
