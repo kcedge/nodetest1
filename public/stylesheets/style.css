@@ -129,6 +129,7 @@ float:left;width:22%;
     padding-left:15px;
     border-color:  #8a8a8a;
     height:62.73px;
+    overflow: auto;
 }
 #tipTypeFilterWrapper{
     border-left-style: solid;

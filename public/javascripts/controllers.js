@@ -979,35 +979,36 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.minimal_toggle = false;
 	$scope.trap_toggle = false;
 
-	$scope.filterGenreClicked = function (genreName) {
-	    if (genreName == "House") {
+	$scope.filterGenreClicked = function (genre) {
+	    genre.toggle = !genre.toggle;
+	    if (genre.genreName == "House") {
 		return $scope.house_toggle = !$scope.house_toggle;
 	    }
-	    if (genreName == "Trance") {
+	    if (genre.genreName == "Trance") {
 		return $scope.trance_toggle = !$scope.trance_toggle;
 	    }
-	    if (genreName == "Breakbeat") {
+	    if (genre.genreName == "Breakbeat") {
 		return $scope.breakbeat_toggle = !$scope.breakbeat_toggle;
 	    }
-	    if (genreName == "Downtempo") {
+	    if (genre.genreName == "Downtempo") {
 		return $scope.downtempo_toggle = !$scope.downtempo_toggle;
 	    }
-	    if (genreName == "Techno") {
+	    if (genre.genreName == "Techno") {
 		return $scope.techno_toggle = !$scope.techno_toggle;
 	    }
-	    if (genreName == "Hardcore") {
+	    if (genre.genreName == "Hardcore") {
 		return $scope.hardcore_toggle = !$scope.hardcore_toggle;
 	    }
-	    if (genreName == "Drum_and_bass") {
+	    if (genre.genreName == "Drum_and_bass") {
 		return $scope.drumandbass_toggle = !$scope.drumandbass_toggle;
 	    }
-	    if (genreName == "Dubstep") {
+	    if (genre.genreName == "Dubstep") {
 		return $scope.dubstep_toggle = !$scope.dubstep_toggle;
 	    }
-	    if (genreName == "Minimal") {
+	    if (genre.genreName == "Minimal") {
 		return $scope.minimal_toggle = !$scope.minimal_toggle;
 	    }
-	    if (genreName == "Trap") {
+	    if (genre.genreName == "Trap") {
 		return $scope.trap_toggle = !$scope.trap_toggle;
 	    }
 	};
@@ -1020,26 +1021,27 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.studio_one_toggle = false;
 	$scope.other_toggle = false;
 
-	$scope.filterDawClicked = function (dawName) {
-	    if (dawName == "Fl_studio") {
+	$scope.filterDawClicked = function (daw) {
+	    daw.toggle = !daw.toggle;
+	    if (daw.dawName == "Fl_studio") {
 		return $scope.fl_studio_toggle = !$scope.fl_studio_toggle;
 	    }
-	    if (dawName == "Ableton_Live") {
+	    if (daw.dawName == "Ableton_Live") {
 		return $scope.ableton_live_toggle = !$scope.ableton_live_toggle;
 	    }
-	    if (dawName == "Logic_Pro") {
+	    if (daw.dawName == "Logic_Pro") {
 		return $scope.logic_pro_toggle = !$scope.logic_pro_toggle;
 	    }
-	    if (dawName == "Pro_Tools") {
+	    if (daw.dawName == "Pro_Tools") {
 		return $scope.pro_tools_toggle = !$scope.pro_tools_toggle;
 	    }
-	    if (dawName == "Bitwig_Studio") {
+	    if (daw.dawName == "Bitwig_Studio") {
 		return $scope.bitwig_studio_toggle = !$scope.bitwig_studio_toggle;
 	    }
-	    if (dawName == "Studio_One") {
+	    if (daw.dawName == "Studio_One") {
 		return $scope.studio_one_toggle = !$scope.studio_one_toggle;
 	    }
-	    if (dawName == "Other") {
+	    if (daw.dawName == "Other") {
 		return $scope.other_toggle = !$scope.other_toggle;
 	    }
 
@@ -1054,29 +1056,30 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.spire_toggle = false;
 	$scope.othervst_toggle = false;
 
-	$scope.filterVstClicked = function (vstName) {
-	    if (vstName == "Massive") {
+	$scope.filterVstClicked = function (vst) {
+	    vst.toggle = !vst.toggle;
+	    if (vst.vstName == "Massive") {
 		return $scope.massive_toggle = !$scope.massive_toggle;
 	    }
-	    if (vstName == "Serum") {
+	    if (vst.vstName == "Serum") {
 		return $scope.serum_toggle = !$scope.serum_toggle;
 	    }
-	    if (vstName == "Sylenth1") {
+	    if (vst.vstName == "Sylenth1") {
 		return $scope.sylenth1_toggle = !$scope.sylenth1_toggle;
 	    }
-	    if (vstName == "Kontakt") {
+	    if (vst.vstName == "Kontakt") {
 		return $scope.kontakt_toggle = !$scope.kontakt_toggle;
 	    }
-	    if (vstName == "Ozone") {
+	    if (vst.vstName == "Ozone") {
 		return $scope.ozone_toggle = !$scope.ozone_toggle;
 	    }
-	    if (vstName == "Nexus") {
+	    if (vst.vstName == "Nexus") {
 		return $scope.nexus_toggle = !$scope.nexus_toggle;
 	    }
-	    if (vstName == "Spire") {
+	    if (vst.vstName == "Spire") {
 		return $scope.spire_toggle = !$scope.spire_toggle;
 	    }
-	    if (vstName == "Other") {
+	    if (vst.vstName == "Other") {
 		return $scope.othervst_toggle = !$scope.othervst_toggle;
 	    }
 
@@ -2531,16 +2534,16 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	}
 
-	$scope.genreArray = [{genreName: "House", subgenres: [{subGenreName: "Progressive House"}]},
-	    {genreName: "Trance", subgenres: [{subGenreName: "Acid Trance"}, {subGenreName: "Progressive Trance"}]},
-	    {genreName: "Breakbeat"},
-	    {genreName: "Downtempo"},
-	    {genreName: "Techno"},
-	    {genreName: "Hardcore"},
-	    {genreName: "Drum_and_bass"},
-	    {genreName: "Dubstep"},
-	    {genreName: "Minimal"},
-	    {genreName: "Trap"},
+	$scope.genreArray = [{genreName: "House",toggle:false, subgenres: [{subGenreName: "Progressive House"}]},
+	    {genreName: "Trance", toggle:false, subgenres: [{subGenreName: "Acid Trance"}, {subGenreName: "Progressive Trance"}]},
+	    {genreName: "Breakbeat",toggle:false},
+	    {genreName: "Downtempo",toggle:false},
+	    {genreName: "Techno",toggle:false},
+	    {genreName: "Hardcore",toggle:false},
+	    {genreName: "Drum_and_bass",toggle:false},
+	    {genreName: "Dubstep",toggle:false},
+	    {genreName: "Minimal",toggle:false},
+	    {genreName: "Trap",toggle:false},
 	];
 
 	$scope.vstArray = [{vstName: "Massive"},
