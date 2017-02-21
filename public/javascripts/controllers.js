@@ -897,7 +897,9 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	   //$scope.tipCounter = $scope.findInTipArray(objectIdToLoad);
 	   //$scope.updateBodyArray();
 	//});
-
+	$scope.isAdmin = function(){
+	     return $localStorage.username === "kcedge";
+	}
 
 	//Display Functions
 	$scope.showButton = function (buttonName) {
