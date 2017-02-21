@@ -6,39 +6,50 @@ append body
 			+alert-i-warning("Find your favorite music production tutorials and tips here!","heart")
 		
 		#filterWrapper.row.filterBoxStyle(ng-style="filtersBoxStyle")
-							div.filterWrapper#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;")
-								
+							div.filterWrapper#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;")
 								.label.label-default() Type:
+								div(style='display:inline-block')
+									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Type'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
 								//input.inputToggleClass(ng-model='theory_toggle'  type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
-								.label.label-primary( ng-class='{active:theory_toggle}' ng-click='theory_toggle = !theory_toggle') Theory
-								input.inputToggleClass(ng-model='mixing_toggle' type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
-								.label.label-primary( ng-class='{active:mixing_toggle}'  ng-click='mixing_toggle = !mixing_toggle') Mixing
-								input.inputToggleClass(ng-model='mastering_toggle' type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
-								.label.label-primary( ng-class='{active:mastering_toggle}'  ng-click='mastering_toggle = !mastering_toggle') Mastering
-								input.inputToggleClass(ng-model='sound_design_toggle'  type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
-								.label.label-primary( ng-class='{active:sound_design_toggle}'  ng-click='sound_design_toggle = !sound_design_toggle') Sound Design
-								input.inputToggleClass(ng-model='workflow_toggle' type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
-								.label.label-primary( ng-class='{active:workflow_toggle}'  ng-click='workflow_toggle = !workflow_toggle') Work Flow
-
+								//.label.label-primary( ng-class='{active:theory_toggle}' ng-click='theory_toggle = !theory_toggle') Theory
+								//input.inputToggleClass(ng-model='mixing_toggle' type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
+								//.label.label-primary( ng-class='{active:mixing_toggle}'  ng-click='mixing_toggle = !mixing_toggle') Mixing
+								//input.inputToggleClass(ng-model='mastering_toggle' type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
+								//.label.label-primary( ng-class='{active:mastering_toggle}'  ng-click='mastering_toggle = !mastering_toggle') Mastering
+								//input.inputToggleClass(ng-model='sound_design_toggle'  type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
+								//.label.label-primary( ng-class='{active:sound_design_toggle}'  ng-click='sound_design_toggle = !sound_design_toggle') Sound Design
+								//input.inputToggleClass(ng-model='workflow_toggle' type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
+								//.label.label-primary( ng-class='{active:workflow_toggle}'  ng-click='workflow_toggle = !workflow_toggle') Work Flow
+								.label.label-primary(ng-click="addFilterToggle = !addFilterToggle") Add
+								.label.label-primary(ng-click="deleteFilterToggle = !deleteFilterToggle") Delete
 							div.filterWrapper#tipGenreFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
-								.btnWrapper(style="float:left")
-									+label-default("Genre:")
-								.genreButton(ng-repeat = "genre in genreArray" style="float:left")
-									//input.inputToggleClass(ng-model='genre.toggle' type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='filterGenreId{{genre.genreName}}' ")
-									.label.label-primary(ng-class='{active:genre.toggle}' ng-click="filterGenreClicked(genre)") {{genre.genreName}}
+								.label.label-default() Genre:
+								div(style='display:inline-block')
+									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Genre'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+									
 							div.filterWrapper#tipDAWFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
-								.btnWrapper(style="float:left")
-									+label-default("DAW:")
-								.dawButton(style="float:left" ng-repeat = "daw in dawArray")							
-									//input.inputToggleClass(ng-model='daw.toggle' type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}' ng-click="filterDawClicked(daw.dawName)")
-									.label.label-primary(ng-class='{active:daw.toggle}'  ng-click='filterDawClicked(daw)'){{daw.dawName}}
+								
+								+label-default("DAW:")
+								div(style='display:inline-block')
+									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'DAW'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+									
 							div.filterWrapper#tipVSTFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
-								.btnWrapper(style="float:left")
-									.label.label-default() VST:
-								.vstButton(style="float:left" ng-repeat = "vst in vstArray")							
-									//input.inputToggleClass(ng-model='vst.toggle' type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='inputDawId{{vst.vstName}}' ")
-									.label.label-primary(ng-class='{active:vst.toggle}'  ng-click='filterVstClicked(vst)'){{vst.vstName}}
-			
+								
+								.label.label-default() VST:
+								div(style='display:inline-block')
+									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'VST'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+									
+		.row(ng-show='addFilterToggle')
+			select(ng-options="f for f in filterHeaders" ng-model="filterSelected")
+			span Filter Name 
+			input(ng-model='filterName' type='text')
+			span Parent
+			select(ng-options="s.name for s in filters" ng-model="filterParent")
+			button.btn.btn-default#filterAddButton(title="" ng-click="addFilter()") Add
+		.row(ng-show='deleteFilterToggle')
+			select(ng-options="f.name for f in filters" ng-model="filterSelectedDelete")
+			button.btn.btn-default#filterDeleteButton(title="" ng-click="deleteFilter()") Delete
+
 		.row
 			#navBarWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3()
 				//#blockForMargin(style="height:11px;width:100%")
@@ -184,38 +195,25 @@ append body
 
 							.genereInputWrapper(style="")
 								h7 Genres
-								.btnWrapper(style="" ng-repeat = "genre in genreArray")
-									//+toggle-primary("{{genre.genreName}}")
-									input.inputClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='inputGenreId{{genre.genreName}}')
-									+label-primary("{{genre.genreName}}")
-
+								.btnWrapper(style="" ng-repeat = 'f in filters | orderBy:"name"'  ng-show="f.type == 'Genre'")
+									input.inputClass(type="checkbox",data-toggle="toggle" name='{{f.name}}' id='' ng-model='f.inputToggle')
+									.label.label-primary(){{f.name}}
 							.theoryInputWrapper(style="")
 								h7 Tip Type
-								.btnWrapper
-									input.inputClass(type="checkbox",data-toggle="toggle" name='theoryYes' id='theoryYes')
-									+label-primary("Theory")
-								.btnWrapper
-									input.inputClass(type="checkbox",data-toggle="toggle" name='mixingYes' id='mixingYes')
-									+label-primary("Mixing")
-								.btnWrapper
-									input.inputClass(type="checkbox",data-toggle="toggle" name='masteringYes' id='masteringYes')
-									+label-primary("Mastering")
-								.btnWrapper
-									input.inputClass(type="checkbox",data-toggle="toggle" name='workFlowYes' id='workFlowYes')
-									+label-primary("Work Flow")
-								.btnWrapper
-									input.inputClass(type="checkbox",data-toggle="toggle" name='soundDesignYes' id='soundDesignYes')
-									+label-primary("Sound Design")
+								.btnWrapper(ng-repeat='f in filters |orderBy:"name"'  ng-show="f.type == 'Type'")
+									input.inputClass(type="checkbox",data-toggle="toggle" name='theoryYes' id='' ng-model='f.inputToggle')
+									.label.label-primary(){{f.name}}
+			
 							.vstInputWrapper(style="")
 								h7 VST
-								.btnWrapper(ng-repeat = "vst in vstArray")							
-									input.inputClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='inputVstId{{vst.vstName}}')
-									+label-primary("{{vst.vstName}}")
+								.btnWrapper(ng-repeat='f in filters |orderBy:"name"'  ng-show="f.type == 'VST'")							
+									input.inputClass(type="checkbox",data-toggle="toggle" name='{{f.name}}' id='' ng-model='f.inputToggle')
+									+label-primary("{{f.name}}")
 							.dawInputWrapper(style="")
 								h7 DAW
-								.btnWrapper( ng-repeat = "daw in dawArray")							
-									input.inputClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='inputDawId{{daw.dawName}}')
-									+label-primary("{{daw.dawName}}")
+								.btnWrapper(ng-repeat='f in filters |orderBy:"name"'  ng-show="f.type == 'DAW'")							
+									input.inputClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id=''  ng-model='f.inputToggle')
+									+label-primary("{{f.name}}")
 
 
 							.viedoLinkInputWrapper(style="margin-top:5px;" ng-show='false')
@@ -283,38 +281,29 @@ append body
 						.filterBoxStyle(style='display:inline-block;width:100%;')
 							.genereInputWrapper(style="")
 								h7 Genres
-								.btnWrapper(style="" ng-repeat = "genre in genreArray")
+								.btnWrapper(style="" ng-repeat = "f in filters | orderBy:'name'"  ng-show="f.type == 'Genre'")
 									//+toggle-primary("{{genre.genreName}}")
-									input.inputClass(type="checkbox",data-toggle="toggle" name='{{genre.genreName}}' id='editInputGenreId{{genre.genreName}}')
-									+label-primary("{{genre.genreName}}")
+									input.inputClass(type="checkbox",data-toggle="toggle" name='{{f.name}}' id='editInputId{{f.name}}' ng-model='f.inputToggle')
+									+label-primary("{{f.name}}")
 
 							.theoryInputWrapper(style="")
 								h7 Tip Type
-								.btnWrapper							
-									input.inputClass(type="checkbox",data-toggle="toggle" name='theoryYes' id='editTheoryYes')
-									+label-primary("Theory")
-								.btnWrapper
-									input.inputClass(type="checkbox",data-toggle="toggle" name='mixingYes' id='editMixingYes')
-									+label-primary("Mixing")
-								.btnWrapper
-									input.inputClass(type="checkbox",data-toggle="toggle" name='masteringYes' id='editMasteringYes')
-									+label-primary("Mastering")
-								.btnWrapper
-									input.inputClass(type="checkbox",data-toggle="toggle" name='workFlowYes' id='editWorkFlowYes')
-									+label-primary("Work Flow")
-								.btnWrapper
-									input.inputClass(type="checkbox",data-toggle="toggle" name='soundDesignYes' id='editSoundDesignYes')
-									+label-primary("Sound Design")
+								.btnWrapper(style="" ng-repeat = "f in filters | orderBy:'name'"  ng-show="f.type == 'Type'")
+									//+toggle-primary("{{genre.genreName}}")
+									input.inputClass(type="checkbox",data-toggle="toggle" name='{{f.name}}' id='editInputId{{f.name}}' ng-model='f.inputToggle')
+									+label-primary("{{f.name}}")
 							.vstInputWrapper()
 								h7 VST
-								.btnWrapper(style="" ng-repeat = "vst in vstArray")							
-									input.inputClass(type="checkbox",data-toggle="toggle" name='{{vst.vstName}}' id='editInputVstId{{vst.vstName}}')
-									+label-primary("{{vst.vstName}}")
+								.btnWrapper(style="" ng-repeat = "f in filters | orderBy:'name'"  ng-show="f.type == 'VST'")
+									//+toggle-primary("{{genre.genreName}}")
+									input.inputClass(type="checkbox",data-toggle="toggle" name='{{f.name}}' id='editInputId{{f.name}}' ng-model='f.inputToggle')
+									+label-primary("{{f.name}}")
 							.dawInputWrapper(style="margin-top:5px;")
 								h7 DAW
-								.btnWrapper(style="" ng-repeat = "daw in dawArray")							
-									input.inputClass(type="checkbox",data-toggle="toggle" name='{{daw.dawName}}' id='editInputDawId{{daw.dawName}}')
-									+label-primary("{{daw.dawName}}")
+								.btnWrapper(style="" ng-repeat = "f in filters | orderBy:'name'"  ng-show="f.type == 'DAW'")
+									//+toggle-primary("{{genre.genreName}}")
+									input.inputClass(type="checkbox",data-toggle="toggle" name='{{f.name}}' id='editInputId{{f.name}}' ng-model='f.inputToggle')
+									+label-primary("{{f.name}}")
 
 						.viedoLinkInputWrapper(style="margin-top:5px;" ng-show='false')
 							h7 Link Video							
@@ -368,12 +357,12 @@ append body
 						#labelSort
 							.label.label-info Top Tips
 						#dropdownWrapper.dropdown(style="float:left")
-							span.label.label-default.dropdown-toggle#rightBarWidgetDropdown(data-toggle='dropdown')
-								{{getRightBarSortType()}}
+							span.label.label-default.dropdown-toggle#rightBarWidgetDropdown1(data-toggle='dropdown')
+								{{rightBarSortType}}
 								span.glyphicon.glyphicon-menu-down
-							ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown" display='')
+							ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown1" display='')
 								li(ng-repeat='sortFilter in rightBarSortFiltersArray')
-									a(ng-click="navBarFilterClick(sortFilter)"){{sortFilter}}
+									a(ng-click="navBarRightFilterClick(sortFilter)"){{sortFilter}}
 					div.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : 'tipPoints':true | limitTo:10" ng-show="true")
 						.rightBarNavItem.row(ng-click="tipNavBarClicked(tip)" ng-mouseleave='navBarHoverRightMouseLeave(tip)')
 							.div.navBarTopDiv.row(ng-show='tip.hoverRightActive' ng-mouseover='rightBarWidgetMouseOver(tip)' style='')
@@ -389,5 +378,25 @@ append body
 								div.col-xs-12.col-sm-12.col-md-12.col-lg-12
 									div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
 				.rightWidetWrapper
-					#header
-						.label.label-info Top Users
+					#header(style='display:inline-block')
+						#labelSort
+							.label.label-info Top Users
+						#dropdownWrapper.dropdown(style="float:left")
+							span.label.label-default.dropdown-toggle#rightBarWidgetDropdown2(data-toggle='dropdown')
+								{{rightBarSortType2}}
+								span.glyphicon.glyphicon-menu-down
+							ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown2" display='')
+								li(ng-repeat='sortFilter in rightBarSortFiltersArray')
+									a(ng-click="navBarRightFilter2Click(sortFilter)"){{sortFilter}}
+				.rightWidetWrapper
+					#header(style='display:inline-block')
+						#labelSort
+							.label.label-info Top Samples
+						#dropdownWrapper.dropdown(style="float:left")
+							span.label.label-default.dropdown-toggle#rightBarWidgetDropdown2(data-toggle='dropdown')
+								{{rightBarSortType2}}
+								span.glyphicon.glyphicon-menu-down
+							ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown2" display='')
+								li(ng-repeat='sortFilter in rightBarSortFiltersArray')
+									a(ng-click="navBarRightFilter2Click(sortFilter)"){{sortFilter}}
+					

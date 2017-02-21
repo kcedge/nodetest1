@@ -54,3 +54,5 @@ Temporary Items
 public/resources/images/*
 
 public/resources/samples/*
+resources/keypair/mphelperT2Key.pem
+resources/keypair/mphelperT2Key.ppk

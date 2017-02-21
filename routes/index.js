@@ -75,6 +75,9 @@ else{
 }
 
 module.exports = function (router, passport) {
+    
+    
+    
     router.get('/authenticated', function (req, res) {
 	// If this function gets called, authentication was successful.
 	// `req.user` contains the authenticated user.
@@ -277,6 +280,7 @@ module.exports = function (router, passport) {
 	var dawJson = req.body['dawJson'];
 	var imageDataJson = req.body['imageDataJson'];
 	var videoLinkJson = req.body['videoLinkJson'];
+	var filtersJson = req.body['filtersJson'];
 	var submittedBy = req.body['submittedBy'];
 	var points = req.body['points'];
 	var dateSubmitted = req.body['dateSubmitted'];
@@ -301,7 +305,7 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		var collection = db.collection('tipsCollection');
-		collection.insert({tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson, submittedBy:submittedBy,tipPoints:points,dateSubmitted:dateSubmitted}, function (err, docsInserted) {
+		collection.insert({tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson,filtersJson:filtersJson, submittedBy:submittedBy,tipPoints:points,dateSubmitted:dateSubmitted}, function (err, docsInserted) {
 		    if (err) {
 
 			console.log('Unable to add tip to tipsCollection', err);
@@ -425,6 +429,8 @@ module.exports = function (router, passport) {
 	}
 	
 	var videoLinkJson = req.body['videoLinkJson'];
+	var filtersJson = req.body['filtersJson'];
+	
 	var submittedBy = req.body['submittedBy'];
 	var tipPoints = req.body['points'];
 	var dateSubmitted = req.body['dateSubmitted'];
@@ -441,7 +447,7 @@ module.exports = function (router, passport) {
 		var collection = db.collection('tipsCollection');
 		console.log(tipId);
 		if (updatingImages) {
-		    collection.update({_id: ObjectId(tipId)}, {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson, submittedBy: submittedBy, tipPoints: tipPoints,dateSubmitted:dateSubmitted}, function (err, db) {
+		    collection.update({_id: ObjectId(tipId)}, {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson,filtersJson:filtersJson, submittedBy: submittedBy, tipPoints: tipPoints,dateSubmitted:dateSubmitted}, function (err, db) {
 			if (err) {
 			    console.log('Unable to edit tip to tipsCollection', err);
 			    res.send('Tip edit failed');
@@ -452,7 +458,7 @@ module.exports = function (router, passport) {
 		    });
 		}
 		else{
-		        collection.update({_id: ObjectId(tipId)}, {$set: {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, videoLinkJson: videoLinkJson, submittedBy: submittedBy, tipPoints: tipPoints,dateSubmitted:dateSubmitted}}, function (err, db) {
+		        collection.update({_id: ObjectId(tipId)}, {$set: {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, videoLinkJson: videoLinkJson,filtersJson:filtersJson, submittedBy: submittedBy, tipPoints: tipPoints,dateSubmitted:dateSubmitted}}, function (err, db) {
 			if (err) {
 			    console.log('Unable to edit tip to tipsCollection', err);
 			    res.send('Tip edit failed');
@@ -543,6 +549,111 @@ module.exports = function (router, passport) {
 	});
 
     });
+    
+    
+    //FILTER ROUTES
+    router.post('/addFilter', function(req,res){
+	console.log('add filter');
+	var name = req.body['name'];
+	var type = req.body['type'];
+	var parent = req.body['parent'];
+
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('filterCollection');
+		collection.insert({name:name,type:type,parent:parent}, function (err, docsInserted) {
+		    if (err) {
+			console.log('Unable to add filter to filterCollection', err);
+			res.send('filter upload failed');
+		    }
+		    else {
+			console.log(docsInserted.ops[0]._id);
+			res.send(docsInserted.ops[0]);
+		    }
+		});
+
+	    }
+	});
+    });
+    router.get('/getFilters', function (req, res) {
+	console.log('get filters');
+
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+		res.status(500).send("unable to connect to mongo server");
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		//var TipsCollection = db.collection('tipsCollection');
+		var cursorArray = db.collection('filterCollection').find({parent:null}).toArray(function (err, items) {
+		    if (err) {
+			res.status(500).send('error retreiving data')
+		    }
+		    res.send(items);
+		});
+
+	    }
+	});
+    });
+     router.get('/getFilters/:parent', function (req, res) {
+	console.log('get sub filters');
+	var parent = req.params['parent'];
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+		res.status(500).send("unable to connect to mongo server");
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		//var TipsCollection = db.collection('tipsCollection');
+		var cursorArray = db.collection('filterCollection').find({parent:parent}).toArray(function (err, items) {
+		    if (err) {
+			res.status(500).send('error retreiving data')
+		    }
+		    res.send(items);
+		});
+
+	    }
+	});
+    });
+    router.delete('/deleteFilter/:id', function (req, res) {
+
+	var filterId = req.params['id'];
+	console.log("delete filter with id:" + filterId);
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('filterCollection');
+		collection.remove({_id: new mongodb.ObjectID(filterId)}, function (err, db) {
+		    res.send('Filter successfuly removed');
+		});
+
+	    }
+	});
+
+    });
+    
+   
 
 //router.get('/images/:imageId', function (req, res, next) {
     // console.log("SERVING IMAGE");
