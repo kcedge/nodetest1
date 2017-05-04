@@ -6,6 +6,26 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 
+//JADE COMPILER
+var jade = require('jade-compiler');
+var opts = {
+  pretty: true
+};
+
+jade.fromSource('/views/profile.jade', opts, function(err, html) {
+  console.log("//** Compiler Output **//");
+  console.log(err);
+  console.log(html);
+});
+
+jade.fromFile('/views/profile.jade', opts, function (err, html) {
+    console.log("//** Compiler Output 2 **//");
+    console.log(err);
+
+    console.log(html);
+});
+
+
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var flash    = require('connect-flash');

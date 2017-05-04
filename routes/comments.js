@@ -54,6 +54,36 @@ module.exports = function (router, passport) {
 	    }
 	});
     });
+     router.get('/getComments/', function (req, res, next) {
+	var tipId = req.params.id;
+	console.log('Getting the comments for')
+	console.log(tipId);
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('commentCollection');
+		if (collection.find({tip_id: tipId})) {
+		    var cursorArray = collection.find({}).toArray(function (err, items) {
+			if (err) {
+			    res.status(500).send('error retreiving data');
+			}
+			console.log('ITEMS');
+			console.log(items);
+			res.send(items);
+		    });
+		}
+		else{
+		    res.send("No tips found");
+		}
+	    }
+	});
+    });
     router.post('/postComment', function (req, res) {
 
 	console.log("postComment Post");

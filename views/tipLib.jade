@@ -1,11 +1,11 @@
 extends layout
 
 append body
-	.pageController(ng-controller="bodyTipHelperController" style = '' )
-		.div(style="text-align:center")
+	.pageController(ng-controller="bodyTipHelperController" style = '' id='controllerDiv' )
+		.div(style="text-align:center;margin-top:65px")
 			+alert-i-warning("Find your favorite music production tutorials and tips here!","heart")
-		
-		#filterWrapper.row.filterBoxStyle(ng-style="filtersBoxStyle")
+		#stickyalias
+		.row.filterBoxStyle#stickyheader(ng-style="filtersBoxStyle")
 							div.filterWrapper#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;")
 								.label.label-default() Type:
 								div(style='display:inline-block')
@@ -51,40 +51,42 @@ append body
 			button.btn.btn-default#filterDeleteButton(title="" ng-click="deleteFilter()") Delete
 
 		.row
-			#navBarWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3()
-				//#blockForMargin(style="height:11px;width:100%")
-				#sortNavBarWrapper(style="display:inline-block;width:100%;margin-bottom:5px;")
-					#labelSort
-						+label-info("Sort by:")			
-					#dropdownWrapper.dropdown(style="float:left")
-						span.label.label-default.dropdown-toggle#navBarSortDropdown(data-toggle='dropdown')
-							{{getSortType()}}
-							span.glyphicon.glyphicon-menu-down
-						ul.dropdown-menu(aria-labelledby="navBarSortDropdown")
-							li(ng-repeat='sortFilter in sortFiltersArray')
-								a(ng-click="navBarFilterClick(sortFilter)"){{sortFilter}}
-					//label.label.label-default#navBarSortBtn(ng-click="sortByClicked()")
-					//	{{arrowUnicode}}
-					span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
-					span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
-				navBarItem.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse" ng-show="showItem(tip)")
-					.tipNavItem.row.animated(ng-click="tipNavBarClicked(tip)" ng-mouseover='navBarHoverMouseOver(tip)'  ng-mouseleave='navBarHoverMouseLeave(tip)')
-						.div.navBarTopDiv.row( ng-show='true' ng-class='{navBarTipActive:tip.isActive}' )
-							.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
-								
-								span#navTipTitle(){{tip.tipTitle}}
-								span#navTipTitle(style='float:right'){{tip.tipPoints}}
-						.div.row.animated.navBarBottomRow(id='navBarBottomRow{{tip._id}}' ng-show='true')
-							div.col-xs-6.col-sm-6.col-md-6.col-lg-6#imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px')
-								img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 105px;margin-top:10px;padding:0px;')
-							div.col-xs-6.col-sm-6.col-md-6.col-lg-6#imgNavWrapper(ng-show='tip.imageDataJson.length > 1' style='padding:0px')
-								img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,1)}}' style='max-height: 105px;margin-top:10px;padding:0px;')
-						.div.row.navBarBottomRowOverlap(id='navBarBottomRowOverlap{{tip._id}}' ng-show='tip.hoverActive')
-							div.col-xs-12.col-sm-12.col-md-12.col-lg-12
-								div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
-									
-			.col-xs-6.col-sm-6.col-md-6.col-lg-6()
-				.tipsPageWrapper(ng-hide="addATip()||editATip()")
+			#stickyaliasNavLeft
+			#stickyheaderNavLeft
+				#navBarWrapper().col-xs-3.col-sm-3.col-md-3.col-lg-3
+					//#blockForMargin(style="height:11px;width:100%")
+					#sortNavBarWrapper(style="display:inline-block;width:100%;margin-bottom:5px;")
+						#labelSort
+							+label-info("Sort by:")			
+						#dropdownWrapper.dropdown(style="float:left")
+							span.label.label-default.dropdown-toggle#navBarSortDropdown(data-toggle='dropdown')
+								{{getSortType()}}
+								span.glyphicon.glyphicon-menu-down
+							ul.dropdown-menu(aria-labelledby="navBarSortDropdown")
+								li(ng-repeat='sortFilter in sortFiltersArray')
+									a(ng-click="navBarFilterClick(sortFilter)"){{sortFilter}}
+						//label.label.label-default#navBarSortBtn(ng-click="sortByClicked()")
+						//	{{arrowUnicode}}
+						span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
+						span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
+					navBarItem.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse" ng-show="showItem(tip)")
+						.tipNavItem.row.animated(ng-click="tipNavBarClicked(tip)" ng-mouseover='navBarHoverMouseOver(tip)'  ng-mouseleave='navBarHoverMouseLeave(tip)')
+							.div.navBarTopDiv.row( ng-show='true' ng-class='{navBarTipActive:tip.isActive}' )
+								.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
+
+									span#navTipTitle(){{tip.tipTitle}}
+									span#navTipTitle(style='float:right'){{tip.tipPoints}}
+							.div.row.animated.navBarBottomRow(id='navBarBottomRow{{tip._id}}' ng-show='true')
+								div.col-xs-6.col-sm-6.col-md-6.col-lg-6#imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px')
+									img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 105px;margin-top:10px;padding:0px;')
+								div.col-xs-6.col-sm-6.col-md-6.col-lg-6#imgNavWrapper(ng-show='tip.imageDataJson.length > 1' style='padding:0px')
+									img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,1)}}' style='max-height: 105px;margin-top:10px;padding:0px;')
+							.div.row.navBarBottomRowOverlap(id='navBarBottomRowOverlap{{tip._id}}' ng-show='tip.hoverActive')
+								div.col-xs-12.col-sm-12.col-md-12.col-lg-12
+									div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
+						
+			.col-xs-6.col-sm-6.col-md-6.col-lg-6#scrollable()
+				.tipsPageWrapper#tipsScrollWrapper(ng-hide="addATip()||editATip()")
 					//h2
 					//	#titleName= title
 
@@ -99,18 +101,18 @@ append body
 						+btn-xs("Edit")
 					//#deleteATipButton.keyButton(ng-click="deleteATipClicked()"  ng-show="showButton('Delete')")
 						+btn-xs("Delete")
-					#tipsWrapper.contentWrapper
+					div.contentWrapper(id='tipsWrapper{{tip._id}}' ng-repeat='tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse' ng-show="showItem(tip)")
 						#tipTitleBlock.titleWrapper
 							#tipTitle.titleWrapper.page-header(style="display:inline-block;width:100%;padding-bottom:3px;")
 
 
-								h2(style="float:left;max-width:450px;margin-left: 3px;margin-top:15px;") {{tipTitle}}
+								h2(style="float:left;max-width:450px;margin-left: 3px;margin-top:15px;") {{tip.tipTitle}}
 								span#currentTipId(ng-show="false")
 									{{currentTipId}}
 								span#currentTipIdToLoad(ng-show="false")
 									#{id}
 								#pointsDiv(style="float:right;margin-left:5px;margin-right:-13px;")
-									+label-default("{{currentTipPoints}}")
+									+label-default("{{tip.tipPoints}}")
 								h3(style="float:right;margin-top:20px;margin-top:15px;")
 									button.btn.btn-default#dislikeButton(title="downvote tip" style="margin-right:5px;" ng-click="dislikeButtonClicked()")
 										span.glyphicon.glyphicon-arrow-down
@@ -121,7 +123,7 @@ append body
 
 						#TipTitlePanel.panel.panel-default
 							#panelBody.panel-body.panel-body(style="text-indent: 0px;padding-bottom:0px;")
-								div.tipDescription.row#tipBody(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tipBodyArray")			
+								div.tipDescription.row#tipBody(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tip.tipBodyArray")			
 									div#descBody(ng-bind-html="tipPart.tipDescription | to_trusted")
 									.col-xs-10.col-sm-10.col-md-10.col-lg-10.imgDiv(ng-if="tipPart.hasImage" style='margin-left:5%')
 										img(ng-show="tipPart.hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
@@ -135,6 +137,7 @@ append body
 										span Submitted By: 
 											a(href="/profile/{{submittedBy}}"){{submittedBy}}
 										time.small(style='margin-left:2px'){{submittedDate|date:"MM/dd/yyyy"}}
+						comment-list(content-id='1' ng-hide='addATip() ')
 					//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])
 
 				.addATipPageWrapper(ng-show="addATipToggle")
@@ -349,54 +352,69 @@ append body
 						+btn-xs("Delete")
 					#erasePoints.keyButton(ng-click="updateTipPoints(0)"  ng-show="showButton('ErasePoints')")
 						+btn-xs("0 Points")
-				comment-list(content-id='1' ng-hide='addATip()')
+				
 				.errorDiv(ng-bind="responseData")
-			.col-xs-3.col-sm-3.col-md-3.col-lg-3#rightWidgetContainer.contentWrapper
-				.rightWidetWrapper
-					#header(style='display:inline-block')
-						#labelSort
-							.label.label-info Top Tips
-						#dropdownWrapper.dropdown(style="float:left")
-							span.label.label-default.dropdown-toggle#rightBarWidgetDropdown1(data-toggle='dropdown')
-								{{rightBarSortType}}
-								span.glyphicon.glyphicon-menu-down
-							ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown1" display='')
-								li(ng-repeat='sortFilter in rightBarSortFiltersArray')
-									a(ng-click="navBarRightFilterClick(sortFilter)"){{sortFilter}}
-					div.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : 'tipPoints':true | limitTo:10" ng-show="true")
-						.rightBarNavItem.row(ng-click="tipNavBarClicked(tip)" ng-mouseleave='navBarHoverRightMouseLeave(tip)')
-							.div.navBarTopDiv.row(ng-show='tip.hoverRightActive' ng-mouseover='rightBarWidgetMouseOver(tip)' style='')
-								.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
-									span#navTipTitle(){{tip.tipTitle}}
-									span#navTipTitle(style='float:right'){{tip.tipPoints}}
-							.div.row(ng-show='true' style='height:125px;')
-								div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px;height:125px')
-									img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
-								div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 1' style='padding:0px;height:125px')
-									img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,1)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
-							.div.row(ng-show='tip.hoverRightActive')
-								div.col-xs-12.col-sm-12.col-md-12.col-lg-12
-									div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
-				.rightWidetWrapper
-					#header(style='display:inline-block')
-						#labelSort
-							.label.label-info Top Users
-						#dropdownWrapper.dropdown(style="float:left")
-							span.label.label-default.dropdown-toggle#rightBarWidgetDropdown2(data-toggle='dropdown')
-								{{rightBarSortType2}}
-								span.glyphicon.glyphicon-menu-down
-							ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown2" display='')
-								li(ng-repeat='sortFilter in rightBarSortFiltersArray')
-									a(ng-click="navBarRightFilter2Click(sortFilter)"){{sortFilter}}
-				.rightWidetWrapper
-					#header(style='display:inline-block')
-						#labelSort
-							.label.label-info Top Samples
-						#dropdownWrapper.dropdown(style="float:left")
-							span.label.label-default.dropdown-toggle#rightBarWidgetDropdown2(data-toggle='dropdown')
-								{{rightBarSortType2}}
-								span.glyphicon.glyphicon-menu-down
-							ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown2" display='')
-								li(ng-repeat='sortFilter in rightBarSortFiltersArray')
-									a(ng-click="navBarRightFilter2Click(sortFilter)"){{sortFilter}}
-					
+			#stickyaliasNavLeft
+			#stickyheaderNavRight.col-xs-3.col-sm-3.col-md-3.col-lg-3
+				#rightWidgetContainer.contentWrapper
+					.rightWidetWrapper
+						#header(style='display:inline-block')
+							#labelSort
+								.label.label-info Top Tips
+							#dropdownWrapper.dropdown(style="float:left")
+								span.label.label-default.dropdown-toggle#rightBarWidgetDropdown1(data-toggle='dropdown')
+									{{rightBarSortType}}
+									span.glyphicon.glyphicon-menu-down
+								ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown1" display='')
+									li(ng-repeat='sortFilter in rightBarSortFiltersArray')
+										a(ng-click="navBarRightFilterClick(sortFilter)"){{sortFilter}}
+						div.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : 'tipPoints':true | limitTo:10" ng-show="true")
+							.rightBarNavItem.row(ng-click="tipNavBarClicked(tip)" ng-mouseleave='navBarHoverRightMouseLeave(tip)')
+								.div.navBarTopDiv.row(ng-show='tip.hoverRightActive' ng-mouseover='rightBarWidgetMouseOver(tip)' style='')
+									.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
+										span#navTipTitle(){{tip.tipTitle}}
+										span#navTipTitle(style='float:right'){{tip.tipPoints}}
+								.div.row(ng-show='true' style='height:125px;')
+									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px;height:125px')
+										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
+									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 1' style='padding:0px;height:125px')
+										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,1)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
+								.div.row(ng-show='tip.hoverRightActive')
+									div.col-xs-12.col-sm-12.col-md-12.col-lg-12
+										div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
+					.rightWidetWrapper
+						#header(style='display:inline-block')
+							#labelSort
+								.label.label-info Top Users
+							#dropdownWrapper.dropdown(style="float:left")
+								span.label.label-default.dropdown-toggle#rightBarWidgetDropdown2(data-toggle='dropdown')
+									{{rightBarSortType2}}
+									span.glyphicon.glyphicon-menu-down
+								ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown2" display='')
+									li(ng-repeat='sortFilter in rightBarSortFiltersArray')
+										a(ng-click="navBarRightFilter2Click(sortFilter)"){{sortFilter}}
+						div.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : 'tipPoints':true | limitTo:10" ng-show="true")
+							.rightBarNavItem.row(ng-click="tipNavBarClicked(tip)" ng-mouseleave='navBarHoverRightMouseLeave(tip)')
+								.div.navBarTopDiv.row(ng-show='tip.hoverRightActive' ng-mouseover='rightBarWidgetMouseOver(tip)' style='')
+									.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
+										span#navTipTitle(){{tip.tipTitle}}
+										span#navTipTitle(style='float:right'){{tip.tipPoints}}
+								.div.row(ng-show='true' style='height:125px;')
+									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px;height:125px')
+										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
+									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 1' style='padding:0px;height:125px')
+										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,1)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
+								.div.row(ng-show='tip.hoverRightActive')
+									div.col-xs-12.col-sm-12.col-md-12.col-lg-12
+										div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
+					.rightWidetWrapper
+						#header(style='display:inline-block')
+							#labelSort
+								.label.label-info Top Samples
+							#dropdownWrapper.dropdown(style="float:left")
+								span.label.label-default.dropdown-toggle#rightBarWidgetDropdown2(data-toggle='dropdown')
+									{{rightBarSortType2}}
+									span.glyphicon.glyphicon-menu-down
+								ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown2" display='')
+									li(ng-repeat='sortFilter in rightBarSortFiltersArray')
+										a(ng-click="navBarRightFilter2Click(sortFilter)"){{sortFilter}}

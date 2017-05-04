@@ -8,11 +8,13 @@ p {
     padding:0;
 }
 #navbar_menu{
-    background-color: white;
     border-radius: 5px;
 }
 .pageController{
 
+}
+::-webkit-scrollbar { 
+    display: none; 
 }
 .formInputWrapper{
     background-color: white;
@@ -34,8 +36,13 @@ a {
   
  
 }
-
-
+.left{
+    float:left;
+    padding-right:15px;
+}
+.right{
+    float:right;
+}
 .titleBannerDiv{
     margin-bottom: 10px;
     margin-left: -10px;
@@ -53,14 +60,20 @@ a {
 
 .filterBoxStyle{
     background-color: white;
-    padding: 5px;
     border-radius: 5px;
     margin-bottom: 5px;
+    padding-bottom:5px;
     border-style: solid;
     border-width: thin;
     border-color: #d1d2d2;
+    z-index: 2;
 }
-
+#navbar_menu{
+    position:fixed;
+    width:100%;
+    z-index: 1;
+    top:0px;
+}
 .label-default{
     margin-right:5px;
     background-color: #8a8a8a;
@@ -105,7 +118,10 @@ float:left;width:22%;
 #labelSort{
     float:left;
 }
-
+#tipsScrollWrapper{
+    overflow:auto;
+    
+}
 .tipDescription{
     white-space:pre-line;
      text-indent: 50px;
@@ -130,6 +146,7 @@ float:left;width:22%;
     border-color:  #8a8a8a;
     height:62.73px;
     overflow: auto;
+
 }
 #tipTypeFilterWrapper{
     border-left-style: solid;
@@ -194,6 +211,7 @@ float:left;width:22%;
     color: #383838;
     padding-right: 3px;
     padding-left: 3px;
+        font-size: smaller;
 }
 .label-primary:hover {
     cursor:pointer;
@@ -214,6 +232,9 @@ float:left;width:22%;
     border-radius: 5px;
 
 }
+.profilePageWrapper{
+    background-color: white;
+}
 
 
 .alert-info,.alert-warning {
@@ -226,7 +247,9 @@ float:left;width:22%;
     background-color: #dff0d8;
     border-color: #00cc66;
 }
-
+.profilePageBanner{
+    margin-bottom: 200px;
+}
 .canvasjs-chart-credit{
     visibility: hidden;
 }
@@ -247,13 +270,18 @@ float:left;width:22%;
     font-size: small;
        
 }
+.imgNavWrapper{
+    margin-top:-35px
+}
 .navBarTopDiv{
-    background-color:#525252;
+    background-color:#f3f3f3;
     z-index:1;
     position:relative;
-    color:white;
+    color:#565656;
     padding:5px;
     border-radius: 5px;
+        height: 25px;
+	opacity: 1
 }
 #navBarWrapper{  
     background-color: white;
@@ -273,7 +301,7 @@ float:left;width:22%;
 }
 #rightWidgetContainer{
     
-    padding-left: 15px;
+ 
 }
 
 .navBarTipActive{
@@ -315,8 +343,8 @@ float:left;width:22%;
     
     display: inline-block;
     width: 100%;
-    color: white;
-    background-color: #777777;
+    color: #565656;
+    background-color: #f3f3f3;
     border-radius: 5px;
     border:#d4d4d4;
     border-style: solid;
@@ -504,4 +532,44 @@ border-radius: 3px;
 
     padding-right: 0px;
 
+}
+
+.replyComment{
+    background:lightblue;
+}
+
+.commentList{
+  
+}
+
+.even{
+    
+}
+.odd{
+    background-color: #f1f1f1;
+}
+.outer {
+    display: table;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+.tooltip{
+    z-index: 1;
+}
+
+.tip-table-cell{
+    padding-top: 17px;
+}
+
+.middle {
+    margin-top:50%;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.inner {
+    margin-left: auto;
+    margin-right: auto; 
+    width: /*whatever width you want*/;
 }

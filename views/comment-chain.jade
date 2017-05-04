@@ -5,8 +5,8 @@ div.buttonWrapper
 	br
 h3.comments-title
 a#showCommentLink.cursor(ng-click="showCommentToggle($parent.tip)" style='float:right; cursor: pointer;') Toggle Comments		
-ul.panel-body.comment-detail-list.commentList(style='margin-top:25px;' ng-show='$parent.tip.showComments')
-	.row.media(ng-repeat="comment in $parent.getComments($parent.tip._id)| orderBy:'-commentPoints'")
+ul.panel-body.comment-detail-list.commentList(style='margin-top:25px;' ng-show='')
+	.row.media(ng-repeat="comment in $parent.tip.comments | orderBy:'-commentPoints'")
 		div#commentWrapper( style='display:inline-block; width:100%;' ng-show='!isReplyComment(comment)')
 			div#commentVoteWrapper.pull-left(style='width:4%')
 				span.glyphicon.glyphicon-arrow-up.hoverButton(ng-click='commentUpVote(comment)')

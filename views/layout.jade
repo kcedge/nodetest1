@@ -81,20 +81,21 @@ html(lang="en" ng-app='myApp')
                         script(src='javascripts/filters.js')
                         script(src='javascripts/directives.js')
         body(data-spy="scroll",data-target=".scrollspy" ng-controller="bodyController")
-               +navbar("Music Production Helper","navbar_menu")
-                        +nav_item("/") Chromatic Wheel
-                        +nav_item("tipLib") Tip Library 
-                        +nav_item("sampleLib") Sample Library 
-                        +nav_item("profile")#profileButton Profile
-                        +nav_item("about") About
-                        +nav_item_dropdown("#")(label="Connect")
-                                //+nav_item("https://soundcloud.com/crazylegsmusic","soundCloudLink") SoundCloud
-                                //+nav_item("https://www.facebook.com/crazylegsmusic/","facebookLink") Facebook
-                                //+nav_item("https://twitter.com/crazylegsmusic","twitterLink") Twitter
-                                //+nav_divider                            
-                                +nav_item("signUp") Sign Up
-                                +nav_item("signIn") Sign In
-                                +nav_item("contactMe") Contact
+                    #navbar_menu(style='margin-bottom:0px;height:50px;')
+                        +navbar("Music Production Helper","navbarWidget")
+                                +nav_item("/") Chromatic Wheel
+                                +nav_item("tipLib") Tip Library 
+                                +nav_item("sampleLib") Sample Library 
+                                +nav_item("profile")#profileButton Profile
+                                +nav_item("about") About
+                                +nav_item_dropdown("#")(label="Connect")
+                                        //+nav_item("https://soundcloud.com/crazylegsmusic","soundCloudLink") SoundCloud
+                                        //+nav_item("https://www.facebook.com/crazylegsmusic/","facebookLink") Facebook
+                                        //+nav_item("https://twitter.com/crazylegsmusic","twitterLink") Twitter
+                                        //+nav_divider                            
+                                        +nav_item("signUp") Sign Up
+                                        +nav_item("signIn") Sign In
+                                        +nav_item("contactMe") Contact
                 #profileLoggedIn(ng-show="isLoggedIn()" style="float:right;")
                         a(href="/logout" ng-click="signOutClicked()") Sign out
                 block body

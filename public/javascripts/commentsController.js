@@ -5,17 +5,25 @@
  */
 angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$http', 'CommentsService', '$localStorage', function ($scope,$rootScope, $http, CommentsService, $localStorage) {
       
-	CommentsService.getComments($scope.contentId)
+	CommentsService.getCommentsWithTipId($scope.tipId)
 		.then(function (response) {
 		    //$scope.parentobj.comments = response.data;
 		});
+		
+		
 	
+	$scope.showCommentToggle = function(tip){
+	    var tipCounter = $scope.$parent.findInTipArray(tip._id);
+	    $scope.$parent.tipArrayData[tipCounter].showComments = !$scope.$parent.tipArrayData[tipCounter].showComments ;
+	}
 	$scope.postACommentClicked = function () {
 	    console.log('Posting a comment');
 	    var username = $localStorage.username;
 	    var comment = $scope.postCommentAdd;
 	    $scope.postCommentAdd = "";
-	    var tipId = $("#currentTipId").html();
+	    var parentScope = $scope.$parent;
+	    var tipId = parentScope.tip._id;
+	    //var tipId = $("#currentTipId").html();
 	    console.log(username);
 	    console.log(comment);
 	    var req = {
@@ -36,6 +44,7 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 		console.log(response);
 		CommentsService.getComments(tipId).then(function (response) {
 		    $scope.$parent.comments = response.data;
+		    $scope.$parent.getTipsFromMongo();
 		});
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
@@ -70,6 +79,7 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 		console.log(response);
 		CommentsService.getComments(tipId).then(function (response) {
 		    $scope.$parent.comments = response.data;
+		       $scope.$parent.getTipsFromMongo();
 		});
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
@@ -171,10 +181,32 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 	}
 	
 	
-	$scope.replyCommentClicked = function(comment){
+	$scope.replyCommentClicked = function(tip,comment){
+	  
 	    comment.replyCommentToggle = !comment.replyCommentToggle; 
+	
+	    //$scope.$parent.tipClicked(tip);
+	    
+	}
+	$scope.showReplyCommentClicked = function (tip, comment) {
+	    
+	   // var tipCounter = $scope.$parent.findInTipArray(tip._id);
+	   
+	    
+	    if (typeof comment !== 'undefined') {
+		// the variable is defined
+
+		comment.showReplies = !comment.showReplies;
+		
+		//$scope.$parent.tipClicked(tip);
+	    }
+	   
+	}
+	$scope.isReplyComment = function(comment){
+	    return comment.parentComment_id != -1;
 	}
 	$scope.showReplyComment = function(comment){
+	    
 	    if(comment.hasOwnProperty('replyCommentToggle')){
 		return comment.replyCommentToggle;
 	    }

@@ -10,8 +10,8 @@ $(".facebookLink").children().first().attr("target", "_blank");
 $(".twitterLink").children().first().attr("target", "_blank");
 
 //angular.module("myApp", ["$scope","$http", "ngCookies"]);
-var runningProduction = true;
-function isAuthenticated($http,routeToSignUp ,callback) {
+var runningProduction = false;
+function isAuthenticated($http, routeToSignUp, callback) {
     var req = {
 	method: 'GET',
 	url: '/authenticated',
@@ -26,9 +26,9 @@ function isAuthenticated($http,routeToSignUp ,callback) {
 	    return callback(response.data);
 	}
 	else {
-	    if(routeToSignUp)
+	    if (routeToSignUp)
 		window.location.href = '/signUp';
-	    else{
+	    else {
 		callback(0);//calls back with false if no need to route to sign in
 	    }
 	}
@@ -39,11 +39,11 @@ function isAuthenticated($http,routeToSignUp ,callback) {
 
 }
 angular.module('myApp')
-    .filter('to_trusted', ['$sce', function($sce){
-        return function(text) {
-            return $sce.trustAsHtml(text);
-        };
-    }]);
+	.filter('to_trusted', ['$sce', function ($sce) {
+		return function (text) {
+		    return $sce.trustAsHtml(text);
+		};
+	    }]);
 angular.module("myApp").controller('bodyController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
 	$scope.isLoggedIn = function () {
 	    if ($localStorage.username != "" && $localStorage.username) {
@@ -71,51 +71,51 @@ angular.module("myApp").controller('signUpController', ['$scope', '$http', '$loc
 	    username: "",
 	    userSignedIn: false
 	});
-	$scope.gotoSignInClicked = function(){
-	    window.location.href = '/signIn/'+$('#redirect').text();
+	$scope.gotoSignInClicked = function () {
+	    window.location.href = '/signIn/' + $('#redirect').text();
 	}
-	
-	$scope.signUpGood = function(){
-	    if($scope.signUpUsername.length == 0){
+
+	$scope.signUpGood = function () {
+	    if ($scope.signUpUsername.length == 0) {
 		$scope.signUpErrorMessage = "enter username";
 		return false;
 	    }
-	    else if($scope.signUpUsername.length < 3){
+	    else if ($scope.signUpUsername.length < 3) {
 		$scope.signUpErrorMessage = "make username >= 3 characters";
 		return false;
 	    }
-	    else if($scope.signUpPassword.length < 6){
+	    else if ($scope.signUpPassword.length < 6) {
 		$scope.signUpErrorMessage = "make password >= 6 characters";
 		return false;
 	    }
-	    else if($scope.signUpPasswordConfirm.length == 0){
+	    else if ($scope.signUpPasswordConfirm.length == 0) {
 		$scope.signUpErrorMessage = "confirm password";
 		return false;
 	    }
-	    else if($scope.signUpPassword != $scope.signUpPasswordConfirm){
+	    else if ($scope.signUpPassword != $scope.signUpPasswordConfirm) {
 		$scope.signUpErrorMessage = "passwords do not match"
 		return false;
 	    }
-	    
+
 	    $scope.signUpErrorMessage = "";
 	    return true;
 	}
 
-	$scope.signUpClicked = function(){
+	$scope.signUpClicked = function () {
 	    var req = {
 		method: 'POST',
 		url: '/signUp',
 		headers: {
 		    'Content-Type': "application/json"
 		},
-		data: {username:$scope.signUpUsername,
+		data: {username: $scope.signUpUsername,
 		    email: $scope.signUpEmail,
 		    password: $scope.signUpPassword,
 		    redirect: $("#redirect").text()}
 	    }
 
 	    $http(req).then(function success(response) {
-		window.location.href = '/'+$('#redirect').text();
+		window.location.href = '/' + $('#redirect').text();
 		$scope.authres = response.data;
 
 	    }, function failure(response) {
@@ -144,7 +144,7 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 	    }
 
 	    $http(req).then(function success(response) {
-		window.location.href = '/'+$('#redirect').text();
+		window.location.href = '/' + $('#redirect').text();
 		$scope.authres = response.data;
 
 	    }, function failure(response) {
@@ -152,20 +152,20 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 
 	    });
 	}
-	$scope.signInClicked = function(){
+	$scope.signInClicked = function () {
 	    var req = {
 		method: 'POST',
 		url: '/signIn',
 		headers: {
 		    'Content-Type': "application/json"
 		},
-		data: {username:$scope.signInUsername,
+		data: {username: $scope.signInUsername,
 		    password: $scope.signInPassword,
 		    redirect: $("#redirect").text()}
 	    }
 
 	    $http(req).then(function success(response) {
-		window.location.href = '/'+$('#redirect').text();
+		window.location.href = '/' + $('#redirect').text();
 		$scope.authres = response.data;
 
 	    }, function failure(response) {
@@ -174,7 +174,7 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 	    });
 	}
 
-	
+
 
     }]);
 
@@ -889,16 +889,141 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.BPM = "122";
 	$scope.BARS = "16";
 	$scope.tipArrayData = TipData;
-	
+
 	//$(document).ready(function(){
-	  // var objectIdToLoad = $('#currentTipId2')[0].innerText;
-	   //objectIdToLoad = objectIdToLoad.replace('<','');
-	   //objectIdToLoad = objectIdToLoad.replace('>','');
-	   //$scope.tipCounter = $scope.findInTipArray(objectIdToLoad);
-	   //$scope.updateBodyArray();
+	// var objectIdToLoad = $('#currentTipId2')[0].innerText;
+	//objectIdToLoad = objectIdToLoad.replace('<','');
+	//objectIdToLoad = objectIdToLoad.replace('>','');
+	//$scope.tipCounter = $scope.findInTipArray(objectIdToLoad);
+	//$scope.updateBodyArray();
 	//});
-	$scope.isAdmin = function(){
-	     return $localStorage.username === "kcedge";
+	$scope.setCurrentTip = function (tip) {
+	    // $scope.tipCounter = scope.findInTipArray(tip._id);
+
+	}
+	$scope.tipClicked = function (tip) {
+	    var tipIdClicked = tip._id;
+	    $scope.tipCounter = $scope.findInTipArray(tipIdClicked);
+	    $scope.updateBodyArray();
+
+	}
+	$("#tipsScrollWrapper").scroll(function () {
+	    var scrollableScrollTop = $('#tipsScrollWrapper').scrollTop();
+	    var totalOffset = 0;
+
+	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
+	    totalOffset = $("#tipsWrapper" + tipId).offset();
+	    var globalOffset = (-$("#tipsWrapper" + tipId).height());
+	    if (totalOffset.top < globalOffset + 600) {
+		$scope.tipCounter --;
+		//$scope.updateBodyArray();
+		//$scope.prevButtonClicked();
+	    }
+	    if (totalOffset.top > 600) {
+		$scope.tipCounter ++;
+		//$scope.updateBodyArray();
+		//$scope.nextButtonClicked();
+	    }
+	    $scope.updateBodyArray();
+	    $scope.$apply();
+	})
+
+	$(window).resize(function () {
+
+	    $scope.stickyHeight = $('#stickyheader').height();
+	    // var stickyWidth =;
+	    $scope.navbarHeight = $('#navbar_menu').height();
+	    $(window).scroll(function () {
+		if ($(window).scrollTop() > $scope.stickyHeaderTop) {
+		    $('#stickyheader').css({position: 'fixed', top: $scope.navbarHeight, height: $scope.stickyHeight, width: '100%'});
+		    $('#stickyalias').css('display', 'block');
+		    $('#stickyalias').css('height', $scope.stickyHeight + "px");
+		    $('#stickyheaderNavLeft').css({position: 'fixed', top: $scope.stickyHeight + $scope.navbarHeight + 5, height: $scope.stickyNavLeftHeight, width: $scope.stickyNavLeftWidth});
+
+		} else {
+		    $('#stickyheader').css({position: 'static', top: '0px', width: ''});
+		    $('#stickyalias').css('display', 'none');
+		}
+
+
+	    });
+	});
+	$(function () {
+	    $('#tipsScrollWrapper').css('height', ($(window).height() - 222));
+	    // Check the initial Poistion of the Sticky Header
+	    $scope.navbarTop = $('#navbar_menu').offset().top;
+	    $scope.navbarHeight = $('#navbar_menu').height();
+	    $scope.navbarWidth = $('#navbar_menu').width();
+
+	    $scope.stickyHeaderTop = $('#stickyheader').offset().top;
+	    $scope.stickyHeight = $('#stickyheader').height() + 5;
+	    $scope.stickyWidth = $('#stickyheader').width();
+
+	    $scope.stickyHeaderNavLeftTop = $('#stickyheaderNavLeft').offset().top;
+	    $scope.stickyNavLeftHeight = $('#stickyheaderNavLeft').height();
+	    $scope.stickyNavLeftWidth = $('#stickyheaderNavLeft').width();
+	    $scope.stickyNavRightHeight = $('#stickyaliasNavRight').height();
+	    $scope.stickyNavRightWidth = $('#stickyaliasNavRight').width();
+
+
+
+	    $(window).resize(function () {
+		//$scope.stickyHeaderTop = $('#stickyheader').offset().top;
+		$scope.stickyHeight = $('#stickyheader').height();
+		$scope.stickyWidth = $('#stickyheader').width();
+		$scope.stickyNavLeftHeight = $('#stickyheaderNavLeft').height();
+		$scope.stickyNavLeftWidth = $('#stickyheaderNavLeft').width();
+		$scope.stickyNavRightHeight = $('#stickyaliasNavRight').height();
+		$scope.stickyNavRightWidth = $('#stickyaliasNavRight').width();
+		$('#tipsScrollWrapper').css('height', ($(window).height() - 222));
+		$(window).scroll(function () {
+		    if ($(window).scrollTop() > $scope.stickyHeaderTop) {
+			$('#stickyheader').css({position: 'fixed', top: $scope.navbarHeight, height: $scope.stickyHeight + 10, width: $scope.stickyNavLeftWidth});
+			$('#stickyalias').css('display', 'block');
+			$('#stickyalias').css('height', $scope.stickyHeight + "px");
+		    } else {
+			$('#stickyheader').css({position: '', top: $scope.navbarHeight, width: ''});
+			$('#stickyalias').css('display', 'none');
+		    }
+
+
+		});
+	    });
+	    $(window).scroll(function () {
+
+		if ($(window).scrollTop() >= $scope.stickyHeaderTop - 50) {
+		    $('#stickyheader').css({position: 'fixed', top: $scope.navbarHeight, height: $scope.stickyHeight + 10, width: $scope.stickyWidth});
+		    $('#stickyalias').css('display', 'block');
+		    $('#stickyalias').css('height', $scope.stickyHeight + "px");
+		    $('#stickyheaderNavLeft').css({position: 'fixed', top: $scope.stickyHeight + $scope.navbarHeight + 5, height: 100 + '%', width: $scope.stickyNavLeftWidth});
+		    $('#stickyaliasNavLeft').css('display', 'block');
+		    $('#stickyaliasNavLeft').css('height', $scope.stickyNavLeftHeight + "px");
+		    $('#stickyheaderNavRight').css({position: 'fixed', top: $scope.stickyHeight + $scope.navbarHeight + 5, height: 100 + '%', width: $scope.stickyNavRightWidth});
+		    $('#stickyaliasNavRight').css('display', 'block');
+		    $('#stickyaliasNavRight').css('height', $scope.stickyNavRightHeight + $scope.navbarHeight + "px");
+		    $('#stickyheaderNavRight').css('left', 75 + '%');
+		    $('#stickyaliasNavRight').css('height', $scope.stickyHeight + $scope.navbarHeight + "px");
+
+		    $('#scrollable').css('left', 25 + '%');
+		    $('#stickyalias').css('height', $scope.stickyHeight + "px");
+
+		} else {
+		    $('#stickyheader').css({position: '', top: '', height: '', width: ''});
+		    $('#stickyalias').css('display', 'none');
+		    $('#stickyheaderNavLeft').css({position: '', top: '', width: ''});
+		    $('#stickyaliasNavLeft').css('display', '');
+		    $('#stickyheaderNavRight').css({position: '', top: '', width: ''});
+		    $('#stickyaliasNavRight').css('display', '');
+		    $('#stickyheaderNavRight').css('left', '');
+		    $('#scrollable').css('left', '');
+
+		}
+
+
+	    });
+	});
+	$scope.isAdmin = function () {
+	    return $localStorage.username === "kcedge";
 	}
 
 	//Display Functions
@@ -911,26 +1036,26 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		if ($localStorage.username == "kcedge") {
 		    return true;
 		}
-		if($scope.tipArrayData.length){
-		    if($scope.tipArrayData[$scope.tipCounter].submittedBy == $localStorage.username){
-			 return true;
-		    }	   
-		}	
+		if ($scope.tipArrayData.length) {
+		    if ($scope.tipArrayData[$scope.tipCounter].submittedBy == $localStorage.username) {
+			return true;
+		    }
+		}
 		return false;
-		
+
 	    }
 	    else if (buttonName == "Delete") {
 		if ($localStorage.username == "kcedge") {
 		    return true;
 		}
-		if($scope.tipArrayData.length){
-		    if($scope.tipArrayData[$scope.tipCounter].submittedBy == $localStorage.username){
-			 return true;
-		    }	   
+		if ($scope.tipArrayData.length) {
+		    if ($scope.tipArrayData[$scope.tipCounter].submittedBy == $localStorage.username) {
+			return true;
+		    }
 		}
-		
+
 		return false;
-		
+
 	    }
 	    else if (buttonName == "ErasePoints") {
 		if ($localStorage.username == "kcedge") {
@@ -946,7 +1071,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	//FILTER FUNCTIONS
 	$scope.theory_toggle = false;
 	$scope.theoryToggle = function () {
-	   
+
 	};
 
 	$scope.mixing_toggle = false;
@@ -1094,7 +1219,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    else
 		return !$scope.theory_toggle;
 	}
-	
+
 
 	function testTipGenre(tip) {
 	    if (tip.hasOwnProperty("genreJson")) {
@@ -1105,7 +1230,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			if (tip.genreJson[i].genreName == $scope.filters[f].name) {
 			    genreFound = true;
 			    if (tip.genreJson[i].genreToggle || !$scope.filters[f].toggle) {
-				
+
 			    }
 			    else {
 				passed = false;
@@ -1113,10 +1238,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			}
 		    }
 		}
-		
-		    return passed;
-		
-		
+
+		return passed;
+
+
 	    }
 	    return false;
 	}
@@ -1203,20 +1328,28 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	}
 	$scope.showItem = function (tip) {
 	    var matchedName = false;
+	    var toggleClicked = false;
+	    for (var i = 0; i < $scope.filters.length; i++) {
+		if ($scope.filters[i].toggle) {
+		    toggleClicked = true;
+		    break;
+
+		}
+	    }
 	    for (var i = 0; i < $scope.filters.length; i++) {
 		for (var f = 0; f < tip.filtersJson.length; f++) {
-		    if (tip.filtersJson[f].name == $scope.filters[i].name){
+		    if (tip.filtersJson[f].name == $scope.filters[i].name) {
 			matchedName = true;
-			if($scope.filters[i].toggle && !tip.filtersJson[f].toggle){
-			    return false;
+			if (($scope.filters[i].toggle && tip.filtersJson[f].toggle) || !toggleClicked) {
+			    return true;
 			}
 		    }
 		}
 	    }
-	    
-	   
-		return true;
-	    
+
+
+	    return false;
+
 	};
 
 
@@ -1229,20 +1362,20 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 	}
-	
-	$scope.navBarRightFilterClick = function(filter){
+
+	$scope.navBarRightFilterClick = function (filter) {
 	    $scope.rightBarSortType = filter;
 	}
-	
-	    $scope.navBarRightFilter2Click = function(filter){
+
+	$scope.navBarRightFilter2Click = function (filter) {
 	    $scope.rightBarSortType2 = filter;
 	}
 
 
 	$scope.sortFiltersArray = ["Tip Title ", "Latest", "Rating"/*, "Tip Type ", "Genre ", "Level ", "DAW "*/];
-	
+
 	$scope.rightBarSortFiltersArray = ["Week", "Month", "All Time"];
-	
+
 	$scope.getOrderByNavBar = function () {
 	    if ($scope.sortType == "Tip Title") {
 		return "tipTitle";
@@ -1268,8 +1401,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	//Sort Functions for Nav Bar
 	$scope.sortType = $scope.sortFiltersArray[1]; // set the default sort type
-	$scope.rightBarSortType = $scope.rightBarSortFiltersArray[0]; 
-	
+	$scope.rightBarSortType = $scope.rightBarSortFiltersArray[0];
+
 	$scope.sortReverse = false;  // set the default sort order
 	$scope.searchTerm = '';     // set the default search/filter term
 
@@ -1282,8 +1415,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.sortReverseClicked = function () {
 	    $scope.sortReverse = !$scope.sortReverse;
 	}
-	$scope.getImageSrc = function(tip,imgIndex){
-	    
+	$scope.getImageSrc = function (tip, imgIndex) {
+
 	    if (tip && tip.imageDataJson.length) {
 		if (imgIndex < tip.imageDataJson.length && tip.imageDataJson.length != 0) {
 		    var tipImg = tip.imageDataJson[imgIndex];
@@ -1295,16 +1428,17 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			return "resources/images/" + tipImg['imageName'];
 		    }
 		}
-		else return "";
+		else
+		    return "";
 	    }
 	    else
 		return ""
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 
 	$scope.addATipToggle = false;
 
@@ -1318,7 +1452,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.addATipToggle = !$scope.addATipToggle;
 	    $scope.tipTitleAdd = "";
 	    $scope.tipDescAdd = "";
-	    $scope.tipBodyArray = [];
+
 	    $scope.tipImageArray = [];
 	    tinyMCE.get('textAreaTip').setContent('');
 	}
@@ -1346,8 +1480,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 
-	$scope.getTipFiltersData = function(){
-	    if($scope.tipArrayData[$scope.tipCounter])
+	$scope.getTipFiltersData = function () {
+	    if ($scope.tipArrayData[$scope.tipCounter])
 		return $scope.tipArrayData[$scope.tipCounter].filtersJson;
 	    else
 		return [];
@@ -1374,18 +1508,18 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    }
 	}
 	$scope.removeImageBodyArray = false;
-	$scope.removeSelectedImage = function(){
-	     var removeImageBodyArray = $scope.tipImageArray[$scope.selectedImgObjIndex];
-	     var spliceReturn = $scope.tipImageArray.splice($scope.selectedImgObjIndex,1);
-	     $scope.removeImageBodyArray = true;
-	   
+	$scope.removeSelectedImage = function () {
+	    var removeImageBodyArray = $scope.tipImageArray[$scope.selectedImgObjIndex];
+	    var spliceReturn = $scope.tipImageArray.splice($scope.selectedImgObjIndex, 1);
+	    $scope.removeImageBodyArray = true;
+
 	}
-	
+
 	$scope.editATipToggle = false;
 	$scope.editATip = function () {
 	    return $scope.editATipToggle;
 	}
-	
+
 	$scope.editATipClicked = function () {
 	    $scope.editATipToggle = !$scope.editATipToggle;
 	    $scope.addATipToggle = false;
@@ -1399,7 +1533,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 	    $("#tipTitleEditInput").val(tipTitle);
-	    
+
 	    //Update tip description
 	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipDescJson")) {
 		//starts at 2 because number of tips is in first array space
@@ -1407,12 +1541,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    if (i == 1) {
 			var tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription;
 			var mce = tinyMCE.get('textAreaEditTip');
-				mce.setContent(tipDesc);
+			mce.setContent(tipDesc);
 			//$("#textAreaEditTip").val(tipDesc);
 		    }
 		    else {
 			$scope.editAddDescription();//put text area elements into the DOM 
-			tinyMCE.get('textAreaEditTip'+i).setContent($scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription);
+			tinyMCE.get('textAreaEditTip' + i).setContent($scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription);
 			//$("#textAreaEditTip" + i).val($scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription);
 		    }
 		}
@@ -1425,62 +1559,62 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	    for (var f = 0; f < $scope.filters.length; f++) {
 		for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].filtersJson.length; i++) {
-		    if( $scope.filters[f].name ==  $scope.tipArrayData[$scope.tipCounter].filtersJson[i].name){
+		    if ($scope.filters[f].name == $scope.tipArrayData[$scope.tipCounter].filtersJson[i].name) {
 			$scope.filters[f].inputToggle = $scope.tipArrayData[$scope.tipCounter].filtersJson[i].toggle;
-			
+
 		    }
 		}
 	    }
 	    /*
-	    for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].dawJson.length; i++) {
-		var dawName = $scope.tipArrayData[$scope.tipCounter].dawJson[i].dawName;
-
-		if ($scope.tipArrayData[$scope.tipCounter].dawJson[i].dawToggle) {
-		    if (dawName) {
-			$("#editInputDawId" + dawName).prop("checked", true);
-		    }
-		}
-		else {
-		    if (dawName) {
-			$("#editInputDawId" + dawName).prop("checked", false);
-		    }
-		}
-
-	    }
-
-	    //Mark VST
-	    for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].vstJson.length; i++) {
-		var vstName = $scope.tipArrayData[$scope.tipCounter].vstJson[i].vstName;
-		if ($scope.tipArrayData[$scope.tipCounter].vstJson[i].vstToggle) {
-		    if (vstName) {
-			$("#editInputVstId" + vstName).prop("checked", true);
-		    }
-
-		}
-		else {
-		    $("#editInputVstId" + vstName).prop("checked", false);
-
-		}
-	    }
-	    //Mark Genre
-	    for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].genreJson.length; i++) {
-		var genreName = $scope.tipArrayData[$scope.tipCounter].genreJson[i].genreName;
-		if ($scope.tipArrayData[$scope.tipCounter].genreJson[i].genreToggle) {
-		    if (genreName) {
-			$("#editInputGenreId" + genreName).prop("checked", true);
-		    }
-		}
-		else {
-		    $("#editInputGenreId" + genreName).prop("checked", false);
-		}
-	    }
-	    //Mark Tip TYPE
-	    $("#editMixingYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.mixingTip);
-	    $("#editTheoryYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.theoryTip);
-	    $("#editMasteringYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.masteringTip);
-	    $("#editWorkFlowYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.workFlowTip);
-	    $("#editSoundDesignYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.soundDesignTip);
-*/
+	     for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].dawJson.length; i++) {
+	     var dawName = $scope.tipArrayData[$scope.tipCounter].dawJson[i].dawName;
+	     
+	     if ($scope.tipArrayData[$scope.tipCounter].dawJson[i].dawToggle) {
+	     if (dawName) {
+	     $("#editInputDawId" + dawName).prop("checked", true);
+	     }
+	     }
+	     else {
+	     if (dawName) {
+	     $("#editInputDawId" + dawName).prop("checked", false);
+	     }
+	     }
+	     
+	     }
+	     
+	     //Mark VST
+	     for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].vstJson.length; i++) {
+	     var vstName = $scope.tipArrayData[$scope.tipCounter].vstJson[i].vstName;
+	     if ($scope.tipArrayData[$scope.tipCounter].vstJson[i].vstToggle) {
+	     if (vstName) {
+	     $("#editInputVstId" + vstName).prop("checked", true);
+	     }
+	     
+	     }
+	     else {
+	     $("#editInputVstId" + vstName).prop("checked", false);
+	     
+	     }
+	     }
+	     //Mark Genre
+	     for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].genreJson.length; i++) {
+	     var genreName = $scope.tipArrayData[$scope.tipCounter].genreJson[i].genreName;
+	     if ($scope.tipArrayData[$scope.tipCounter].genreJson[i].genreToggle) {
+	     if (genreName) {
+	     $("#editInputGenreId" + genreName).prop("checked", true);
+	     }
+	     }
+	     else {
+	     $("#editInputGenreId" + genreName).prop("checked", false);
+	     }
+	     }
+	     //Mark Tip TYPE
+	     $("#editMixingYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.mixingTip);
+	     $("#editTheoryYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.theoryTip);
+	     $("#editMasteringYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.masteringTip);
+	     $("#editWorkFlowYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.workFlowTip);
+	     $("#editSoundDesignYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.soundDesignTip);
+	     */
 	}
 	$scope.descriptionCounter = 1;
 	$scope.addDescription = function () {
@@ -1508,10 +1642,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	}
 	$scope.subtractDescription = function () {
 	    if ($scope.descriptionCounter > 1) {
-		tinyMCE.remove('#textAreaTip'+ $scope.descriptionCounter);
-		$("#textAreaTip" + $scope.descriptionCounter).last().remove();	
+		tinyMCE.remove('#textAreaTip' + $scope.descriptionCounter);
+		$("#textAreaTip" + $scope.descriptionCounter).last().remove();
 		$scope.descriptionCounter--;
-		
+
 	    }
 	}
 	$scope.editAddDescription = function () {
@@ -1537,7 +1671,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    });
 	}
 	$scope.editSubtractDescription = function () {
-	    tinyMCE.remove('#textAreaEditTip'+ $scope.descriptionCounter);
+	    tinyMCE.remove('#textAreaEditTip' + $scope.descriptionCounter);
 	    if ($scope.descriptionCounter > 1) {
 		$("#textAreaEditTip" + $scope.descriptionCounter).last().remove();
 		$scope.descriptionCounter--;
@@ -1546,14 +1680,14 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.removeAllButOneTipDescriptions = function (editOrAdd) {
 	    if (editOrAdd == "Add") {
 		for (i = $scope.descriptionCounter; i > 1; i--) {
-		    tinyMCE.remove('#textAreaTip'+ $scope.descriptionCounter);
+		    tinyMCE.remove('#textAreaTip' + $scope.descriptionCounter);
 		    $("#textAreaTip" + $scope.descriptionCounter).last().remove();
 		    $scope.descriptionCounter--;
 		}
 	    }
 	    else if (editOrAdd == "Edit") {
 		for (i = $scope.descriptionCounter; i > 1; i--) {
-		    tinyMCE.remove('#textAreaEditTip'+ $scope.descriptionCounter);
+		    tinyMCE.remove('#textAreaEditTip' + $scope.descriptionCounter);
 		    $("#textAreaEditTip" + $scope.descriptionCounter).last().remove();
 		    $scope.descriptionCounter--;
 		}
@@ -1582,13 +1716,13 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    //Collect Tip Description JSON
 	    for (var i = 1; i <= $scope.descriptionCounter; i++) {
 		if (i == 1) {
-		   // var tipDescriptionLocal = $("#textAreaEditTip").val();
+		    // var tipDescriptionLocal = $("#textAreaEditTip").val();
 		    var tipDescriptionLocal = tinyMCE.get('textAreaEditTip').getContent();
 		    tipDescObject[i] = {tipNumber: i, tipDescription: tipDescriptionLocal}
 		}
 		else {
 		    //var tipDescriptionLocal = $("#textAreaEditTip" + i).val();
-		    var tipDescriptionLocal = tinyMCE.get('textAreaEditTip'+i).getContent();
+		    var tipDescriptionLocal = tinyMCE.get('textAreaEditTip' + i).getContent();
 		    tipDescObject[i] = {tipNumber: i, tipDescription: tipDescriptionLocal}
 		}
 	    }
@@ -1596,46 +1730,46 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 	    var genreObject = [{}]
-	    
+
 
 	    var vstObject = [{}]
-	    
+
 
 	    var vstObjectJson = JSON.stringify(vstObject);
 
 	    var dawObject = [{}]
-	   
+
 	    var dawObjectJson = JSON.stringify(dawObject);
 
 	    var updatingImages = false;
-	    
+
 	    //if(($scope.tipBodyArray.length != $scope.tipArrayData[$scope.tipCounter].imageDataJson.length) || $scope.removeImageBodyArray){
-		var imageDataObject = [];
-		for (var i = 0; i < $scope.tipImageArray.length; i++) {
-		    var imageName = "";
-		    if(!runningProduction){
-			imageName =  $scope.tipImageArray[i].imageFileName.replace("resources/images/", "");
-		    }
-		    else{
-			imageName = $scope.tipImageArray[i].imageFileName
-		    }
-		    imageDataObject.push({imageName:imageName, imageSize:0,
-			dateModified: 0, newFileName: imageName});
+	    var imageDataObject = [];
+	    for (var i = 0; i < $scope.tipImageArray.length; i++) {
+		var imageName = "";
+		if (!runningProduction) {
+		    imageName = $scope.tipImageArray[i].imageFileName.replace("resources/images/", "");
 		}
-		var imageDataObjectJson = JSON.stringify(imageDataObject);
-		updatingImages = true;	
+		else {
+		    imageName = $scope.tipImageArray[i].imageFileName
+		}
+		imageDataObject.push({imageName: imageName, imageSize: 0,
+		    dateModified: 0, newFileName: imageName});
+	    }
+	    var imageDataObjectJson = JSON.stringify(imageDataObject);
+	    updatingImages = true;
 	    //}
-	    
-	    
-	 /*   if ($scope.uploader.queue.length > 0) {
-		var imageDataObject = $scope.tipArrayData[$scope.tipCounter].imageDataJson;
-		for (var i = 0; i < $scope.uploader.queue.length; i++) {
-		    imageDataObject.push({imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
-			dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]});
-		}
-		var imageDataObjectJson = JSON.stringify(imageDataObject);
-		updatingImages = true;
-	    }*/
+
+
+	    /*   if ($scope.uploader.queue.length > 0) {
+	     var imageDataObject = $scope.tipArrayData[$scope.tipCounter].imageDataJson;
+	     for (var i = 0; i < $scope.uploader.queue.length; i++) {
+	     imageDataObject.push({imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
+	     dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]});
+	     }
+	     var imageDataObjectJson = JSON.stringify(imageDataObject);
+	     updatingImages = true;
+	     }*/
 
 
 	    var videoLink = $("#editVideoLink")[0].value;
@@ -1659,12 +1793,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		tipPoints = 1;
 	    }
 	    var req = "";
-	    
+
 	    var date = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
-	    
+
 	    var genreObjectJson = JSON.stringify([]);
 	    var tipTypeObjectJson = JSON.stringify([]);
-	    
+
 	    if (updatingImages) {
 		req = {
 		    method: 'PUT',
@@ -1681,10 +1815,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			dawJson: dawObjectJson,
 			imageDataJson: imageDataObjectJson,
 			videoLinkJson: videoLinkJson,
-			filtersJson:filtersJson,
+			filtersJson: filtersJson,
 			submittedBy: $localStorage.username,
 			points: tipPoints,
-			dateSubmitted:date
+			dateSubmitted: date
 		    }
 
 		}
@@ -1704,10 +1838,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			vstJson: vstObjectJson,
 			dawJson: dawObjectJson,
 			imageDataJson: imageDataObjectJson,
-			filtersJson:filtersJson,
+			filtersJson: filtersJson,
 			submittedBy: $localStorage.username,
 			points: tipPoints,
-			dateSubmitted:date
+			dateSubmitted: date
 		    }
 
 		}
@@ -1737,44 +1871,43 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		}
 	    }
 	}
-	$scope.navBarHoverMouseOver = function(tip){
-	   // $("#navBarBottomRow"+tip._id).removeClass('slideOutLeft');
-	   // $("#navBarBottomRow"+tip._id).addClass('animated');
-	   // $("#navBarBottomRow"+tip._id).addClass('slideInLeft');
-
-
-
-// $("#navBarBottomRow"+tip._id).removeClass('slideOutLeft');
+	$scope.navBarHoverMouseOver = function (tip) {
+	
 	    tip.hoverActive = true;
 	}
 	$scope.rightBarWidgetMouseOver = function (tip) {
 	    tip.hoverRightActive = true;
 
 	}
-	$scope.navBarHoverMouseLeave = function(tip){
-	     $("#navBarBottomRow"+tip._id).removeClass('animated');
+	$scope.navBarHoverMouseLeave = function (tip) {
+	    $("#navBarBottomRow" + tip._id).removeClass('animated');
 	    tip.hoverActive = false;
 	}
-	$scope.navBarHoverRightMouseLeave = function(tip){
+	$scope.navBarHoverRightMouseLeave = function (tip) {
 	    // $("#navBarBottomRow"+tip._id).removeClass('animated');
 	    tip.hoverRightActive = false;
 	}
+
 	$scope.tipNavBarClicked = function (tip) {
 	    var tipIdClicked = tip._id;
+	    var tipObjClicked = $("#tipsWrapper" + tipIdClicked);
+	    var tipObjClickedOffset = tipObjClicked[0].offsetTop;
+	    var scrollWrapper = $("#tipsScrollWrapper");
+	    scrollWrapper.scrollTop(tipObjClickedOffset);
 
 	    $scope.tipCounter = $scope.findInTipArray(tip._id);
-	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
-	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-	    $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
+	    // $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
+	    // $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
+	    // $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
 
 	    $scope.addATipToggle = false;
 	    $scope.editATipToggle = false;
-	    
-	    
-	 //   $scope.updateImageFileName();
 	    $scope.updateBodyArray();
-	}
 
+	    //   $scope.updateImageFileName();
+
+	}
+	
 	var convertTipDataToJson = function () {
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		if ($scope.tipArrayData[i].dawJson) {
@@ -1816,20 +1949,39 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.tipArrayData = response.data;
 		$scope.tipArrayData.sort(compare);
 		convertTipDataToJson();
-		
-		var objectIdToLoad = $('#currentTipIdToLoad')[0].innerText;
-		if (objectIdToLoad) {
-		    objectIdToLoad = objectIdToLoad.replace('<', '');
-		    objectIdToLoad = objectIdToLoad.replace('>', '');
-		    $scope.tipCounter = $scope.findInTipArray(objectIdToLoad);
+
+		CommentsService.getComments().then(function (response) {
+		    for (var i = 0; i < $scope.tipArrayData.length; i++) {
+			
+			$scope.tipArrayData[i].parentComments = [];
+			$scope.tipArrayData[i].replyComments = [];
+			$scope.tipArrayData[i].comments = [];
+			
+		    }
+
+		    $scope.setTipComments(response.data);
+		});
+
+		//Update comments
+		CommentsService.getCommentsWithTipId($scope.tipArrayData[$scope.tipCounter]._id).then(function (response) {
+
+		    var comment = response.data;
+		    //setTipComments();
+		});
+		$scope.tipCounter = 0;
+		for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		    $scope.tipArrayData[i].showComments = true;
 		    $scope.updateBodyArray();
+		    $scope.tipCounter++
 		}
+		$scope.tipCounter =  $scope.tipArrayData.length - 1;
+		
 		
 		$scope.submitMessage = "Success"
 		$scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
 		$scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 		$scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
-	//	$scope.updateImageFileName();
+		//	$scope.updateImageFileName();
 		$scope.updateBodyArray();
 		$scope.navBarArray = "[";
 		for (var i = 0; i < $scope.tipArrayData.length; i++) {
@@ -1837,8 +1989,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    $scope.navBarArray += object;
 
 		}
+		//$scope.tipCounter = $scope.tipArrayData.length-1;
 		$scope.navBarArray += "]"
-
 	    }, function failure(response) {
 
 		$scope.submitMessage = "Failure"
@@ -1848,7 +2000,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 	}
-
+	
 
 	$scope.profileDataFromMongo = function () {
 	    var username = $localStorage.username;
@@ -1883,153 +2035,208 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	}
 
 	$scope.submittedDate = "";
-	
+
 	//Update Tip arrays when the tip is changed
 	$scope.updateBodyArray = function () {
-	    $scope.tipBodyArray = [];
-	    $scope.tipImageArray = [];
-	    
-	    for(var i = 0; i < $scope.tipArrayData.length;i++){
-		$scope.tipArrayData[i].isActive = false;
-	    }
-	    $scope.tipArrayData[$scope.tipCounter].isActive = true;
-	    
-	    
-	    $scope.currentTipId = $scope.tipArrayData[$scope.tipCounter]._id
-	    $scope.currentTipPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
-	    $scope.removeImageBodyArray = false;
-	    $scope.submittedDate = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
-	    
-	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipDescJson")) {
-		for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].tipDescJson.length; i++) {
-		    var tipDescriptionLocal = $scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription;
-		    var submittedByLocal = $scope.tipArrayData[$scope.tipCounter].submittedBy;
-		    var submittedDateLocal = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
-		    var imageFileNameLocal = "";
-		    
-		    if ($scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1]) {
-			imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1].newFileName;
-		    }
+	    if ($scope.tipArrayData.length) {
+		$scope.tipBodyArray = [];
+		$scope.tipImageArray = [];
+		$scope.tipArrayData[$scope.tipCounter].tipImageArray = [];
+		$scope.tipArrayData[$scope.tipCounter].tipBodyArray = []
 
-		    if (!runningProduction) {
-			imageFileNameLocal = "resources/images/" + imageFileNameLocal;
-		    }
-		    var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/" && imageFileNameLocal != "resources/images/undefined");
-		    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal,submittedDate:submittedDateLocal})
-		    if(hasImage){
-			 $scope.tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal,submittedDate:submittedDateLocal});
-		    }
+		for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		    $scope.tipArrayData[i].isActive = false;
 		}
-	    }
-	    if(($scope.tipArrayData[$scope.tipCounter].tipDescJson.length) <= $scope.tipArrayData[$scope.tipCounter].imageDataJson.length){
-		var i = $scope.tipArrayData[$scope.tipCounter].tipDescJson.length-1;
-		for (var i; i < $scope.tipArrayData[$scope.tipCounter].imageDataJson.length; i++) {
-		    var tipDescriptionLocal = "";
-		    var submittedByLocal = $scope.tipArrayData[$scope.tipCounter].submittedBy;
-		    var submittedDateLocal = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
-		    var imageFileNameLocal = "";
-		    if ($scope.tipArrayData[$scope.tipCounter].imageDataJson[i]) {
-			imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i].newFileName;
-		    }
-		    if (!runningProduction) {
-			imageFileNameLocal = "resources/images/" + imageFileNameLocal;
-		    }
-		    var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/");
-		    if(hasImage){
-			    $scope.tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal,submittedDate:submittedDateLocal})
-			    $scope.tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal,submittedDate:submittedDateLocal})
-		    }
-		}
-	    }
-	    
-	    
-	    
-	    $scope.tipTagsArray = [];
-	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipTypeJson")) {
-		var isMastering = $scope.tipArrayData[$scope.tipCounter].tipTypeJson['masteringTip'];
-		var isMixing = $scope.tipArrayData[$scope.tipCounter].tipTypeJson['mixingTip'];
-		var isSoundDesign = $scope.tipArrayData[$scope.tipCounter].tipTypeJson['soundDesignTip'];
-		var isTheory = $scope.tipArrayData[$scope.tipCounter].tipTypeJson['theoryTip'];
-		var isWorkFlow = $scope.tipArrayData[$scope.tipCounter].tipTypeJson['workFlowTip'];
-
-		if (isMastering) {
-		    $scope.tipTagsArray.push('Mastering');
-		}
-		if (isMixing) {
-		    $scope.tipTagsArray.push('Mixing');
-		}
-		if (isSoundDesign) {
-		    $scope.tipTagsArray.push('Sound Design');
-		}
-		if (isTheory) {
-		    $scope.tipTagsArray.push('Theory');
-		}
-		if (isWorkFlow) {
-		    $scope.tipTagsArray.push('Work Flow');
-		}
-	    }
-	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("genreJson")) {
-		for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].genreJson.length; i++) {
-		    var genreObj = $scope.tipArrayData[$scope.tipCounter].genreJson[i];
-		    if (genreObj.genreToggle) {
-			$scope.tipTagsArray.push(genreObj.genreName);
-		    }
-		}
-	    }
-	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("dawJson")) {
-		for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].dawJson.length; i++) {
-		    var dawObj = $scope.tipArrayData[$scope.tipCounter].dawJson[i];
-		    if (dawObj.dawToggle) {
-			$scope.tipTagsArray.push(dawObj.dawName);
-		    }
-		}
-	    }
-	    if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("vstJson")) {
-		for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].vstJson.length; i++) {
-		    var vstObj = $scope.tipArrayData[$scope.tipCounter].vstJson[i];
-		    if (vstObj.vstToggle) {
-			$scope.tipTagsArray.push(vstObj.vstName);
-		    }
-		}
-	    }
+		$scope.tipArrayData[$scope.tipCounter].isActive = true;
 
 
-	    if ($scope.lovedTipsArray.indexOf($scope.currentTipId) != -1) {
-		//Mark Loved Button
-		$('#loveButton').addClass("active");
+		$scope.currentTipId = $scope.tipArrayData[$scope.tipCounter]._id
+		$scope.currentTipPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
+		$scope.removeImageBodyArray = false;
+		$scope.submittedDate = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
+
+	
+		if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipDescJson")) {
+
+		    for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].tipDescJson.length; i++) {
+			var tipDescriptionLocal = $scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription;
+			var submittedByLocal = $scope.tipArrayData[$scope.tipCounter].submittedBy;
+			var submittedDateLocal = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
+			var imageFileNameLocal = "";
+
+			if ($scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1]) {
+			    imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1].newFileName;
+			}
+
+			if (!runningProduction) {
+			    imageFileNameLocal = "resources/images/" + imageFileNameLocal;
+			}
+			var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/" && imageFileNameLocal != "resources/images/undefined");
+			$scope.tipArrayData[$scope.tipCounter].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			if (hasImage) {
+			    $scope.tipArrayData[$scope.tipCounter].tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal});
+			}
+		    }
+		}
+		if (($scope.tipArrayData[$scope.tipCounter].tipDescJson.length) <= $scope.tipArrayData[$scope.tipCounter].imageDataJson.length) {
+		    var i = $scope.tipArrayData[$scope.tipCounter].tipDescJson.length - 1;
+		    for (var i; i < $scope.tipArrayData[$scope.tipCounter].imageDataJson.length; i++) {
+			var tipDescriptionLocal = "";
+			var submittedByLocal = $scope.tipArrayData[$scope.tipCounter].submittedBy;
+			var submittedDateLocal = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
+			var imageFileNameLocal = "";
+			if ($scope.tipArrayData[$scope.tipCounter].imageDataJson[i]) {
+			    imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i].newFileName;
+			}
+			if (!runningProduction) {
+			    imageFileNameLocal = "resources/images/" + imageFileNameLocal;
+			}
+			var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/");
+			if (hasImage) {
+			    $scope.tipArrayData[$scope.tipCounter].tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			    $scope.tipArrayData[$scope.tipCounter].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			}
+		    }
+		}
+
+
+
+		$scope.tipTagsArray = [];
+		if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipTypeJson")) {
+		    var isMastering = $scope.tipArrayData[$scope.tipCounter].tipTypeJson['masteringTip'];
+		    var isMixing = $scope.tipArrayData[$scope.tipCounter].tipTypeJson['mixingTip'];
+		    var isSoundDesign = $scope.tipArrayData[$scope.tipCounter].tipTypeJson['soundDesignTip'];
+		    var isTheory = $scope.tipArrayData[$scope.tipCounter].tipTypeJson['theoryTip'];
+		    var isWorkFlow = $scope.tipArrayData[$scope.tipCounter].tipTypeJson['workFlowTip'];
+
+		    if (isMastering) {
+			$scope.tipTagsArray.push('Mastering');
+		    }
+		    if (isMixing) {
+			$scope.tipTagsArray.push('Mixing');
+		    }
+		    if (isSoundDesign) {
+			$scope.tipTagsArray.push('Sound Design');
+		    }
+		    if (isTheory) {
+			$scope.tipTagsArray.push('Theory');
+		    }
+		    if (isWorkFlow) {
+			$scope.tipTagsArray.push('Work Flow');
+		    }
+		}
+		if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("genreJson")) {
+		    for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].genreJson.length; i++) {
+			var genreObj = $scope.tipArrayData[$scope.tipCounter].genreJson[i];
+			if (genreObj.genreToggle) {
+			    $scope.tipTagsArray.push(genreObj.genreName);
+			}
+		    }
+		}
+		if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("dawJson")) {
+		    for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].dawJson.length; i++) {
+			var dawObj = $scope.tipArrayData[$scope.tipCounter].dawJson[i];
+			if (dawObj.dawToggle) {
+			    $scope.tipTagsArray.push(dawObj.dawName);
+			}
+		    }
+		}
+		if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("vstJson")) {
+		    for (var i = 1; i < $scope.tipArrayData[$scope.tipCounter].vstJson.length; i++) {
+			var vstObj = $scope.tipArrayData[$scope.tipCounter].vstJson[i];
+			if (vstObj.vstToggle) {
+			    $scope.tipTagsArray.push(vstObj.vstName);
+			}
+		    }
+		}
+
+
+		if ($scope.lovedTipsArray.indexOf($scope.currentTipId) != -1) {
+		    //Mark Loved Button
+		    $('#loveButton').addClass("active");
+		}
+		else {
+		    $('#loveButton').removeClass("active");
+		}
+		if ($scope.likedTipsArray.indexOf($scope.currentTipId) != -1) {
+		    //Mark Liked Button
+		    $('#likeButton').addClass("active");
+		}
+		else {
+		    $('#likeButton').removeClass("active");
+		}
+		if ($scope.dislikedTipsArray.indexOf($scope.currentTipId) != -1) {
+		    //Mark Disliked Button
+		    $('#dislikeButton').addClass("active");
+		}
+		else {
+		    $('#dislikeButton').removeClass("active");
+		}
+
+
+
+
+
+		$scope.showButton('Edit');
+		$scope.showButton('Delete');
+		//$('html, body').animate({
+		//	scrollTop: $("#filterWrapper").offset().top
+		//   }, 1000);
 	    }
-	    else {
-		$('#loveButton').removeClass("active");
-	    }
-	    if ($scope.likedTipsArray.indexOf($scope.currentTipId) != -1) {
-		//Mark Liked Button
-		$('#likeButton').addClass("active");
-	    }
-	    else {
-		$('#likeButton').removeClass("active");
-	    }
-	    if ($scope.dislikedTipsArray.indexOf($scope.currentTipId) != -1) {
-		//Mark Disliked Button
-		$('#dislikeButton').addClass("active");
-	    }
-	    else {
-		$('#dislikeButton').removeClass("active");
-	    }
-	    
-	    
-	    
-	    //Update comments
-	    CommentsService.getComments($scope.currentTipId).then(function (response) {
-		$scope.comments = response.data;
-	    });
-	    
-	    $scope.showButton('Edit');
-	    $scope.showButton('Delete');
-	    //$('html, body').animate({
-	//	scrollTop: $("#filterWrapper").offset().top
-	 //   }, 1000);
 	}
+	
+	$scope.setTipComments = function (comments) {
 
+
+	    if (comments) {
+		for (var i = 0; i < comments.length; i++) {
+		    comments[i].showReplies = true;
+		    var tipId = comments[i].tip_id;
+		    var tipCounter = $scope.findInTipArray(tipId);
+		    $scope.tipArrayData[tipCounter].comments.push(comments[i]);
+		    if (comments[i].parentComment_id == -1) {
+
+			$scope.tipArrayData[tipCounter].parentComments.push(comments[i]);
+		    }
+		    else {
+			$scope.tipArrayData[tipCounter].replyComments.push(comments[i]);
+		    }
+
+		}
+	    }
+
+	    var test = $scope.tipArrayData;
+	}
+	$scope.getReplys = function (tip, comment) {
+	    var tipCounter = $scope.findInTipArray(tip._id);
+	    var reply_array = [];
+	    if ($scope.tipArrayData[tipCounter].replyComments) {
+		for (var i = 0; i < $scope.tipArrayData[tipCounter].replyComments.length; i++) {
+		    if (comment._id == $scope.tipArrayData[tipCounter].replyComments[i].parentComment_id) {
+			reply_array.push($scope.tipArrayData[tipCounter].replyComments[i])
+		    }
+
+		}
+	    }
+	    return reply_array;
+	}
+	$scope.setReplyComments = function (tipId, comment) {
+	    var tipCounter = $scope.findInTipArray(tipId);
+	    if ($scope.tipArrayData[tipCounter].comments) {
+		for (var i = 0; i < $scope.tipArrayData[tipCounter].comments.length; i++) {
+		    var comment = $scope.tipArrayData[tipCounter].comments[i];
+
+
+		}
+
+	    }
+	}
+	$scope.getComments = function (tipId) {
+	    var tipCounter = $scope.findInTipArray(tipId);
+	    $scope.setReplyComments(tipId);
+	    return $scope.tipArrayData[tipCounter].comments
+
+	}
 
 
 	$scope.updateProfile = function () {
@@ -2249,7 +2456,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 	    $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
 
-	   // $scope.updateImageFileName();
+	    // $scope.updateImageFileName();
 	    $scope.updateBodyArray();
 
 	}
@@ -2270,7 +2477,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle;
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 	    $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
-	  //  $scope.updateImageFileName();
+	    //  $scope.updateImageFileName();
 	    $scope.updateBodyArray();
 	}
 	$scope.backToTipsClicked = function () {   //dd tip to database
@@ -2289,12 +2496,11 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		{title: 'New page', value: '_blank'},
 		{title: 'LIghtbox', value: '_lightbox'}
 	    ], paste_as_text: false,
-	    forced_root_block : '' ,force_br_newlines : true,
-   force_p_newlines : false,
-	    
-    advlist_bullet_styles: "square"
-	 
-	     //font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n',
+	    forced_root_block: '', force_br_newlines: true,
+	    force_p_newlines: false,
+	    advlist_bullet_styles: "square"
+
+		    //font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n',
 	});
 	tinyMCE.init({
 	    selector: '#textAreaEditTip',
@@ -2308,18 +2514,18 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		{title: 'LIghtbox', value: '_lightbox'}
 	    ],
 	    paste_as_text: false,
-	    forced_root_block : '' ,
-	    force_br_newlines : true,
-   force_p_newlines : false// Needed for 3.x
+	    forced_root_block: '',
+	    force_br_newlines: true,
+	    force_p_newlines: false// Needed for 3.x
 	});
 	$scope.isReadyForSubmit = function () {
-	    var content =  "";
+	    var content = "";
 	    if (tinyMCE.get('textAreaTip')) {
-		     content = tinyMCE.get('textAreaTip').getContent();
+		content = tinyMCE.get('textAreaTip').getContent();
 	    }
 	    $scope.tipDescAdd = content;
-	    
-	    
+
+
 	    var imagesUploaded = true;
 	    var passedDescriptionTest = true;//(content != "" && content);
 	    for (var i = 0; i < $scope.uploader.queue.length; i++) {
@@ -2341,7 +2547,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    }
 
 	    return $scope.tipTitleAdd != "" &&
-		   // ($scope.tipDescAdd != "" && $scope.tipDescAdd) &&
+		    // ($scope.tipDescAdd != "" && $scope.tipDescAdd) &&
 		    imagesUploaded;
 	}
 	//ADD a tip submit
@@ -2359,7 +2565,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    tipDescObject[i] = {tipNumber: i, tipDescription: tipDescriptionLocal}
 		}
 		else {
-		    var tipDescriptionLocal = tinyMCE.get('textAreaTip'+i).getContent();
+		    var tipDescriptionLocal = tinyMCE.get('textAreaTip' + i).getContent();
 		    //var tipDescriptionLocal = $("#textAreaTip" + i).val();
 		    tipDescObject[i] = {tipNumber: i, tipDescription: tipDescriptionLocal}
 		}
@@ -2367,44 +2573,44 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    var tipDescObjectJson = JSON.stringify(tipDescObject);
 
 	    var genreObject = [{}]
-	  
+
 	    var genreObjectJson = JSON.stringify(genreObject);
 
 
-	  var tipTypeObjectJson = JSON.stringify([]);
+	    var tipTypeObjectJson = JSON.stringify([]);
 
 
 	    var vstObject = [{}]
-	  
+
 
 	    var vstObjectJson = JSON.stringify(vstObject);
 
 	    var dawObject = [{}]
-	   
+
 	    var dawObjectJson = JSON.stringify(dawObject);
 
 	    //if(($scope.tipBodyArray.length != $scope.tipArrayData[$scope.tipCounter].imageDataJson.length) || $scope.removeImageBodyArray){
-		var imageDataObject = [];
-		for (var i = 0; i < $scope.tipImageArray.length; i++) {
-		    var imageName = "";
-		    if(!runningProduction){
-			imageName =  $scope.tipImageArray[i].imageFileName.replace("resources/images/", "");
-		    }
-		    else{
-			imageName = $scope.tipImageArray[i].imageFileName
-		    }
-		    imageDataObject.push({imageName:imageName, imageSize:0,
-			dateModified: 0, newFileName: imageName});
+	    var imageDataObject = [];
+	    for (var i = 0; i < $scope.tipImageArray.length; i++) {
+		var imageName = "";
+		if (!runningProduction) {
+		    imageName = $scope.tipImageArray[i].imageFileName.replace("resources/images/", "");
 		}
-		var imageDataObjectJson = JSON.stringify(imageDataObject);
-	    //}
-	   /* var imageDataObject = [{}]
-	    for (var i = 0; i < $scope.uploader.queue.length; i++) {
-		imageDataObject[i] = {imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
-		    dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]};
+		else {
+		    imageName = $scope.tipImageArray[i].imageFileName
+		}
+		imageDataObject.push({imageName: imageName, imageSize: 0,
+		    dateModified: 0, newFileName: imageName});
 	    }
-	    */
-	
+	    var imageDataObjectJson = JSON.stringify(imageDataObject);
+	    //}
+	    /* var imageDataObject = [{}]
+	     for (var i = 0; i < $scope.uploader.queue.length; i++) {
+	     imageDataObject[i] = {imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
+	     dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]};
+	     }
+	     */
+
 
 	    var videoLink = $("#videoLink")[0].value;
 	    var videoLinkObject = {videoLink: videoLink};
@@ -2413,12 +2619,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 	    var filtersData = [];
-		for (var i = 0; i < $scope.filters.length; i++) {
-		    var imageName = "";
-		   
-		    filtersData.push({name:$scope.filters[i].name,toggle:$scope.filters[i].inputToggle});
-		}
-		var filtersJson = JSON.stringify(filtersData);
+	    for (var i = 0; i < $scope.filters.length; i++) {
+		var imageName = "";
+
+		filtersData.push({name: $scope.filters[i].name, toggle: $scope.filters[i].inputToggle});
+	    }
+	    var filtersJson = JSON.stringify(filtersData);
 
 	    var req = {
 		method: 'POST',
@@ -2503,7 +2709,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			'Content-Type': "application/json"
 		    },
 		    data: {
-			}
+		    }
 
 		}
 		$http(req).then(function success(response) {
@@ -2518,12 +2724,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	    }
 	}
-	
+
 	$scope.addFilterToggle = false;
-	
-	$scope.addFilter = function(){
+
+	$scope.addFilter = function () {
 	    var name = null;
-	    if($scope.filterParent){
+	    if ($scope.filterParent) {
 		name = $scope.filterParent.name;
 	    }
 	    if ($scope.filterName != "" && $scope.filterSelected != "") {
@@ -2549,7 +2755,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		});
 	    }
 	};
-	$scope.filterClicked = function(filter){
+	$scope.filterClicked = function (filter) {
 	    filter.toggle = !filter.toggle;
 	}
 	var getFilters = function () {
@@ -2564,9 +2770,9 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	    }
 	    $scope.filters = [];
-	    var findParent = function(parent){
-		for(var f = 0; f < $scope.filters.length; f++){
-		    if($scope.filters[f].name == parent){
+	    var findParent = function (parent) {
+		for (var f = 0; f < $scope.filters.length; f++) {
+		    if ($scope.filters[f].name == parent) {
 			return f;
 		    }
 		}
@@ -2575,7 +2781,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $http(req).then(function success(response) {
 		$scope.submitMessage = "Success"
 		$scope.filters = response.data;
-		$scope.filters.forEach(function(element){
+		$scope.filters.forEach(function (element) {
 		    element.toggle = false;
 		    element.inputToggle = false;
 		});
@@ -2594,14 +2800,14 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			$scope.filters[parentIndex].children = res.data;
 			$scope.submitMessage = "Success";
 			console.log(res);
-			
+
 		    }, function failure(res) {
 			$scope.submitMessage = "Failure"
-			
+
 
 		    });
 
-		    
+
 		}
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
@@ -2611,19 +2817,19 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	};
 	getFilters();
-	
-	$scope.filterHeaders= ['Type','Genre','DAW','VST'];
-	$scope.parentFilters = ['Trance','House'];
-	$scope.genreArray = [{genreName: "House",toggle:false, subgenres: [{subGenreName: "Progressive House"}]},
-	    {genreName: "Trance", toggle:false, subgenres: [{subGenreName: "Acid Trance"}, {subGenreName: "Progressive Trance"}]},
-	    {genreName: "Breakbeat",toggle:false},
-	    {genreName: "Downtempo",toggle:false},
-	    {genreName: "Techno",toggle:false},
-	    {genreName: "Hardcore",toggle:false},
-	    {genreName: "Drum_and_bass",toggle:false},
-	    {genreName: "Dubstep",toggle:false},
-	    {genreName: "Minimal",toggle:false},
-	    {genreName: "Trap",toggle:false},
+
+	$scope.filterHeaders = ['Type', 'Genre', 'DAW', 'VST'];
+	$scope.parentFilters = ['Trance', 'House'];
+	$scope.genreArray = [{genreName: "House", toggle: false, subgenres: [{subGenreName: "Progressive House"}]},
+	    {genreName: "Trance", toggle: false, subgenres: [{subGenreName: "Acid Trance"}, {subGenreName: "Progressive Trance"}]},
+	    {genreName: "Breakbeat", toggle: false},
+	    {genreName: "Downtempo", toggle: false},
+	    {genreName: "Techno", toggle: false},
+	    {genreName: "Hardcore", toggle: false},
+	    {genreName: "Drum_and_bass", toggle: false},
+	    {genreName: "Dubstep", toggle: false},
+	    {genreName: "Minimal", toggle: false},
+	    {genreName: "Trap", toggle: false},
 	];
 
 	$scope.vstArray = [{vstName: "Massive"},
@@ -2655,7 +2861,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	var uploader = $scope.uploader = new FileUploader({
 	    url: '/uploadImage'
 	});
-	
+
 	// FILTERS
 
 	uploader.filters.push({
@@ -2664,7 +2870,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		return this.queue.length < 10;
 	    }
 	});
-	
+
 	uploader.filters.push({
 	    name: 'sizeFilter',
 	    fn: function (item /*{File|FileLikeObject}*/, options) {
@@ -2680,7 +2886,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
 	    $scope.fileErrorMessage = "";
-	    if(filter.name = 'sizeFilter'){
+	    if (filter.name = 'sizeFilter') {
 		$scope.fileErrorMessage = "File too big. Upload file limit 1 MB";
 	    }
 	    console.info('onWhenAddingFileFailed', item, filter, options);
@@ -2703,7 +2909,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	};
 	uploader.onSuccessItem = function (fileItem, response, status, headers) {
 	    console.info('onSuccessItem', fileItem, response, status, headers);
-	    
+
 	};
 	uploader.onErrorItem = function (fileItem, response, status, headers) {
 	    console.info('onErrorItem', fileItem, response, status, headers);
@@ -2716,11 +2922,11 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 	    $scope.uploadedImages[numberOfImages] = response;
-	    
+
 	    var imageFileNameLocal = response;
 	    if (!runningProduction) {
-			imageFileNameLocal = "resources/images/" + response;
-		}
+		imageFileNameLocal = "resources/images/" + response;
+	    }
 	    $scope.tipImageArray.push({tipImageNumber: numberOfImages, tipDescription: "doesn'tmatter", imageFileName: imageFileNameLocal, hasImage: true, submittedBy: "submittedBy"})
 	    numberOfImages++;
 

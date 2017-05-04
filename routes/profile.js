@@ -131,4 +131,69 @@ module.exports = function (router, passport) {
 	    }
 	});
     });
+    router.post('/getRecentTips',function(req,res){
+	console.log(req);
+	//var tipIdArray = req.body['tipArray'];
+	console.log('getting Recent Tips');
+
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('tipsCollection');
+		if (true) {
+		    var cursorArray = collection.find().sort( { dateSubmitted: -1 } ).toArray(function (err, items) {
+			if (err) {
+			    console.log('error 500');
+			    res.status(500).send('error retreiving data');
+			}
+			console.log('ITEMS');
+			console.log(items);
+			res.send(items);
+		    });
+		}
+		else{
+		    res.send("No tips found");
+		}
+	    }
+	});
+    });
+    
+    router.post('/getTopTips',function(req,res){
+	console.log(req);
+	//var tipIdArray = req.body['tipArray'];
+	console.log('getting Top Tips');
+
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('tipsCollection');
+		if (true) {
+		    var cursorArray = collection.find().sort( { tipPoints: -1 } ).toArray(function (err, items) {
+			if (err) {
+			    console.log('error 500');
+			    res.status(500).send('error retreiving data');
+			}
+			console.log('ITEMS');
+			console.log(items);
+			res.send(items);
+		    });
+		}
+		else{
+		    res.send("No tips found");
+		}
+	    }
+	});
+    });
 };
