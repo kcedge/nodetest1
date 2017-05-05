@@ -889,6 +889,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.BPM = "122";
 	$scope.BARS = "16";
 	$scope.tipArrayData = TipData;
+	$scope.filtersToggle = true;
 
 	//$(document).ready(function(){
 	// var objectIdToLoad = $('#currentTipId2')[0].innerText;
@@ -1893,7 +1894,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    var tipObjClicked = $("#tipsWrapper" + tipIdClicked);
 	    var tipObjClickedOffset = tipObjClicked[0].offsetTop;
 	    var scrollWrapper = $("#tipsScrollWrapper");
-	    scrollWrapper.scrollTop(tipObjClickedOffset-75);
+	    scrollWrapper.scrollTop(tipObjClickedOffset-90);
 
 	    $scope.tipCounter = $scope.findInTipArray(tip._id);
 	    // $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle

@@ -144,14 +144,24 @@ float:left;width:22%;
     border-right-style: solid;
     padding-left:15px;
     border-color:  #8a8a8a;
-    height:62.73px;
+    height:75.73px;
     overflow: auto;
 
 }
 #tipTypeFilterWrapper{
     border-left-style: solid;
 }
+.minimize{
 
+    height: 15px;
+
+    /* position: relative; */
+    /* float: left; */
+    float: right;
+    margin-top: -16px;
+    margin-right: 2px;
+
+}
 .btn-primary.active, .btn-primary.focus, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open>.dropdown-toggle.btn-primary {
     color: #fff;
     background-color: darkslateblue;
@@ -305,7 +315,8 @@ float:left;width:22%;
 }
 
 .navBarTipActive{
-    background-color:green;
+        background-color: white;
+    border-top-style: solid;
 }
 .rightBarNavItem{
     max-height: 40px;

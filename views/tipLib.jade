@@ -53,9 +53,12 @@ append body
 									div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
 						
 			.col-xs-6.col-sm-6.col-md-6.col-lg-6
-				.row.filterBoxStyle#stickyheader(ng-style="filtersBoxStyle")
+				a.minimize.hover(ng-click='filtersToggle=!filtersToggle' ng-model='filtersToggle' ng-show='!filtersToggle') Show Filters
+				a.minimize.hover(ng-click='filtersToggle=!filtersToggle' ng-model='filtersToggle' ng-show='filtersToggle') Hide Filters
+				.row.filterBoxStyle#stickyheader(ng-style="filtersBoxStyle" ng-show='filtersToggle')
+							
 							div.filterWrapper#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;")
-								.label.label-default() Type:
+								//.label.label-default() Type:
 								div(style='display:inline-block')
 									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Type'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
 								//input.inputToggleClass(ng-model='theory_toggle'  type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
@@ -71,22 +74,21 @@ append body
 								.label.label-primary(ng-click="addFilterToggle = !addFilterToggle" ng-show='isAdmin()') Add
 								.label.label-primary(ng-click="deleteFilterToggle = !deleteFilterToggle"  ng-show='isAdmin()') Delete
 							div.filterWrapper#tipGenreFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
-								.label.label-default() Genre:
+								//.label.label-default() Genre:
 								div(style='display:inline-block')
 									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Genre'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
 									
 							div.filterWrapper#tipDAWFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
 								
-								+label-default("DAW:")
+								//+label-default("DAW:")
 								div(style='display:inline-block')
 									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'DAW'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
 									
 							div.filterWrapper#tipVSTFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
 								
-								.label.label-default() VST:
+								//.label.label-default() VST:
 								div(style='display:inline-block')
 									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'VST'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
-									
 				.div#scrollable()
 					.tipsPageWrapper#tipsScrollWrapper(ng-hide="addATip()||editATip()")
 						//h2
@@ -359,7 +361,7 @@ append body
 			#stickyaliasNavLeft
 			#stickyheaderNavRight.col-xs-3.col-sm-3.col-md-3.col-lg-3
 				#rightWidgetContainer.contentWrapper
-					.rightWidetWrapper
+					.rightWidetWrapper#topTipsList(ng-hide='true')
 						#header(style='display:inline-block')
 							#labelSort
 								.label.label-info Top Tips
@@ -384,7 +386,7 @@ append body
 								.div.row(ng-show='tip.hoverRightActive')
 									div.col-xs-12.col-sm-12.col-md-12.col-lg-12
 										div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
-					.rightWidetWrapper
+					.rightWidetWrapper#topUsersWidget
 						#header(style='display:inline-block')
 							#labelSort
 								.label.label-info Top Users
