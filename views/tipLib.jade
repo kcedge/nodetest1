@@ -5,40 +5,7 @@ append body
 		.div(style="text-align:center;margin-top:65px")
 			+alert-i-warning("Find your favorite music production tutorials and tips here!","heart")
 		#stickyalias
-		.row.filterBoxStyle#stickyheader(ng-style="filtersBoxStyle")
-							div.filterWrapper#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;")
-								.label.label-default() Type:
-								div(style='display:inline-block')
-									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Type'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
-								//input.inputToggleClass(ng-model='theory_toggle'  type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
-								//.label.label-primary( ng-class='{active:theory_toggle}' ng-click='theory_toggle = !theory_toggle') Theory
-								//input.inputToggleClass(ng-model='mixing_toggle' type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
-								//.label.label-primary( ng-class='{active:mixing_toggle}'  ng-click='mixing_toggle = !mixing_toggle') Mixing
-								//input.inputToggleClass(ng-model='mastering_toggle' type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
-								//.label.label-primary( ng-class='{active:mastering_toggle}'  ng-click='mastering_toggle = !mastering_toggle') Mastering
-								//input.inputToggleClass(ng-model='sound_design_toggle'  type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
-								//.label.label-primary( ng-class='{active:sound_design_toggle}'  ng-click='sound_design_toggle = !sound_design_toggle') Sound Design
-								//input.inputToggleClass(ng-model='workflow_toggle' type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
-								//.label.label-primary( ng-class='{active:workflow_toggle}'  ng-click='workflow_toggle = !workflow_toggle') Work Flow
-								.label.label-primary(ng-click="addFilterToggle = !addFilterToggle" ng-show='isAdmin()') Add
-								.label.label-primary(ng-click="deleteFilterToggle = !deleteFilterToggle"  ng-show='isAdmin()') Delete
-							div.filterWrapper#tipGenreFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
-								.label.label-default() Genre:
-								div(style='display:inline-block')
-									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Genre'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
-									
-							div.filterWrapper#tipDAWFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
-								
-								+label-default("DAW:")
-								div(style='display:inline-block')
-									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'DAW'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
-									
-							div.filterWrapper#tipVSTFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
-								
-								.label.label-default() VST:
-								div(style='display:inline-block')
-									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'VST'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
-									
+		
 		.row(ng-show='addFilterToggle')
 			select(ng-options="f for f in filterHeaders" ng-model="filterSelected")
 			span Filter Name 
@@ -85,60 +52,95 @@ append body
 								div.col-xs-12.col-sm-12.col-md-12.col-lg-12
 									div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
 						
-			.col-xs-6.col-sm-6.col-md-6.col-lg-6#scrollable()
-				.tipsPageWrapper#tipsScrollWrapper(ng-hide="addATip()||editATip()")
-					//h2
-					//	#titleName= title
+			.col-xs-6.col-sm-6.col-md-6.col-lg-6
+				.row.filterBoxStyle#stickyheader(ng-style="filtersBoxStyle")
+							div.filterWrapper#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;")
+								.label.label-default() Type:
+								div(style='display:inline-block')
+									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Type'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+								//input.inputToggleClass(ng-model='theory_toggle'  type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
+								//.label.label-primary( ng-class='{active:theory_toggle}' ng-click='theory_toggle = !theory_toggle') Theory
+								//input.inputToggleClass(ng-model='mixing_toggle' type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
+								//.label.label-primary( ng-class='{active:mixing_toggle}'  ng-click='mixing_toggle = !mixing_toggle') Mixing
+								//input.inputToggleClass(ng-model='mastering_toggle' type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
+								//.label.label-primary( ng-class='{active:mastering_toggle}'  ng-click='mastering_toggle = !mastering_toggle') Mastering
+								//input.inputToggleClass(ng-model='sound_design_toggle'  type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
+								//.label.label-primary( ng-class='{active:sound_design_toggle}'  ng-click='sound_design_toggle = !sound_design_toggle') Sound Design
+								//input.inputToggleClass(ng-model='workflow_toggle' type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
+								//.label.label-primary( ng-class='{active:workflow_toggle}'  ng-click='workflow_toggle = !workflow_toggle') Work Flow
+								.label.label-primary(ng-click="addFilterToggle = !addFilterToggle" ng-show='isAdmin()') Add
+								.label.label-primary(ng-click="deleteFilterToggle = !deleteFilterToggle"  ng-show='isAdmin()') Delete
+							div.filterWrapper#tipGenreFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
+								.label.label-default() Genre:
+								div(style='display:inline-block')
+									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Genre'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+									
+							div.filterWrapper#tipDAWFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
+								
+								+label-default("DAW:")
+								div(style='display:inline-block')
+									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'DAW'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+									
+							div.filterWrapper#tipVSTFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
+								
+								.label.label-default() VST:
+								div(style='display:inline-block')
+									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'VST'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+									
+				.div#scrollable()
+					.tipsPageWrapper#tipsScrollWrapper(ng-hide="addATip()||editATip()")
+						//h2
+						//	#titleName= title
 
 
-					//#prvButton.keyButton(ng-click="prevButtonClicked()")
-						+btn-xs("Previous")
-					//#nxtButton.keyButton(ng-click="nextButtonClicked()" style="float:right")
-						+btn-xs("Next")
-					//#addATipButton.keyButton(ng-click="addATipClicked()"  ng-show="showButton('Add')")
-						+btn-xs("Add")
-					//#editATipButton.keyButton(ng-click="editATipClicked()"  ng-show="showButton('Edit')")
-						+btn-xs("Edit")
-					//#deleteATipButton.keyButton(ng-click="deleteATipClicked()"  ng-show="showButton('Delete')")
-						+btn-xs("Delete")
-					div.contentWrapper(id='tipsWrapper{{tip._id}}' ng-repeat='tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse' ng-show="showItem(tip)")
-						#tipTitleBlock.titleWrapper
-							#tipTitle.titleWrapper.page-header(style="display:inline-block;width:100%;padding-bottom:3px;")
+						//#prvButton.keyButton(ng-click="prevButtonClicked()")
+							+btn-xs("Previous")
+						//#nxtButton.keyButton(ng-click="nextButtonClicked()" style="float:right")
+							+btn-xs("Next")
+						//#addATipButton.keyButton(ng-click="addATipClicked()"  ng-show="showButton('Add')")
+							+btn-xs("Add")
+						//#editATipButton.keyButton(ng-click="editATipClicked()"  ng-show="showButton('Edit')")
+							+btn-xs("Edit")
+						//#deleteATipButton.keyButton(ng-click="deleteATipClicked()"  ng-show="showButton('Delete')")
+							+btn-xs("Delete")
+						div.contentWrapper(id='tipsWrapper{{tip._id}}' ng-repeat='tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse' ng-show="showItem(tip)" ng-click='tipClicked(tip)')
+							#tipTitleBlock.titleWrapper
+								#tipTitle.titleWrapper.page-header(style="display:inline-block;width:100%;padding-bottom:3px;")
 
 
-								h2(style="float:left;max-width:450px;margin-left: 3px;margin-top:15px;") {{tip.tipTitle}}
-								span#currentTipId(ng-show="false")
-									{{currentTipId}}
-								span#currentTipIdToLoad(ng-show="false")
-									#{id}
-								#pointsDiv(style="float:right;margin-left:5px;margin-right:-13px;")
-									+label-default("{{tip.tipPoints}}")
-								h3(style="float:right;margin-top:20px;margin-top:15px;")
-									button.btn.btn-default#dislikeButton(title="downvote tip" style="margin-right:5px;" ng-click="dislikeButtonClicked()")
-										span.glyphicon.glyphicon-arrow-down
-									button.btn.btn-default#likeButton(title="upvote tip" style="margin-right:5px;" ng-click="likeButtonClicked()")
-										span.glyphicon.glyphicon-arrow-up
-									button.btn.btn-default#loveButton(title="save tip" ng-click="loveButtonClicked()")
-										span.glyphicon.glyphicon-heart
+									h2(style="float:left;max-width:450px;margin-left: 3px;margin-top:15px;") {{tip.tipTitle}}
+									span#currentTipId(ng-show="false")
+										{{currentTipId}}
+									span#currentTipIdToLoad(ng-show="false")
+										#{id}
+									#pointsDiv(style="float:right;margin-left:5px;margin-right:-13px;")
+										+label-default("{{tip.tipPoints}}")
+									h3(style="float:right;margin-top:20px;margin-top:15px;")
+										button.btn.btn-default#dislikeButton(title="downvote tip" style="margin-right:5px;" ng-click="dislikeButtonClicked()")
+											span.glyphicon.glyphicon-arrow-down
+										button.btn.btn-default#likeButton(title="upvote tip" style="margin-right:5px;" ng-click="likeButtonClicked()")
+											span.glyphicon.glyphicon-arrow-up
+										button.btn.btn-default#loveButton(title="save tip" ng-click="loveButtonClicked()")
+											span.glyphicon.glyphicon-heart
 
-						#TipTitlePanel.panel.panel-default
-							#panelBody.panel-body.panel-body(style="text-indent: 0px;padding-bottom:0px;")
-								div.tipDescription.row#tipBody(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tip.tipBodyArray")			
-									div#descBody(ng-bind-html="tipPart.tipDescription | to_trusted")
-									.col-xs-10.col-sm-10.col-md-10.col-lg-10.imgDiv(ng-if="tipPart.hasImage" style='margin-left:5%')
-										img(ng-show="tipPart.hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
-								div#TagsAndSubmittedBy(style="text-indent: 0px;padding-bottom:0px;padding-top:10px;")
-									#tipTagsDiv(ng-repeat='tipTag in tipTagsArray track by $index' style='display:inline-block;')
-										span(ng-if='($index==0)' style='float:left')
-											+label-info("Filters:")
-										span(style='float:left')
-											+label-primary("{{tipTag}}")
-									#submittedByDiv.small(style="padding-top:5px")
-										span Submitted By: 
-											a(href="/profile/{{submittedBy}}"){{submittedBy}}
-										time.small(style='margin-left:2px'){{submittedDate|date:"MM/dd/yyyy"}}
-						comment-list(content-id='1' ng-hide='addATip() ')
-					//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])
+							#TipTitlePanel.panel.panel-default
+								#panelBody.panel-body.panel-body(style="text-indent: 0px;padding-bottom:0px;")
+									div.tipDescription.row#tipBody(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tip.tipBodyArray")			
+										div#descBody(ng-bind-html="tipPart.tipDescription | to_trusted")
+										.col-xs-10.col-sm-10.col-md-10.col-lg-10.imgDiv(ng-if="tipPart.hasImage" style='margin-left:5%')
+											img(ng-show="tipPart.hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
+									div#TagsAndSubmittedBy(style="text-indent: 0px;padding-bottom:0px;padding-top:10px;")
+										#tipTagsDiv(ng-repeat='tipTag in tipTagsArray track by $index' style='display:inline-block;')
+											span(ng-if='($index==0)' style='float:left')
+												+label-info("Filters:")
+											span(style='float:left')
+												+label-primary("{{tipTag}}")
+										#submittedByDiv.small(style="padding-top:5px")
+											span Submitted By: 
+												a(href="/profile/{{submittedBy}}"){{submittedBy}}
+											time.small(style='margin-left:2px'){{submittedDate|date:"MM/dd/yyyy"}}
+							comment-list(content-id='1' ng-hide='addATip() ')
+						//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])
 
 				.addATipPageWrapper(ng-show="addATipToggle")
 					#tipsFormWrapper.contentWrapper

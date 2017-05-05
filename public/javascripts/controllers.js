@@ -907,26 +907,26 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.updateBodyArray();
 
 	}
-	$("#tipsScrollWrapper").scroll(function () {
-	    var scrollableScrollTop = $('#tipsScrollWrapper').scrollTop();
-	    var totalOffset = 0;
-
-	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
-	    totalOffset = $("#tipsWrapper" + tipId).offset();
-	    var globalOffset = (-$("#tipsWrapper" + tipId).height());
-	    if (totalOffset.top < globalOffset + 600) {
-		$scope.tipCounter --;
-		//$scope.updateBodyArray();
-		//$scope.prevButtonClicked();
-	    }
-	    if (totalOffset.top > 600) {
-		$scope.tipCounter ++;
-		//$scope.updateBodyArray();
-		//$scope.nextButtonClicked();
-	    }
-	    $scope.updateBodyArray();
-	    $scope.$apply();
-	})
+//	$("#tipsScrollWrapper").scroll(function () {
+//	    var scrollableScrollTop = $('#tipsScrollWrapper').scrollTop();
+//	    var totalOffset = 0;
+//
+//	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
+//	    totalOffset = $("#tipsWrapper" + tipId).offset();
+//	    var globalOffset = (-$("#tipsWrapper" + tipId).height());
+//	    if (totalOffset.top < globalOffset + 600) {
+//		$scope.tipCounter --;
+//		//$scope.updateBodyArray();
+//		//$scope.prevButtonClicked();
+//	    }
+//	    if (totalOffset.top > 600) {
+//		$scope.tipCounter ++;
+//		//$scope.updateBodyArray();
+//		//$scope.nextButtonClicked();
+//	    }
+//	    $scope.updateBodyArray();
+//	    $scope.$apply();
+//	})
 
 	$(window).resize(function () {
 
@@ -1893,7 +1893,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    var tipObjClicked = $("#tipsWrapper" + tipIdClicked);
 	    var tipObjClickedOffset = tipObjClicked[0].offsetTop;
 	    var scrollWrapper = $("#tipsScrollWrapper");
-	    scrollWrapper.scrollTop(tipObjClickedOffset);
+	    scrollWrapper.scrollTop(tipObjClickedOffset-75);
 
 	    $scope.tipCounter = $scope.findInTipArray(tip._id);
 	    // $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle

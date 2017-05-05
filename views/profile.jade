@@ -4,7 +4,7 @@ append body
 	.pageController(ng-controller="ProfileCtrl" style="margin:0 auto;margin-top:50px")
 		.profilePageWrapper.row(style='margin-top:50px')
 			.profilePageLeft.col-sm-1.col-md-1.col-lg-1.col-xl-1
-			.profilePageCenter.col-sm-8.col-md-8.col-lg-8.col-xl-8
+			.profilePageCenter.col-sm-9.col-md-9.col-lg-9.col-xl-9
 				.profileNotify(ng-show="!isLoggedIn()")
 				.profilePageBanner.contentWrapper(ng-show="isLoggedIn()")
 					.div()
@@ -241,7 +241,7 @@ append body
 										#submittedByDiv.small(style="padding-top:5px")
 											span Submitted By: 
 												a(href="/profile/{{submittedBy}}"){{submittedBy}}
-			.profilePageRightWrapper.col-xs-3.col-md-3.col-lg-3.col-xl-3
+			.profilePageRightWrapper.col-xs-2.col-md-2.col-lg-2.col-xl-2
 				div.rightWidgetTopContainer.row(style='height:200px')
 					
 				#rightWidgetContainer.contentWrapper
