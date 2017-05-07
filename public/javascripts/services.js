@@ -22,8 +22,137 @@ myApp.service('ProfileService', ['$http', function ($http) {
 			return "no data";
 		    });
 	};
-	
-	this.getTipsSubmitted = function (username){
+	this.getTopUsers = function (period) {
+	    return $http.get('/getTopUsers/' + period)
+		    .then(function (data) {
+			//console.log(data);
+			//angular.forEach(data, function (item) {
+			//    item.datePublished = new Date(item.datePublished);
+			//});
+			console.log("Retreived top user data");
+			console.log(data);
+			return data;
+		    })
+		    .catch(function (data, status) {
+			console.log('ERROR: ' + status + '. We can\'t get the profile right now, please try again later');
+			return "no data";
+		    });
+	};
+
+	this.postBannerImage = function (username, bannerImageJson) {
+	    console.log('posting banner image data');
+	    console.log(bannerImageJson);
+	    var req = {
+		method: 'POST',
+		url: '/postBannerImage/' + username,
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {bannerImageJson: bannerImageJson
+		}
+	    };
+
+	    return $http(req)
+		    .then(function (data) {
+			//console.log(data);
+			//angular.forEach(data, function (item) {
+			//    item.datePublished = new Date(item.datePublished);
+			//});
+			console.log("Posted banner image data");
+			console.log(data);
+			return data;
+		    })
+		    .catch(function (data, status) {
+			console.log('ERROR: ' + status + '. We can\'t upload image right now, please try again later');
+			return "no data";
+		    });
+	}
+
+	this.postProfileImage = function (username, profileImageJson) {
+	    console.log('posting banner image data');
+	    console.log(profileImageJson);
+	    var req = {
+		method: 'POST',
+		url: '/postProfileImage/' + username,
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {profileImageJson: profileImageJson
+		}
+	    };
+
+	    return $http(req)
+		    .then(function (data) {
+			//console.log(data);
+			//angular.forEach(data, function (item) {
+			//    item.datePublished = new Date(item.datePublished);
+			//});
+			console.log("Posted profileImageJson image data");
+			console.log(data);
+			return data;
+		    })
+		    .catch(function (data, status) {
+			console.log('ERROR: ' + status + '. We can\'t upload image right now, please try again later');
+			return "no data";
+		    });
+	}
+	this.postProfileMetaData = function (username, profileMetaDataJson) {
+	    console.log('posting profileMetaDataJson data');
+	    console.log(profileMetaDataJson);
+	    var req = {
+		method: 'POST',
+		url: '/postProfileMetaData/' + username,
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {profileMetaDataJson: profileMetaDataJson
+		}
+	    };
+
+	    return $http(req)
+		    .then(function (data) {
+			//console.log(data);
+			//angular.forEach(data, function (item) {
+			//    item.datePublished = new Date(item.datePublished);
+			//});
+			console.log("Posted profileImageJson image data");
+			console.log(data);
+			return data;
+		    })
+		    .catch(function (data, status) {
+			console.log('ERROR: ' + status + '. We can\'t upload image right now, please try again later');
+			return "no data";
+		    });
+	}
+	this.postTotalPoints = function (username, totalpoints) {
+	    console.log('posting postTotalPoints data');
+	    console.log(totalpoints);
+	    var req = {
+		method: 'POST',
+		url: '/postProfilePoints/' + username,
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {totalpoints: totalpoints
+		}
+	    };
+
+	    return $http(req)
+		    .then(function (data) {
+			//console.log(data);
+			//angular.forEach(data, function (item) {
+			//    item.datePublished = new Date(item.datePublished);
+			//});
+			console.log("Posted profileImageJson image data");
+			console.log(data);
+			return data;
+		    })
+		    .catch(function (data, status) {
+			console.log('ERROR: ' + status + '. We can\'t upload image right now, please try again later');
+			return "no data";
+		    });
+	}
+	this.getTipsSubmitted = function (username) {
 	    return $http.get('/getTips/' + username)
 		    .then(function (data) {
 			//console.log(data);
@@ -40,7 +169,7 @@ myApp.service('ProfileService', ['$http', function ($http) {
 		    });
 	};
 	//
-	this.getTipsByJsonArray = function (tipArray){
+	this.getTipsByJsonArray = function (tipArray) {
 	    console.log('gettingTipsByJsonArray');
 	    console.log(tipArray);
 	    var req = {
@@ -49,10 +178,10 @@ myApp.service('ProfileService', ['$http', function ($http) {
 		headers: {
 		    'Content-Type': "application/json"
 		},
-		data: {tipArray:tipArray
+		data: {tipArray: tipArray
 		}
 	    };
-	    
+
 	    return $http(req)
 		    .then(function (data) {
 			//console.log(data);
@@ -68,7 +197,7 @@ myApp.service('ProfileService', ['$http', function ($http) {
 			return "no data";
 		    });
 	};
-	
+
 	this.getRecentTips = function () {
 	    console.log('gettingRecentTips');
 	    var req = {

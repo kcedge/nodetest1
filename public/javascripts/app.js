@@ -51,7 +51,7 @@ myApp.directive('commentList', [
       controllerAs: 'packs'
     };
   }]);
-  app.directive('tooltip', function(){
+  myApp.directive('tooltip', function(){
     return {
         restrict: 'A',
         link: function(scope, element, attrs){
@@ -65,6 +65,17 @@ myApp.directive('commentList', [
         }
     };
 });
+
+myApp.directive('backImg', function(){
+    return function(scope, element, attrs){
+        var url = attrs.backImg;
+        element.css({
+            'background-image': 'url(' + url +')',
+            'background-size' : 'cover'
+        });
+    };
+});
+
 myApp.filter('to_trusted', ['$sce', function($sce){
         return function(text) {
             return $sce.trustAsHtml(text);

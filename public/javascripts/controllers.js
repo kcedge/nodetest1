@@ -890,6 +890,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.BARS = "16";
 	$scope.tipArrayData = TipData;
 	$scope.filtersToggle = true;
+	$scope.navRightToggle = true;
 
 	//$(document).ready(function(){
 	// var objectIdToLoad = $('#currentTipId2')[0].innerText;
@@ -907,6 +908,18 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.tipCounter = $scope.findInTipArray(tipIdClicked);
 	    $scope.updateBodyArray();
 
+	}
+	$scope.toggleNavBarRight = function () {
+	    $scope.navRightToggle = !$scope.navRightToggle;
+	    if (!$scope.navRightToggle){
+		$("#middleDivTipLib").addClass("col-xs-8 col-sm-8 col-md-8 col-lg-8");
+		$("#middleDivTipLib").removeClass("col-xs-6 col-sm-6 col-md-6 col-lg-6");
+	    }
+	    else{
+		$("#middleDivTipLib").removeClass("col-xs-8 col-sm-8 col-md-8 col-lg-8");
+		$("#middleDivTipLib").addClass("col-xs-6 col-sm-6 col-md-6 col-lg-6");
+	    }
+	
 	}
 //	$("#tipsScrollWrapper").scroll(function () {
 //	    var scrollableScrollTop = $('#tipsScrollWrapper').scrollTop();

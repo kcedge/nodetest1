@@ -163,7 +163,187 @@ module.exports = function (router, passport) {
 	    }
 	});
     });
+    router.get('/getTopUsers/:period',function(req,res){
+	console.log(req);
+	var period = req.params.period;
+	if(period == 'MONTH'){
+	    
+	}
+	//var tipIdArray = req.body['tipArray'];
+	console.log('getting Top Users');
+
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('profileCollection');
+		if (true) {//period=='ALL TIME'
+		    var cursorArray = collection.find().sort( { totalpoints: -1 } ).toArray(function (err, items) {
+			if (err) {
+			    console.log('error 500');
+			    res.status(500).send('error retreiving data');
+			}
+			console.log('ITEMS');
+			console.log(items);
+			res.send(items);
+		    });
+		}
+		else{
+		    res.send("No profiless found");
+		}
+	    }
+	});
+    });
+    router.post('/postProfileMetaData/:username',function(req,res){
+	var username = req.params.username;
+	console.log(req);
+	var profileMetaDataJson = req.body['profileMetaDataJson'];
+
+	//var tipIdArray = req.body['tipArray'];
+	console.log('posting profileImageJson Data' + profileMetaDataJson);
+	
+	console.log('username:' + username);
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('profileCollection');
+		if (true) {
+		    collection.update({userName: username},  {$set:{profileMetaDataJson:profileMetaDataJson}}, function (err, db) {
+			if (err) {
+			    console.log('Unable to edit profile', err);
+			    res.send('profileMetaDataJson save failed');
+			}
+			else {
+			    res.send('profileMetaDataJson edit successful');
+			}
+		    })
+		}
+		else{
+		    res.send("No profileImageJson found");
+		}
+	    }
+	});
+    });
     
+     router.post('/postProfilePoints/:username',function(req,res){
+	var username = req.params.username;
+	console.log(req);
+	var totalpoints = req.body['totalpoints'];
+
+	//var tipIdArray = req.body['tipArray'];
+	console.log('posting totalpoints Data' + totalpoints);
+	
+	console.log('username:' + username);
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('profileCollection');
+		if (true) {
+		    collection.update({userName: username},  {$set:{totalpoints:totalpoints}}, function (err, db) {
+			if (err) {
+			    console.log('Unable to edit profile', err);
+			    res.send('totalpoints  save failed');
+			}
+			else {
+			    res.send('totalpoints Profile edit successful');
+			}
+		    })
+		}
+		else{
+		    res.send("No totalpoints found");
+		}
+	    }
+	});
+    });
+    router.post('/postProfileImage/:username',function(req,res){
+	var username = req.params.username;
+	console.log(req);
+	var profileImageJson = req.body['profileImageJson'];
+
+	//var tipIdArray = req.body['tipArray'];
+	console.log('posting profileImageJson Data' + profileImageJson);
+	
+	console.log('username:' + username);
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('profileCollection');
+		if (true) {
+		    collection.update({userName: username},  {$set:{profileImageJson:profileImageJson}}, function (err, db) {
+			if (err) {
+			    console.log('Unable to edit profile', err);
+			    res.send('profileImageJson image save failed');
+			}
+			else {
+			    res.send('Profile edit successful');
+			}
+		    })
+		}
+		else{
+		    res.send("No profileImageJson found");
+		}
+	    }
+	});
+    });
+    router.post('/postBannerImage/:username',function(req,res){
+	var username = req.params.username;
+	console.log(req);
+	var bannerImageJson = req.body['bannerImageJson'];
+
+	//var tipIdArray = req.body['tipArray'];
+	console.log('posting Banner Data' + bannerImageJson);
+	
+	console.log('username:' + username);
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('profileCollection');
+		if (true) {
+		    collection.update({userName: username},  {$set:{bannerImageJson:bannerImageJson}}, function (err, db) {
+			if (err) {
+			    console.log('Unable to edit profile', err);
+			    res.send('Banner image save failed');
+			}
+			else {
+			    res.send('Profile edit successful');
+			}
+		    })
+		}
+		else{
+		    res.send("No banner image found");
+		}
+	    }
+	});
+    });
     router.post('/getTopTips',function(req,res){
 	console.log(req);
 	//var tipIdArray = req.body['tipArray'];

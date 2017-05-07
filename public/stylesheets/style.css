@@ -258,7 +258,11 @@ float:left;width:22%;
     border-color: #00cc66;
 }
 .profilePageBanner{
-    margin-bottom: 200px;
+    height: 200px;
+}
+.bannerWrapper{
+    width:100%;
+    height:200px;
 }
 .canvasjs-chart-credit{
     visibility: hidden;
@@ -279,6 +283,16 @@ float:left;width:22%;
     text-align: center;
     font-size: small;
        
+}
+.navBarBottomRowUserBioOverlap{
+    background-color: #777;
+    position: relative;
+    top: -105px;
+    opacity: .8;
+   // max-height: 94px;
+    color: white;
+    text-align: left;
+    font-size: small;
 }
 .imgNavWrapper{
     margin-top:-35px
@@ -465,7 +479,13 @@ li > ul{
 li{
     float:left;
 }
-
+.container{
+    background: white;
+    margin: 5px;
+  
+   // padding:5px;
+    border-radius: 5px;
+}
 .ng-hide-add-active {
     opacity: 0;
 }
@@ -481,9 +501,23 @@ li{
     cursor: pointer;
    
 }
+.profileImageWrapper{
+    margin:10px;
+    border-radius: 5px;
+    background-color: #f3f3f3;
+    padding: 0px;
+    border-style: solid;
+    border-width: thick;
+}
 
-
-
+.metaDataLabel{
+    text-align: center;
+}
+.metaDataDiv{
+    text-align: center;
+    margin-bottom:5px;
+    overflow-wrap: break-word;
+}
 #tipWrapper{
     transition: all 1s ease-in-out;
 }
@@ -527,7 +561,13 @@ border-radius: 3px;
 .hover:hover{
     cursor:pointer;
 }
-
+.inputGroup{
+        margin-bottom: 5px;
+	
+}
+.inputWrapper{
+    margin-right:5px;
+}
 .playbtn{
     font-size: 125%;
     
@@ -566,7 +606,7 @@ border-radius: 3px;
     width: 100%;
 }
 .tooltip{
-    z-index: 1;
+    position: fixed;
 }
 
 .tip-table-cell{

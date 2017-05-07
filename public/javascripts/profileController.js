@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', 'CommentsService', '$localStorage', function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStorage) {
+angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', 'CommentsService', '$localStorage','FileUploader', function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStorage,FileUploader) {
 
 	$scope.$storage = $localStorage.$default({
 	    username: "",
@@ -21,11 +21,33 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 	$scope.tipsSubmitted = [];
 	$scope.tipsFavorited = [];
 	$scope.rightBarSortFiltersArray = ["Week", "Month", "All Time"];
-
+	$scope.editProfileToggle = false;
+	$scope.imageUploadBannerToggle = false;
+	$scope.imageUploadProfileImage = false;
+	$scope.bannerImagesUploaded = [];
+	$scope.profileImagesUploaded = [];
+	
+	$scope.displayName = '';
+	$scope.firstName = '';
+	$scope.city = '';
+	//$scope.state = '';
+	$scope.country = '';
+	$scope.bio = '';
+	$scope.soundCloud = '';
+	$scope.twitter = '';
+	$scope.facebook = '';
+	$scope.filterPeriodTopTipsDropDown = 'Month';
+	$scope.filterPeriodTopUsersDropDown = 'Month';
+	
+	$scope.navBarRightFilterClick = function(sortFilter){
+	    
+	}
+	
 	var setTotalPoints = function () {
 	    $scope.tipsSubmitted.forEach(function (tip) {
 		$scope.totalpoints += tip.tipPoints;
 	    });
+	    ProfileService.postTotalPoints($scope.$storage.username,$scope.totalpoints)
 	}
 	var convertTipDataToJsonArray = function (tipArrayData) {
 	    for (var i = 0; i < tipArrayData.length; i++) {
@@ -53,6 +75,8 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 		if (tipArrayData[i].hasOwnProperty("vstJson")) {
 		    tipArrayData[i].vstJson = JSON.parse(tipArrayData[i].vstJson);
 		}
+		
+		
 
 	    }
 	    return tipArrayData;
@@ -67,19 +91,64 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 
 	    });
 	}
+	var convertProfileDataToJson = function (profileArrayData) {
+	    for (var i = 0; i < profileArrayData.length; i++) {
+		if (profileArrayData[i].hasOwnProperty("bannerImageJson")) {
+		    profileArrayData[i].bannerImageJson = JSON.parse(profileArrayData[i].bannerImageJson);
+		}
+		if (profileArrayData[i].hasOwnProperty("dislikedTipsJson")) {
+		    profileArrayData[i].dislikedTipsJson = JSON.parse(profileArrayData[i].dislikedTipsJson);
+		}
+		if (profileArrayData[i].hasOwnProperty("likedTipsJson")) {
+		    profileArrayData[i].likedTipsJson = JSON.parse(profileArrayData[i].likedTipsJson);
+		}
+		if (profileArrayData[i].hasOwnProperty("lovedTipsJson")) {
+		    profileArrayData[i].lovedTipsJson = JSON.parse(profileArrayData[i].lovedTipsJson);
+		}
+		if (profileArrayData[i].hasOwnProperty("profileImageJson")) {
+		    profileArrayData[i].profileImageJson = JSON.parse(profileArrayData[i].profileImageJson);
+		}
+		if (profileArrayData[i].hasOwnProperty("profileMetaDataJson")) {
+		    profileArrayData[i].profileMetaDataJson = JSON.parse(profileArrayData[i].profileMetaDataJson);
+		}
+//		if (profileArrayData[i].hasOwnProperty("submittedTips")) {
+//		    profileArrayData[i].submittedTips = JSON.parse(submittedTips[i].submittedTips);
+//		}
+		
+	    }
+	    return profileArrayData;
+	}
+	ProfileService.getTopUsers($scope.filterPeriodTopUsersDropDown)
+		.then(function (response) {
+		    $scope.topUsers = convertProfileDataToJson(response.data);
+		  
+		    //$scope.$apply();
+
+		    //$scope.parentobj.comments = response.data;
+		});
+	//ProfileService.getTopUsers($scope.filterPeriodTopUsersDropDown);
 
 	ProfileService.getProfileInfo($scope.username)
 		.then(function (response) {
 		    $scope.profileInfo = response.data;
+		    if ($scope.profileInfo[0].bannerImageJson) {
+			$scope.profileInfo.bannerImageJson = JSON.parse($scope.profileInfo[0].bannerImageJson);
+		    }
+		    if ($scope.profileInfo[0].profileImageJson) {
+			$scope.profileInfo.profileImageJson = JSON.parse($scope.profileInfo[0].profileImageJson);
+		    }
+		    if ($scope.profileInfo[0].profileMetaDataJson) {
+			$scope.profileInfo.profileMetaDataJson = JSON.parse($scope.profileInfo[0].profileMetaDataJson);
+		    }
 		    if ($scope.profileInfo[0].lovedTipsJson) {
 			getTips($scope.profileInfo[0].lovedTipsJson);
-
+			  $scope.lovedTips = JSON.parse($scope.profileInfo[0].lovedTipsJson);
+			  $scope.likedTips = JSON.parse($scope.profileInfo[0].likedTipsJson);
+			  $scope.dislikedTips = JSON.parse($scope.profileInfo[0].dislikedTipsJson);
 		    }
 
-		    $scope.lovedTips = JSON.parse($scope.profileInfo[0].lovedTipsJson);
-		    $scope.likedTips = JSON.parse($scope.profileInfo[0].likedTipsJson);
-		    $scope.dislikedTips = JSON.parse($scope.profileInfo[0].dislikedTipsJson);
-
+		  
+		    //$scope.$apply();
 
 		    //$scope.parentobj.comments = response.data;
 		});
@@ -95,7 +164,7 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 		    if ($scope.tipsSubmitted[0]) {
 			$scope.updateTip($scope.tipsSubmitted[0]);
 		    }
-		    setTotalPoints();
+		    setTotalPoints();//saves to database
 		    //$scope.parentobj.comments = response.data;
 		});
 	ProfileService.getTopTips()
@@ -140,7 +209,11 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 	$scope.loveButtonClicked = function () {
 	    var test = $scope.currentTip;
 	}
-
+	$scope.userNavBarClicked = function(user){
+	    $scope.userActive = user;
+	    window.location.href = '/profile/'+$scope.userActive.userName;
+	    
+	}
 
 	$scope.navBarHoverMouseOver = function (tip) {
 
@@ -228,12 +301,206 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 		else
 		    return ""
 	    }
+	    
 
 
 
 //	    $('html, body').animate({
 //		scrollTop: $("#tipWrapper").offset().top
 //	    }, 1000);
+	};
+	
+	$scope.editProfileSave = function () {
+		var displayName = $scope.displayNameInput;
+		var firstName = $scope.firstNameInput;
+		var lastName = $scope.lastNameInput;
+		var city = $scope.cityInput;
+		var country = $scope.countryInput;
+		var bio = $scope.bioInput;
+		var soundCloud = $scope.soundCloudInput;
+		var twitterInput = $scope.twitterInput;
+		
+		
+		var profileMetaData = {displayName:displayName,
+		    firstName:firstName,
+		    lastName:lastName,
+		    city:city,
+		    country:country,
+		    bio:bio,
+		    soundCloud:soundCloud,
+		    twitterInput:twitterInput	
+		}
+		
+		var profileMetaDataJson = JSON.stringify(profileMetaData);
+		
+	        ProfileService.postProfileMetaData($scope.$storage.username,profileMetaDataJson);
+
+		
+
+
+
+	};
+	
+	var uploader = $scope.uploader = new FileUploader({
+	    url: '/uploadImage'
+	});
+
+	// FILTERS
+
+	uploader.filters.push({
+	    name: 'customFilter',
+	    fn: function (item /*{File|FileLikeObject}*/, options) {
+		return this.queue.length < 2;
+	    }
+	});
+
+	uploader.filters.push({
+	    name: 'sizeFilter',
+	    fn: function (item /*{File|FileLikeObject}*/, options) {
+		console.log(item);
+		return item.size <= 10000000;
+	    }
+	});
+
+
+	// CALLBACKS
+	$scope.uploadedImages = [];
+	var numberOfImages = 0;
+
+	uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+	    $scope.fileErrorMessage = "";
+	    if (filter.name = 'sizeFilter') {
+		$scope.fileErrorMessage = "File too big. Upload file limit 1 MB";
+	    }
+	    console.info('onWhenAddingFileFailed', item, filter, options);
+	};
+	uploader.onAfterAddingFile = function (fileItem) {
+	    $scope.fileErrorMessage = "";
+	    console.info('onAfterAddingFile', fileItem);
+	};
+	uploader.onAfterAddingAll = function (addedFileItems) {
+	    console.info('onAfterAddingAll', addedFileItems);
+	};
+	uploader.onBeforeUploadItem = function (item) {
+	    console.info('onBeforeUploadItem', item);
+	};
+	uploader.onProgressItem = function (fileItem, progress) {
+	    console.info('onProgressItem', fileItem, progress);
+	};
+	uploader.onProgressAll = function (progress) {
+	    console.info('onProgressAll', progress);
+	};
+	uploader.onSuccessItem = function (fileItem, response, status, headers) {
+	    console.info('onSuccessItem', fileItem, response, status, headers);
+
+	};
+	uploader.onErrorItem = function (fileItem, response, status, headers) {
+	    console.info('onErrorItem', fileItem, response, status, headers);
+	};
+	uploader.onCancelItem = function (fileItem, response, status, headers) {
+	    console.info('onCancelItem', fileItem, response, status, headers);
+	};
+	uploader.onCompleteItem = function (fileItem, response, status, headers) {
+	    console.info('onCompleteItem', fileItem, response, status, headers);
+
+	    var imagePath = response;
+	  
+	    if (!runningProduction) {
+		imagePath = "resources/images/" + response;
+	    }
+	    $scope.bannerImagesUploaded.push({image:imagePath,isBanner:true});
+	    //$sc
+	    $scope.queue = [];
+	    var bannerImageJson = JSON.stringify($scope.bannerImagesUploaded);
+	    ProfileService.postBannerImage($scope.$storage.username,bannerImageJson)
+	   // numberOfImages++;
+
+	};
+	uploader.onCompleteAll = function () {
+	    console.info('onCompleteAll');
+	};
+	
+	
+	
+	
+	
+	var profileImageUploader = $scope.profileImageUploader = new FileUploader({
+	    url: '/uploadImage'
+	});
+
+	// FILTERS
+
+	profileImageUploader.filters.push({
+	    name: 'customFilter',
+	    fn: function (item /*{File|FileLikeObject}*/, options) {
+		return this.queue.length < 2;
+	    }
+	});
+
+	profileImageUploader.filters.push({
+	    name: 'sizeFilter',
+	    fn: function (item /*{File|FileLikeObject}*/, options) {
+		console.log(item);
+		return item.size <= 10000000;
+	    }
+	});
+
+
+	// CALLBACKS
+	//$scope.uploadedImages = [];
+	//var numberOfImages = 0;
+
+	profileImageUploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+	    $scope.fileErrorMessage = "";
+	    if (filter.name = 'sizeFilter') {
+		$scope.fileErrorMessage = "File too big. Upload file limit 1 MB";
+	    }
+	    console.info('onWhenAddingFileFailed', item, filter, options);
+	};
+	profileImageUploader.onAfterAddingFile = function (fileItem) {
+	    $scope.fileErrorMessage = "";
+	    console.info('onAfterAddingFile', fileItem);
+	};
+	profileImageUploader.onAfterAddingAll = function (addedFileItems) {
+	    console.info('onAfterAddingAll', addedFileItems);
+	};
+	profileImageUploader.onBeforeUploadItem = function (item) {
+	    console.info('onBeforeUploadItem', item);
+	};
+	profileImageUploader.onProgressItem = function (fileItem, progress) {
+	    console.info('onProgressItem', fileItem, progress);
+	};
+	profileImageUploader.onProgressAll = function (progress) {
+	    console.info('onProgressAll', progress);
+	};
+	profileImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+	    console.info('onSuccessItem', fileItem, response, status, headers);
+
+	};
+	profileImageUploader.onErrorItem = function (fileItem, response, status, headers) {
+	    console.info('onErrorItem', fileItem, response, status, headers);
+	};
+	profileImageUploader.onCancelItem = function (fileItem, response, status, headers) {
+	    console.info('onCancelItem', fileItem, response, status, headers);
+	};
+	profileImageUploader.onCompleteItem = function (fileItem, response, status, headers) {
+	    console.info('onCompleteItem', fileItem, response, status, headers);
+
+	    var imagePath = response;
+	  
+	    if (!runningProduction) {
+		imagePath = "resources/images/" + response;
+	    }
+	    $scope.profileImagesUploaded.push({image:imagePath,isProfile:true});
+	    //$sc
+	    $scope.queue = [];
+	    var profileImageJson = JSON.stringify($scope.profileImagesUploaded);
+	    ProfileService.postProfileImage($scope.$storage.username,profileImageJson)
+	   // numberOfImages++;
+
+	};
+	profileImageUploader.onCompleteAll = function () {
+	    console.info('onCompleteAll');
 	};
 
     }]);

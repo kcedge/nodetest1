@@ -4,210 +4,385 @@ append body
 	.pageController(ng-controller="ProfileCtrl" style="margin:0 auto;margin-top:50px")
 		.profilePageWrapper.row(style='margin-top:50px')
 			.profilePageLeft.col-sm-1.col-md-1.col-lg-1.col-xl-1
+				div.container.col-xs-12.col-sm-12.col-lg-12.col-md-12
+							.div.headerbanner.row()
+								h3.left(style='margin-top:-1px')
+									//#greeting= greeting
+									a(href='/profile'){{username}}
+							.div.editProfile.hover
+								a#editProfileLink(ng-click='editProfileToggle = !editProfileToggle')
+									span Edit Profile
+							.div.editProfileImage.hover
+								a#editProfileLink(ng-click='imageUploadProfileImage = !imageUploadProfileImage')
+									span Edit Profile Image
+								.imageUploaderInputWrapper(style="margin-top:5px;" ng-show='imageUploadProfileImage')
+									.headerImageInput(style="font-size:small;color:#777777")
+										span Profile Image Uploader
+										span(style='float:right') {{fileErrorMessage}}
+									.inputWrapper						
+										input.inputClass(type="file",nv-file-select uploader="profileImageUploader")
+										ul
+											li(ng-repeat="item in profileImageUploader.queue")
+												{{item.file.name}}
+												//button.btn.btn-success.btn-xs(ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess")
+												//	span.glyphicon.glyphicon-upload
+												//button.btn.btn-warning.btn-xs(ng-click="item.cancel()" ng-disabled="item.isUploading")
+												//	span.glyphicon.glyphicon-ban-circle
+												button.btn.btn-default.btn-xs(ng-click="item.remove()" style=";color:black;margin-left:5px;")
+													span.glyphicon.glyphicon-remove
+									.progress
+										.progress-bar(role="progressbar" ng-style="{width:profileImageUploader.progress + '%'}" style="width:0%;")
+									.imgUploadButtonsDiv(ng-show="profileImageUploader.queue.length > 0" style='margin-bottom:5px;')
+										button.btn.btn-danger.btn-xs(ng-click="profileImageUploader.clearQueue()" ng-disabled="!profileImageUploader.queue.length" )
+														span.glyphicon.glyphicon-trash 
+														&nbsp Remove all
+										button.btn.btn-warning.btn-xs(ng-click="profileImageUploader.cancelAll()" ng-disabled="!profileImageUploader.isUploading" style='margin-left:5px;')
+														span.glyphicon.glyphicon-ban-circle 
+														&nbsp Cancel
+										button.btn.btn-success.btn-xs(ng-click="profileImageUploader.uploadAll()" ng-disabled="!profileImageUploader.getNotUploadedItems().length" style='margin-left:5px;')
+														span.glyphicon.glyphicon-upload
+														&nbsp Upload
+							.div.editBannerImage.hover
+								a#editBannerLink(ng-click='imageUploadBannerToggle = !imageUploadBannerToggle')
+									span Edit Banner
+								.imageUploaderInputWrapper(style="margin-top:5px;" ng-show='imageUploadBannerToggle')
+									.headerImageInput(style="font-size:small;color:#777777")
+										span Image Uploader
+										span(style='float:right') {{fileErrorMessage}}
+									.inputWrapper						
+										input.inputClass(type="file",nv-file-select uploader="uploader")
+										ul
+											li(ng-repeat="item in uploader.queue")
+												{{item.file.name}}
+												//button.btn.btn-success.btn-xs(ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess")
+												//	span.glyphicon.glyphicon-upload
+												//button.btn.btn-warning.btn-xs(ng-click="item.cancel()" ng-disabled="item.isUploading")
+												//	span.glyphicon.glyphicon-ban-circle
+												button.btn.btn-default.btn-xs(ng-click="item.remove()" style=";color:black;margin-left:5px;")
+													span.glyphicon.glyphicon-remove
+									.progress
+										.progress-bar(role="progressbar" ng-style="{width:uploader.progress + '%'}" style="width:0%;")
+									#imgUploadButtonsDiv(ng-show="uploader.queue.length > 0" style='margin-bottom:5px;')
+										button.btn.btn-danger.btn-xs(ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length" )
+														span.glyphicon.glyphicon-trash 
+														&nbsp Remove all
+										button.btn.btn-warning.btn-xs(ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading" style='margin-left:5px;')
+														span.glyphicon.glyphicon-ban-circle 
+														&nbsp Cancel
+										button.btn.btn-success.btn-xs(ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length" style='margin-left:5px;')
+														span.glyphicon.glyphicon-upload
+														&nbsp Upload
+
+							.div.warningbanner
+								#alert(ng-hide='true')
+									+alert-i-warning("The profile page is still in development.  This page will display your saved and contributed tips and samples, your comments, your social network links, stats, and much more!","heart")
+							.div.navBanner(style='')
+								a.left(href='/tipLib')
+									span Tip Library 
+								a.left(href='/')
+									span Chromatic Wheel
+								#profileDetails(ng-show="false")
+									a(href='/profile')#userName=username
+							//.div.imageWrapper.bannerWrapper.row(style='position:absolute')
+								img.col-xs-12.col-sm-12.col-md-12.col-xl-12(ng-src='{{profileInfo[0].image}}' style='height:250px')
+				div.container.col-xs-12.col-sm-12.col-lg-12.col-md-12
+					hr
+					.div.profileDataWrapper.row()
+						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+								span Name: 
+						label.label-primary.metaDataDiv.col-sm-12.col-md-12.col-lg-12.col-xs-12
+							span
+								{{profileInfo.profileMetaDataJson.firstName}} 
+							span(style='margin-left:5px')
+								{{profileInfo.profileMetaDataJson.lastName}} 
+
+					.div.profileDataWrapper.row()
+						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+								span City/State:
+						label.label-primary.metaDataDiv.col-sm-12.col-md-12.col-lg-12.col-xs-12
+							span
+								{{profileInfo.profileMetaDataJson.city}} 
+					
+					.div.profileDataWrapper.row()
+						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+								span County:	
+						label.label-primary.metaDataDiv.col-sm-12.col-md-12.col-lg-12.col-xs-12
+							span
+								{{profileInfo.profileMetaDataJson.country}} 
+				div.container.col-xs-12.col-sm-12.col-lg-12.col-md-12
+					hr
+					.div.profileDataWrapper
+						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+								span SoundCloud:	
+						div.metaDataDiv.col-sm-12.col-md-12.col-lg-12.col-xs-12
+							a(href='{{profileInfo.profileMetaDataJson.soundCloud}}' target="_blank")
+								{{profileInfo.profileMetaDataJson.soundCloud}} 
+					.div.profileDataWrapper
+						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+								span Twitter:	
+						div.metaDataDiv.col-sm-12.col-md-12.col-lg-12.col-xs-12
+							a(href='{{profileInfo.profileMetaDataJson.twitterInput}}' target="_blank")
+								{{profileInfo.profileMetaDataJson.twitterInput}} 
+					.div.profileDataWrapper
+						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+								span Facebook:	
+
+
 			.profilePageCenter.col-sm-9.col-md-9.col-lg-9.col-xl-9
 				.profileNotify(ng-show="!isLoggedIn()")
-				.profilePageBanner.contentWrapper(ng-show="isLoggedIn()")
-					.div()
-						.div.headerbanner(style='display:inline-block')
-							h2.left
-								#greeting= greeting
-									a(href='/profile'){{username}}
-						.div.warningbanner
-							#alert(ng-hide='true')
-								+alert-i-warning("The profile page is still in development.  This page will display your saved and contributed tips and samples, your comments, your social network links, stats, and much more!","heart")
-						.div.navBanner(style='')
-							a.left(href='/tipLib')
-								span Go to Tip Library 
-							a.left(href='/')
-								span Go to Chromatic Wheel
-							#profileDetails(ng-show="false")
-								a(href='/profile')#userName=username
-				+tab-list(["Favorites","Submitted","Top","Recent"],0)
-						+tab("Favorites","active")
-							//h1 My Tips
-							div.tipTableWrapper
-								//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
-								div.row.table-striped.table-hover.tipTable
-									div.row.tableHeader
-										div.col-md-2.col-lg-2.col-xl-2
+				.profilePageBanner.contentWrapper(ng-show="isLoggedIn()" style='height: 300px;')
+					.div(ng-style="{'background-image': 'url(' + profileInfo.bannerImageJson[0].image + ')'}" style='background-size: cover;background-size: contain;height: 100%;')
+						.div.profileImageWrapper.col-xs-2.col-sm-2.col-md-1.col-lg-1.thumbnail()
+							img(ng-src='{{profileInfo.profileImageJson[0].image}}' style='')
+				div.profileEditView(ng-show='editProfileToggle')
+					hr
+					div#editProfileForm.formInputWrapper
+						div.inputGroup.soundCloudInput.row
+							label.label-primary.col-sm-1.col-md-1.col-lg-1.col-xl-1
+								span Display name
+							.spacer.col-sm-offset-1.col-md-offset-1.col-lg-offset-1.col-xl-offset-1
+							div.inputWrapper.col-sm-4.col-md-4.col-lg-4.col-xl-4
+								input#soundCloudInput.form-control(type='text' ng-model='displayNameInput')
+						div.inputGroup.soundCloudInput.row
+							label.label-primary.col-sm-1.col-md-1.col-lg-1.col-xl-1
+								span First name
+							.spacer.col-sm-offset-2.col-md-offset-2.col-lg-offset-2.col-xl-offset-2
+							div.inputWrapper.col-sm-4.col-md-4.col-lg-4.col-xl-4
+								input#soundCloudInput.form-control(type='text' ng-model='firstNameInput')
+							label.label-primary.col-sm-1.col-md-1.col-lg-1.col-xl-1
+								span Last name
+							.spacer.col-sm-offset-2.col-md-offset-2.col-lg-offset-2.col-xl-offset-2
+							div.inputWrapper.col-sm-4.col-md-4.col-lg-4.col-xl-4
+								input#soundCloudInput.form-control(type='text' ng-model='lastNameInput')
+						div.inputGroup.soundCloudInput.row
+							label.label-primary.col-sm-1.col-md-1.col-lg-1.col-xl-1
+								span City/State
+							.spacer.col-sm-offset-2.col-md-offset-2.col-lg-offset-2.col-xl-offset-2
+							div.inputWrapper.col-sm-4.col-md-4.col-lg-4.col-xl-4
+								input#soundCloudInput.form-control(type='text' ng-model='cityInput')
+							label.label-primary.col-sm-1.col-md-1.col-lg-1.col-xl-1
+								span Country
+							.spacer.col-sm-offset-2.col-md-offset-2.col-lg-offset-2.col-xl-offset-2
+							div.inputWrapper.col-sm-4.col-md-4.col-lg-4.col-xl-4
+								input#soundCloudInput.form-control(type='text' ng-model='countryInput')
+						div.inputGroup.bioInput.row
+							label.label-primary.col-sm-1.col-md-1.col-lg-1.col-xl-1
+								span Bio:
+							.spacer.col-sm-offset-2.col-md-offset-2.col-lg-offset-2.col-xl-offset-2
+							div.inputWrapper.col-sm-10.col-md-10.col-lg-10.col-xl-10
+								textarea#soundCloudInput.form-control(type='text' ng-model='bioInput')
+						#yourLinksLabel(style='font-style:italic')
+							span Your Links
+						hr(style='margin-top:0px')
+						div.inputGroup.soundCloudInput.row
+							label.label-primary.col-sm-1.col-md-1.col-lg-1.col-xl-1
+								span SoundCloud:
+							.spacer.col-sm-offset-2.col-md-offset-2.col-lg-offset-2.col-xl-offset-2
+							div.inputWrapper.col-sm-4.col-md-4.col-lg-4.col-xl-4
+								input#soundCloudInput.form-control(type='text' ng-model='soundCloudInput')
+						div.inputGroup.soundCloudInput.row
+							label.label-primary.col-sm-1.col-md-1.col-lg-1.col-xl-1
+								span Twitter:
+							div.inputWrapper.col-sm-4.col-md-4.col-lg-4.col-xl-4
+								input#soundCloudInput.form-control(type='text' ng-model='twitterInput')
+						div.inputGroup.soundCloudInput(display:'inline-block')
+							button.btn.btn-primary.right(ng-click='editProfileSave()')
+								span Save
+							button.btn.btn-primary.right(ng-click='editProfileToggle = false')
+								span Cancel
+					hr
+				div.profileTableView(ng-show='!editProfileToggle')
+						+tab-list(["Favorites","Submitted","Top","Recent"],0)#tablist
+								+tab("Favorites","active")
+									//h1 My Tips
+									div.tipTableWrapper
+										//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
+										div.row.table-striped.table-hover.tipTable
+											div.row.tableHeader(ng-show='lovedTipsData.length > 0')
+												div.col-md-2.col-lg-2.col-xl-2
 
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Tags
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Points
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Submitted By
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Date Submitted
-										//th(width="20%") Tags
-										//th(width="20%") Points
-										//th(width="20%") Submitted By
-										//th(width="20%") Date Submitted
-										//th
-									div.tableBody(style='max-height:250px;overflow:auto;')
-										div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in lovedTipsData' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a {{tip.tipTitle}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
-												span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
-													//+label-primary("{{tipFilter.name}}")
-													label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a(href='/tipLib/{{tip._id}}')
-													span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
-									hr
-									div.row.tableFooter
-										div.col-md-2.col-lg-2.col-xl-2 
-											span Total:
-										div.col-md-2.col-lg-2.col-xl-2
-										div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
-										div.col-md-2.col-lg-2.col-xl-2
-						+tab("Submitted")
-							//h1 My Tips
-							div.tipTableWrapper
-								//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
-								div.row.table-striped.table-hover.tipTable
-									div.row.tableHeader
-										div.col-md-2.col-lg-2.col-xl-2
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Tags
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Points
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Submitted By
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Date Submitted
+												//th(width="20%") Tags
+												//th(width="20%") Points
+												//th(width="20%") Submitted By
+												//th(width="20%") Date Submitted
+												//th
+											div.tableBody(style='max-height:250px;overflow:auto;')
+												div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in lovedTipsData' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a {{tip.tipTitle}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
+														span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
+															//+label-primary("{{tipFilter.name}}")
+															label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a(href='/tipLib/{{tip._id}}')
+															span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
+												div.row(ng-show='lovedTipsData.length == 0' style='font-style:italic;margin-top:10px')
+													span(style='margin-left:5px') No Favoirte Tips
+											hr
+											div.row.tableFooter
+												div.col-md-2.col-lg-2.col-xl-2 
+													span Total:
+												div.col-md-2.col-lg-2.col-xl-2
+												div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
+												div.col-md-2.col-lg-2.col-xl-2
+								+tab("Submitted")
+									//h1 My Tips
+									div.tipTableWrapper
+										//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
+										div.row.table-striped.table-hover.tipTable
+											div.row.tableHeader(ng-show='tipsSubmitted.length > 0')
+												div.col-md-2.col-lg-2.col-xl-2
 
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Tags
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Points
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Submitted By
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Date Submitted
-										//th(width="20%") Tags
-										//th(width="20%") Points
-										//th(width="20%") Submitted By
-										//th(width="20%") Date Submitted
-										//th
-									div.tableBody(style='max-height:250px;overflow:auto;')
-										div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in tipsSubmitted' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a {{tip.tipTitle}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
-												span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
-													//+label-primary("{{tipFilter.name}}")
-													label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a(href='/tipLib/{{tip._id}}')
-													span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
-									hr
-									div.row.tableFooter
-										div.col-md-2.col-lg-2.col-xl-2 
-											span Total:
-										div.col-md-2.col-lg-2.col-xl-2
-										div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
-										div.col-md-2.col-lg-2.col-xl-2
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Tags
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Points
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Submitted By
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Date Submitted
+												//th(width="20%") Tags
+												//th(width="20%") Points
+												//th(width="20%") Submitted By
+												//th(width="20%") Date Submitted
+												//th
+											div.tableBody(style='max-height:250px;overflow:auto;')
+												div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in tipsSubmitted' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a {{tip.tipTitle}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
+														span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
+															//+label-primary("{{tipFilter.name}}")
+															label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a(href='/tipLib/{{tip._id}}')
+															span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
+											
+											div.row(ng-show='tipsSubmitted.length == 0' style='font-style:italic;margin-top:10px')
+													span(style='margin-left:5px') No Tips Submitted
+											hr
+											div.row.tableFooter
+												div.col-md-2.col-lg-2.col-xl-2 
+													span Total:
+												div.col-md-2.col-lg-2.col-xl-2
+												div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
+												div.col-md-2.col-lg-2.col-xl-2
+											
+
+								+tab("Top")
+									//h1 My Tips
+									div.tipTableWrapper
+										//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
+										div.row.table-striped.table-hover.tipTable
+											div.row.tableHeader
+												div.col-md-2.col-lg-2.col-xl-2
+
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Tags
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Points
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Submitted By
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Date Submitted
+												//th(width="20%") Tags
+												//th(width="20%") Points
+												//th(width="20%") Submitted By
+												//th(width="20%") Date Submitted
+												//th
+											div.tableBody(style='max-height:250px;overflow:auto;')
+												div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in topTips' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a {{tip.tipTitle}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
+														span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
+															//+label-primary("{{tipFilter.name}}")
+															label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a(href='/tipLib/{{tip._id}}')
+															span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
+											hr
+											div.row.tableFooter
+												div.col-md-2.col-lg-2.col-xl-2 
+													span Total:
+												div.col-md-2.col-lg-2.col-xl-2
+												div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
+												div.col-md-2.col-lg-2.col-xl-2			
+								+tab("Recent")
+									//h1 My Tips
+									div.tipTableWrapper
+										//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
+										div.row.table-striped.table-hover.tipTable
+											div.row.tableHeader
+												div.col-md-2.col-lg-2.col-xl-2
+
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Tags
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Points
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Submitted By
+												div.col-md-2.col-lg-2.col-xl-2
+													h5.display-3 Date Submitted
+												//th(width="20%") Tags
+												//th(width="20%") Points
+												//th(width="20%") Submitted By
+												//th(width="20%") Date Submitted
+												//th
+											div.tableBody(style='max-height:250px;overflow:auto;')
+												div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in recentTips' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a {{tip.tipTitle}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
+														span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
+															//+label-primary("{{tipFilter.name}}")
+															label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
+													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+														a(href='/tipLib/{{tip._id}}')
+															span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
+											hr
+											div.row.tableFooter
+												div.col-md-2.col-lg-2.col-xl-2 
+													span Total:
+												div.col-md-2.col-lg-2.col-xl-2
+												div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
+												div.col-md-2.col-lg-2.col-xl-2		
 
 
-						+tab("Top")
-							//h1 My Tips
-							div.tipTableWrapper
-								//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
-								div.row.table-striped.table-hover.tipTable
-									div.row.tableHeader
-										div.col-md-2.col-lg-2.col-xl-2
 
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Tags
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Points
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Submitted By
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Date Submitted
-										//th(width="20%") Tags
-										//th(width="20%") Points
-										//th(width="20%") Submitted By
-										//th(width="20%") Date Submitted
-										//th
-									div.tableBody(style='max-height:250px;overflow:auto;')
-										div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in topTips' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a {{tip.tipTitle}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
-												span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
-													//+label-primary("{{tipFilter.name}}")
-													label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a(href='/tipLib/{{tip._id}}')
-													span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
-									hr
-									div.row.tableFooter
-										div.col-md-2.col-lg-2.col-xl-2 
-											span Total:
-										div.col-md-2.col-lg-2.col-xl-2
-										div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
-										div.col-md-2.col-lg-2.col-xl-2			
-						+tab("Recent")
-							//h1 My Tips
-							div.tipTableWrapper
-								//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
-								div.row.table-striped.table-hover.tipTable
-									div.row.tableHeader
-										div.col-md-2.col-lg-2.col-xl-2
+							//	#tipHeader.row(style="display:inline-block;width:100%;background-color: white;padding: 5px;border-radius: 5px;border-style: solid;border-width:thin;border-color: #ececec;")
+							//		span.col-md-6.col-sm-6.col-xs-6(style='float:left') {{tip.tipTitle}}
+							//		#tipPointsWrapper.col-md-2(style='margin-right:5px;float:left')
+							//			span.small(style='') {{tip.tipPoints}} points
+							//		#tipPointsData(style='float:left;margin-left:5px')
+							//			span.small {{tip.dateSubmitted|date:"MM/dd/yyyy"}}				
 
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Tags
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Points
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Submitted By
-										div.col-md-2.col-lg-2.col-xl-2
-											h5.display-3 Date Submitted
-										//th(width="20%") Tags
-										//th(width="20%") Points
-										//th(width="20%") Submitted By
-										//th(width="20%") Date Submitted
-										//th
-									div.tableBody(style='max-height:250px;overflow:auto;')
-										div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in recentTips' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a {{tip.tipTitle}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
-												span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
-													//+label-primary("{{tipFilter.name}}")
-													label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
-											div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
-												a(href='/tipLib/{{tip._id}}')
-													span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
-									hr
-									div.row.tableFooter
-										div.col-md-2.col-lg-2.col-xl-2 
-											span Total:
-										div.col-md-2.col-lg-2.col-xl-2
-										div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
-										div.col-md-2.col-lg-2.col-xl-2		
-
-
-
-					//	#tipHeader.row(style="display:inline-block;width:100%;background-color: white;padding: 5px;border-radius: 5px;border-style: solid;border-width:thin;border-color: #ececec;")
-					//		span.col-md-6.col-sm-6.col-xs-6(style='float:left') {{tip.tipTitle}}
-					//		#tipPointsWrapper.col-md-2(style='margin-right:5px;float:left')
-					//			span.small(style='') {{tip.tipPoints}} points
-					//		#tipPointsData(style='float:left;margin-left:5px')
-					//			span.small {{tip.dateSubmitted|date:"MM/dd/yyyy"}}				
-
-				.tipsWrapper.contentWrapper#tipWrapper
+				.tipsWrapper.contentWrapper#tipWrapper()
 							.tipTitleBlock.titleWrapper
 								.tipTitle.titleWrapper.page-header(style="display:inline-block;width:100%;padding-bottom:3px;")
 									h2(style="float:left;max-width:450px;margin-left: 3px;margin-top:15px;") {{tipTitle}}
@@ -242,20 +417,22 @@ append body
 											span Submitted By: 
 												a(href="/profile/{{submittedBy}}"){{submittedBy}}
 			.profilePageRightWrapper.col-xs-2.col-md-2.col-lg-2.col-xl-2
-				div.rightWidgetTopContainer.row(style='height:200px')
+				//div.rightWidgetTopContainer.row(style='height:200px')
 					
 				#rightWidgetContainer.contentWrapper
-					.rightWidetWrapper
+					//.rightWidetWrapper
 						#header(style='display:inline-block')
 							#labelSort
 								.label.label-info Top Tips
-							#dropdownWrapper.dropdown(style="float:left")
+							select#dropdownWrapper(style='float:left' ng-model='filterPeriodTopTipsDropDown')
+									option(ng-repeat='sortFilter in rightBarSortFiltersArray' ng-value='sortFilter')
+										span {{sortFilter}}
+							//#dropdownWrapper.dropdown(style="float:left")
 								span.label.label-default.dropdown-toggle#rightBarWidgetDropdown1(data-toggle='dropdown')
-									{{rightBarSortType}}
+									{{filterPeriodTopTipsDropDown}}
 									span.glyphicon.glyphicon-menu-down
-								ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown1" display='')
-									li(ng-repeat='sortFilter in rightBarSortFiltersArray')
-										a(ng-click="navBarRightFilterClick(sortFilter)"){{sortFilter}}
+
+								
 						div.list-unstyled.row.hover(ng-repeat="tip in topTips | orderBy : 'tipPoints':true | limitTo:10" ng-show="true")
 							.rightBarNavItem.row(ng-click="tipNavBarClicked(tip)" ng-mouseover='rightBarWidgetMouseOver(tip)' ng-mouseleave='navBarHoverRightMouseLeave(tip)')
 								.div.navBarTopDiv(ng-show='true'  style='')
@@ -274,13 +451,28 @@ append body
 						#header(style='display:inline-block')
 							#labelSort
 								.label.label-info Top Users
-							#dropdownWrapper.dropdown(style="float:left")
-								span.label.label-default.dropdown-toggle#rightBarWidgetDropdown2(data-toggle='dropdown')
-									{{rightBarSortType2}}
-									span.glyphicon.glyphicon-menu-down
-								ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown2" display='')
-									li(ng-repeat='sortFilter in rightBarSortFiltersArray')
-										a(ng-click="navBarRightFilter2Click(sortFilter)"){{sortFilter}}
+							select#dropdownWrapper(style='float:left' ng-model='filterPeriodTopUsersDropDown')
+									option(ng-repeat='sortFilter in rightBarSortFiltersArray' ng-value='sortFilter')
+										span {{sortFilter}}
+						div.list-unstyled.row.hover(ng-repeat="user in topUsers | orderBy : 'totalpoints':true | limitTo:10" ng-show="user.userName")
+							.rightBarNavItem.row(ng-click="userNavBarClicked(user)" ng-mouseover='rightBarWidgetMouseOver(user)' ng-mouseleave='navBarHoverRightMouseLeave(user)')
+								.div.navBarTopDiv(ng-show='true'  style='')
+									.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
+										span#navTipTitle(){{user.userName}}
+										span#navTipTitle(style='float:right'){{user.totalpoints}}
+								.div.row.animated.navBarBottomRow(ng-show='true' style='height:125px;margin-top:-20px')
+									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
+										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.profileImageJson[0].image}}' style='min-height: 100px;margin-top:10px;padding:0px;')
+									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
+										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.bannerImageJson[0].image}}' style='max-height: 100px;margin-top:10px;padding:0px;')
+								.div.row.navBarBottomRowUserBioOverlap( ng-show='user.hoverRightActive')
+									div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='margin-left:-5px')
+										h4.nameWrapper(style='margin-bottom:5px;')
+											span(ng-bind-html='user.profileMetaDataJson.firstName  | to_trusted')
+											span(ng-bind-html='user.profileMetaDataJson.lastName  | to_trusted' style='margin-left:2px;')
+										h6(ng-bind-html='user.profileMetaDataJson.city  | to_trusted' style='margin-top:-3px;margin-left:2px;')
+										span(ng-bind-html='user.profileMetaDataJson.bio  | to_trusted')
+							
 					.rightWidetWrapper
 						#header(style='display:inline-block')
 							#labelSort
