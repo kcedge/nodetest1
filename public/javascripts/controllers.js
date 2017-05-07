@@ -891,7 +891,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.tipArrayData = TipData;
 	$scope.filtersToggle = true;
 	$scope.navRightToggle = true;
-
+	
+	var url_in = window.location.href;
+	var urlComponents = url_in.split("/");
+	$scope.currentTipId = urlComponents[urlComponents.length - 1];
 	//$(document).ready(function(){
 	// var objectIdToLoad = $('#currentTipId2')[0].innerText;
 	//objectIdToLoad = objectIdToLoad.replace('<','');
@@ -899,10 +902,25 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	//$scope.tipCounter = $scope.findInTipArray(objectIdToLoad);
 	//$scope.updateBodyArray();
 	//});
-	$scope.setCurrentTip = function (tip) {
-	    // $scope.tipCounter = scope.findInTipArray(tip._id);
-
+	
+	$scope.findInTipArray = function (id) {
+	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		if ($scope.tipArrayData[i]._id == id) {
+		    return i;
+		}
+	    }
 	}
+	$scope.setCurrentTipCounter = function (currentTipId) {    
+	    if(currentTipId)
+		$scope.tipCounter = $scope.findInTipArray(currentTipId);
+	    else{
+		$scope.tipCounter = 0;
+	    }
+	   // $scope.tipNavBarClicked($scope.tipArrayData[$scope.tipCounter])
+	}
+	
+	
+	
 	$scope.tipClicked = function (tip) {
 	    var tipIdClicked = tip._id;
 	    $scope.tipCounter = $scope.findInTipArray(tipIdClicked);
@@ -921,6 +939,11 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    }
 	
 	}
+	window.onload = function () {
+	   // var currentTipId = $scope.currentTipId;
+	   
+	    $scope.tipNavBarClicked($scope.tipArrayData[$scope.tipCounter]);
+	};
 //	$("#tipsScrollWrapper").scroll(function () {
 //	    var scrollableScrollTop = $('#tipsScrollWrapper').scrollTop();
 //	    var totalOffset = 0;
@@ -1878,13 +1901,6 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 
-	$scope.findInTipArray = function (id) {
-	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
-		if ($scope.tipArrayData[i]._id == id) {
-		    return i;
-		}
-	    }
-	}
 	$scope.navBarHoverMouseOver = function (tip) {
 	
 	    tip.hoverActive = true;
@@ -1982,14 +1998,15 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    var comment = response.data;
 		    //setTipComments();
 		});
-		$scope.tipCounter = 0;
+		
+		
 		for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		    $scope.tipArrayData[i].showComments = true;
-		    $scope.updateBodyArray();
-		    $scope.tipCounter++
+//		    $scope.updateBodyArray();
+//		    $scope.tipCounter++
 		}
-		$scope.tipCounter =  $scope.tipArrayData.length - 1;
-		
+		//$scope.tipCounter =  $scope.tipArrayData.length - 1;
+		$scope.setCurrentTipCounter($scope.currentTipId);
 		
 		$scope.submitMessage = "Success"
 		$scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
@@ -2193,9 +2210,9 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 		$scope.showButton('Edit');
 		$scope.showButton('Delete');
-		//$('html, body').animate({
-		//	scrollTop: $("#filterWrapper").offset().top
-		//   }, 1000);
+//		$('html, body').animate({
+//			scrollTop: $("#filterWrapper").offset().top
+//		   }, 1000);
 	    }
 	}
 	
@@ -2951,6 +2968,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	$scope.getTipsFromMongo();
 	$scope.profileDataFromMongo();
+	
     }]);
 
 
