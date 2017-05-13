@@ -359,6 +359,12 @@ float:left;width:22%;
     transition: max-height 0.5s ease-out;
 
 }
+.packWrapper{
+    width:50%;
+}
+.sampleListWrapper {
+    overflow:auto;
+}
 .tipNavItem:hover{
     max-height: 125px;
     transition: max-height 0.5s ease-in;
@@ -536,10 +542,39 @@ li{
     background-color: darkgray;
     border-color: darkslateblue;
 }
+.packHeaderWrapper{
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+     opacity: .8;
+    /* border-style: solid; */
+/*    margin-top: 50%;*/
+}
 .packWrapper{
 margin-bottom:5px;
 padding:5px;
 border-radius: 3px;
+min-height:100px;
+
+.form-control-minus-width{
+    display: block;
+   width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
 }
 .packWrapper:hover{
     cursor: pointer;

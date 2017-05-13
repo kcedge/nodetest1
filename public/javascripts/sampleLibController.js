@@ -14,6 +14,13 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	
 	$scope.adminAuth = false;
 	$scope.authenticated = false;
+	
+	$scope.packsFilterOptions = ["Top Packs","Most Recent Packs","Most Liked Packs","Most Used Packs"];
+	$scope.packsDurationOptions = ["All Time","Year","Month","Week"];
+
+	$scope.packsFilter = "Top Packs";
+	$scope.packsFilterDuration = "Month";
+	
 	isAuthenticated($http,false,function(username){
 	    if(username == 'kcedge'){
 		$scope.adminAuth = true;
@@ -25,9 +32,115 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    }    
 	});
 	
+	$scope.parseJson = function (jsonArray) {
+	    for (var i = 0; i < jsonArray.length; i++) {
+		if (jsonArray[i].hasOwnProperty("packImageJson") && jsonArray[i].packImageJson) {
+		    jsonArray[i].packImageJson = JSON.parse(jsonArray[i].packImageJson);
+		}
+	    }
+	   
+	    return jsonArray;
+	}
+	setTimeout(function () {
+	    //your code here
+	   styleSize(); 
+	   setStyle();
+	}, 500);
+	$(document).ready(function(){
+	   styleSize(); 
+	   setStyle();
+	});
+	
+	$(window).resize(function(){
+	   styleSize(); 
+	   setStyle();
+	});
+	var styleSize = function(){
+	    var height = $(window).height();
+	    $(".sampleListWrapper").height(height - 50 - 90); //For banner and filter menu
+	}
+	var setStyle = function(){
+	    var packWrapper = $(".packWrapper");
+	    var width = packWrapper.width();
+	    if(width){
+		$(".packWrapper").height(width);//SQUARE
+	    }
+	    else{
+		$(".packWrapper").height(150);
+	    }
+	 
+	 
+	}
+	
+
+	
+	var getFilters = function () {
+
+	    var req = {
+		method: 'GET',
+		url: '/getFilters',
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {}
+
+	    }
+	    $scope.filters = [];
+	    var findParent = function (parent) {
+		for (var f = 0; f < $scope.filters.length; f++) {
+		    if ($scope.filters[f].name == parent) {
+			return f;
+		    }
+		}
+		return -1;
+	    }
+	    $http(req).then(function success(response) {
+		$scope.submitMessage = "Success"
+		$scope.filters = response.data;
+		$scope.filters.forEach(function (element) {
+		    element.toggle = false;
+		    element.inputToggle = false;
+		});
+		for (var f = 0; f < $scope.filters.length; f++) {
+		    var req = {
+			method: 'GET',
+			url: '/getFilters/' + $scope.filters[f].name,
+			headers: {
+			    'Content-Type': "application/json"
+			},
+			data: {}
+
+		    }
+		    $http(req).then(function success(res) {
+			var parentIndex = findParent(res.data[0].parent);
+			$scope.filters[parentIndex].children = res.data;
+			$scope.submitMessage = "Success";
+			console.log(res);
+
+		    }, function failure(res) {
+			$scope.submitMessage = "Failure"
+
+
+		    });
+
+
+		}
+	    }, function failure(response) {
+		$scope.submitMessage = "Failure"
+		$scope.responseData = response.data;
+
+	    });
+
+	};
+	
+	getFilters();
+	
 	
 	var uploader = $scope.uploader = new FileUploader({
 	    url: '/uploadSample'
+	});
+	var packImageUploader = $scope.packImageUploader = new FileUploader({
+	    url: '/uploadPackImage'
 	});
 	
 	// FILTERS
@@ -39,6 +152,20 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	});
 	
 	uploader.filters.push({
+	    name: 'sizeFilter',
+	    fn: function (item /*{File|FileLikeObject}*/, options) {
+		console.log(item);
+		return item.size <= 10000000;
+	    }
+	});
+	packImageUploader.filters.push({	
+	    name: 'customFilter',
+	    fn: function (item /*{File|FileLikeObject}*/, options) {
+		return this.queue.length < 1000;
+	    }
+	});
+	
+	packImageUploader.filters.push({
 	    name: 'sizeFilter',
 	    fn: function (item /*{File|FileLikeObject}*/, options) {
 		console.log(item);
@@ -58,7 +185,8 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 		    'Content-Type': "application/json"
 		},
 		data: {packname: $scope.packname,
-		       sampleArrayJson:JSON.stringify($scope.uploadedSamples)}
+		       sampleArrayJson:JSON.stringify($scope.uploadedSamples),
+		       packImageJson:JSON.stringify($scope.uploadedPackImages)}
 	    }
 	    $http(req).then(function success(response) {
 		$scope.submitMessage = "Success"
@@ -100,7 +228,10 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    } 
 	     $http(req).then(function success(response) {
 		$scope.packs = response.data;
-		$scope.updatePacks();
+		$scope.packs = $scope.parseJson($scope.packs);
+		$scope.updatePacks(); // UPDATES LEFT NAV BAR WITH PACKS
+		$scope.$apply();
+		setStyle();
 		
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
@@ -166,6 +297,74 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    console.info('onCompleteAll');
 	};
 	
+	packImageUploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+	    $scope.fileErrorMessage = "";
+	    if(filter.name = 'sizeFilter'){
+		$scope.fileErrorMessage = "File too big. Upload file limit 10 MB";
+	    }
+	    console.info('onWhenAddingFileFailed', item, filter, options);
+	};
+	packImageUploader.onAfterAddingFile = function (fileItem) {
+	    $scope.fileErrorMessage = "";
+	    console.info('onAfterAddingFile', fileItem);
+	};
+	packImageUploader.onAfterAddingAll = function (addedFileItems) {
+	    console.info('onAfterAddingAll', addedFileItems);
+	};
+	packImageUploader.onBeforeUploadItem = function (item) {
+//	    item.formData.push({bpm:item.bpm});
+//	    item.formData.push({key:item.key});
+//	    item.formData.push({tagJson:JSON.stringify(item.tags)});
+//	    item.formData.push({type:item.type});
+//	    item.formData.push({packname:$scope.packname});
+//
+//	    item.formData.push({points:0});
+	    console.info('onBeforeUploadItem', item);
+	};
+	packImageUploader.onProgressItem = function (fileItem, progress) {
+	    console.info('onProgressItem', fileItem, progress);
+	};
+	packImageUploader.onProgressAll = function (progress) {
+	    console.info('onProgressAll', progress);
+	};
+	packImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+	    console.info('onSuccessItem', fileItem, response, status, headers);
+	    
+	};
+	packImageUploader.onErrorItem = function (fileItem, response, status, headers) {
+	    console.info('onErrorItem', fileItem, response, status, headers);
+	};
+	packImageUploader.onCancelItem = function (fileItem, response, status, headers) {
+	    console.info('onCancelItem', fileItem, response, status, headers);
+	};
+	packImageUploader.onCompleteItem = function (fileItem, response, status, headers) {
+	    console.info('onCompleteItem', fileItem, response, status, headers);
+
+	    var imagePath = response;
+	  
+	    if (!runningProduction) {
+		imagePath = "resources/images/" + response;
+	    }
+	    if($scope.uploadedPackImages){
+		 $scope.uploadedPackImages.push({image:imagePath,isPackImage:true});
+	    }
+	    else{
+		$scope.uploadedPackImages = [];
+		$scope.uploadedPackImages.push({image:imagePath,isPackImage:true});
+	    }
+	    
+	   
+	    //$sc
+//	    $scope.queue = [];
+//	    var bannerImageJson = JSON.stringify($scope.bannerImagesUploaded);
+//	    ProfileService.postBannerImage($scope.$storage.username,bannerImageJson)
+
+	};
+	packImageUploader.onCompleteAll = function () {
+	   // uploadPackImage();
+	    console.info('onCompleteAll');
+	};
+	
 	$scope.getTags = function(query){
 	    return [
                     { text: 'percs' },
@@ -186,6 +385,8 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 		else{
 		    $scope.samples[s].audio = ngAudio.load($scope.samples[s].destination);
 		}
+		
+		if($scope.samples[s].tagJson != 'undefined' && $scope.samples[s].tagJson)
 		$scope.samples[s].tags = JSON.parse($scope.samples[s].tagJson);
 		if (typeof pack != 'undefined' && pack.active) {
 		    if (($scope.samples[s].packname == pack.packname)) {
@@ -205,6 +406,24 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    for (var s = 0; s < $scope.packs.length; s++) {
 		
 	    }
+	}
+	$scope.copyAll = function () {
+	    if (uploader.queue) {
+		var bpm = uploader.queue[0].bpm;
+		var key = uploader.queue[0].key;
+		var type = uploader.queue[0].type;
+		var tags = uploader.queue[0].tags;
+		
+		for (var i = 0; i < uploader.queue.length; i++) {
+			uploader.queue[i].bpm = bpm;
+			uploader.queue[i].key = key
+			uploader.queue[i].type = type;
+			uploader.queue[i].tags = tags;
+		}
+	    }
+	}
+	$scope.showKey = function(key){
+	    return (key != 'undefined' && key)
 	}
 	
 	

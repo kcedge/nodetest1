@@ -85,6 +85,38 @@ else{
     upload = multer({dest: appRoot + '/public/resources/samples'}).single('file');
 }
 
+var uploadPackImage = "";
+if (runningProduction) {
+    // *** UPDATE THIS FOR PRODUCTION *** ///
+    uploadPackImage = multer({storage: multerS3({
+	    s3: sampleBucket,
+	    bucket: 'mphelper-samples-bucket',
+	    acl: 'public-read',
+	    contentDisposition: 'attachment',
+	    metadata: function (req, file, cb) {
+		console.log('metadata...');
+		console.dir(file);
+		cb(null, {fieldName: file.fieldname});
+	    },
+	    key: function (req, file, cb) {
+		console.log('file and req');
+		console.dir(file);
+		console.dir(req);
+		var name = file.originalname.replace(".wav","");
+		var pack =req.body['packname'].replace("Pack","")
+		//Date.now().toString().substring(7,9)
+		cb(null, pack + "_"+ name +".wav");
+	    }
+	    
+	})
+    }).single('file');
+}
+else{
+    uploadPackImage = multer({dest: appRoot + '/public/resources/images'}).single('file');
+}
+
+
+
 
 module.exports = function (router, passport) {
  /* GET Hello World page. */
@@ -160,6 +192,7 @@ module.exports = function (router, passport) {
 	console.log("uploading pack");
 	var packname = req.body['packname'];
 	var sampleArrayJson = req.body['sampleArrayJson'];
+	var packImageJson = req.body['packImageJson'];
 	
 	MongoClient.connect(url, function (err, db) {
 	    if (err) {
@@ -172,7 +205,7 @@ module.exports = function (router, passport) {
 		// Get the documents collection
 		var collection = db.collection('packCollection');
 		collection.createIndex( { "packname": 1 }, { unique: true } )
-		collection.insert({packname: packname, sampleArrayJson: sampleArrayJson}, function (err, docsInserted) {
+		collection.insert({packname: packname, sampleArrayJson: sampleArrayJson,packImageJson:packImageJson}, function (err, docsInserted) {
 		    if (err) {
 
 			console.log('Unable to add tip to packCollection', err);
@@ -242,6 +275,56 @@ module.exports = function (router, passport) {
 			    
 			}
 		    });
+
+		}
+	    });
+	});
+	
+    });
+    router.post('/uploadPackImage', function (req, res) {
+	uploadPackImage(req, res, function (err) {
+	    if (err) {
+		console.log(err);
+		return res.end("Error uploading pack image.");
+	    }
+	    MongoClient.connect(url, function (err, db) {
+		if (err) {
+		    console.log('Unable to connect to the mongoDB server. Error:', err);
+		} else {
+		    //WE don't need DB Stuff, we savew that with pack
+		    console.log("REQ:****");
+		    console.log(req);
+		    res.send(req.file.filename);
+//		    //HURRAY!! We are connected. :)
+//		    console.log('Connection established to', url);
+//
+//		    // do some work here with the database.
+//		    // Get the documents collection
+//		    console.log("uploading sample..");
+//		    console.dir(req);
+//		    var collection = db.collection('packCollection');
+//		    collection.insert({},
+//		    function (err, docsInserted) {
+//			if (err) {
+//			    console.log('Unable to add image to image collection', err);
+//			    res.send('Image uploaded failed');
+//			}
+//			else {
+//			   console.dir(req);
+//			   
+//			    //Production
+//			   if(runningProduction){
+//				res.send(docsInserted.ops[0]._id);
+//			    }
+//			    else{
+//				 //Local
+//				 res.send(docsInserted.ops[0]._id);
+//			    }
+//			   
+//			   
+//			    
+//			}
+//		    });
 
 		}
 	    });

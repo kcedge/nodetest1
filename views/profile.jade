@@ -3,7 +3,7 @@ extends layout
 append body
 	.pageController(ng-controller="ProfileCtrl" style="margin:0 auto;margin-top:50px")
 		.profilePageWrapper.row(style='margin-top:50px')
-			.profilePageLeft.col-sm-1.col-md-1.col-lg-1.col-xl-1
+			.profilePageLeft.col-sm-0.col-md-1.col-lg-1.col-xs-0
 				div.container.col-xs-12.col-sm-12.col-lg-12.col-md-12
 							.div.headerbanner.row()
 								h3.left(style='margin-top:-1px')
@@ -85,46 +85,46 @@ append body
 									a(href='/profile')#userName=username
 							//.div.imageWrapper.bannerWrapper.row(style='position:absolute')
 								img.col-xs-12.col-sm-12.col-md-12.col-xl-12(ng-src='{{profileInfo[0].image}}' style='height:250px')
-				div.container.col-xs-12.col-sm-12.col-lg-12.col-md-12
+				div.container.col-xs-0.col-sm-0.col-lg-12.col-md-12
 					hr
 					.div.profileDataWrapper.row()
-						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						//label.label-primary.metaDataLabel.col-sm-0.col-md-12.col-lg-12.col-xs-0
 								span Name: 
-						label.label-primary.metaDataDiv.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						label.label-primary.metaDataDiv.col-sm-0.col-md-12.col-lg-12.col-xs-0
 							span
 								{{profileInfo.profileMetaDataJson.firstName}} 
 							span(style='margin-left:5px')
 								{{profileInfo.profileMetaDataJson.lastName}} 
 
 					.div.profileDataWrapper.row()
-						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						//label.label-primary.metaDataLabel.col-sm-0.col-md-12.col-lg-12.col-xs-0
 								span City/State:
-						label.label-primary.metaDataDiv.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						label.label-primary.metaDataDiv.col-sm-0.col-md-12.col-lg-12.col-xs-0
 							span
 								{{profileInfo.profileMetaDataJson.city}} 
 					
 					.div.profileDataWrapper.row()
-						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						//label.label-primary.metaDataLabel.col-sm-0.col-md-12.col-lg-12.col-xs-0
 								span County:	
-						label.label-primary.metaDataDiv.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						label.label-primary.metaDataDiv.col-sm-0.col-md-12.col-lg-12.col-xs-0
 							span
 								{{profileInfo.profileMetaDataJson.country}} 
-				div.container.col-xs-12.col-sm-12.col-lg-12.col-md-12
+				div.container.col-xs-0.col-sm-0.col-lg-12.col-md-12
 					hr
 					.div.profileDataWrapper
-						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						//label.label-primary.metaDataLabel.col-sm-0.col-md-12.col-lg-12.col-xs-0
 								span SoundCloud:	
-						div.metaDataDiv.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						div.metaDataDiv.col-sm-0.col-md-12.col-lg-12.col-xs-0
 							a(href='{{profileInfo.profileMetaDataJson.soundCloud}}' target="_blank")
 								{{profileInfo.profileMetaDataJson.soundCloud}} 
 					.div.profileDataWrapper
-						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						//label.label-primary.metaDataLabel.col-sm-0.col-md-12.col-lg-12.col-xs-0
 								span Twitter:	
-						div.metaDataDiv.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						div.metaDataDiv.col-sm-0.col-md-12.col-lg-12.col-xs-0
 							a(href='{{profileInfo.profileMetaDataJson.twitterInput}}' target="_blank")
 								{{profileInfo.profileMetaDataJson.twitterInput}} 
 					.div.profileDataWrapper
-						//label.label-primary.metaDataLabel.col-sm-12.col-md-12.col-lg-12.col-xs-12
+						//label.label-primary.metaDataLabel.col-sm-0.col-md-12.col-lg-12.col-xs-0
 								span Facebook:	
 
 

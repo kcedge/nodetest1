@@ -38,8 +38,8 @@ ul.panel-body.comment-detail-list(style='margin-top:25px;')
 					div(ng-repeat='tag in sample.tags' style='float:left')
 						label.label-primary(style='margin-right:3px;') {{tag.text}}
 			div.key.col-xs-1.col-sm-1.col-md-1.col-lg-1
-				span {{sample.key}}
-			div.bpm.col-xs-1.col-sm-1.col-md-1.col-lg-1
+				span(ng-show='sample.key!="undefined"') {{sample.key}}
+			div.bpm.col-xs-1.col-sm-1.col-md-1.col-lg-1(ng-show='sample.bpm')
 				span {{sample.bpm}}
 			div.other(style='float:right')
 				span.hover.glyphicon.glyphicon-edit(style='margin-right:5px;' ng-click='editSampleClicked(sample)' ng-show='adminAuth')
