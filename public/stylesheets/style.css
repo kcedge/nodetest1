@@ -359,10 +359,28 @@ float:left;width:22%;
     transition: max-height 0.5s ease-out;
 
 }
+.activePackDescWrapper{
+    background:#616161;
+    border-radius: 5px;
+    padding:5px;
+        margin-top: 5px;
+    margin-left: 5px;
+    color: white;
+    opacity: .8;
+}
+.activePackNameWrapper{
+    background:#616161;
+    border-radius: 5px;
+    padding:5px;
+        margin-top: 5px;
+    margin-left: 5px;
+    color: white;
+    opacity: .8;
+}
 .packWrapper{
     width:50%;
 }
-.sampleListWrapper {
+.sampleListWrapper,.packList {
     overflow:auto;
 }
 .tipNavItem:hover{
@@ -539,14 +557,24 @@ li{
 }
 
 .btn:disabled {
-    background-color: darkgray;
+    background-color: #616161;
     border-color: darkslateblue;
 }
+.packName,.packDescWrapper{
+     opacity: 1;
+     margin-left:5px;
+     margin-top:5px;
+      margin-bottom:5px;
+}
+.packViewBanner{
+    max-height: 250px;
+}
 .packHeaderWrapper{
-    background: white;
+    background: #616161;
     padding: 10px;
     border-radius: 5px;
      opacity: .8;
+     color: white
     /* border-style: solid; */
 /*    margin-top: 50%;*/
 }
@@ -576,6 +604,9 @@ min-height:100px;
 }
 
 }
+.packDescWrapper{
+    overflow:auto
+}
 .packWrapper:hover{
     cursor: pointer;
     background-color: #f6fff3;
@@ -599,6 +630,11 @@ min-height:100px;
 .inputGroup{
         margin-bottom: 5px;
 	
+}
+.packMetaDataWrapper{
+    background-color: #f6fff3;
+    border-radius: 5px;
+    padding:5px;
 }
 .inputWrapper{
     margin-right:5px;
@@ -657,5 +693,5 @@ min-height:100px;
 .inner {
     margin-left: auto;
     margin-right: auto; 
-    width: /*whatever width you want*/;
+   
 }

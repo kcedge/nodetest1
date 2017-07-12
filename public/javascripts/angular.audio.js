@@ -40,8 +40,9 @@ angular.module('ngAudio', [])
                 }        
 
                 /* iOS workaround: Call the play method directly in listener function */
-                audio.audio.play();
-                
+		if(audio.audio){
+		     audio.audio.play();
+                }
                 /* Set volume to $scope volume if it exists, or default to audio's current value */
                 audio.volume = $scope.volume || audio.volume;
                 audio.loop = $scope.loop;
@@ -145,8 +146,10 @@ angular.module('ngAudio', [])
         if (ngAudioGlobals.unlock) {
 
             window.addEventListener("click",function twiddle(){
-                audio.play();
-                audio.pause();
+                if(audio){
+		    audio.play();
+		    audio.pause();
+		}
                 window.removeEventListener("click",twiddle);
             });
 

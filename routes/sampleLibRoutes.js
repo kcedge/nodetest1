@@ -220,6 +220,39 @@ module.exports = function (router, passport) {
 	});
     });
     
+     router.put('/savePack',function(req,res){
+	
+	console.log("uploading pack");
+	var packname = req.body['packname'];
+	var packdesc = req.body['packdesc'];
+	var id = req.body['id'];
+	console.log("pack id:" + id);
+	console.log("pack name:" + packname);
+	console.log("pack desc:" + packdesc);
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('packCollection');
+		//collection.createIndex( { "packname": 1 }, { unique: true } )
+		collection.update({_id:ObjectId(id)},{$set:{packname: packname,packdesc: packdesc}}, {upsert: false}, function (err, db) {
+		    if (err) {
+			console.log('Unable to edit pack', err);
+			res.send('pack edit failed');
+		    }
+		    else {
+			res.send('pack edit successful');
+		    }
+		});
+	    }
+	});
+    });
+    
     router.post('/uploadSample', function (req, res) {
 	upload(req, res, function (err) {
 	    if (err) {

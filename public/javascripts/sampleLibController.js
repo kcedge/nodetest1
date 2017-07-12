@@ -20,6 +20,7 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 
 	$scope.packsFilter = "Top Packs";
 	$scope.packsFilterDuration = "Month";
+	$scope.activePack = {};
 	
 	isAuthenticated($http,false,function(username){
 	    if(username == 'kcedge'){
@@ -41,6 +42,33 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	   
 	    return jsonArray;
 	}
+	
+	$scope.savePack = function(pack){
+	    var req = {
+		method: 'PUT',
+		url: '/savePack',
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {id: pack._id,
+		       packname:pack.packname,
+		       packdesc:pack.packdesc
+		   }
+	    }
+	    $http(req).then(function success(response) {
+		$scope.submitMessage = "Success"
+		$scope.responseData = response.data;
+		$scope.packname = "";
+		
+		
+	    }, function failure(response) {
+		$scope.submitMessage = "Failure"
+		$scope.failureData = response.data;
+	    });
+	}
+	
+	
+	
 	setTimeout(function () {
 	    //your code here
 	   styleSize(); 
@@ -63,11 +91,30 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    var packWrapper = $(".packWrapper");
 	    var width = packWrapper.width();
 	    if(width){
-		$(".packWrapper").height(width);//SQUARE
+		var windowHeight = $(window).height();
+		$(".packWrapper").height(width/2);//SQUARE
+		$(".packDescWrapper").height((width-20)/2);
+		$(".packHeaderWrapper").height((width-20)/2);
+		$(".packViewBanner").height(width*2-100);
+		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() -50 - 50);
+		$(".packList").height($(window).height() -$(".filterBoxStyle").height() -50 - 20);
+		//$("#addContent").height = window.height();
+
+		 
 	    }
 	    else{
-		$(".packWrapper").height(150);
+		var windowHeight = $(window).height();
+		$(".packWrapper").height(150/2);
+		 $(".packDescWrapper").height(130/2);
+		 $(".packHeaderWrapper").height(130/2);
+		 $(".packViewBanner").height(200);
+		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() -50 - 50);
+
+		  $(".packList").height($(window).height() - $(".filterBoxStyle").height() - 50 - 50-20);
+		// $("#addContent").height = window.height();
 	    }
+	   
+	 
 	 
 	 
 	}
@@ -229,8 +276,12 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	     $http(req).then(function success(response) {
 		$scope.packs = response.data;
 		$scope.packs = $scope.parseJson($scope.packs);
+		
 		$scope.updatePacks(); // UPDATES LEFT NAV BAR WITH PACKS
-		$scope.$apply();
+		if($scope.packs){
+			$scope.activePack = $scope.packs[0];
+		    }
+		//$scope.$apply();
 		setStyle();
 		
 	    }, function failure(response) {
@@ -401,10 +452,18 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 		}
 	    }
 	}
+	$scope.packMouseOver = function(pack){
+	    pack.showDesc = true;
+	    pack.showTitle = false;
+	}
 	$scope.updatePacks = function () {
 
 	    for (var s = 0; s < $scope.packs.length; s++) {
-		
+		$scope.packs[s].showTitle = true;
+		$scope.packs[s].showDesc = false;
+		if(!$scope.packs[s].hasOwnProperty("desc")){
+		    $scope.packs[s].desc = "";
+		}
 	    }
 	}
 	$scope.copyAll = function () {
@@ -474,10 +533,14 @@ angular.module("myApp").controller('samplesCtrl', ['$scope', '$rootScope', '$htt
 	    var x = e;
 	    var progressPercent = (e.layerX-5)/width;
 	    sample.audio.progress = progressPercent;
-	    sample.audio.play();
+	    if (sample.audio) {
+		sample.audio.play();
+	    }
 	}
 	$scope.samplePlayClicked = function(sample){
-	    sample.audio.paused ? sample.audio.play() : sample.audio.pause();
+	    if(sample.audio){
+		sample.audio.paused ? sample.audio.play() : sample.audio.pause();
+	    }
 	}
 	
 	$scope.editSampleClicked = function(sample){
@@ -512,19 +575,72 @@ angular.module("myApp").controller('samplesCtrl', ['$scope', '$rootScope', '$htt
     }]);
 
 angular.module("myApp").controller('packsCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', '$localStorage', "ngAudio", function ($scope, $rootScope, $http, ProfileService, $localStorage,ngAudio ) {
-	$scope.setActivePack = function(pack){
+	$scope.setActivePack = function(pack,$index)
+	{
 	    for(var p = 0; p<$scope.$parent.packs.length;p++){
-		if(pack._id === $scope.$parent.packs[p]._id){
-		    $scope.$parent.packs[p].active =  !$scope.$parent.packs[p].active;
-		}
-		else{
-		    $scope.$parent.packs[p].active = false;
-		}
+		$scope.$parent.packs[p].active = false;
+	    }
+	    if($scope.$parent.packs[$index]){
+		$scope.$parent.activePack = $scope.$parent.packs[$index];
+		$scope.$parent.activePackIndex = $index;
+		$scope.$parent.packs[$index].active = true;
+	    }
+	  
+	    
+	   
+	}
+	$scope.editPackToggle = false;
+	$scope.editPackClicked = function(pack,$index){
+	    $scope.editPackToggle = !$scope.editPackToggle;
+	    $scope.editPackIndex = $index;
+	    if($scope.editPack){
+		 $scope.editPack.title = pack.packname;
+		 $scope.editPack.desc = pack.packdesc;
+	    }
+	    else{
+		$scope.editPack = {};
+		 $scope.editPack.title = pack.packname;
+		 $scope.editPack.desc = pack.packdesc;
+	    }
+	    
+	    
+	    
+	}
+	$scope.activePackTmpIndex = 0;
+	
+	$scope.setActivePackBanner=function(pack,$index){
+	    $scope.$parent.activePack =  $scope.$parent.packs[$index];
+	}
+	
+	$scope.packMouseOver = function(pack,$index){
+	    $scope.$parent.updatePacks();
+	    $scope.$parent.packs[$index].showTitle = false;
+	    $scope.$parent.packs[$index].showDesc = true;
+	    
+	    $scope.activePackTmpIndex = $scope.$parent.activePackIndex;
+	    $scope.setActivePackBanner(pack,$index);
+	}
+	$scope.packMouseLeave = function(pack,$index){
+	    $scope.$parent.updatePacks();
+	    $scope.$parent.packs[$index].showTitle = true;
+	    $scope.$parent.packs[$index].showDesc = false;
+	    
+
+	    $scope.setActivePackBanner(pack, $scope.activePackTmpIndex);
+	}
+	
+	$scope.editPackSave = function(){
+	    if($scope.$parent.packs[$scope.editPackIndex]){
+		
+		$scope.$parent.packs[$scope.editPackIndex].packname = $scope.editPack.title;
+		$scope.$parent.packs[$scope.editPackIndex].packdesc = $scope.editPack.desc;
+		$scope.$parent.savePack($scope.$parent.packs[$scope.editPackIndex]);
 	    }
 	}
 	
-	$scope.packClicked = function(pack){
-	    $scope.setActivePack(pack);
+	$scope.packClicked = function(pack,$index){
+	     $scope.activePackTmpIndex = $index;
+	    $scope.setActivePack(pack,$index);
 	    $scope.$parent.updateSamples(pack);
 	     
 	}
