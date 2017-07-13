@@ -12,7 +12,7 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	$scope.searchSample   = '';
 	$scope.packname = "";
 	
-	$scope.adminAuth = false;
+	$scope.adminAuth = true;
 	$scope.authenticated = false;
 	
 	$scope.packsFilterOptions = ["Top Packs","Most Recent Packs","Most Liked Packs","Most Used Packs"];
@@ -182,37 +182,39 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	
 	getFilters();
 	
-	
-	var uploader = $scope.uploader = new FileUploader({
+	$scope.uploadPackHeadClicked = function(){
+	    var test = $scope.adminAuth;
+	}
+	$scope.uploader = new FileUploader({
 	    url: '/uploadSample'
 	});
-	var packImageUploader = $scope.packImageUploader = new FileUploader({
+	$scope.packImageUploader = new FileUploader({
 	    url: '/uploadPackImage'
 	});
 	
 	// FILTERS
-	uploader.filters.push({	
+	$scope.uploader.filters.push({	
 	    name: 'customFilter',
 	    fn: function (item /*{File|FileLikeObject}*/, options) {
 		return this.queue.length < 1000;
 	    }
 	});
 	
-	uploader.filters.push({
+	$scope.uploader.filters.push({
 	    name: 'sizeFilter',
 	    fn: function (item /*{File|FileLikeObject}*/, options) {
 		console.log(item);
 		return item.size <= 10000000;
 	    }
 	});
-	packImageUploader.filters.push({	
+	$scope.packImageUploader.filters.push({	
 	    name: 'customFilter',
 	    fn: function (item /*{File|FileLikeObject}*/, options) {
 		return this.queue.length < 1000;
 	    }
 	});
 	
-	packImageUploader.filters.push({
+	$scope.packImageUploader.filters.push({
 	    name: 'sizeFilter',
 	    fn: function (item /*{File|FileLikeObject}*/, options) {
 		console.log(item);
@@ -290,21 +292,21 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    });
 	}
 	
-	uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+	$scope.uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
 	    $scope.fileErrorMessage = "";
 	    if(filter.name = 'sizeFilter'){
 		$scope.fileErrorMessage = "File too big. Upload file limit 10 MB";
 	    }
 	    console.info('onWhenAddingFileFailed', item, filter, options);
 	};
-	uploader.onAfterAddingFile = function (fileItem) {
+	$scope.uploader.onAfterAddingFile = function (fileItem) {
 	    $scope.fileErrorMessage = "";
 	    console.info('onAfterAddingFile', fileItem);
 	};
-	uploader.onAfterAddingAll = function (addedFileItems) {
+	$scope.uploader.onAfterAddingAll = function (addedFileItems) {
 	    console.info('onAfterAddingAll', addedFileItems);
 	};
-	uploader.onBeforeUploadItem = function (item) {
+	$scope.uploader.onBeforeUploadItem = function (item) {
 	    item.formData.push({bpm:item.bpm});
 	    item.formData.push({key:item.key});
 	    item.formData.push({tagJson:JSON.stringify(item.tags)});
@@ -314,23 +316,23 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    item.formData.push({points:0});
 	    console.info('onBeforeUploadItem', item);
 	};
-	uploader.onProgressItem = function (fileItem, progress) {
+	$scope.uploader.onProgressItem = function (fileItem, progress) {
 	    console.info('onProgressItem', fileItem, progress);
 	};
-	uploader.onProgressAll = function (progress) {
+	$scope.uploader.onProgressAll = function (progress) {
 	    console.info('onProgressAll', progress);
 	};
-	uploader.onSuccessItem = function (fileItem, response, status, headers) {
+	$scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
 	    console.info('onSuccessItem', fileItem, response, status, headers);
 	    
 	};
-	uploader.onErrorItem = function (fileItem, response, status, headers) {
+	$scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
 	    console.info('onErrorItem', fileItem, response, status, headers);
 	};
-	uploader.onCancelItem = function (fileItem, response, status, headers) {
+	$scope.uploader.onCancelItem = function (fileItem, response, status, headers) {
 	    console.info('onCancelItem', fileItem, response, status, headers);
 	};
-	uploader.onCompleteItem = function (fileItem, response, status, headers) {
+	$scope.uploader.onCompleteItem = function (fileItem, response, status, headers) {
 	    console.info('onCompleteItem', fileItem, response, status, headers);
 
 	    $scope.uploadedSamples.push(response);
@@ -343,26 +345,26 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    numberOfSamples++;
 
 	};
-	uploader.onCompleteAll = function () {
+	$scope.uploader.onCompleteAll = function () {
 	    uploadPack();
 	    console.info('onCompleteAll');
 	};
 	
-	packImageUploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+	$scope.packImageUploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
 	    $scope.fileErrorMessage = "";
 	    if(filter.name = 'sizeFilter'){
 		$scope.fileErrorMessage = "File too big. Upload file limit 10 MB";
 	    }
 	    console.info('onWhenAddingFileFailed', item, filter, options);
 	};
-	packImageUploader.onAfterAddingFile = function (fileItem) {
+	$scope.packImageUploader.onAfterAddingFile = function (fileItem) {
 	    $scope.fileErrorMessage = "";
 	    console.info('onAfterAddingFile', fileItem);
 	};
-	packImageUploader.onAfterAddingAll = function (addedFileItems) {
+	$scope.packImageUploader.onAfterAddingAll = function (addedFileItems) {
 	    console.info('onAfterAddingAll', addedFileItems);
 	};
-	packImageUploader.onBeforeUploadItem = function (item) {
+	$scope.packImageUploader.onBeforeUploadItem = function (item) {
 //	    item.formData.push({bpm:item.bpm});
 //	    item.formData.push({key:item.key});
 //	    item.formData.push({tagJson:JSON.stringify(item.tags)});
@@ -372,23 +374,23 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 //	    item.formData.push({points:0});
 	    console.info('onBeforeUploadItem', item);
 	};
-	packImageUploader.onProgressItem = function (fileItem, progress) {
+	$scope.packImageUploader.onProgressItem = function (fileItem, progress) {
 	    console.info('onProgressItem', fileItem, progress);
 	};
-	packImageUploader.onProgressAll = function (progress) {
+	$scope.packImageUploader.onProgressAll = function (progress) {
 	    console.info('onProgressAll', progress);
 	};
-	packImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
+	$scope.packImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
 	    console.info('onSuccessItem', fileItem, response, status, headers);
 	    
 	};
-	packImageUploader.onErrorItem = function (fileItem, response, status, headers) {
+	$scope.packImageUploader.onErrorItem = function (fileItem, response, status, headers) {
 	    console.info('onErrorItem', fileItem, response, status, headers);
 	};
-	packImageUploader.onCancelItem = function (fileItem, response, status, headers) {
+	$scope.packImageUploader.onCancelItem = function (fileItem, response, status, headers) {
 	    console.info('onCancelItem', fileItem, response, status, headers);
 	};
-	packImageUploader.onCompleteItem = function (fileItem, response, status, headers) {
+	$scope.packImageUploader.onCompleteItem = function (fileItem, response, status, headers) {
 	    console.info('onCompleteItem', fileItem, response, status, headers);
 
 	    var imagePath = response;
@@ -411,7 +413,7 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 //	    ProfileService.postBannerImage($scope.$storage.username,bannerImageJson)
 
 	};
-	packImageUploader.onCompleteAll = function () {
+	$scope.packImageUploader.onCompleteAll = function () {
 	   // uploadPackImage();
 	    console.info('onCompleteAll');
 	};
@@ -495,13 +497,13 @@ angular.module("myApp").controller('samplesCtrl', ['$scope', '$rootScope', '$htt
 	$scope.editToggle = false;
 	$scope.keyValues = ["C","C#/Db","D","D#/Eb","E","F","F#/Gb","G","G#/Ab","A","A#/Bb","B"];
 	$scope.typeValues = ["One Shot","Loop"];
-	$scope.adminAuth = false;
+	$scope.adminAuthSamples = false;
 	$scope.authenticated = false;
 	
 	//Second Parm is route to sign in
 	isAuthenticated($http,false,function(username){
 	    if(username == 'kcedge'){
-		$scope.adminAuth = true;
+		$scope.adminAuthSamples = true;
 		$scope.authenticated = true;
 	    }
 	    if(username != 0){

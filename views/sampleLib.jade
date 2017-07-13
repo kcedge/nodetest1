@@ -4,141 +4,143 @@ append body
 	div.row(ng-controller="bodySampleController" ).row
 		div(style='text-align:center')
 			+alert-i-warning("The Sample Library is a place to upload or download your favorite samples!","heart")
-		
-		div.packListWrapper.col-sm-3.col-md-3.col-lg-3.col-xs-3
-			.div.row(style="text-align:center;")
-							+alert-i-warning("The Sample Library is a place to upload or download your favorite samples!","heart")
-			packs-list#packList
-		div#packAndSampleWidget.col-xs-6.col-sm-6.col-lg-7.col-md-6
+		div.row
+			div.packListWrapper.col-sm-3.col-md-3.col-lg-3.col-xs-3
+				.div.row(style="text-align:center;")
+								+alert-i-warning("The Sample Library is a place to upload or download your favorite samples!","heart")
+				packs-list#packList
+			div#packAndSampleWidget.col-xs-6.col-sm-6.col-lg-7.col-md-6
 
-			div.filtersWrapper.row
-				.row.filterBoxStyle#stickyheaderPackFilters(ng-style="filtersBoxStyle" ng-show='true')
-							div.filterWrapper#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;")
-								//.label.label-default() Type:
-								div(style='display:inline-block')
-									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Type'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
-								//input.inputToggleClass(ng-model='theory_toggle'  type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
-								//.label.label-primary( ng-class='{active:theory_toggle}' ng-click='theory_toggle = !theory_toggle') Theory
-								//input.inputToggleClass(ng-model='mixing_toggle' type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
-								//.label.label-primary( ng-class='{active:mixing_toggle}'  ng-click='mixing_toggle = !mixing_toggle') Mixing
-								//input.inputToggleClass(ng-model='mastering_toggle' type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
-								//.label.label-primary( ng-class='{active:mastering_toggle}'  ng-click='mastering_toggle = !mastering_toggle') Mastering
-								//input.inputToggleClass(ng-model='sound_design_toggle'  type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
-								//.label.label-primary( ng-class='{active:sound_design_toggle}'  ng-click='sound_design_toggle = !sound_design_toggle') Sound Design
-								//input.inputToggleClass(ng-model='workflow_toggle' type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
-								//.label.label-primary( ng-class='{active:workflow_toggle}'  ng-click='workflow_toggle = !workflow_toggle') Work Flow
-								.label.label-primary(ng-click="addFilterToggle = !addFilterToggle" ng-show='isAdmin()') Add
-								.label.label-primary(ng-click="deleteFilterToggle = !deleteFilterToggle"  ng-show='isAdmin()') Delete
-							div.filterWrapper#tipGenreFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
-								//.label.label-default() Genre:
-								div(style='display:inline-block')
-									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Genre'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
-									
-							div.filterWrapper#tipDAWFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
-								
-								//+label-default("DAW:")
-								div(style='display:inline-block')
-									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'DAW'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
-									
-							div.filterWrapper#tipVSTFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
-								
-								//.label.label-default() VST:
-								div(style='display:inline-block')
-									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'VST'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
-			.packViewBanner.contentWrapper.row(ng-show="true" style='height: 300px;')
-					.div(ng-style="{'background-image': 'url(' + activePack.packImageJson[0].image + ')'}" style='background-size: cover;background-size: contain;height: 100%;')
-						//.div.profileImageWrapper.col-xs-2.col-sm-2.col-md-1.col-lg-1.thumbnail()
-							img(ng-src='{{profileInfo.profileImageJson[0].image}}' style='')
-						.div.activePackMetaData
-							.div.activePackNameWrapper.col-sm-12.col-md-6.col-lg-9.col-xs-12
-								h2.packName
-									span.packName {{activePack.packname}}
-						.div.activePackDesc
-							p.activePackDescWrapper.col-sm-12.col-md-6.col-lg.9.col-xs-12
-								span.packName {{activePack.packdesc}}
-			div.sampleListWrapper.row
-				samples-list(contentId = '1')
-		div#rightWidgetContainer.col-xs-3.col-sm-3.col-lg-2.col-md-3
-			.rightWidetWrapper
-						#header(style='display:inline-block')
-							#labelSort
-								.label.label-info Top Users
-							select#dropdownWrapper(style='float:left' ng-model='filterPeriodTopUsersDropDown')
-									option(ng-repeat='sortFilter in rightBarSortFiltersArray' ng-value='sortFilter')
-										span {{sortFilter}}
-						div.list-unstyled.row.hover(ng-repeat="user in topUsers | orderBy : 'totalpoints':true | limitTo:10" ng-show="user.userName")
-							.rightBarNavItem.row(ng-click="userNavBarClicked(user)" ng-mouseover='rightBarWidgetMouseOver(user)' ng-mouseleave='navBarHoverRightMouseLeave(user)')
-								.div.navBarTopDiv(ng-show='true'  style='')
-									.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
-										span#navTipTitle(){{user.userName}}
-										span#navTipTitle(style='float:right'){{user.totalpoints}}
-								.div.row.animated.navBarBottomRow(ng-show='true' style='height:125px;margin-top:-20px')
-									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
-										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.profileImageJson[0].image}}' style='min-height: 100px;margin-top:10px;padding:0px;')
-									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
-										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.bannerImageJson[0].image}}' style='max-height: 100px;margin-top:10px;padding:0px;')
-								.div.row.navBarBottomRowUserBioOverlap( ng-show='user.hoverRightActive')
-									div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='margin-left:-5px')
-										h4.nameWrapper(style='margin-bottom:5px;')
-											span(ng-bind-html='user.profileMetaDataJson.firstName  | to_trusted')
-											span(ng-bind-html='user.profileMetaDataJson.lastName  | to_trusted' style='margin-left:2px;')
-										h6(ng-bind-html='user.profileMetaDataJson.city  | to_trusted' style='margin-top:-3px;margin-left:2px;')
-										span(ng-bind-html='user.profileMetaDataJson.bio  | to_trusted')
-	div#addContent.row(style='overflow:auto')
-			.imageUploaderInputWrapper(style="margin-top:5px;").col-xs-6.col-sm-6.col-lg-6.col-md-6
-						.inputWrapper(ng-show='adminAuth')
-							h4 Upload a pack
-							input.form-control(type='text' ng-model='packname' placeholder="Enter pack name" ng-required)
-							h5 Upload Pack Image
-							input.form-control(type="file" nv-file-select uploader="packImageUploader")
-							#audioUploadButtonsDiv(ng-show="packImageUploader.queue.length > 0" style='margin-bottom:5px;')
-								button.btn.btn-danger.btn-xs(ng-click="packImageUploader.clearQueue()" ng-disabled="!packImageUploader.queue.length" )
-											span.glyphicon.glyphicon-trash 
-											&nbsp Remove all
-								button.btn.btn-warning.btn-xs(ng-click="packImageUploader.cancelAll()" ng-disabled="!packImageUploader.isUploading" style='margin-left:5px;')
-											span.glyphicon.glyphicon-ban-circle 
-											&nbsp Cancel
-								button.btn.btn-success.btn-xs(ng-click="packImageUploader.uploadAll()" ng-disabled="!packImageUploader.getNotUploadedItems().length" style='margin-left:5px;')
-											span.glyphicon.glyphicon-upload
-											&nbsp Upload Pack Image
-							.headerImageInput(style="font-size:small;color:#777777")
-								h5 Audio Uploader
-								span(style='float:right') {{fileErrorMessage}}
-						
-							input.inputClass.form-control(type="file" multiple nv-file-select uploader="uploader")
-							div.copyButtonWrapper.row
-								button.btn-default(ng-click='copyAll()') Copy All
-								button.btn-default(ng-click='copyKey()') Copy KEY
-								button.btn-default(ng-click='copyType()') Copy Type
-								button.btn-default(ng-click='copyTags()') Copy Tags
-							div(ng-repeat="item in uploader.queue")
-								{{item.file.name}}
-								
-								div#audioMetaData(class='row' style='margin-left:10px;width:100%')
-									div#bpmWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
-										span.small BPM
-										input.form-control(ng-model='item.bpm' type='number')
-									div#keyWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
-										span.small KEY
-										select.form-control(ng-model='item.key' ng-options="k as k for k in keyValues")
-									div#keyWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
-										span.small Type
-										select.form-control(ng-model='item.type' ng-options="t as t for t in typeValues")
-									div#tagInputWrapper(class='col-sm-5 col-md-5 col-lg-5 col-xs-5')
-										tags-input(ng-model='item.tags')
-											auto-complete(source='getTags($query)')
-									div#cancelButton(class='col-sm-1 col-md-1 col-lg-1 col-xs-1')
-										button.btn.btn-default.btn-xs(ng-click="item.remove()" style=";color:black;margin-left:5px;")
-											span.glyphicon.glyphicon-remove
-						.progress
-							.progress-bar(role="progressbar" ng-style="{width:uploader.progress + '%'}" style="width:0%;")
-						#audioUploadButtonsDiv(ng-show="uploader.queue.length > 0" style='margin-bottom:5px;')
-							button.btn.btn-danger.btn-xs(ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length" )
-											span.glyphicon.glyphicon-trash 
-											&nbsp Remove all
-							button.btn.btn-warning.btn-xs(ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading" style='margin-left:5px;')
-											span.glyphicon.glyphicon-ban-circle 
-											&nbsp Cancel
-							button.btn.btn-success.btn-xs(ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length || packname == ''" style='margin-left:5px;')
-											span.glyphicon.glyphicon-upload
-											&nbsp Upload 
+				div.filtersWrapper.row
+					.row.filterBoxStyle#stickyheaderPackFilters(ng-style="filtersBoxStyle" ng-show='true')
+								div.filterWrapper#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;")
+									//.label.label-default() Type:
+									div(style='display:inline-block')
+										.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Type'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+									//input.inputToggleClass(ng-model='theory_toggle'  type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
+									//.label.label-primary( ng-class='{active:theory_toggle}' ng-click='theory_toggle = !theory_toggle') Theory
+									//input.inputToggleClass(ng-model='mixing_toggle' type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
+									//.label.label-primary( ng-class='{active:mixing_toggle}'  ng-click='mixing_toggle = !mixing_toggle') Mixing
+									//input.inputToggleClass(ng-model='mastering_toggle' type="checkbox",data-toggle="toggle" name='masteringInputYes' id='masteringInputYes')
+									//.label.label-primary( ng-class='{active:mastering_toggle}'  ng-click='mastering_toggle = !mastering_toggle') Mastering
+									//input.inputToggleClass(ng-model='sound_design_toggle'  type="checkbox",data-toggle="toggle" name='soundDesignInputYes' id='soundDesignInputYes')
+									//.label.label-primary( ng-class='{active:sound_design_toggle}'  ng-click='sound_design_toggle = !sound_design_toggle') Sound Design
+									//input.inputToggleClass(ng-model='workflow_toggle' type="checkbox",data-toggle="toggle" name='workFlowInputYes' id='workFlowInputYes')
+									//.label.label-primary( ng-class='{active:workflow_toggle}'  ng-click='workflow_toggle = !workflow_toggle') Work Flow
+									.label.label-primary(ng-click="addFilterToggle = !addFilterToggle" ng-show='isAdmin()') Add
+									.label.label-primary(ng-click="deleteFilterToggle = !deleteFilterToggle"  ng-show='isAdmin()') Delete
+								div.filterWrapper#tipGenreFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
+									//.label.label-default() Genre:
+									div(style='display:inline-block')
+										.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Genre'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+
+								div.filterWrapper#tipDAWFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
+
+									//+label-default("DAW:")
+									div(style='display:inline-block')
+										.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'DAW'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+
+								div.filterWrapper#tipVSTFilterWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;display:inline-block;").btnWrapper
+
+									//.label.label-default() VST:
+									div(style='display:inline-block')
+										.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'VST'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+				.packViewBanner.contentWrapper.row(ng-show="true" style='height: 300px;')
+						.div(ng-style="{'background-image': 'url(' + activePack.packImageJson[0].image + ')'}" style='background-size: cover;background-size: contain;height: 100%;')
+							//.div.profileImageWrapper.col-xs-2.col-sm-2.col-md-1.col-lg-1.thumbnail()
+								img(ng-src='{{profileInfo.profileImageJson[0].image}}' style='')
+							.div.activePackMetaData
+								.div.activePackNameWrapper.col-sm-12.col-md-6.col-lg-9.col-xs-12
+									h2.packName
+										span.packName {{activePack.packname}}
+							.div.activePackDesc
+								p.activePackDescWrapper.col-sm-12.col-md-6.col-lg.9.col-xs-12
+									span.packName {{activePack.packdesc}}
+				div.sampleListWrapper.row
+					samples-list(contentId = '1')
+			div#rightWidgetContainer.col-xs-3.col-sm-3.col-lg-2.col-md-3
+				.rightWidetWrapper
+							#header(style='display:inline-block')
+								#labelSort
+									.label.label-info Top Users
+								select#dropdownWrapper(style='float:left' ng-model='filterPeriodTopUsersDropDown')
+										option(ng-repeat='sortFilter in rightBarSortFiltersArray' ng-value='sortFilter')
+											span {{sortFilter}}
+							div.list-unstyled.row.hover(ng-repeat="user in topUsers | orderBy : 'totalpoints':true | limitTo:10" ng-show="user.userName")
+								.rightBarNavItem.row(ng-click="userNavBarClicked(user)" ng-mouseover='rightBarWidgetMouseOver(user)' ng-mouseleave='navBarHoverRightMouseLeave(user)')
+									.div.navBarTopDiv(ng-show='true'  style='')
+										.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
+											span#navTipTitle(){{user.userName}}
+											span#navTipTitle(style='float:right'){{user.totalpoints}}
+									.div.row.animated.navBarBottomRow(ng-show='true' style='height:125px;margin-top:-20px')
+										div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
+											img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.profileImageJson[0].image}}' style='min-height: 100px;margin-top:10px;padding:0px;')
+										div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
+											img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.bannerImageJson[0].image}}' style='max-height: 100px;margin-top:10px;padding:0px;')
+									.div.row.navBarBottomRowUserBioOverlap( ng-show='user.hoverRightActive')
+										div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='margin-left:-5px')
+											h4.nameWrapper(style='margin-bottom:5px;')
+												span(ng-bind-html='user.profileMetaDataJson.firstName  | to_trusted')
+												span(ng-bind-html='user.profileMetaDataJson.lastName  | to_trusted' style='margin-left:2px;')
+											h6(ng-bind-html='user.profileMetaDataJson.city  | to_trusted' style='margin-top:-3px;margin-left:2px;')
+											span(ng-bind-html='user.profileMetaDataJson.bio  | to_trusted')
+		div.row
+			div#addContent(style='overflow:auto')
+				.imageUploaderInputWrapper(style="margin-top:5px;").col-xs-6.col-sm-6.col-lg-6.col-md-6
+							.inputWrapper(ng-show='adminAuth')
+								h4(ng-click='uploadPackHeadClicked()') Upload a pack
+								input.form-control(type='text' ng-model='packname' placeholder="Enter pack name" ng-required)
+								h5 Upload Pack Image
+								//div(ng-if='packImageUploader')
+								input.form-control(type="file" nv-file-select uploader="packImageUploader")
+								#audioUploadButtonsDiv(ng-show="packImageUploader.queue.length > 0" style='margin-bottom:5px;')
+									button.btn.btn-danger.btn-xs(ng-click="packImageUploader.clearQueue()" ng-disabled="!packImageUploader.queue.length" )
+												span.glyphicon.glyphicon-trash 
+												&nbsp Remove all
+									button.btn.btn-warning.btn-xs(ng-click="packImageUploader.cancelAll()" ng-disabled="!packImageUploader.isUploading" style='margin-left:5px;')
+												span.glyphicon.glyphicon-ban-circle 
+												&nbsp Cancel
+									button.btn.btn-success.btn-xs(ng-click="packImageUploader.uploadAll()" ng-disabled="!packImageUploader.getNotUploadedItems().length" style='margin-left:5px;')
+												span.glyphicon.glyphicon-upload
+												&nbsp Upload Pack Image
+								.headerImageInput(style="font-size:small;color:#777777")
+									h5 Audio Uploader
+									span(style='float:right') {{fileErrorMessage}}
+								//div(ng-if='uploader')
+								input.inputClass.form-control(type="file" multiple nv-file-select uploader="uploader")
+								div.copyButtonWrapper.row
+									button.btn-default(ng-click='copyAll()') Copy All
+									button.btn-default(ng-click='copyKey()') Copy KEY
+									button.btn-default(ng-click='copyType()') Copy Type
+									button.btn-default(ng-click='copyTags()') Copy Tags
+								div(ng-repeat="item in uploader.queue")
+									{{item.file.name}}
+
+									div#audioMetaData(class='row' style='margin-left:10px;width:100%')
+										div#bpmWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
+											span.small BPM
+											input.form-control(ng-model='item.bpm' type='number')
+										div#keyWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
+											span.small KEY
+											select.form-control(ng-model='item.key' ng-options="k as k for k in keyValues")
+										div#keyWrapper(class='col-sm-2 col-md-2 col-lg-2 col-xs-2')
+											span.small Type
+											select.form-control(ng-model='item.type' ng-options="t as t for t in typeValues")
+										div#tagInputWrapper(class='col-sm-5 col-md-5 col-lg-5 col-xs-5')
+											tags-input(ng-model='item.tags')
+												auto-complete(source='getTags($query)')
+										div#cancelButton(class='col-sm-1 col-md-1 col-lg-1 col-xs-1')
+											button.btn.btn-default.btn-xs(ng-click="item.remove()" style=";color:black;margin-left:5px;")
+												span.glyphicon.glyphicon-remove
+							.progress
+								.progress-bar(role="progressbar" ng-style="{width:uploader.progress + '%'}" style="width:0%;")
+							#audioUploadButtonsDiv(ng-show="uploader.queue.length > 0" style='margin-bottom:5px;')
+								button.btn.btn-danger.btn-xs(ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length" )
+												span.glyphicon.glyphicon-trash 
+												&nbsp Remove all
+								button.btn.btn-warning.btn-xs(ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading" style='margin-left:5px;')
+												span.glyphicon.glyphicon-ban-circle 
+												&nbsp Cancel
+								button.btn.btn-success.btn-xs(ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length || packname == ''" style='margin-left:5px;')
+												span.glyphicon.glyphicon-upload
+												&nbsp Upload 
