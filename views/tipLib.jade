@@ -118,11 +118,11 @@ append body
 									#pointsDiv(style="float:right;margin-left:5px;margin-right:-13px;")
 										+label-default("{{tip.tipPoints}}")
 									h3(style="float:right;margin-top:20px;margin-top:15px;")
-										button.btn.btn-default#dislikeButton(title="downvote tip" style="margin-right:5px;" ng-click="dislikeButtonClicked()")
+										button.btn.btn-default#dislikeButton(title="downvote tip" style="margin-right:5px;" ng-click="dislikeButtonClicked(tip)" ng-class="{active:tip.isDisliked}" )
 											span.glyphicon.glyphicon-arrow-down
-										button.btn.btn-default#likeButton(title="upvote tip" style="margin-right:5px;" ng-click="likeButtonClicked()")
+										button.btn.btn-default#likeButton(title="upvote tip" style="margin-right:5px;" ng-click="likeButtonClicked(tip)" ng-class="{active:tip.isLiked}" )
 											span.glyphicon.glyphicon-arrow-up
-										button.btn.btn-default#loveButton(title="save tip" ng-click="loveButtonClicked()")
+										button.btn.btn-default#loveButton(title="save tip" ng-click="loveButtonClicked(tip)" ng-class="{active:tip.isLoved}")
 											span.glyphicon.glyphicon-heart
 
 							#TipTitlePanel.panel.panel-default
@@ -139,7 +139,7 @@ append body
 												+label-primary("{{tipTag}}")
 										#submittedByDiv.small(style="padding-top:5px")
 											span Submitted By: 
-												a(href="/profile/{{submittedBy}}"){{submittedBy}}
+												a(href="/profile/{{tip.submittedBy}}"){{tip.submittedBy}}
 											time.small(style='margin-left:2px'){{submittedDate|date:"MM/dd/yyyy"}}
 							comment-list(content-id='1' ng-hide='addATip() ')
 						//+carousel("sample",["{image:"resources/images/b01930a6957f7a1ffc3536132b554bb2",caption:"blah"}"])

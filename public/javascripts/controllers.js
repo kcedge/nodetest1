@@ -872,7 +872,7 @@ angular.module("myApp").factory('TipData', function () {
 });
 
 
-angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootScope', '$http', '$localStorage', 'FileUploader', 'TipData', 'CommentsService','ProfileService', function ($scope, $rootScope, $http, $localStorage, FileUploader, TipData, CommentsService,ProfileService) {
+angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootScope', '$http', '$localStorage', 'FileUploader', 'TipData', 'CommentsService', 'ProfileService', function ($scope, $rootScope, $http, $localStorage, FileUploader, TipData, CommentsService, ProfileService) {
 
 
 	$scope.title = "HELLLOOO";
@@ -941,10 +941,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	}
 	window.onload = function () {
 	    // var currentTipId = $scope.currentTipId;
-	    
-	   if($scope.tipCounter === undefined){
-	       $scope.tipCounter=0;
-	   }
+
+	    if ($scope.tipCounter === undefined) {
+		$scope.tipCounter = 0;
+	    }
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		$scope.tipNavBarClicked($scope.tipArrayData[i]);
 	    }
@@ -975,19 +975,19 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 //		if (profileArrayData[i].hasOwnProperty("submittedTips")) {
 //		    profileArrayData[i].submittedTips = JSON.parse(submittedTips[i].submittedTips);
 //		}
-		
+
 	    }
 	    return profileArrayData;
 	}
-	$scope.userNavBarClicked = function(user){
+	$scope.userNavBarClicked = function (user) {
 	    $scope.userActive = user;
-	    window.location.href = '/profile/'+$scope.userActive.userName;
-	    
+	    window.location.href = '/profile/' + $scope.userActive.userName;
+
 	}
 	ProfileService.getTopUsers($scope.filterPeriodTopUsersDropDown)
 		.then(function (response) {
 		    $scope.topUsers = convertProfileDataToJson(response.data);
-		  
+
 		    //$scope.$apply();
 
 		    //$scope.parentobj.comments = response.data;
@@ -2027,7 +2027,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.tipArrayData = response.data;
 		$scope.tipArrayData.sort(compare);
 		convertTipDataToJson();
-
+		
+		$scope.profileDataFromMongo();
 		CommentsService.getComments().then(function (response) {
 		    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 
@@ -2081,6 +2082,44 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	}
 
 
+	$scope.updateTipDataWithLovedTipData = function () {
+	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		$scope.tipArrayData[i].isLoved = false;
+		for (var j = 0; j < $scope.lovedTipsArray.length; j++) {
+		    var tipId = $scope.tipArrayData[i]._id;
+		    var profileId = $scope.lovedTipsArray[j];
+		    if (tipId == profileId) {
+			$scope.tipArrayData[i].isLoved = true;
+		    }
+		}
+	    }
+	}
+	$scope.updateTipDataWithLikedTipData = function () {
+	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		$scope.tipArrayData[i].isLiked = false;
+		for (var j = 0; j < $scope.likedTipsArray.length; j++) {
+		    var tipId = $scope.tipArrayData[i]._id;
+		    var profileId = $scope.likedTipsArray[j];
+		    if (tipId == profileId) {
+			$scope.tipArrayData[i].isLiked = true;
+		    }
+		}
+	    }
+	}
+	$scope.updateTipDataWithDislikedTipData = function () {
+	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		$scope.tipArrayData[i].isDisliked = false;
+		for (var j = 0; j < $scope.dislikedTipsArray.length; j++) {
+		    var tipId = $scope.tipArrayData[i]._id;
+		    var profileId = $scope.dislikedTipsArray[j];
+		    if (tipId == profileId) {
+			$scope.tipArrayData[i].isDisliked = true;
+		    }
+		}
+	    }
+	}
+
+
 	$scope.profileDataFromMongo = function () {
 	    var username = $localStorage.username;
 	    var req = {
@@ -2094,14 +2133,24 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $http(req).then(function success(response) {
 		if (response.data.length > 0) {
 		    var responseData = response.data[0];
-		    if (responseData.hasOwnProperty('lovedTipsJson'))
+		    if (responseData.hasOwnProperty('lovedTipsJson')) {
 			$scope.lovedTipsArray = JSON.parse(responseData.lovedTipsJson);
-		    if (responseData.hasOwnProperty('likedTipsJson'))
+			$scope.updateTipDataWithLovedTipData();
+		    }
+		    if (responseData.hasOwnProperty('likedTipsJson')) {
 			$scope.likedTipsArray = JSON.parse(responseData.likedTipsJson);
-		    if (responseData.hasOwnProperty('dislikedTipsJson'))
+			$scope.updateTipDataWithLikedTipData();
+		    }
+		    if (responseData.hasOwnProperty('dislikedTipsJson')) {
 			$scope.dislikedTipsArray = JSON.parse(responseData.dislikedTipsJson);
-		    if (responseData.hasOwnProperty('submittedTips'))
+			$scope.updateTipDataWithDislikedTipData();
+		    }
+
+		    if (responseData.hasOwnProperty('submittedTips')) {
 			$scope.submittedTipsArray = JSON.parse(responseData.submittedTips);
+		    }
+
+
 		}
 	    }, function failure(response) {
 
@@ -2230,27 +2279,6 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		}
 
 
-		if ($scope.lovedTipsArray.indexOf($scope.currentTipId) != -1) {
-		    //Mark Loved Button
-		    $('#loveButton').addClass("active");
-		}
-		else {
-		    $('#loveButton').removeClass("active");
-		}
-		if ($scope.likedTipsArray.indexOf($scope.currentTipId) != -1) {
-		    //Mark Liked Button
-		    $('#likeButton').addClass("active");
-		}
-		else {
-		    $('#likeButton').removeClass("active");
-		}
-		if ($scope.dislikedTipsArray.indexOf($scope.currentTipId) != -1) {
-		    //Mark Disliked Button
-		    $('#dislikeButton').addClass("active");
-		}
-		else {
-		    $('#dislikeButton').removeClass("active");
-		}
 
 
 
@@ -2357,7 +2385,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.dislikedTipsArray = [];
 	$scope.submittedTipsArray = [];
 
-	$scope.loveButtonClicked = function () {
+	$scope.loveButtonClicked = function (tip) {
+	    $scope.tipClicked(tip);
 	    if (!$scope.isLoggedIn()) {
 		$scope.likedTipsArray = [];
 		$scope.lovedTipsArray = [];
@@ -2401,7 +2430,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.updateProfile();
 	    }
 	}
-	$scope.likeButtonClicked = function () {
+	$scope.likeButtonClicked = function (tip) {
+	     $scope.tipClicked(tip);
 	    if (!$scope.isLoggedIn()) {
 		$scope.likedTipsArray = [];
 		$scope.lovedTipsArray = [];
@@ -2445,7 +2475,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.updateProfile();
 	    }
 	}
-	$scope.dislikeButtonClicked = function () {
+	$scope.dislikeButtonClicked = function (tip) {
+	     $scope.tipClicked(tip);
 	    if (!$scope.isLoggedIn()) {
 		$scope.likedTipsArray = [];
 		$scope.lovedTipsArray = [];
@@ -3015,7 +3046,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	};
 
 	$scope.getTipsFromMongo();
-	$scope.profileDataFromMongo();
+	
 
     }]);
 
