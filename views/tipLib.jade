@@ -387,31 +387,31 @@ append body
 								.div.row(ng-show='tip.hoverRightActive')
 									div.col-xs-12.col-sm-12.col-md-12.col-lg-12
 										div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
-					.rightWidetWrapper#topUsersWidget
+					.rightWidetWrapper
 						#header(style='display:inline-block')
 							#labelSort
 								.label.label-info Top Users
-							#dropdownWrapper.dropdown(style="float:left")
-								span.label.label-default.dropdown-toggle#rightBarWidgetDropdown2(data-toggle='dropdown')
-									{{rightBarSortType2}}
-									span.glyphicon.glyphicon-menu-down
-								ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown2" display='')
-									li(ng-repeat='sortFilter in rightBarSortFiltersArray')
-										a(ng-click="navBarRightFilter2Click(sortFilter)"){{sortFilter}}
-						div.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : 'tipPoints':true | limitTo:10" ng-show="true")
-							.rightBarNavItem.row(ng-click="tipNavBarClicked(tip)" ng-mouseleave='navBarHoverRightMouseLeave(tip)')
-								.div.navBarTopDiv.row(ng-show='tip.hoverRightActive' ng-mouseover='rightBarWidgetMouseOver(tip)' style='')
+							select#dropdownWrapper(style='float:left' ng-model='filterPeriodTopUsersDropDown')
+									option(ng-repeat='sortFilter in rightBarSortFiltersArray' ng-value='sortFilter')
+										span {{sortFilter}}
+						div.list-unstyled.row.hover(ng-repeat="user in topUsers | orderBy : 'totalpoints':true | limitTo:10" ng-show="user.userName")
+							.rightBarNavItem.row(ng-click="userNavBarClicked(user)" ng-mouseover='rightBarWidgetMouseOver(user)' ng-mouseleave='navBarHoverRightMouseLeave(user)')
+								.div.navBarTopDiv(ng-show='true'  style='')
 									.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
-										span#navTipTitle(){{tip.tipTitle}}
-										span#navTipTitle(style='float:right'){{tip.tipPoints}}
-								.div.row(ng-show='true' style='height:125px;')
-									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px;height:125px')
-										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
-									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 1' style='padding:0px;height:125px')
-										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,1)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
-								.div.row(ng-show='tip.hoverRightActive')
-									div.col-xs-12.col-sm-12.col-md-12.col-lg-12
-										div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
+										span#navTipTitle(){{user.userName}}
+										span#navTipTitle(style='float:right'){{user.totalpoints}}
+								.div.row.animated.navBarBottomRow(ng-show='true' style='height:125px;margin-top:-20px')
+									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
+										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.profileImageJson[0].image}}' style='min-height: 100px;margin-top:10px;padding:0px;')
+									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
+										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.bannerImageJson[0].image}}' style='max-height: 100px;margin-top:10px;padding:0px;')
+								.div.row.navBarBottomRowUserBioOverlap( ng-show='user.hoverRightActive')
+									div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='margin-left:-5px')
+										h4.nameWrapper(style='margin-bottom:5px;')
+											span(ng-bind-html='user.profileMetaDataJson.firstName  | to_trusted')
+											span(ng-bind-html='user.profileMetaDataJson.lastName  | to_trusted' style='margin-left:2px;')
+										h6(ng-bind-html='user.profileMetaDataJson.city  | to_trusted' style='margin-top:-3px;margin-left:2px;')
+										span(ng-bind-html='user.profileMetaDataJson.bio  | to_trusted')
 					.rightWidetWrapper
 						#header(style='display:inline-block')
 							#labelSort

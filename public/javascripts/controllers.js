@@ -10,7 +10,7 @@ $(".facebookLink").children().first().attr("target", "_blank");
 $(".twitterLink").children().first().attr("target", "_blank");
 
 //angular.module("myApp", ["$scope","$http", "ngCookies"]);
-var runningProduction = true;
+var runningProduction = false;
 function isAuthenticated($http, routeToSignUp, callback) {
     var req = {
 	method: 'GET',
@@ -872,7 +872,7 @@ angular.module("myApp").factory('TipData', function () {
 });
 
 
-angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootScope', '$http', '$localStorage', 'FileUploader', 'TipData', 'CommentsService', function ($scope, $rootScope, $http, $localStorage, FileUploader, TipData, CommentsService) {
+angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootScope', '$http', '$localStorage', 'FileUploader', 'TipData', 'CommentsService','ProfileService', function ($scope, $rootScope, $http, $localStorage, FileUploader, TipData, CommentsService,ProfileService) {
 
 
 	$scope.title = "HELLLOOO";
@@ -952,6 +952,46 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.updateBodyArray();
 
 	};
+	var convertProfileDataToJson = function (profileArrayData) {
+	    for (var i = 0; i < profileArrayData.length; i++) {
+		if (profileArrayData[i].hasOwnProperty("bannerImageJson")) {
+		    profileArrayData[i].bannerImageJson = JSON.parse(profileArrayData[i].bannerImageJson);
+		}
+		if (profileArrayData[i].hasOwnProperty("dislikedTipsJson")) {
+		    profileArrayData[i].dislikedTipsJson = JSON.parse(profileArrayData[i].dislikedTipsJson);
+		}
+		if (profileArrayData[i].hasOwnProperty("likedTipsJson")) {
+		    profileArrayData[i].likedTipsJson = JSON.parse(profileArrayData[i].likedTipsJson);
+		}
+		if (profileArrayData[i].hasOwnProperty("lovedTipsJson")) {
+		    profileArrayData[i].lovedTipsJson = JSON.parse(profileArrayData[i].lovedTipsJson);
+		}
+		if (profileArrayData[i].hasOwnProperty("profileImageJson")) {
+		    profileArrayData[i].profileImageJson = JSON.parse(profileArrayData[i].profileImageJson);
+		}
+		if (profileArrayData[i].hasOwnProperty("profileMetaDataJson")) {
+		    profileArrayData[i].profileMetaDataJson = JSON.parse(profileArrayData[i].profileMetaDataJson);
+		}
+//		if (profileArrayData[i].hasOwnProperty("submittedTips")) {
+//		    profileArrayData[i].submittedTips = JSON.parse(submittedTips[i].submittedTips);
+//		}
+		
+	    }
+	    return profileArrayData;
+	}
+	$scope.userNavBarClicked = function(user){
+	    $scope.userActive = user;
+	    window.location.href = '/profile/'+$scope.userActive.userName;
+	    
+	}
+	ProfileService.getTopUsers($scope.filterPeriodTopUsersDropDown)
+		.then(function (response) {
+		    $scope.topUsers = convertProfileDataToJson(response.data);
+		  
+		    //$scope.$apply();
+
+		    //$scope.parentobj.comments = response.data;
+		});
 //	$("#tipsScrollWrapper").scroll(function () {
 //	    var scrollableScrollTop = $('#tipsScrollWrapper').scrollTop();
 //	    var totalOffset = 0;
