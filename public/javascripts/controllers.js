@@ -945,12 +945,11 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    if ($scope.tipCounter === undefined) {
 		$scope.tipCounter = 0;
 	    }
-	     $scope.updateBodyArray();
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		$scope.tipNavBarClicked($scope.tipArrayData[i]);
 	    }
 
-	   
+	    $scope.updateBodyArray();
 
 	};
 	var convertProfileDataToJson = function (profileArrayData) {
@@ -2028,8 +2027,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.tipArrayData = response.data;
 		$scope.tipArrayData.sort(compare);
 		convertTipDataToJson();
-		
 		$scope.profileDataFromMongo();
+		$scope.initilizeTipData();
 		CommentsService.getComments().then(function (response) {
 		    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 
@@ -2165,6 +2164,67 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	$scope.submittedDate = "";
 
+
+	$scope.initilizeTipData = function () {
+
+	    for (var ti = 0; ti < $scope.tipArrayData.length; ti++) {
+		if ($scope.tipArrayData[ti].hasOwnProperty("tipDescJson")) {
+
+		    for (var i = 1; i < $scope.tipArrayData[ti].tipDescJson.length; i++) {
+			var tipDescriptionLocal = $scope.tipArrayData[ti].tipDescJson[i].tipDescription;
+			var submittedByLocal = $scope.tipArrayData[ti].submittedBy;
+			var submittedDateLocal = $scope.tipArrayData[ti].dateSubmitted;
+			var imageFileNameLocal = "";
+
+			if ($scope.tipArrayData[ti].imageDataJson[i - 1]) {
+			    imageFileNameLocal = $scope.tipArrayData[ti].imageDataJson[i - 1].newFileName;
+			}
+
+			if (!runningProduction) {
+			    imageFileNameLocal = "resources/images/" + imageFileNameLocal;
+			}
+			var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/" && imageFileNameLocal != "resources/images/undefined");
+			if ($scope.tipArrayData[ti].hasOwnProperty("tipBodyArray")) {
+			    $scope.tipArrayData[ti].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			}
+			else {
+			    $scope.tipArrayData[ti].tipBodyArray = [];
+			    $scope.tipArrayData[ti].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			}
+
+			if (hasImage) {
+			    if ($scope.tipArrayData[ti].hasOwnProperty("tipImageArray")) {
+				$scope.tipArrayData[ti].tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal});
+			    }
+			    else {
+				$scope.tipArrayData[ti].tipImageArray = [];
+				$scope.tipArrayData[ti].tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal});
+			    }
+			}
+		    }
+		}
+		if (($scope.tipArrayData[ti].tipDescJson.length) <= $scope.tipArrayData[ti].imageDataJson.length) {
+		    var i = $scope.tipArrayData[ti].tipDescJson.length - 1;
+		    for (var i; i < $scope.tipArrayData[ti].imageDataJson.length; i++) {
+			var tipDescriptionLocal = "";
+			var submittedByLocal = $scope.tipArrayData[ti].submittedBy;
+			var submittedDateLocal = $scope.tipArrayData[ti].dateSubmitted;
+			var imageFileNameLocal = "";
+			if ($scope.tipArrayData[ti].imageDataJson[i]) {
+			    imageFileNameLocal = $scope.tipArrayData[ti].imageDataJson[i].newFileName;
+			}
+			if (!runningProduction) {
+			    imageFileNameLocal = "resources/images/" + imageFileNameLocal;
+			}
+			var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/");
+			if (hasImage) {
+			    $scope.tipArrayData[ti].tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			    $scope.tipArrayData[ti].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			}
+		    }
+		}
+	    }
+	}
 	//Update Tip arrays when the tip is changed
 	$scope.updateBodyArray = function () {
 	    if ($scope.tipArrayData.length) {
@@ -2432,7 +2492,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    }
 	}
 	$scope.likeButtonClicked = function (tip) {
-	     $scope.tipClicked(tip);
+	    $scope.tipClicked(tip);
 	    if (!$scope.isLoggedIn()) {
 		$scope.likedTipsArray = [];
 		$scope.lovedTipsArray = [];
@@ -2477,7 +2537,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    }
 	}
 	$scope.dislikeButtonClicked = function (tip) {
-	     $scope.tipClicked(tip);
+	    $scope.tipClicked(tip);
 	    if (!$scope.isLoggedIn()) {
 		$scope.likedTipsArray = [];
 		$scope.lovedTipsArray = [];
@@ -3047,7 +3107,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	};
 
 	$scope.getTipsFromMongo();
-	
+
 
     }]);
 
