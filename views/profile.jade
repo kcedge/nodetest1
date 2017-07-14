@@ -2,13 +2,17 @@ extends layout
 
 append body
 	.pageController(ng-controller="ProfileCtrl" style="margin:0 auto;margin-top:50px")
+		.div.userDetailsDiv
+			.div.username(style='margin-top: -34px;')
+				span.greeting Hey there	
+				a(href='/profile/{{username}}'){{username}}!
 		.profilePageWrapper.row(style='margin-top:50px')
 			.profilePageLeft.col-sm-0.col-md-1.col-lg-1.col-xs-0
 				div.container.col-xs-12.col-sm-12.col-lg-12.col-md-12
 							.div.headerbanner.row()
 								h3.left(style='margin-top:-1px')
 									//#greeting= greeting
-									a(href='/profile'){{username}}
+									a(href='/profile'){{currentProfileUsername}}
 							.div.editProfile.hover
 								a#editProfileLink(ng-click='editProfileToggle = !editProfileToggle')
 									span Edit Profile

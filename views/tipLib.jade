@@ -2,6 +2,10 @@ extends layout
 
 append body
 	.pageController(ng-controller="bodyTipHelperController" style = '' id='controllerDiv' )
+		.div.userDetailsDiv
+			.div.username
+				span.greeting Hey there	
+				a(href='/profile/{{username}}'){{username}}!
 		.div(style="text-align:center;margin-top:65px")
 			+alert-i-warning("Find your favorite music production tutorials and tips here!","heart")
 		#stickyalias

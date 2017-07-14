@@ -903,6 +903,18 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	//$scope.updateBodyArray();
 	//});
 
+
+	isAuthenticated($http,false,function(username){
+	    if(username == 'kcedge'){
+		$scope.adminAuth = true;
+		$scope.authenticated = true;
+	    }
+	    if(username != 0){
+		$scope.authenticated = true;
+		$scope.username = username;
+	    }    
+	});
+	
 	$scope.findInTipArray = function (id) {
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		if ($scope.tipArrayData[i]._id == id) {

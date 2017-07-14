@@ -13,7 +13,7 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 	$scope.currentTip = {} // Current Tip Previewing
 
 	var username = $("#userName").html();
-	$scope.username = username;
+	$scope.currentProfileUsername = username;
 	$scope.$storage = $localStorage;
 	$scope.$storage.userSignedIn = true;
 	$scope.$storage.username = username;
@@ -42,6 +42,18 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 	$scope.navBarRightFilterClick = function(sortFilter){
 	    
 	}
+	
+	isAuthenticated($http,false,function(username){
+	    if(username == 'kcedge'){
+		$scope.adminAuth = true;
+		$scope.authenticated = true;
+	    }
+	    if(username != 0){
+		$scope.authenticated = true;
+		$scope.username = username;
+	    }    
+	});
+	
 	
 	var setTotalPoints = function () {
 	    $scope.tipsSubmitted.forEach(function (tip) {
@@ -128,7 +140,7 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 		});
 	//ProfileService.getTopUsers($scope.filterPeriodTopUsersDropDown);
 
-	ProfileService.getProfileInfo($scope.username)
+	ProfileService.getProfileInfo($scope.currentProfileUsername)
 		.then(function (response) {
 		    $scope.profileInfo = response.data;
 		    if ($scope.profileInfo[0].bannerImageJson) {
@@ -154,7 +166,7 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 		});
 
 
-	ProfileService.getTipsSubmitted($scope.username)
+	ProfileService.getTipsSubmitted($scope.currentProfileUsername)
 		.then(function (response) {
 		    response.data = convertTipDataToJsonArray(response.data);
 		    $scope.tipsSubmitted = response.data;

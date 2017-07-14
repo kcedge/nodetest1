@@ -9,6 +9,7 @@ p {
 }
 #navbar_menu{
     border-radius: 5px;
+    z-index: 1;
 }
 .pageController{
 
@@ -68,10 +69,23 @@ a {
     border-color: #d1d2d2;
     z-index: 2;
 }
+.userDetailsDiv{
+    position: fixed;
+    width: 100%;
+    display:inline-block;
+    z-index: 2;
+}
+.alert{
+        z-index: -1;
+}
+.username{
+    float: right;
+    margin-top: -48px;
+    padding-right: 150px;
+}
 #navbar_menu{
     position:fixed;
     width:100%;
-    z-index: 1;
     top:0px;
 }
 .label-default{
@@ -489,9 +503,10 @@ float:left;width:22%;
    // opacity: 1;
 }
 #profileLoggedIn{
-    position: absolute;
+    position: fixed;
    top: 17px;
     right: 75px;
+    z-index: 2;
 }
 ol{
     display:inline-block;   
