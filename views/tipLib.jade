@@ -40,9 +40,10 @@ append body
 						.tipNavItem.row.animated(ng-click="tipNavBarClicked(tip)" ng-mouseover='navBarHoverMouseOver(tip)'  ng-mouseleave='navBarHoverMouseLeave(tip)')
 							.div.navBarTopDiv.row( ng-show='true' ng-class='{navBarTipActive:tip.isActive}' )
 								.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px;margin-top:-5px;')
-
-									span#navTipTitle.navTipTitle(){{tip.tipTitle}}
-									span#navTipPoints.navTipPoints(style='float:right'){{tip.tipPoints}}
+									.div.col-xs-11.col-sm-11.col-md-11.col-lg-11
+										span#navTipTitle.navTipTitle(){{tip.tipTitle}}
+									.div.col-xs-1.col-sm-1.col-md-1.col-lg-1
+										span.navTipPoints(style='float:right'){{tip.tipPoints}}
 							.div.row.animated.navBarBottomRow(id='navBarBottomRow{{tip._id}}' ng-show='true')
 								div.col-xs-6.col-sm-6.col-md-6.col-lg-6#imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px')
 									img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 105px;margin-top:10px;padding:0px;')
@@ -375,9 +376,11 @@ append body
 						div.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : 'tipPoints':true | limitTo:10" ng-show="true")
 							.rightBarNavItem.row(ng-click="tipNavBarClicked(tip)" ng-mouseleave='navBarHoverRightMouseLeave(tip)')
 								.div.navBarTopDiv.row(ng-show='tip.hoverRightActive' ng-mouseover='rightBarWidgetMouseOver(tip)' style='')
-									.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
-										span#navTipTitle.navTipTitle(){{tip.tipTitle}}
-										span.navTipPoints(style='float:right'){{tip.tipPoints}}
+									.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px;margin-top:-5px;')
+										.div.col-xs-11.col-sm-11.col-md-11.col-lg-11
+											span#navTipTitle.navTipTitle(){{tip.tipTitle}}
+										.div.col-xs-1.col-sm-1.col-md-1.col-lg-1
+											span.navTipPoints(style='float:right'){{tip.tipPoints}}
 								.div.row(ng-show='true' style='height:125px;')
 									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px;height:125px')
 										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 100px;margin-top:10px;padding:0px;')
@@ -395,10 +398,14 @@ append body
 										span {{sortFilter}}
 						div.list-unstyled.row.hover(ng-repeat="user in topUsers | orderBy : 'totalpoints':true | limitTo:10" ng-show="user.userName")
 							.rightBarNavItem.row(ng-click="userNavBarClicked(user)" ng-mouseover='rightBarWidgetMouseOver(user)' ng-mouseleave='navBarHoverRightMouseLeave(user)')
-								.div.navBarTopDiv(ng-show='true'  style='')
-									.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
-										span#navTipTitle(){{user.userName}}
-										span#navTipTitle(style='float:right'){{user.totalpoints}}
+								.div.navBarTopDiv.row(ng-show='true'  style='')
+									.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px;margin-top:-5px;')
+										.div.col-xs-11.col-sm-11.col-md-11.col-lg-11
+											span#navTipTitle(){{user.userName}}
+										.div.col-xs-1.col-sm-1.col-md-1.col-lg-1
+											span#navTipTitle(style='float:right'){{user.totalpoints}}
+										
+										
 								.div.row.animated.navBarBottomRow(ng-show='true' style='height:125px;margin-top:-20px')
 									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
 										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.profileImageJson[0].image}}' style='min-height: 100px;margin-top:10px;padding:0px;')
