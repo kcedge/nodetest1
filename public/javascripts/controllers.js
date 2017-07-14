@@ -945,11 +945,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    if ($scope.tipCounter === undefined) {
 		$scope.tipCounter = 0;
 	    }
+	     $scope.updateBodyArray();
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		$scope.tipNavBarClicked($scope.tipArrayData[i]);
 	    }
 
-	    $scope.updateBodyArray();
+	   
 
 	};
 	var convertProfileDataToJson = function (profileArrayData) {
