@@ -132,11 +132,10 @@ append body
 										.col-xs-10.col-sm-10.col-md-10.col-lg-10.imgDiv(ng-if="tipPart.hasImage" style='margin-left:5%')
 											img(ng-show="tipPart.hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
 									div#TagsAndSubmittedBy(style="text-indent: 0px;padding-bottom:0px;padding-top:10px;")
-										#tipTagsDiv(ng-repeat='tipTag in tipTagsArray track by $index' style='display:inline-block;')
-											span(ng-if='($index==0)' style='float:left')
-												+label-info("Filters:")
-											span(style='float:left')
-												+label-primary("{{tipTag}}")
+										#tipTagsDiv(ng-repeat='tipTag in tip.filtersJson track by $index' style='display:inline-block;')
+											
+											span(style='float:left' ng-show='tipTag.toggle')
+												+label-primary("{{tipTag.name}}")
 										#submittedByDiv.small(style="padding-top:5px")
 											span Submitted By: 
 												a(href="/profile/{{tip.submittedBy}}"){{tip.submittedBy}}
