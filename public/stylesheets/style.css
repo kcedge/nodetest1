@@ -81,7 +81,7 @@ a {
 .username{
     float: right;
     margin-top: -48px;
-    padding-right: 150px;
+   margin-right: 150px;
 }
 #navbar_menu{
     position:fixed;
