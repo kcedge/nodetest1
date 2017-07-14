@@ -39,10 +39,10 @@ append body
 					navBarItem.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse" ng-show="showItem(tip)")
 						.tipNavItem.row.animated(ng-click="tipNavBarClicked(tip)" ng-mouseover='navBarHoverMouseOver(tip)'  ng-mouseleave='navBarHoverMouseLeave(tip)')
 							.div.navBarTopDiv.row( ng-show='true' ng-class='{navBarTipActive:tip.isActive}' )
-								.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
+								.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px;margin-top:-5px;')
 
-									span#navTipTitle(){{tip.tipTitle}}
-									span#navTipTitle(style='float:right'){{tip.tipPoints}}
+									span#navTipTitle.navTipTitle(){{tip.tipTitle}}
+									span#navTipPoints.navTipPoints(style='float:right'){{tip.tipPoints}}
 							.div.row.animated.navBarBottomRow(id='navBarBottomRow{{tip._id}}' ng-show='true')
 								div.col-xs-6.col-sm-6.col-md-6.col-lg-6#imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px')
 									img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 105px;margin-top:10px;padding:0px;')
@@ -376,8 +376,8 @@ append body
 							.rightBarNavItem.row(ng-click="tipNavBarClicked(tip)" ng-mouseleave='navBarHoverRightMouseLeave(tip)')
 								.div.navBarTopDiv.row(ng-show='tip.hoverRightActive' ng-mouseover='rightBarWidgetMouseOver(tip)' style='')
 									.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
-										span#navTipTitle(){{tip.tipTitle}}
-										span#navTipTitle(style='float:right'){{tip.tipPoints}}
+										span#navTipTitle.navTipTitle(){{tip.tipTitle}}
+										span.navTipPoints(style='float:right'){{tip.tipPoints}}
 								.div.row(ng-show='true' style='height:125px;')
 									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='tip.imageDataJson.length > 0' style='padding:0px;height:125px')
 										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,0)}}' style='max-height: 100px;margin-top:10px;padding:0px;')

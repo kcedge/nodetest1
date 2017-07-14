@@ -151,6 +151,10 @@ float:left;width:22%;
 #tipTypeFilterWrapper{
     border-left-style: solid;
 }
+.navBarTopDiv{
+ 
+    font-size:large;
+}
 .minimize{
 
     height: 15px;
