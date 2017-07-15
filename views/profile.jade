@@ -135,9 +135,9 @@ append body
 			.profilePageCenter.col-sm-9.col-md-9.col-lg-9.col-xl-9
 				.profileNotify(ng-show="!isLoggedIn()")
 				.profilePageBanner.contentWrapper(ng-show="isLoggedIn()" style='height: 300px;')
-					.div(ng-style="{'background-image': 'url(' + profileInfo.bannerImageJson[0].image + ')'}" style='background-size: cover;background-size: contain;height: 100%;')
-						.div.profileImageWrapper.col-xs-2.col-sm-2.col-md-1.col-lg-1.thumbnail()
-							img(ng-src='{{profileInfo.profileImageJson[0].image}}' style='')
+					.div.row(ng-style="{'background-image': 'url(' + profileInfo.bannerImageJson[0].image + ')'}" style='background-size: cover;background-size: contain;height: 100%;')
+						.div.profileImageWrapper.col-xs-2.col-sm-2.col-md-2.col-lg-2.thumbnail()
+							img(ng-src='{{profileInfo.profileImageJson[0].image}}' style='max-height: 220px;min-height:150px;width:95%;')
 				div.profileEditView(ng-show='editProfileToggle')
 					hr
 					div#editProfileForm.formInputWrapper
