@@ -203,15 +203,15 @@ append body
 										//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
 										div.row.table-striped.table-hover.tipTable
 											div.row.tableHeader(ng-show='lovedTipsData.length > 0')
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Tags
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Points
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Submitted By
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Date Submitted
 												//th(width="20%") Tags
 												//th(width="20%") Points
@@ -220,43 +220,43 @@ append body
 												//th
 											div.tableBody(style='max-height:250px;overflow:auto;')
 												div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in lovedTipsData' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a {{tip.tipTitle}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
 														span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
 															//+label-primary("{{tipFilter.name}}")
 															label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a(href='/tipLib/{{tip._id}}')
 															span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
 												div.row(ng-show='lovedTipsData.length == 0' style='font-style:italic;margin-top:10px')
 													span(style='margin-left:5px') No Favoirte Tips
 											hr
 											div.row.tableFooter
-												div.col-md-2.col-lg-2.col-xl-2 
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2 
 													span Total:
-												div.col-md-2.col-lg-2.col-xl-2
-												div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 								+tab("Submitted")
 									//h1 My Tips
 									div.tipTableWrapper
 										//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
 										div.row.table-striped.table-hover.tipTable
 											div.row.tableHeader(ng-show='tipsSubmitted.length > 0')
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Tags
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Points
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Submitted By
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Date Submitted
 												//th(width="20%") Tags
 												//th(width="20%") Points
@@ -265,17 +265,17 @@ append body
 												//th
 											div.tableBody(style='max-height:250px;overflow:auto;')
 												div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in tipsSubmitted' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a {{tip.tipTitle}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
 														span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
 															//+label-primary("{{tipFilter.name}}")
 															label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a(href='/tipLib/{{tip._id}}')
 															span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
 											
@@ -283,11 +283,11 @@ append body
 													span(style='margin-left:5px') No Tips Submitted
 											hr
 											div.row.tableFooter
-												div.col-md-2.col-lg-2.col-xl-2 
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2 
 													span Total:
-												div.col-md-2.col-lg-2.col-xl-2
-												div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 											
 
 								+tab("Top")
@@ -296,15 +296,15 @@ append body
 										//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
 										div.row.table-striped.table-hover.tipTable
 											div.row.tableHeader
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Tags
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Points
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Submitted By
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Date Submitted
 												//th(width="20%") Tags
 												//th(width="20%") Points
@@ -313,41 +313,41 @@ append body
 												//th
 											div.tableBody(style='max-height:250px;overflow:auto;')
 												div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in topTips' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a {{tip.tipTitle}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
 														span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
 															//+label-primary("{{tipFilter.name}}")
 															label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a(href='/tipLib/{{tip._id}}')
 															span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
 											hr
 											div.row.tableFooter
-												div.col-md-2.col-lg-2.col-xl-2 
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2 
 													span Total:
-												div.col-md-2.col-lg-2.col-xl-2
-												div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
-												div.col-md-2.col-lg-2.col-xl-2			
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2			
 								+tab("Recent")
 									//h1 My Tips
 									div.tipTableWrapper
 										//+table(["#","First Name","Last Name","Username"],[["1","Mark","Otto","@mdo"],["2","Jacob","Thornton","@fat"],["3","Larry","the Bird","@twitter"]])
 										div.row.table-striped.table-hover.tipTable
 											div.row.tableHeader
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Tags
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Points
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Submitted By
-												div.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
 													h5.display-3 Date Submitted
 												//th(width="20%") Tags
 												//th(width="20%") Points
@@ -356,26 +356,26 @@ append body
 												//th
 											div.tableBody(style='max-height:250px;overflow:auto;')
 												div.row.hoverButton(style='max-height:50px;overflow:auto;' ng-repeat='tip in recentTips' ng-click = 'updateTip(tip)' ng-class-odd="'odd'" ng-class-even="'even'")
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a {{tip.tipTitle}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell(style='height:50px;overflow:auto;')
 														span(ng-repeat="tipFilter in tip.filtersJson" ng-if='tipFilter.toggle')
 															//+label-primary("{{tipFilter.name}}")
 															label.label-primary(style='margin-right:3px;') {{tipFilter.name}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.tipPoints}}
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a(href='/profile/{{tip.submittedBy}}' title="View Profile" data-toggle="tooltip" data-placement="top" tooltip){{tip.submittedBy}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
-													div.col-md-2.col-lg-2.col-xl-2.tip-table-cell
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell {{tip.dateSubmitted|date:"MM/dd/yyyy"}}
+													div.col-sm-2.col-md-2.col-lg-2.col-xl-2.tip-table-cell
 														a(href='/tipLib/{{tip._id}}')
 															span.glyphicon.glyphicon-open(title="Open in Tip Library" data-toggle="tooltip" data-placement="top" tooltip)
 											hr
 											div.row.tableFooter
-												div.col-md-2.col-lg-2.col-xl-2 
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2 
 													span Total:
-												div.col-md-2.col-lg-2.col-xl-2
-												div.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
-												div.col-md-2.col-lg-2.col-xl-2		
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2 {{totalpoints}}
+												div.col-sm-2.col-md-2.col-lg-2.col-xl-2		
 
 
 

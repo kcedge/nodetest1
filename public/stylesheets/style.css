@@ -311,6 +311,7 @@ float:left;width:22%;
     color: white;
     text-align: left;
     font-size: small;
+    min-height: 100px;
 }
 .imgNavWrapper{
     margin-top:-35px
@@ -561,6 +562,9 @@ li{
     text-align: center;
     margin-bottom:5px;
     overflow-wrap: break-word;
+}
+#navTipTitle{
+    opacity: 1;
 }
 #tipWrapper{
     transition: all 1s ease-in-out;

@@ -404,8 +404,10 @@ append body
 							.rightBarNavItem.row(ng-click="userNavBarClicked(user)" ng-mouseover='rightBarWidgetMouseOver(user)' ng-mouseleave='navBarHoverRightMouseLeave(user)')
 								.div.navBarTopDiv.row(ng-show='true'  style='')
 									.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px;margin-top:-5px;')
-										.div.col-xs-11.col-sm-11.col-md-11.col-lg-11
-											span#navTipTitle(){{user.userName}}
+										.div.col-xs-4.col-sm-4.col-md-4.col-lg-4
+											span#navTipTitle(style='font-style: italic;background-color: white;padding: 5px;border-radius: 5px;opacity: 1;'){{user.userName}}
+										.div.col-xs-4.col-sm-4.col-md-4.col-lg-4
+										.div.col-xs-1.col-sm-1.col-md-2.col-lg-1
 										.div.col-xs-1.col-sm-1.col-md-1.col-lg-1
 											span#navTipTitle(style='float:right'){{user.totalpoints}}
 										
