@@ -837,7 +837,7 @@ angular.module("myApp").controller('bodyMelodyHelperController', ['$scope', '$ht
 			    maxWidth: 350,
 			    itemWidth: 120
 			},
-			backgroundColor: "#f1f1f1",
+			backgroundColor: "white",
 			data: [
 			    {
 				type: "pie",

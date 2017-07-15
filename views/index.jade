@@ -1,7 +1,7 @@
 extends layout
 
 append body
-	.container(ng-controller="bodyMelodyHelperController" style="margin:0 auto;width:90%;max-width:966px;margin-top:50px")
+	.container(ng-controller="bodyMelodyHelperController" style="margin:0 auto;width:90%;max-width:966px;margin-top:50px;height: 1000px;")
 		.titleBannerDiv(style="text-align:center")
 			h1
 				#titleName= title
@@ -71,5 +71,6 @@ append body
 						+btn("7th")
 					#btnMajor.keyButton(ng-click="Chord9thClicked()")
 						+btn("9th")
+			hr
 			#canvasDiv(ng-click="canvasClick()")
 				//canvas#noteCircleCanvas	
