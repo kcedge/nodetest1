@@ -2,6 +2,10 @@ extends layout
 
 append body
 	div.row(ng-controller="bodySampleController" ).row
+		.div.userDetailsDiv
+			.div.username(style='margin-top: -34px;')
+				span.greeting Hey there	
+				a(href='/profile/{{username}}'){{username}}!
 		div(style='text-align:center')
 			+alert-i-warning("The Sample Library is a place to upload or download your favorite samples!","heart")
 		div.row

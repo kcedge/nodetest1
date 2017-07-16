@@ -80,6 +80,14 @@ a {
     width: 100%;
     display:inline-block;
     z-index: 2;
+        TOP: 50PX;
+}
+.userDetailsDivTipLib{
+    position: fixed;
+    width: 100%;
+    display:inline-block;
+    z-index: 2;
+        TOP: 65PX;
 }
 .alert{
     z-index: -1;
