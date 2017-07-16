@@ -1,7 +1,7 @@
 body {
-  background-color: #f1f1f1;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-   
+    background-color: #f1f1f1;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
 }
 p {
     margin: 0;
@@ -17,6 +17,12 @@ p {
 ::-webkit-scrollbar { 
     display: none; 
 }
+.navDescriptionWrapper{
+    margin-left: 10px;
+    padding-right: 10px;
+    margin-top: 7px;
+    text-align: left;
+}
 .formInputWrapper{
     background-color: white;
     /* padding: 15px; */
@@ -30,12 +36,12 @@ p {
 
 }
 a {
-  color: #00B7FF;
+    color: #00B7FF;
 }
 
 #keyButtonWrapper{
-  
- 
+
+
 }
 .left{
     float:left;
@@ -49,10 +55,10 @@ a {
     margin-left: -10px;
 }
 .keyButton{
-  display: inline-block;
-  margin-top: 5px;
-  
-  
+    display: inline-block;
+    margin-top: 5px;
+
+
 }
 .container{
     margin-left: 5px;
@@ -76,12 +82,12 @@ a {
     z-index: 2;
 }
 .alert{
-        z-index: -1;
+    z-index: -1;
 }
 .username{
     float: right;
     margin-top: -48px;
-   margin-right: 150px;
+    margin-right: 150px;
 }
 #navbar_menu{
     position:fixed;
@@ -93,13 +99,13 @@ a {
     background-color: #8a8a8a;
 }
 .genereInputWrapper{
-float:left;width:26%;margin-left:2%;margin-bottom:5px;
+    float:left;width:26%;margin-left:2%;margin-bottom:5px;
 }
 .theoryInputWrapper{
-float:left;width:25%;
+    float:left;width:25%;
 }
 .vstInputWrapper{
-float:left;width:22%;
+    float:left;width:22%;
 }
 .dawInputWrapper{
     float:left;width:25%;
@@ -109,17 +115,17 @@ float:left;width:22%;
     margin: 0 auto;
     width:40%;
     min-width: 150px;
-   
+
 }
 #signInDetails{
-    
+
 }
 #btnSignInSubmit{
     float:right;
 }
 #signInLinkWrapper{
-        font-size: smaller;
-	margin-top: 15px;
+    font-size: smaller;
+    margin-top: 15px;
 }
 
 #navBarSortBtn{
@@ -134,16 +140,16 @@ float:left;width:22%;
 }
 #tipsScrollWrapper{
     overflow:auto;
-    
+
 }
 .tipDescription{
     white-space:pre-line;
-     text-indent: 50px;
+    text-indent: 50px;
 }
 .tipDescInput{
     width:100%;
     margin-bottom:10px
-    
+
 } 
 
 #submittedByDiv{
@@ -166,7 +172,7 @@ float:left;width:22%;
     border-left-style: solid;
 }
 .navBarTopDiv{
- 
+
     font-size:large;
 }
 .minimize{
@@ -197,7 +203,7 @@ float:left;width:22%;
 //    cursor: pointer;
 //} 
 .btn-primary{
-   
+
     color: #383838;
     background-color: #ececec;
     border-style: groove;
@@ -239,21 +245,21 @@ float:left;width:22%;
     color: #383838;
     padding-right: 3px;
     padding-left: 3px;
-        font-size: smaller;
+    font-size: smaller;
 }
 .label-primary:hover {
     cursor:pointer;
-    
+
 }
 .label-default:hover {
     cursor:pointer;
-    
+
 }
 .inputToggleClass{
-      cursor:pointer;
+    cursor:pointer;
 }
 .hoverButton:hover{
-     cursor:pointer;
+    cursor:pointer;
 }
 .panel-body{
     background-color:  white;
@@ -292,29 +298,35 @@ float:left;width:22%;
 }
 
 .navBarBottomRowOverlap{
-    background-color: #777;
-    position: relative;
-    top: -126px;
-    opacity: .8;
-    max-height: 94px;
-    color: white;
-    text-align: center;
-    font-size: small;
-       
-}
-.navBarBottomRowUserBioOverlap{
-    background-color: #777;
+    background-color: rgba(119, 119, 119,.8);
     position: relative;
     top: -130px;
-    opacity: .8;
-   // max-height: 94px;
+    color: white;
+    text-align: left;
+    font-size: small;
+    min-height: 100px;
+    text-align: center;
+    font-size: 14px;
+
+}
+.userNameLabel{
+    font-style: italic;
+    background-color: white;
+    padding: 5px;
+    border-radius: 5px;
+    opacity: 1;
+}
+.navBarBottomRowUserBioOverlap{
+    background-color: rgba(119, 119, 119,.8);
+    position: relative;
+    top: -110px;
     color: white;
     text-align: left;
     font-size: small;
     min-height: 100px;
 }
 .userTotalPoints{
-       font-weight: bold;
+    font-weight: bold;
     font-style: italic;
     background: white;
     padding: 4px;
@@ -337,9 +349,9 @@ float:left;width:22%;
     color:#565656;
     padding:5px;
     border-radius: 5px;
-       
-	//opacity: .8;
-	    background: rgba(243, 243, 243,.8);
+
+    //opacity: .8;
+    background: rgba(243, 243, 243,.8);
 }
 #navBarWrapper{  
     background-color: white;
@@ -358,12 +370,12 @@ float:left;width:22%;
     border-width: thin;
 }
 #rightWidgetContainer{
-    
- 
+
+
 }
 
 .navBarTipActive{
-        background-color: white;
+    background-color: white;
     border-top-style: solid;
 }
 .rightBarNavItem{
@@ -397,7 +409,7 @@ float:left;width:22%;
     background:#616161;
     border-radius: 5px;
     padding:5px;
-        margin-top: 5px;
+    margin-top: 5px;
     margin-left: 5px;
     color: white;
     opacity: .8;
@@ -406,7 +418,7 @@ float:left;width:22%;
     background:#616161;
     border-radius: 5px;
     padding:5px;
-        margin-top: 5px;
+    margin-top: 5px;
     margin-left: 5px;
     color: white;
     opacity: .8;
@@ -423,7 +435,7 @@ float:left;width:22%;
 }
 
 #tipTitle{
-    
+
     display: inline-block;
     width: 100%;
     color: #565656;
@@ -438,7 +450,7 @@ float:left;width:22%;
     border-bottom-right-radius: 0px;
     padding-left: 10px;
     padding-right: 10px;
-        
+
 }
 .textAreaTip#textAreaTip{
     resize:vertical ;
@@ -504,7 +516,7 @@ float:left;width:22%;
     animation:0.5s flipInX ease;
     //transition: 0.5s linear opacity;
     //opacity: 0;
-    
+
 }
 
 
@@ -515,18 +527,18 @@ float:left;width:22%;
 .animate-show.ng-hide-add {
     animation:0.5s flipOutX ease-in-out;
     //transition: 0.5s linear opacity;
-   // opacity: 1;
+    // opacity: 1;
 }
 #profileLoggedIn{
     position: fixed;
-   top: 17px;
+    top: 17px;
     right: 75px;
     z-index: 2;
 }
 ol{
     display:inline-block;   
-     overflow: hidden;
-    
+    overflow: hidden;
+
 }
 div > ul{
     margin-top: -40px;
@@ -541,15 +553,15 @@ li{
 .container{
     background: white;
     margin: 5px;
-  
-   // padding:5px;
+
+    // padding:5px;
     border-radius: 5px;
 }
 .ng-hide-add-active {
     opacity: 0;
 }
 .tipMetaClick{
-     width:100%;
+    width:100%;
     border-radius:5px;
     border-bottom: lightgray;
     border-bottom-style: solid;
@@ -558,7 +570,7 @@ li{
 }
 .tipMetaClick.active, .tipMetaClick.focus, .tipMetaClick:active, .tipMetaClick:focus, .tipMetaClick:hover{
     cursor: pointer;
-   
+
 }
 .profileImageWrapper{
     margin:10px;
@@ -599,47 +611,48 @@ li{
     border-color: darkslateblue;
 }
 .packName,.packDescWrapper{
-     opacity: 1;
-     margin-left:5px;
-     margin-top:5px;
-      margin-bottom:5px;
+    opacity: 1;
+    margin-left:5px;
+    margin-top:5px;
+    margin-bottom:5px;
 }
 .packViewBanner{
     max-height: 250px;
 }
 .packHeaderWrapper{
-    background: #616161;
+    background: rgba(97, 97, 97,.8);
     padding: 10px;
     border-radius: 5px;
-     opacity: .8;
-     color: white
-    /* border-style: solid; */
-/*    margin-top: 50%;*/
+    /* opacity: .8; */
+    color: white
+	/* border-style: solid; */
+	/* margin-top: 50%;*/;
 }
 .packWrapper{
-margin-bottom:5px;
-padding:5px;
-border-radius: 3px;
-min-height:100px;
+    margin-bottom:5px;
+    padding:5px;
+    border-radius: 3px;
+    min-height:100px;
+    height: 10%;
 
-.form-control-minus-width{
-    display: block;
-   width: 100%;
-    height: 34px;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    color: #555;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-}
+    .form-control-minus-width{
+	display: block;
+	width: 100%;
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #555;
+	background-color: #fff;
+	background-image: none;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    }
 
 }
 .packDescWrapper{
@@ -666,8 +679,8 @@ min-height:100px;
     cursor:pointer;
 }
 .inputGroup{
-        margin-bottom: 5px;
-	
+    margin-bottom: 5px;
+
 }
 .packMetaDataWrapper{
     background-color: #f6fff3;
@@ -679,7 +692,7 @@ min-height:100px;
 }
 .playbtn{
     font-size: 125%;
-    
+
 }
 
 //ABOUT
@@ -699,11 +712,11 @@ min-height:100px;
 }
 
 .commentList{
-  
+
 }
 
 .even{
-    
+
 }
 .odd{
     background-color: #f1f1f1;
@@ -731,5 +744,5 @@ min-height:100px;
 .inner {
     margin-left: auto;
     margin-right: auto; 
-   
+
 }

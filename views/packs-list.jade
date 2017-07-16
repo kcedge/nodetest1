@@ -12,19 +12,20 @@ ul.panel-body.comment-detail-list.packList(style='margin-top:5px;')
 		select.dropdownWrapper.form-control-minus-width.col-sm-8.col-md-8.col-lg-8.col-xs-8(ng-model='$parent.packsFilterDuration')
 				option(ng-repeat='durationFilter in $parent.packsDurationOptions' ng-value='durationFilter' ng-selected="$index==2")
 					span {{durationFilter}}
-	div(ng-repeat="pack in $parent.packs" style='display:inline:block')
-		div.packNavRow
-			div.packWrapper.cursor(style='float:left;background-size: contain;' id='pack{{pack._id}}' ng-class="{'active':pack.active}" ng-style="{'background-image': 'url(' + pack.packImageJson[0].image + ')'}")
-				div.packHeaderWrapper.row(ng-click='packClicked(pack,$index)' ng-mouseover='packMouseOver(pack,$index)' ng-mouseleave='packMouseLeave(pack,$index)')
+	div.row()
+		div.packContainer.col-sm-12.col-md-12.col-lg-12.col-xs-12
+			div.packWrapper.cursor.col-sm-5.col-md-5.col-lg-5.col-xs-12(ng-repeat="pack in $parent.packs" style='float:left;background-size: contain;' id='pack{{pack._id}}' ng-class="{'active':pack.active}" ng-style="{'background-image': 'url(' + pack.packImageJson[0].image + ')'}")
+				div.packHeaderWrapper(ng-click='packClicked(pack,$index)' ng-mouseover='packMouseOver(pack,$index)' ng-mouseleave='packMouseLeave(pack,$index)')
 					h4.packHeaderWrapper(ng-show='pack.showTitle')
 						span.packName {{pack.packname}}
 					div.packImageWrapper.row
 						//.div.profileImageWrapper.thumbnail()
 								img(ng-src='{{pack.packImageJson[0].image}}' style='')
-					div.packDescWrapper.row(ng-show='pack.showDesc')
-						span.packName {{pack.packname}} - 
-						p
-							span.packDesc {{pack.packdesc}}
+					div.descriptWrapperBorder(style='')
+						div.packDescWrapper.row(ng-show='pack.showDesc')
+							span.packName {{pack.packname}} - 
+							p
+								span.packDesc {{pack.packdesc}}
 					div.buttonsRow.hover.minimize(ng-click='editPackClicked(pack,$index)' ng-show='pack.showDesc')
 						.div.buttonWrapper
 								span.glyphicon.glyphicon-edit

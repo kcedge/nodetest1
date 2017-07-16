@@ -55,7 +55,7 @@ append body
 									img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{getImageSrc(tip,1)}}' style='max-height: 105px;margin-top:10px;padding:0px;')
 							.div.row.navBarBottomRowOverlap(id='navBarBottomRowOverlap{{tip._id}}' ng-show='tip.hoverActive')
 								div.col-xs-12.col-sm-12.col-md-12.col-lg-12
-									div#navDescWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='margin-left:-10px;padding-right: 10px;')
+									div#navDescWrapper.navDescriptionWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='')
 						
 			.col-xs-6.col-sm-6.col-md-6.col-lg-6#middleDivTipLib
 				a.minimize.hover(ng-click='filtersToggle=!filtersToggle' ng-model='filtersToggle' ng-show='!filtersToggle') Show Filters

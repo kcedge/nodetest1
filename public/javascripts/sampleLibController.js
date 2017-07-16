@@ -92,9 +92,9 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    var width = packWrapper.width();
 	    if(width){
 		var windowHeight = $(window).height();
-		$(".packWrapper").height(width/2);//SQUARE
+		//$(".packWrapper").height(width/2);//SQUARE
 		$(".packDescWrapper").height((width-20)/2);
-		$(".packHeaderWrapper").height((width-20)/2);
+		//$(".packHeaderWrapper").height((width-20)/2);
 		$(".packViewBanner").height(width*2-100);
 		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() -50 - 50);
 		$(".packList").height($(window).height() -$(".filterBoxStyle").height() -50 - 20);
@@ -104,9 +104,9 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    }
 	    else{
 		var windowHeight = $(window).height();
-		$(".packWrapper").height(150/2);
+		//$(".packWrapper").height(150/2);
 		 $(".packDescWrapper").height(130/2);
-		 $(".packHeaderWrapper").height(130/2);
+		// $(".packHeaderWrapper").height(130/2);
 		 $(".packViewBanner").height(200);
 		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() -50 - 50);
 
@@ -456,7 +456,7 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	}
 	$scope.packMouseOver = function(pack){
 	    pack.showDesc = true;
-	    pack.showTitle = false;
+	    pack.showTitle = true;
 	}
 	$scope.updatePacks = function () {
 
