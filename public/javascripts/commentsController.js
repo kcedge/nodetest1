@@ -3,19 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$http', 'CommentsService', '$localStorage', function ($scope,$rootScope, $http, CommentsService, $localStorage) {
-      
+angular.module("myApp").controller('CommentsCtrl', ['$scope', '$rootScope', '$http', 'CommentsService', '$localStorage', function ($scope, $rootScope, $http, CommentsService, $localStorage) {
+
 	CommentsService.getCommentsWithTipId($scope.tipId)
 		.then(function (response) {
 		    //$scope.parentobj.comments = response.data;
 		});
-		
-		
-	
-	$scope.showCommentToggle = function(tip){
+
+
+
+
+	$scope.showCommentToggle = function (tip) {
 	    var tipCounter = $scope.$parent.findInTipArray(tip._id);
-	    $scope.$parent.tipArrayData[tipCounter].showComments = !$scope.$parent.tipArrayData[tipCounter].showComments ;
+	    $scope.$parent.tipArrayData[tipCounter].showComments = !$scope.$parent.tipArrayData[tipCounter].showComments;
 	}
+	isAuthenticated($http, false, function (username) {
+		    if (username == 'kcedge') {
+			$scope.adminAuth = true;
+			$scope.authenticated = true;
+		    }
+		    if (username != 0) {
+			$scope.authenticated = true;
+			$scope.username = username;
+		    }
+		});
 	$scope.postACommentClicked = function () {
 	    console.log('Posting a comment');
 	    var username = $localStorage.username;
@@ -26,6 +37,11 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 	    //var tipId = $("#currentTipId").html();
 	    console.log(username);
 	    console.log(comment);
+	    if (!$scope.authenticated) {
+		window.location.href = '/signUp';
+	    }
+
+
 	    var req = {
 		method: 'POST',
 		url: '/postComment',
@@ -35,9 +51,9 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 		data: {username: username,
 		    comment: comment,
 		    tip_id: tipId,
-		    date_published:new Date(),
-		    commentPoints:0,
-		    parentComment_id:-1}
+		    date_published: new Date(),
+		    commentPoints: 0,
+		    parentComment_id: -1}
 	    }
 	    $http(req).then(function success(response) {
 		console.log("added comment, with tip_id:")
@@ -70,16 +86,16 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 		data: {username: username,
 		    comment: comment,
 		    tip_id: tipId,
-		    date_published:new Date(),
-		    commentPoints:0,
-		    parentComment_id:parentCommentId}
+		    date_published: new Date(),
+		    commentPoints: 0,
+		    parentComment_id: parentCommentId}
 	    }
 	    $http(req).then(function success(response) {
 		console.log("added reply comment, with tip_id:")
 		console.log(response);
 		CommentsService.getComments(tipId).then(function (response) {
 		    $scope.$parent.comments = response.data;
-		       $scope.$parent.getTipsFromMongo();
+		    $scope.$parent.getTipsFromMongo();
 		});
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
@@ -87,8 +103,8 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 
 	    });
 	}
-	$scope.getPoints = function(comment){
-	    if(comment.commentPoints == 1 || comment.commentPoints == -1){
+	$scope.getPoints = function (comment) {
+	    if (comment.commentPoints == 1 || comment.commentPoints == -1) {
 		return comment.commentPoints + " point"
 	    }
 	    return comment.commentPoints + " points";
@@ -98,41 +114,41 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 	    function parseDate(input) {
 		var parts = input.match(/(\d+)/g);
 		// new Date(year, month [, date [, hours[, minutes[, seconds[, ms]]]]])
-		return new Date(parts[0], parts[1] - 1, parts[2],parts[3],parts[4],parts[5]); // months are 0-based
+		return new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4], parts[5]); // months are 0-based
 	    }
 	    var datePublished = parseDate(comment.datePublished).getTime();
-	    var difference =  ((now.getTime() - datePublished)/(3600000));
-	    if(difference < 24){
-		if(difference < 1){
-		    if(difference < 0){
+	    var difference = ((now.getTime() - datePublished) / (3600000));
+	    if (difference < 24) {
+		if (difference < 1) {
+		    if (difference < 0) {
 			return "just now"
 		    }
-		    else if(difference < .2){
+		    else if (difference < .2) {
 			return "a few minutes ago"
 		    }
-		    else if(difference >= .2 && difference < .4){
+		    else if (difference >= .2 && difference < .4) {
 			return "15 minutes ago";
 		    }
-		    else if(difference <= .7 && difference >= .4){
+		    else if (difference <= .7 && difference >= .4) {
 			return "30 minutes ago";
 		    }
-		    else{
+		    else {
 			return "1 hour ago";
 		    }
 		}
-		else{
+		else {
 		    return Math.round(difference) + " hours ago";
 		}
-		
+
 	    }
-	    else{
+	    else {
 		var days = Math.round(difference / 24);
-		return days +" days ago";
+		return days + " days ago";
 	    }
-	    
-	    
+
+
 	}
-	$scope.commentUpVote = function(comment){   
+	$scope.commentUpVote = function (comment) {
 	    var commentId = comment._id;
 	    var updatedPoints = comment.commentPoints + 1;
 	    var req = {
@@ -155,7 +171,7 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 		$scope.responseData = response.data;
 	    });
 	}
-	$scope.commentDownVote = function(comment){
+	$scope.commentDownVote = function (comment) {
 	    var commentId = comment._id;
 	    var updatedPoints = comment.commentPoints - 1;
 	    var req = {
@@ -177,50 +193,50 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope','$rootScope', '$htt
 		$scope.submitMessage = "Failure"
 		$scope.responseData = response.data;
 	    });
-	    
+
 	}
-	
-	
-	$scope.replyCommentClicked = function(tip,comment){
-	  
-	    comment.replyCommentToggle = !comment.replyCommentToggle; 
-	
+
+
+	$scope.replyCommentClicked = function (tip, comment) {
+
+	    comment.replyCommentToggle = !comment.replyCommentToggle;
+
 	    //$scope.$parent.tipClicked(tip);
-	    
+
 	}
 	$scope.showReplyCommentClicked = function (tip, comment) {
-	    
-	   // var tipCounter = $scope.$parent.findInTipArray(tip._id);
-	   
-	    
+
+	    // var tipCounter = $scope.$parent.findInTipArray(tip._id);
+
+
 	    if (typeof comment !== 'undefined') {
 		// the variable is defined
 
 		comment.showReplies = !comment.showReplies;
-		
+
 		//$scope.$parent.tipClicked(tip);
 	    }
-	   
+
 	}
-	$scope.isReplyComment = function(comment){
+	$scope.isReplyComment = function (comment) {
 	    return comment.parentComment_id != -1;
 	}
-	$scope.showReplyComment = function(comment){
-	    
-	    if(comment.hasOwnProperty('replyCommentToggle')){
+	$scope.showReplyComment = function (comment) {
+
+	    if (comment.hasOwnProperty('replyCommentToggle')) {
 		return comment.replyCommentToggle;
 	    }
-	    else{
+	    else {
 		comment.replyCommentToggle = false;
 		return comment.replyCommentToggle;
 	    }
-	    
+
 	}
-	$scope.isTopLevelComment = function(comment){
+	$scope.isTopLevelComment = function (comment) {
 	    return comment.parentComment_id == -1;
 	}
-	
-	
-	
+
+
+
     }]);
 
