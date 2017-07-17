@@ -132,7 +132,7 @@ append body
 								span Facebook:	
 
 
-			.profilePageCenter.col-sm-9.col-md-9.col-lg-9.col-xl-9
+			.profilePageCenter.col-sm-8.col-md-8.col-lg-8.col-xs-8
 				.profileNotify(ng-show="!isLoggedIn()")
 				.profilePageBanner.contentWrapper(ng-show="isLoggedIn()" style='height: 300px;')
 					.div.row(ng-style="{'background-image': 'url(' + profileInfo.bannerImageJson[0].image + ')'}" style='background-size: cover;background-size: contain;height: 100%;')
@@ -420,7 +420,7 @@ append body
 										#submittedByDiv.small(style="padding-top:5px")
 											span Submitted By: 
 												a(href="/profile/{{submittedBy}}"){{submittedBy}}
-			.profilePageRightWrapper.col-xs-2.col-md-2.col-lg-2.col-xl-2
+			.profilePageRightWrapper.col-xs-3.col-md-3.col-lg-3.col-xl-3
 				//div.rightWidgetTopContainer.row(style='height:200px')
 					
 				#rightWidgetContainer.contentWrapper
@@ -469,7 +469,7 @@ append body
 										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.profileImageJson[0].image}}' style='min-height: 100px;margin-top:10px;padding:0px;')
 									div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
 										img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.bannerImageJson[0].image}}' style='max-height: 100px;margin-top:10px;padding:0px;')
-								.div.row.navBarBottomRowUserBioOverlap( ng-show='user.hoverRightActive')
+								.div.row.navBarBottomRowUserBioOverlapProfile( ng-show='user.hoverRightActive')
 									div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='margin-left:-5px')
 										h4.nameWrapper(style='margin-bottom:5px;')
 											span(ng-bind-html='user.profileMetaDataJson.firstName  | to_trusted')
