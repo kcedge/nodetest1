@@ -17,6 +17,7 @@ p {
 ::-webkit-scrollbar { 
     display: none; 
 }
+
 .navDescriptionWrapper{
     margin-left: 10px;
     padding-right: 10px;
@@ -301,7 +302,7 @@ a {
 }
 .navBarBottomRow{
     position:relative;
-    top:-20px;
+    top:-38px;
     height:125px;
 }
 
@@ -342,6 +343,10 @@ a {
     font-size: small;
     min-height: 100px;
 }
+.tipTagNav{
+    font-size:10px;
+    max-height: 100px;
+}
 .userTotalPoints{
     font-weight: bold;
     font-style: italic;
@@ -355,7 +360,15 @@ a {
     border-right-style: dotted;
     border-left-style: dotted;
 }
-
+.navTipPoints {
+    font-style: italic;
+    font-size: 16px;
+}
+.navTipDate{
+        font-size: small;
+    font-style: normal;
+    margin-left: 5px;
+}
 .imgNavWrapper{
     margin-top:-35px
 }
@@ -366,7 +379,9 @@ a {
     color:#565656;
     padding:5px;
     border-radius: 5px;
-
+    max-height: 50px;
+    overflow:auto;
+    
     //opacity: .8;
     background: rgba(243, 243, 243,.8);
 }

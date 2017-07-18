@@ -46,6 +46,11 @@ append body
 								.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px;margin-top:-5px;')
 									.div.col-xs-11.col-sm-11.col-md-11.col-lg-11
 										span#navTipTitle.navTipTitle(){{tip.tipTitle}}
+										span.navTipDate {{tip.dateSubmitted | date:'MM/dd/yy'}}
+										span.tipTagsWrapper(style='margin-left:5px')
+											div.tipTagNav(ng-repeat="tipTag in tip.filtersJson" style='display:inline-block;')				
+												span(style='float:left' ng-show='tipTag.toggle')
+													+label-primary("{{tipTag.name}}")
 									.div.col-xs-1.col-sm-1.col-md-1.col-lg-1
 										span.navTipPoints(style='float:right'){{tip.tipPoints}}
 							.div.row.animated.navBarBottomRow(id='navBarBottomRow{{tip._id}}' ng-show='true')
@@ -397,7 +402,7 @@ append body
 						#header(style='display:inline-block')
 							#labelSort
 								.label.label-info Top Users
-							select#dropdownWrapper(style='float:left' ng-model='filterPeriodTopUsersDropDown')
+							select#dropdownWrapper(style='float:left' ng-model='filterPeriodTopUsersDropDown' ng-show='false')
 									option(ng-repeat='sortFilter in rightBarSortFiltersArray' ng-value='sortFilter')
 										span {{sortFilter}}
 						div.list-unstyled.row.hover(ng-repeat="user in topUsers | orderBy : 'totalpoints':true | limitTo:10" ng-show="user.userName")
