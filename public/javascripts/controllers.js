@@ -904,17 +904,17 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	//});
 
 
-	isAuthenticated($http,false,function(username){
-	    if(username == 'kcedge'){
+	isAuthenticated($http, false, function (username) {
+	    if (username == 'kcedge') {
 		$scope.adminAuth = true;
 		$scope.authenticated = true;
 	    }
-	    if(username != 0){
+	    if (username != 0) {
 		$scope.authenticated = true;
 		$scope.username = username;
-	    }    
+	    }
 	});
-	
+
 	$scope.findInTipArray = function (id) {
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		if ($scope.tipArrayData[i]._id == id) {
@@ -1437,15 +1437,15 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		for (var f = 0; f < tip.filtersJson.length; f++) {
 		    if (tip.filtersJson[f].name == $scope.filters[i].name) {
 			matchedName = true;
-			if (($scope.filters[i].toggle && tip.filtersJson[f].toggle) || !toggleClicked) {
-			    return true;
+			if (($scope.filters[i].toggle && !tip.filtersJson[f].toggle) && toggleClicked) {
+			    return false;
 			}
 		    }
 		}
 	    }
 
 
-	    return false;
+	    return true;
 
 	};
 
