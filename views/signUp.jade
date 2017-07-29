@@ -3,10 +3,13 @@
 </script>
 extends layout
 append body
-	.container.pageController(ng-controller="signUpController" style="margin:0 auto;width:90%;max-width:966px;")
-		+alert-i-warning("Signing up with Music Production Helper allows you to view your profile page.  With a profile on mphelper.io you can: contribute to the Tip Library, save tips, comment on tips, network yourself with other producers, link your SoundCloud, and gain a good rep for helping others!")
+	.bgImage
+	.pageController(ng-controller="signUpController" style="margin:0 auto;width:90%;max-width:966px;")
+		.aleartTop
+			+alert-i-warning("Signing up with Music Production Helper allows you to view your profile page.  With a profile on mphelper.io you can: contribute to the Tip Library, save tips, comment on tips, network yourself with other producers, link your SoundCloud, and gain a good rep for helping others!")
 		
-		#signInWrapper.formInputWrapper
+		
+		#signUpWrapper.formInputWrapper
 
 			.titleBannerDiv(display:inline-block)
 				#sampleProfileDiv.small(style='float:right')

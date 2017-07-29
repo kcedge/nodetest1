@@ -3,6 +3,9 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 }
+body, html {
+    height: 100%;
+}
 p {
     margin: 0;
     padding:0;
@@ -10,6 +13,20 @@ p {
 #navbar_menu{
     border-radius: 5px;
     z-index: 1;
+}
+.bgImage{
+     /* The image used */
+    /* Full height */
+    height: 100%; 
+    width: 100%;
+    background: url('../resources/images/520202ce90b6e971987929a73550424c');
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: fixed;
+    z-index: -1000;
+    top:50px;
 }
 .pageController{
 
@@ -113,6 +130,9 @@ a {
 .theoryInputWrapper{
     float:left;width:25%;
 }
+.aleartTop{
+    margin-top:60px;
+}
 .vstInputWrapper{
     float:left;width:22%;
 }
@@ -124,7 +144,21 @@ a {
     margin: 0 auto;
     width:40%;
     min-width: 150px;
+   //margin-top: 25%;
 
+}
+
+#signUpWrapper{
+    margin: 0 auto;
+    width:40%;
+    min-width: 150px;
+   //margin-top: 25%;
+
+}
+.labelDisplayStrong{
+   
+    font-size: 25px;
+    //font-family: helvetica;
 }
 #signInDetails{
 

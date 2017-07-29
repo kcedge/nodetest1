@@ -74,6 +74,14 @@ angular.module("myApp").controller('signUpController', ['$scope', '$http', '$loc
 	$scope.gotoSignInClicked = function () {
 	    window.location.href = '/signIn/' + $('#redirect').text();
 	}
+	var imageUrl = ''
+	if(!runningProduction){
+	    imageUrl = '../resources/images/520202ce90b6e971987929a73550424c'
+	}
+	else{
+	    imageUrl = 'https://tip-photos-bucket.s3-us-west-2.amazonaws.com/1499998967136'
+	}
+	$('.bgImage').css('background-image', 'url("' + imageUrl + '")');
 
 	$scope.signUpGood = function () {
 	    if ($scope.signUpUsername.length == 0) {
@@ -133,6 +141,17 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 	    username: "",
 	    userSignedIn: false
 	});
+	
+	//SET background image
+	var imageUrl = ''
+	if(!runningProduction){
+	    imageUrl = '../resources/images/520202ce90b6e971987929a73550424c'
+	}
+	else{
+	    imageUrl = 'https://tip-photos-bucket.s3-us-west-2.amazonaws.com/1499998967136'
+	}
+	$('.bgImage').css('background-image', 'url("' + imageUrl + '")');
+	
 	$scope.signInWithSoundCloud = function () {
 	    var req = {
 		method: 'GET',
