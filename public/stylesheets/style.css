@@ -19,7 +19,7 @@ p {
     /* Full height */
     height: 100%; 
     width: 100%;
-    background: url('../resources/images/520202ce90b6e971987929a73550424c');
+    background: url('https://tip-photos-bucket.s3-us-west-2.amazonaws.com/1499998967136');
     /* Center and scale the image nicely */
     background-position: center;
     background-repeat: no-repeat;
