@@ -348,17 +348,15 @@ a {
     max-height: 100px;
 }
 .userTotalPoints{
-    font-weight: bold;
     font-style: italic;
-    background: white;
+    background: rgba(255, 255, 255, .7);
     padding: 4px;
     border-radius: 6px;
     width: 50px;
     text-align: center;
-    margin-top: 2px;
+    /* margin-right: 0px; */
+    /* margin-top: 2px; */
     padding-bottom: 3px;
-    border-right-style: dotted;
-    border-left-style: dotted;
 }
 .navTipPoints {
     font-style: italic;
