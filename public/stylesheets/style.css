@@ -177,13 +177,18 @@ a {
 .arrowBtnClass{
     float:right;
 }
-
+.packHeaderWrapper{
+    font-size:18px;
+    
+}
 #labelSort{
     float:left;
 }
 #tipsScrollWrapper{
     overflow:auto;
-
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
 }
 .tipDescription{
     white-space:pre-line;
@@ -683,12 +688,21 @@ li{
 .packViewBanner{
     max-height: 250px;
 }
+.packNameWrapper{
+        background: rgba(255, 255, 255, .7);
+    padding: 5px;
+    border-radius: 5px;
+}
+.packBackGroundImage {
+    background-size: contain;
+}
 .packHeaderWrapper{
-    background: rgba(97, 97, 97,.8);
+    background: rgba(202, 199, 199, 0.7);
     padding: 10px;
     border-radius: 5px;
     /* opacity: .8; */
-    color: white
+    color: black;
+       
 	/* border-style: solid; */
 	/* margin-top: 50%;*/;
 }
@@ -719,8 +733,24 @@ li{
     }
 
 }
+.sampleLibAlert{
+    margin-bottom: 0px;
+}
+.packListHeader{
+    background: white;
+    /* margin: 5px; */
+    /* padding: 5px; */
+    border-radius: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top:5px;
+}
+
 .packDescWrapper{
-    overflow:auto
+    overflow:auto;
+    background: rgba(255, 255, 255, .7);
+    padding:5px;
+    border-radius: 5px;
 }
 .packWrapper:hover{
     cursor: pointer;

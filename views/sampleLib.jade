@@ -6,12 +6,11 @@ append body
 			.div.username(style='margin-top: -34px;')
 				span.greeting Hey there	
 				a(href='/profile/{{username}}'){{username}}!
-		div(style='text-align:center')
-			+alert-i-warning("The Sample Library is a place to upload or download your favorite samples!","heart")
-		div.row
+		
+		div.row(style='margin-top:50px')
 			div.packListWrapper.col-sm-3.col-md-3.col-lg-3.col-xs-3
-				.div.row(style="text-align:center;")
-								+alert-i-warning("The Sample Library is a place to upload or download your favorite samples!","heart")
+				
+
 				packs-list#packList
 			div#packAndSampleWidget.col-xs-6.col-sm-6.col-lg-7.col-md-6
 
@@ -60,37 +59,11 @@ append body
 							.div.activePackDesc
 								p.activePackDescWrapper.col-sm-12.col-md-6.col-lg.9.col-xs-12
 									span.packName {{activePack.packdesc}}
-				div.sampleListWrapper.row
+				div.sampleListWrapper.row(ng-show='!uploadAPackToggle')
 					samples-list(contentId = '1')
-			div#rightWidgetContainer.col-xs-3.col-sm-3.col-lg-2.col-md-3
-				.rightWidetWrapper
-							#header(style='display:inline-block')
-								#labelSort
-									.label.label-info Top Users
-								select#dropdownWrapper(style='float:left' ng-model='filterPeriodTopUsersDropDown')
-										option(ng-repeat='sortFilter in rightBarSortFiltersArray' ng-value='sortFilter')
-											span {{sortFilter}}
-							div.list-unstyled.row.hover(ng-repeat="user in topUsers | orderBy : 'totalpoints':true | limitTo:10" ng-show="user.userName")
-								.rightBarNavItem.row(ng-click="userNavBarClicked(user)" ng-mouseover='rightBarWidgetMouseOver(user)' ng-mouseleave='navBarHoverRightMouseLeave(user)')
-									.div.navBarTopDiv(ng-show='true'  style='')
-										.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
-											span#navTipTitle(){{user.userName}}
-											span#navTipTitle(style='float:right'){{user.totalpoints}}
-									.div.row.animated.navBarBottomRow(ng-show='true' style='height:125px;margin-top:-20px')
-										div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
-											img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.profileImageJson[0].image}}' style='min-height: 100px;margin-top:10px;padding:0px;')
-										div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
-											img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.bannerImageJson[0].image}}' style='max-height: 100px;margin-top:10px;padding:0px;')
-									.div.row.navBarBottomRowUserBioOverlap( ng-show='user.hoverRightActive')
-										div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='margin-left:-5px')
-											h4.nameWrapper(style='margin-bottom:5px;')
-												span(ng-bind-html='user.profileMetaDataJson.firstName  | to_trusted')
-												span(ng-bind-html='user.profileMetaDataJson.lastName  | to_trusted' style='margin-left:2px;')
-											h6(ng-bind-html='user.profileMetaDataJson.city  | to_trusted' style='margin-top:-3px;margin-left:2px;')
-											span(ng-bind-html='user.profileMetaDataJson.bio  | to_trusted')
-		div.row
-			div#addContent(style='overflow:auto')
-				.imageUploaderInputWrapper(style="margin-top:5px;").col-xs-6.col-sm-6.col-lg-6.col-md-6
+				div.row(ng-show='uploadAPackToggle')
+					div#addContent(style='overflow:auto')
+						.imageUploaderInputWrapper(style="margin-top:5px;").col-xs-6.col-sm-6.col-lg-6.col-md-6
 							.inputWrapper(ng-show='adminAuth')
 								h4(ng-click='uploadPackHeadClicked()') Upload a pack
 								input.form-control(type='text' ng-model='packname' placeholder="Enter pack name" ng-required)
@@ -148,3 +121,30 @@ append body
 								button.btn.btn-success.btn-xs(ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length || packname == ''" style='margin-left:5px;')
 												span.glyphicon.glyphicon-upload
 												&nbsp Upload 
+			div#rightWidgetContainer.col-xs-3.col-sm-3.col-lg-2.col-md-3
+				.rightWidetWrapper
+							#header(style='display:inline-block')
+								#labelSort
+									.label.label-info Top Users
+								select#dropdownWrapper(style='float:left' ng-model='filterPeriodTopUsersDropDown')
+										option(ng-repeat='sortFilter in rightBarSortFiltersArray' ng-value='sortFilter')
+											span {{sortFilter}}
+							div.list-unstyled.row.hover(ng-repeat="user in topUsers | orderBy : 'totalpoints':true | limitTo:10" ng-show="user.userName")
+								.rightBarNavItem.row(ng-click="userNavBarClicked(user)" ng-mouseover='rightBarWidgetMouseOver(user)' ng-mouseleave='navBarHoverRightMouseLeave(user)')
+									.div.navBarTopDiv(ng-show='true'  style='')
+										.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px')
+											span#navTipTitle(){{user.userName}}
+											span#navTipTitle(style='float:right'){{user.totalpoints}}
+									.div.row.animated.navBarBottomRow(ng-show='true' style='height:125px;margin-top:-20px')
+										div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
+											img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.profileImageJson[0].image}}' style='min-height: 100px;margin-top:10px;padding:0px;')
+										div.col-xs-6.col-sm-6.col-md-6.col-lg-6.imgNavWrapper(ng-show='user.profileImageJson.length > 0' style='padding:0px;height:125px')
+											img.thumbnail.hover.hidden-xs.col-sm-12.col-md-12.col-lg-12(ng-src='{{user.bannerImageJson[0].image}}' style='max-height: 100px;margin-top:10px;padding:0px;')
+									.div.row.navBarBottomRowUserBioOverlap( ng-show='user.hoverRightActive')
+										div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='margin-left:-5px')
+											h4.nameWrapper(style='margin-bottom:5px;')
+												span(ng-bind-html='user.profileMetaDataJson.firstName  | to_trusted')
+												span(ng-bind-html='user.profileMetaDataJson.lastName  | to_trusted' style='margin-left:2px;')
+											h6(ng-bind-html='user.profileMetaDataJson.city  | to_trusted' style='margin-top:-3px;margin-left:2px;')
+											span(ng-bind-html='user.profileMetaDataJson.bio  | to_trusted')
+		

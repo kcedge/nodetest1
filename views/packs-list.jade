@@ -1,22 +1,26 @@
-		
-ul.panel-body.comment-detail-list.packList(style='margin-top:5px;')
-	#header.row
-		div.col-sm-4.col-md-4.col-lg-4.col-xs-4.labelSort
-			.label.label-info Filter
-		select.dropdownWrapper.form-control-minus-width.col-sm-8.col-md-8.col-lg-8.col-xs-8(ng-model='$parent.packsFilter')
+#packListHeader.row.packListHeader
+		div.col-sm-10.col-md-10.col-lg-10.col-xs-10
+			div.col-sm-4.col-md-4.col-lg-4.col-xs-4.labelSort
+				.label.label-info Filter
+			select.dropdownWrapper.form-control-minus-width.col-sm-8.col-md-8.col-lg-8.col-xs-8(ng-model='$parent.packsFilter')
 				option(ng-repeat='sortFilter in $parent.packsFilterOptions' ng-value='sortFilter'  ng-selected="$index==2")
 					span {{sortFilter}}
-	div.row
-		div.col-sm-4.col-md-4.col-lg-4.col-xs-4.labelSort
-			.label.label-info Duration
-		select.dropdownWrapper.form-control-minus-width.col-sm-8.col-md-8.col-lg-8.col-xs-8(ng-model='$parent.packsFilterDuration')
+			div.col-sm-4.col-md-4.col-lg-4.col-xs-4.labelSort
+				.label.label-info Duration
+			select.dropdownWrapper.form-control-minus-width.col-sm-8.col-md-8.col-lg-8.col-xs-8(ng-model='$parent.packsFilterDuration')
 				option(ng-repeat='durationFilter in $parent.packsDurationOptions' ng-value='durationFilter' ng-selected="$index==2")
 					span {{durationFilter}}
+			
+		div.col-sm-2.col-md-2.col-lg-2.col-xs-2
+			btn.btn-primary(ng-click='$parent.uploadPackToggleClicked()') Upload Pack		
+ul.panel-body.comment-detail-list.packList(style='margin-top:5px;')
 	div.row()
 		div.packContainer.col-sm-12.col-md-12.col-lg-12.col-xs-12
-			div.packWrapper.cursor.col-sm-5.col-md-5.col-lg-5.col-xs-12(ng-repeat="pack in $parent.packs" style='float:left;background-size: contain;' id='pack{{pack._id}}' ng-class="{'active':pack.active}" ng-style="{'background-image': 'url(' + pack.packImageJson[0].image + ')'}")
-				div.packHeaderWrapper(ng-click='packClicked(pack,$index)' ng-mouseover='packMouseOver(pack,$index)' ng-mouseleave='packMouseLeave(pack,$index)')
-					h4.packHeaderWrapper(ng-show='pack.showTitle')
+
+			div.packWrapper.cursor.col-sm-5.col-md-5.col-lg-5.col-xs-12(ng-repeat="pack in $parent.packs" style='float:left;background-size: contain;' id='pack{{pack._id}}' ng-class="{'active':pack.active}" ng-style='getPackWrapperStyle()')
+			
+				div.packHeaderWrapper(ng-style="{'background': 'url(' + pack.packImageJson[0].image + ')','background-size':'contain'}" ng-click='packClicked(pack,$index)' ng-mouseover='packMouseOver(pack,$index)' ng-mouseleave='packMouseLeave(pack,$index)' )
+					div.packNameWrapper(ng-show='pack.showTitle')
 						span.packName {{pack.packname}}
 					div.packImageWrapper.row
 						//.div.profileImageWrapper.thumbnail()

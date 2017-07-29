@@ -69,25 +69,25 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	
 	
 	
-	setTimeout(function () {
-	    //your code here
-	   styleSize(); 
-	   setStyle();
-	}, 500);
-	$(document).ready(function(){
-	   styleSize(); 
-	   setStyle();
-	});
+	
+	
+	window.onload=function(){
+	     styleSize(); 
+	   $scope.setStyle();
+	}
 	
 	$(window).resize(function(){
 	   styleSize(); 
-	   setStyle();
+	   $scope.setStyle();
 	});
 	var styleSize = function(){
 	    var height = $(window).height();
 	    $(".sampleListWrapper").height(height - 50 - 90); //For banner and filter menu
 	}
-	var setStyle = function(){
+	
+	
+	
+	$scope.setStyle = function(){
 	    var packWrapper = $(".packWrapper");
 	    var width = packWrapper.width();
 	    if(width){
@@ -99,8 +99,10 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() -50 - 50);
 		$(".packList").height($(window).height() -$(".filterBoxStyle").height() -50 - 20);
 		//$("#addContent").height = window.height();
-
-		 
+		$('.packWrapper').height(width*.8);
+		$('.packHeaderWrapper').height(width*.7);
+		$('.packHeaderWrapper').css('background-size','contain');
+		 $('.packBackGroundImage').height(width);
 	    }
 	    else{
 		var windowHeight = $(window).height();
@@ -284,7 +286,7 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 			$scope.activePack = $scope.packs[0];
 		    }
 		//$scope.$apply();
-		setStyle();
+		$scope.setStyle();
 		
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
@@ -486,6 +488,10 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	$scope.showKey = function(key){
 	    return (key != 'undefined' && key)
 	}
+	$scope.uploadAPackToggle = false;
+	$scope.uploadPackToggleClicked = function(){
+	    $scope.uploadAPackToggle = !$scope.uploadAPackToggle;
+	}
 	
 	
 	getPacks();
@@ -591,6 +597,41 @@ angular.module("myApp").controller('packsCtrl', ['$scope', '$rootScope', '$http'
 	    
 	   
 	}
+	
+	$scope.packWidth = 0;
+	$scope.getPackWrapperStyle = function(){
+	    var packWrapper = $(".packWrapper");
+	    var width = packWrapper.width();
+	    var updatedWidth =false;
+	    if($scope.packWidth == 0){
+		    $scope.packWidth = width;
+		    updatedWidth = true;
+	    }
+	    else if($scope.packWidth != width){
+		updatedWidth = true;
+	    }
+	    
+	    
+	    if(updatedWidth && width){
+		var windowHeight = $(window).height();
+		//$(".packWrapper").height(width/2);//SQUARE
+		$(".packDescWrapper").height((width-20)/2);
+		//$(".packHeaderWrapper").height((width-20)/2);
+		$(".packViewBanner").height(width*2-100);
+		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() -50 - 50);
+		$(".packList").height($(window).height() -$(".filterBoxStyle").height() -50 - 60);
+		//$("#addContent").height = window.height();
+		$('.packWrapper').height(width*.8);
+		$('.packHeaderWrapper').height(width*.7);
+		$('.packHeaderWrapper').css('background-size','contain');
+		 $('.packBackGroundImage').height(width);
+	    }
+	   
+	   // return $(".packWrapper").css();
+	}
+	
+	
+	
 	$scope.editPackToggle = false;
 	$scope.editPackClicked = function(pack,$index){
 	    $scope.editPackToggle = !$scope.editPackToggle;
