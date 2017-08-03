@@ -52,6 +52,7 @@ module.exports = function (router, passport) {
 		    res.send("No tips found");
 		}
 	    }
+	    db.close();
 	});
     });
      router.get('/getComments/', function (req, res, next) {
@@ -82,6 +83,7 @@ module.exports = function (router, passport) {
 		    res.send("No tips found");
 		}
 	    }
+	    db.close();
 	});
     });
     router.post('/postComment', function (req, res) {
@@ -119,6 +121,7 @@ module.exports = function (router, passport) {
 		});
 
 	    }
+	    db.close();
 	});
 
     });
@@ -148,6 +151,7 @@ module.exports = function (router, passport) {
 		    }
 		});
 	    }
+	    db.close();
 	});
 	
     })

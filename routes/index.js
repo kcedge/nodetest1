@@ -206,8 +206,9 @@ module.exports = function (router, passport) {
 		// Get the documents collection
 		var collection = db.collection('tipsCollection');
 		cursor = collection.find();
-
+		db.close()
 	    }
+	    db.close();
 	});
 	res.render('tipLib', {title: 'Tip Library', dbCursor: cursor});
     });
@@ -233,9 +234,12 @@ module.exports = function (router, passport) {
 		    }
 		    else {
 			res.render('tipLib', {title: 'Tip Library with Id', item: item, id:id});
+			
 		    }
+		    db.close();
 		});
 	    }
+	    db.close();
 	});
 	
     });
@@ -265,6 +269,7 @@ module.exports = function (router, passport) {
 		});
 
 	    }
+	    db.close();
 	});
 
     });
@@ -318,6 +323,7 @@ module.exports = function (router, passport) {
 		});
 
 	    }
+	    db.close();
 	});
 
     });
@@ -349,6 +355,7 @@ module.exports = function (router, passport) {
 		});
 
 	    }
+	    db.close();
 	});	
     });
     router.put('/tipsPageUpdateProfile',function(req,res){
@@ -380,6 +387,7 @@ module.exports = function (router, passport) {
 		    }
 		});
 	    }
+	    db.close();
 	});
 
     })
@@ -408,6 +416,7 @@ module.exports = function (router, passport) {
 		    }
 		});
 	    }
+	    db.close();
 	});
 	
     })
@@ -469,6 +478,7 @@ module.exports = function (router, passport) {
 		    });
 		}
 	    }
+	    db.close();
 	});
     
     });
@@ -519,6 +529,7 @@ module.exports = function (router, passport) {
 		    });
 
 		}
+		db.close();
 	    });
 	});
 	
@@ -546,6 +557,7 @@ module.exports = function (router, passport) {
 		});
 
 	    }
+	    db.close();
 	});
 
     });
@@ -580,6 +592,7 @@ module.exports = function (router, passport) {
 		});
 
 	    }
+	    db.close();
 	});
     });
     router.get('/getFilters', function (req, res) {
@@ -604,6 +617,7 @@ module.exports = function (router, passport) {
 		});
 
 	    }
+	    db.close();
 	});
     });
      router.get('/getFilters/:parent', function (req, res) {
@@ -628,6 +642,7 @@ module.exports = function (router, passport) {
 		});
 
 	    }
+	    db.close();
 	});
     });
     router.delete('/deleteFilter/:id', function (req, res) {
@@ -649,6 +664,7 @@ module.exports = function (router, passport) {
 		});
 
 	    }
+	    db.close();
 	});
 
     });

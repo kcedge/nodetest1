@@ -185,6 +185,7 @@ module.exports = function (router, passport) {
 		    res.send(items);
 		});
 	    }
+	    db.close();
 	});
     });
     router.post('/uploadPack',function(req,res){
@@ -217,6 +218,7 @@ module.exports = function (router, passport) {
 		    }
 		});
 	    }
+	    db.close();
 	});
     });
     
@@ -250,6 +252,7 @@ module.exports = function (router, passport) {
 		    }
 		});
 	    }
+	    db.close();
 	});
     });
     
@@ -310,6 +313,7 @@ module.exports = function (router, passport) {
 		    });
 
 		}
+		db.close();
 	    });
 	});
 	
@@ -360,6 +364,7 @@ module.exports = function (router, passport) {
 //		    });
 
 		}
+		db.close();
 	    });
 	});
 	
@@ -393,6 +398,7 @@ module.exports = function (router, passport) {
 		    }
 		});
 	    }
+	    db.close();
 	});
     });
     

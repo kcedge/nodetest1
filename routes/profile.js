@@ -53,6 +53,7 @@ module.exports = function (router, passport) {
 		    res.send("No profile data found");
 		}
 	    }
+	    db.close();
 	});
     });
    
@@ -86,6 +87,7 @@ module.exports = function (router, passport) {
 		 //   res.send("No tips found");
 		//}
 	    }
+	    db.close();
 	});
     });
     
@@ -129,6 +131,7 @@ module.exports = function (router, passport) {
 		    res.send("No tips found");
 		}
 	    }
+	    db.close();
 	});
     });
     router.post('/getRecentTips',function(req,res){
@@ -161,6 +164,7 @@ module.exports = function (router, passport) {
 		    res.send("No tips found");
 		}
 	    }
+	    db.close();
 	});
     });
     router.get('/getTopUsers/:period',function(req,res){
@@ -197,6 +201,7 @@ module.exports = function (router, passport) {
 		    res.send("No profiless found");
 		}
 	    }
+	    db.close();
 	});
     });
     router.post('/postProfileMetaData/:username',function(req,res){
@@ -233,6 +238,7 @@ module.exports = function (router, passport) {
 		    res.send("No profileImageJson found");
 		}
 	    }
+	    db.close();
 	});
     });
     
@@ -270,6 +276,7 @@ module.exports = function (router, passport) {
 		    res.send("No totalpoints found");
 		}
 	    }
+	    db.close();
 	});
     });
     router.post('/postProfileImage/:username',function(req,res){
@@ -306,6 +313,7 @@ module.exports = function (router, passport) {
 		    res.send("No profileImageJson found");
 		}
 	    }
+	    db.close();
 	});
     });
     router.post('/postBannerImage/:username',function(req,res){
@@ -342,6 +350,7 @@ module.exports = function (router, passport) {
 		    res.send("No banner image found");
 		}
 	    }
+	    db.close();
 	});
     });
     router.post('/getTopTips',function(req,res){
@@ -374,6 +383,7 @@ module.exports = function (router, passport) {
 		    res.send("No tips found");
 		}
 	    }
+	    db.close();
 	});
     });
 };
