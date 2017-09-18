@@ -32,9 +32,9 @@ ul.panel-body.comment-detail-list.commentList(style='margin-top:25px;' ng-show='
 					span.glyphicon.glyphicon-arrow-up.hoverButton(ng-click='commentUpVote(reply_comment)')
 					span.glyphicon.glyphicon-arrow-down.hoverButton(ng-click='commentDownVote(reply_comment)')
 				div.commentHeader.pull-left(style='display:inline-block;width:96%;')
-					a.pull-left(style='margin-top:-3px;' href='profile') {{ comment.username }}
-					time.small.pull-right(style='margin-left:5px;'){{comment.datePublished|date:"MM/dd/yyyy"}}
-					span.pull-left.small(style='margin-left:10px;') {{getPoints(comment)}}
+					a.pull-left(style='margin-top:-3px;' href='profile') {{ reply_comment.username }}
+					time.small.pull-right(style='margin-left:5px;'){{reply_comment.datePublished|date:"MM/dd/yyyy"}}
+					span.pull-left.small(style='margin-left:10px;') {{getPoints(reply_comment)}}
 					time.small.italics.pull-left(style='margin-left:10px;font-style: italic;'){{getTime(reply_comment)}}
 				div.commentBody.pull-left(style='width:96%;margin-top:5px;white-space:pre-wrap')
 					p {{reply_comment.comment}}
