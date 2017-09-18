@@ -2443,6 +2443,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			if ($scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1]) {
 			    imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1].newFileName;
 			}
+			if($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("audioSampleObjectJson") && $scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson.length > (i-1))
 			if ($scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1] && $scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1].hasOwnProperty('audioSampleObject')) {
 			    audioSampleLocal = $scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1].audioSampleObject;
 			}
