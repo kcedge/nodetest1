@@ -980,11 +980,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.tipCounterTmp = $scope.tipCounter;
 	    $scope.tipCounter =0;
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		$scope.tipArrayData[i].isActive = false;
 		$scope.updateBodyArray();
 		$scope.tipCounter++;
 	    }
 	     $scope.tipCounter =  $scope.tipCounterTmp;
-
+	     $scope.tipArrayData[$scope.tipCounter].isActive = true;
 	};
 	window.onload = function () {
 	    // var currentTipId = $scope.currentTipId;
@@ -2018,6 +2019,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	}
 
 	$scope.tipNavBarClicked = function (tip) {
+	    
+	    //$scope.tipArrayData[$scope.tipCounter].isActive = false;
+	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		    $scope.tipArrayData[i].isActive = false;
+		}
+	    
 	    var tipIdClicked = tip._id;
 	    var tipObjClicked = $("#tipsWrapper" + tipIdClicked);
 	    var tipObjClickedOffset = tipObjClicked[0].offsetTop;
@@ -2025,6 +2032,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    scrollWrapper.scrollTop(tipObjClickedOffset - 90);
 
 	    $scope.tipCounter = $scope.findInTipArray(tip._id);
+	    $scope.tipArrayData[$scope.tipCounter].isActive = true;
 	    // $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
 	    // $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 	    // $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
@@ -2406,10 +2414,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		}
 
 
-		for (var i = 0; i < $scope.tipArrayData.length; i++) {
-		    $scope.tipArrayData[i].isActive = false;
-		}
-		$scope.tipArrayData[$scope.tipCounter].isActive = true;
+		
+		//$scope.tipArrayData[$scope.tipCounter].isActive = true;
 
 
 		$scope.currentTipId = $scope.tipArrayData[$scope.tipCounter]._id
