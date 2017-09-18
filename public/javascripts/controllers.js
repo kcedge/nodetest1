@@ -10,7 +10,7 @@ $(".facebookLink").children().first().attr("target", "_blank");
 $(".twitterLink").children().first().attr("target", "_blank");
 
 //angular.module("myApp", ["$scope","$http", "ngCookies"]);
-var runningProduction = true;
+var runningProduction = false;
 function isAuthenticated($http, routeToSignUp, callback) {
     var req = {
 	method: 'GET',
@@ -978,14 +978,21 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.tipCounter = 0;
 	    }
 	    $scope.tipCounterTmp = $scope.tipCounter;
-	    $scope.tipCounter =0;
+	    $scope.tipCounter = 0;
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		$scope.tipArrayData[i].isActive = false;
-		$scope.updateBodyArray();
+		$scope.updateBodyArray();//call to update all tip bodies
 		$scope.tipCounter++;
 	    }
-	     $scope.tipCounter =  $scope.tipCounterTmp;
-	     $scope.tipArrayData[$scope.tipCounter].isActive = true;
+	    $scope.tipCounter = $scope.tipCounterTmp;
+	    $scope.tipArrayData[$scope.tipCounter].isActive = true;
+
+
+	    $scope.currentTipId = $scope.tipArrayData[$scope.tipCounter]._id
+	    $scope.currentTipPoints = $scope.tipArrayData[$scope.tipCounter].tipPoints;
+	    $scope.removeImageBodyArray = false;
+	    $scope.submittedDate = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
+	    // $scope.updateBodyArray(); //update current tip
 	};
 	window.onload = function () {
 	    // var currentTipId = $scope.currentTipId;
@@ -2019,12 +2026,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	}
 
 	$scope.tipNavBarClicked = function (tip) {
-	    
+
 	    //$scope.tipArrayData[$scope.tipCounter].isActive = false;
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
-		    $scope.tipArrayData[i].isActive = false;
-		}
-	    
+		$scope.tipArrayData[i].isActive = false;
+	    }
+
 	    var tipIdClicked = tip._id;
 	    var tipObjClicked = $("#tipsWrapper" + tipIdClicked);
 	    var tipObjClickedOffset = tipObjClicked[0].offsetTop;
@@ -2039,7 +2046,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	    $scope.addATipToggle = false;
 	    $scope.editATipToggle = false;
-	   // $scope.updateBodyArray();
+	    // $scope.updateBodyArray();
 
 	    //   $scope.updateImageFileName();
 
@@ -2403,8 +2410,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    if ($scope.tipArrayData.length) {
 		$scope.tipBodyArray = [];
 		$scope.tipImageArray = [];
-		
-		
+
+
 
 		if (!$scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipImageArray")) {
 		    $scope.tipArrayData[$scope.tipCounter].tipImageArray = [];
@@ -2414,7 +2421,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		}
 
 
-		
+
 		//$scope.tipArrayData[$scope.tipCounter].isActive = true;
 
 
@@ -2816,7 +2823,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
 
 	    // $scope.updateImageFileName();
-	   // $scope.updateBodyArray();
+	    // $scope.updateBodyArray();
 
 	}
 	$scope.prevButtonClicked = function () {
@@ -2837,7 +2844,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 	    $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
 	    //  $scope.updateImageFileName();
-	 //   $scope.updateBodyArray();
+	    //   $scope.updateBodyArray();
 	}
 	$scope.backToTipsClicked = function () {   //dd tip to database
 	    $scope.addATipToggle = false;
