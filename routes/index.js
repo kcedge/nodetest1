@@ -53,6 +53,8 @@ var multerS3 = require('multer-s3');
 AWS.config.loadFromPath('./aws-config.json');
 // assume you already have the S3 Bucket created, and it is called ierg4210-shopxx-photos
 var photoBucket = new AWS.S3({params: {Bucket: 'tip-photos-bucket'}});
+var sampleBucket = new AWS.S3({params: {Bucket: 'tip-samples-bucket'}});
+
 console.log("Photo Bucket is")
 console.log(photoBucket);
 var upload = "";
@@ -87,24 +89,24 @@ else {
     uploadSample = multer({dest: appRoot + '/public/resources/samples'}).single('file');
 }
 
-var tipAudioSampleUpload = "";
-if (runningProduction) {
-    tipAudioSampleUpload = multer({storage: multerS3({
-	    s3: photoBucket,
-	    bucket: 'tip-audio-sample-bucket',
-	    acl: 'public-read',
-	    metadata: function (req, file, cb) {
-		cb(null, {fieldName: file.fieldname});
-	    },
-	    key: function (req, file, cb) {
-		cb(null, Date.now().toString())
-	    }
-	})
-    }).single('file');
-}
-else {
-    tipAudioSampleUpload = multer({dest: appRoot + '/public/resources/tipAudioSamples'}).single('file');
-}
+//var tipAudioSampleUpload = "";
+//if (runningProduction) {
+//    tipAudioSampleUpload = multer({storage: multerS3({
+//	    s3: photoBucket,
+//	    bucket: 'tip-audio-sample-bucket',
+//	    acl: 'public-read',
+//	    metadata: function (req, file, cb) {
+//		cb(null, {fieldName: file.fieldname});
+//	    },
+//	    key: function (req, file, cb) {
+//		cb(null, Date.now().toString())
+//	    }
+//	})
+//    }).single('file');
+//}
+//else {
+//    tipAudioSampleUpload = multer({dest: appRoot + '/public/resources/tipAudioSamples'}).single('file');
+//}
 
 
 
