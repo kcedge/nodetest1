@@ -4,46 +4,50 @@
  * and open the template in the editor.
  */
 
-angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScope', '$http', 'ProfileService', '$localStorage',"FileUploader","ngAudio", function ($scope, $rootScope, $http, ProfileService, $localStorage,FileUploader,ngAudio) {
-	$scope.keyValues = ["C","C#/Db","D","D#/Eb","E","F","F#/Gb","G","G#/Ab","A","A#/Bb","B"];
-	$scope.typeValues = ["One Shot","Loop"];
-	$scope.sortReverse  = false;
-	$scope.sortType     = 'originalName';
-	$scope.searchSample   = '';
+angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScope', '$http', 'ProfileService', '$localStorage', "FileUploader", "ngAudio", function ($scope, $rootScope, $http, ProfileService, $localStorage, FileUploader, ngAudio) {
+	$scope.keyValues = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
+	$scope.typeValues = ["One Shot", "Loop"];
+	$scope.sortReverse = false;
+	$scope.sortType = 'originalName';
+	$scope.searchSample = '';
 	$scope.packname = "";
-	
+
 	$scope.adminAuth = true;
 	$scope.authenticated = false;
-	
-	$scope.packsFilterOptions = ["Top Packs","Most Recent Packs","Most Liked Packs","Most Used Packs"];
-	$scope.packsDurationOptions = ["All Time","Year","Month","Week"];
+
+	$scope.packsFilterOptions = ["Top Packs", "Most Recent Packs", "Most Liked Packs", "Most Used Packs"];
+	$scope.packsDurationOptions = ["All Time", "Year", "Month", "Week"];
 
 	$scope.packsFilter = "Top Packs";
 	$scope.packsFilterDuration = "Month";
 	$scope.activePack = {};
+
+
 	
-	isAuthenticated($http,false,function(username){
-	    if(username == 'kcedge'){
+	isAuthenticated($http, false, function (username) {
+	    if (username == 'kcedge') {
 		$scope.adminAuth = true;
 		$scope.authenticated = true;
 	    }
-	    if(username != 0){
+	    if (username != 0) {
 		$scope.authenticated = true;
 		$scope.username = username;
-	    }    
+		$scope.profileDataFromMongo();
+		
+	    }
 	});
-	
+
 	$scope.parseJson = function (jsonArray) {
 	    for (var i = 0; i < jsonArray.length; i++) {
 		if (jsonArray[i].hasOwnProperty("packImageJson") && jsonArray[i].packImageJson) {
 		    jsonArray[i].packImageJson = JSON.parse(jsonArray[i].packImageJson);
 		}
 	    }
-	   
+
 	    return jsonArray;
 	}
-	
-	$scope.savePack = function(pack){
+
+	$scope.savePack = function (pack) {
 	    var req = {
 		method: 'PUT',
 		url: '/savePack',
@@ -51,78 +55,78 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 		    'Content-Type': "application/json"
 		},
 		data: {id: pack._id,
-		       packname:pack.packname,
-		       packdesc:pack.packdesc
-		   }
+		    packname: pack.packname,
+		    packdesc: pack.packdesc
+		}
 	    }
 	    $http(req).then(function success(response) {
 		$scope.submitMessage = "Success"
 		$scope.responseData = response.data;
 		$scope.packname = "";
-		
-		
+
+
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
 		$scope.failureData = response.data;
 	    });
 	}
-	
-	
-	
-	
-	
-	window.onload=function(){
-	     styleSize(); 
-	   $scope.setStyle();
+
+
+
+
+
+	window.onload = function () {
+	    styleSize();
+	    $scope.setStyle();
 	}
-	
-	$(window).resize(function(){
-	   styleSize(); 
-	   $scope.setStyle();
+
+	$(window).resize(function () {
+	    styleSize();
+	    $scope.setStyle();
 	});
-	var styleSize = function(){
+	var styleSize = function () {
 	    var height = $(window).height();
 	    $(".sampleListWrapper").height(height - 50 - 90); //For banner and filter menu
 	}
-	
-	
-	
-	$scope.setStyle = function(){
+
+
+
+	$scope.setStyle = function () {
 	    var packWrapper = $(".packWrapper");
 	    var width = packWrapper.width();
-	    if(width){
+	    if (width) {
 		var windowHeight = $(window).height();
 		//$(".packWrapper").height(width/2);//SQUARE
-		$(".packDescWrapper").height((width-20)/2);
+		$(".packDescWrapper").height((width - 20) / 2);
 		//$(".packHeaderWrapper").height((width-20)/2);
-		$(".packViewBanner").height(width*2-100);
-		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() -50 - 50);
-		$(".packList").height($(window).height() -$(".filterBoxStyle").height() -50 - 20);
+		$(".packViewBanner").height(width * 2 - 100);
+		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() - 50 - 50);
+		$(".packList").height($(window).height() - $(".filterBoxStyle").height() - 50 - 20);
 		//$("#addContent").height = window.height();
-		$('.packWrapper').height(width*.8);
-		$('.packHeaderWrapper').height(width*.7);
-		$('.packHeaderWrapper').css('background-size','contain');
-		 $('.packBackGroundImage').height(width);
+		$('.packWrapper').height(width * .8);
+		$('.packHeaderWrapper').height(width * .7);
+		$('.packHeaderWrapper').css('background-size', 'contain');
+		$('.packBackGroundImage').height(width);
 	    }
-	    else{
+	    else {
 		var windowHeight = $(window).height();
 		//$(".packWrapper").height(150/2);
-		 $(".packDescWrapper").height(130/2);
+		$(".packDescWrapper").height(130 / 2);
 		// $(".packHeaderWrapper").height(130/2);
-		 $(".packViewBanner").height(200);
-		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() -50 - 50);
+		$(".packViewBanner").height(200);
+		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() - 50 - 50);
 
-		  $(".packList").height($(window).height() - $(".filterBoxStyle").height() - 50 - 50-20);
+		$(".packList").height($(window).height() - $(".filterBoxStyle").height() - 50 - 50 - 20);
 		// $("#addContent").height = window.height();
 	    }
-	   
-	 
-	 
-	 
-	}
-	
 
-	
+
+
+
+	}
+
+
+
 	var getFilters = function () {
 
 	    var req = {
@@ -181,10 +185,10 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    });
 
 	};
-	
+
 	getFilters();
-	
-	$scope.uploadPackHeadClicked = function(){
+
+	$scope.uploadPackHeadClicked = function () {
 	    var test = $scope.adminAuth;
 	}
 	$scope.uploader = new FileUploader({
@@ -193,15 +197,15 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	$scope.packImageUploader = new FileUploader({
 	    url: '/uploadPackImage'
 	});
-	
+
 	// FILTERS
-	$scope.uploader.filters.push({	
+	$scope.uploader.filters.push({
 	    name: 'customFilter',
 	    fn: function (item /*{File|FileLikeObject}*/, options) {
 		return this.queue.length < 1000;
 	    }
 	});
-	
+
 	$scope.uploader.filters.push({
 	    name: 'sizeFilter',
 	    fn: function (item /*{File|FileLikeObject}*/, options) {
@@ -209,13 +213,13 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 		return item.size <= 10000000;
 	    }
 	});
-	$scope.packImageUploader.filters.push({	
+	$scope.packImageUploader.filters.push({
 	    name: 'customFilter',
 	    fn: function (item /*{File|FileLikeObject}*/, options) {
 		return this.queue.length < 1000;
 	    }
 	});
-	
+
 	$scope.packImageUploader.filters.push({
 	    name: 'sizeFilter',
 	    fn: function (item /*{File|FileLikeObject}*/, options) {
@@ -228,75 +232,75 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	// CALLBACKS
 	$scope.uploadedSamples = [];
 	var numberOfSamples = 0;
-	var uploadPack = function(){
-	     var req = {
+	var uploadPack = function () {
+	    var req = {
 		method: 'POST',
 		url: '/uploadPack',
 		headers: {
 		    'Content-Type': "application/json"
 		},
 		data: {packname: $scope.packname,
-		       sampleArrayJson:JSON.stringify($scope.uploadedSamples),
-		       packImageJson:JSON.stringify($scope.uploadedPackImages)}
+		    sampleArrayJson: JSON.stringify($scope.uploadedSamples),
+		    packImageJson: JSON.stringify($scope.uploadedPackImages)}
 	    }
 	    $http(req).then(function success(response) {
 		$scope.submitMessage = "Success"
 		$scope.responseData = response.data;
 		$scope.packname = "";
-		
-		
+
+
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
 		$scope.failureData = response.data;
 	    });
 	}
-	var getSamples = function(){
-	      var req = {
+	var getSamples = function () {
+	    var req = {
 		method: 'GET',
 		url: '/samples',
 		headers: {
 		    'Content-Type': "application/json"
 		},
 		data: {}
-	    } 
-	     $http(req).then(function success(response) {
+	    }
+	    $http(req).then(function success(response) {
 		$scope.samples = response.data;
 		$scope.updateSamples();
-		
+
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
 		$scope.failureData = response.data;
 	    });
 	}
-	var getPacks = function(){
-	      var req = {
+	var getPacks = function () {
+	    var req = {
 		method: 'GET',
 		url: '/packs',
 		headers: {
 		    'Content-Type': "application/json"
 		},
 		data: {}
-	    } 
-	     $http(req).then(function success(response) {
+	    }
+	    $http(req).then(function success(response) {
 		$scope.packs = response.data;
 		$scope.packs = $scope.parseJson($scope.packs);
-		
+
 		$scope.updatePacks(); // UPDATES LEFT NAV BAR WITH PACKS
-		if($scope.packs){
-			$scope.activePack = $scope.packs[0];
-		    }
+		if ($scope.packs) {
+		    $scope.activePack = $scope.packs[0];
+		}
 		//$scope.$apply();
 		$scope.setStyle();
-		
+
 	    }, function failure(response) {
 		$scope.submitMessage = "Failure"
 		$scope.failureData = response.data;
 	    });
 	}
-	
+
 	$scope.uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
 	    $scope.fileErrorMessage = "";
-	    if(filter.name = 'sizeFilter'){
+	    if (filter.name = 'sizeFilter') {
 		$scope.fileErrorMessage = "File too big. Upload file limit 10 MB";
 	    }
 	    console.info('onWhenAddingFileFailed', item, filter, options);
@@ -309,13 +313,13 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    console.info('onAfterAddingAll', addedFileItems);
 	};
 	$scope.uploader.onBeforeUploadItem = function (item) {
-	    item.formData.push({bpm:item.bpm});
-	    item.formData.push({key:item.key});
-	    item.formData.push({tagJson:JSON.stringify(item.tags)});
-	    item.formData.push({type:item.type});
-	    item.formData.push({packname:$scope.packname});
+	    item.formData.push({bpm: item.bpm});
+	    item.formData.push({key: item.key});
+	    item.formData.push({tagJson: JSON.stringify(item.tags)});
+	    item.formData.push({type: item.type});
+	    item.formData.push({packname: $scope.packname});
 
-	    item.formData.push({points:0});
+	    item.formData.push({points: 0});
 	    console.info('onBeforeUploadItem', item);
 	};
 	$scope.uploader.onProgressItem = function (fileItem, progress) {
@@ -326,7 +330,7 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	};
 	$scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
 	    console.info('onSuccessItem', fileItem, response, status, headers);
-	    
+
 	};
 	$scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
 	    console.info('onErrorItem', fileItem, response, status, headers);
@@ -338,11 +342,11 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    console.info('onCompleteItem', fileItem, response, status, headers);
 
 	    $scope.uploadedSamples.push(response);
-	    
+
 	    var imageFileNameLocal = response;
 	    if (!runningProduction) {
-			imageFileNameLocal = "resources/samples/" + response;
-		}
+		imageFileNameLocal = "resources/samples/" + response;
+	    }
 	    //$scope.samplesArray.push({imageFileName: imageFileNameLocal, hasImage: true, submittedBy: "submittedBy"})
 	    numberOfSamples++;
 
@@ -351,10 +355,10 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    uploadPack();
 	    console.info('onCompleteAll');
 	};
-	
+
 	$scope.packImageUploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
 	    $scope.fileErrorMessage = "";
-	    if(filter.name = 'sizeFilter'){
+	    if (filter.name = 'sizeFilter') {
 		$scope.fileErrorMessage = "File too big. Upload file limit 10 MB";
 	    }
 	    console.info('onWhenAddingFileFailed', item, filter, options);
@@ -384,7 +388,7 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	};
 	$scope.packImageUploader.onSuccessItem = function (fileItem, response, status, headers) {
 	    console.info('onSuccessItem', fileItem, response, status, headers);
-	    
+
 	};
 	$scope.packImageUploader.onErrorItem = function (fileItem, response, status, headers) {
 	    console.info('onErrorItem', fileItem, response, status, headers);
@@ -396,19 +400,19 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    console.info('onCompleteItem', fileItem, response, status, headers);
 
 	    var imagePath = response;
-	  
+
 	    if (!runningProduction) {
 		imagePath = "resources/images/" + response;
 	    }
-	    if($scope.uploadedPackImages){
-		 $scope.uploadedPackImages.push({image:imagePath,isPackImage:true});
+	    if ($scope.uploadedPackImages) {
+		$scope.uploadedPackImages.push({image: imagePath, isPackImage: true});
 	    }
-	    else{
+	    else {
 		$scope.uploadedPackImages = [];
-		$scope.uploadedPackImages.push({image:imagePath,isPackImage:true});
+		$scope.uploadedPackImages.push({image: imagePath, isPackImage: true});
 	    }
-	    
-	   
+
+
 	    //$sc
 //	    $scope.queue = [];
 //	    var bannerImageJson = JSON.stringify($scope.bannerImagesUploaded);
@@ -416,38 +420,45 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 
 	};
 	$scope.packImageUploader.onCompleteAll = function () {
-	   // uploadPackImage();
+	    // uploadPackImage();
 	    console.info('onCompleteAll');
 	};
-	
-	$scope.getTags = function(query){
+
+	$scope.getTags = function (query) {
 	    return [
-                    { text: 'percs' },
-                    { text: 'drums' },
-                    { text: 'kick' },
-                    { text: 'snare' },
-		    { text: 'synth' },
-		    { text: 'sfx' },	
-                ];
+		{text: 'percs'},
+		{text: 'drums'},
+		{text: 'kick'},
+		{text: 'snare'},
+		{text: 'synth'},
+		{text: 'sfx'},
+	    ];
 	}
 	$scope.updateSamples = function (pack) {
 
 	    for (var s = 0; s < $scope.samples.length; s++) {
-		if(!runningProduction){
-			$scope.samples[s].audio = ngAudio.load("resources/samples/"+$scope.samples[s].fileName);
-		
+		if (!runningProduction) {
+		    $scope.samples[s].audio = ngAudio.load("resources/samples/" + $scope.samples[s].fileName);
+
 		}
-		else{
+		else {
 		    $scope.samples[s].audio = ngAudio.load($scope.samples[s].destination);
 		}
-		
-		if($scope.samples[s].tagJson != 'undefined' && $scope.samples[s].tagJson)
-		$scope.samples[s].tags = JSON.parse($scope.samples[s].tagJson);
+
+		if ($scope.samples[s].tagJson != 'undefined' && $scope.samples[s].tagJson) {
+		    $scope.samples[s].tags = JSON.parse($scope.samples[s].tagJson);
+
+		}
+		if ($scope.samples[s].hasOwnProperty('points')) {
+		    $scope.samples[s].points = parseInt($scope.samples[s].points);
+		}
+
+
 		if (typeof pack != 'undefined' && pack.active) {
 		    if (($scope.samples[s].packname == pack.packname)) {
 			$scope.samples[s].show = true;
 		    }
-		    else{
+		    else {
 			$scope.samples[s].show = false;
 		    }
 		}
@@ -456,7 +467,7 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 		}
 	    }
 	}
-	$scope.packMouseOver = function(pack){
+	$scope.packMouseOver = function (pack) {
 	    pack.showDesc = true;
 	    pack.showTitle = true;
 	}
@@ -465,7 +476,7 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	    for (var s = 0; s < $scope.packs.length; s++) {
 		$scope.packs[s].showTitle = true;
 		$scope.packs[s].showDesc = false;
-		if(!$scope.packs[s].hasOwnProperty("desc")){
+		if (!$scope.packs[s].hasOwnProperty("desc")) {
 		    $scope.packs[s].desc = "";
 		}
 	    }
@@ -476,87 +487,304 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 		var key = uploader.queue[0].key;
 		var type = uploader.queue[0].type;
 		var tags = uploader.queue[0].tags;
-		
+
 		for (var i = 0; i < uploader.queue.length; i++) {
-			uploader.queue[i].bpm = bpm;
-			uploader.queue[i].key = key
-			uploader.queue[i].type = type;
-			uploader.queue[i].tags = tags;
+		    uploader.queue[i].bpm = bpm;
+		    uploader.queue[i].key = key
+		    uploader.queue[i].type = type;
+		    uploader.queue[i].tags = tags;
 		}
 	    }
 	}
-	$scope.showKey = function(key){
+	$scope.showKey = function (key) {
 	    return (key != 'undefined' && key)
 	}
 	$scope.uploadAPackToggle = false;
-	$scope.uploadPackToggleClicked = function(){
+	$scope.uploadPackToggleClicked = function () {
 	    $scope.uploadAPackToggle = !$scope.uploadAPackToggle;
 	}
 	
+	
+	var convertProfileSampleDataToJson = function(profileSampleData){
+	    
+	}
+//	if ($scope.authenticated) {
+//	    ProfileService.getProfileSampleData($scope.username).then(function (response) {		    
+//		     convertProfileSampleDataToJson(response.data);
+//
+//		    //$scope.$apply();
+//
+//		    //$scope.parentobj.comments = response.data;
+//		});{
+//		
+//	    }
+//	    ProfileService.getTopUsers($scope.filterPeriodTopUsersDropDown)
+//		
+//	}
+//	
+	$scope.updateDownloadSampleData = function () {
+	    for (var i = 0; i < $scope.samples.length; i++) {
+		$scope.samples[i].isLoved = false;
+		for (var j = 0; j < $scope.downloadedSamples.length; j++) {
+		    var sampleId = $scope.samples[i]._id;
+		    var profileId = $scope.downloadedSamples[j];
+		    if (sampleId == profileId) {
+			$scope.samples[i].isDownloaded = true;
+		    }
+		}
+	    }
+	}
+	$scope.profileDataFromMongo = function () {
+	    var username = $scope.username;
+	    var req = {
+		method: 'POST',
+		url: '/profileInfoPostGet/' + username,
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {userName: username}
+	    }
+	    $http(req).then(function success(response) {
+		if (response.data.length > 0) {
+		    var responseData = response.data[0];
+//		    if (responseData.hasOwnProperty('lovedTipsJson')) {
+//			$scope.lovedTipsArray = JSON.parse(responseData.lovedTipsJson);
+//			$scope.updateTipDataWithLovedTipData();
+//		    }
+//		    if (responseData.hasOwnProperty('likedTipsJson')) {
+//			$scope.likedTipsArray = JSON.parse(responseData.likedTipsJson);
+//			$scope.updateTipDataWithLikedTipData();
+//		    }
+//		    if (responseData.hasOwnProperty('dislikedTipsJson')) {
+//			$scope.dislikedTipsArray = JSON.parse(responseData.dislikedTipsJson);
+//			$scope.updateTipDataWithDislikedTipData();
+//		    }
+
+		
+		     if (responseData.hasOwnProperty('downloadedSamples')) {
+			$scope.downloadedSamples = JSON.parse(responseData.downloadedSamples);
+			$scope.updateDownloadSampleData();
+		    }
+
+
+		}
+	    }, function failure(response) {
+
+		$scope.submitMessage = "Failure"
+		$scope.responseData = response.data;
+
+	    });
+	    //$scope.updateBodyArray();
+
+	}
+	
+
 	
 	getPacks();
 	getSamples();
 
     }]);
 
-angular.module("myApp").controller('samplesCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', '$localStorage', "ngAudio", function ($scope, $rootScope, $http, ProfileService, $localStorage,ngAudio ) {
+angular.module("myApp").controller('samplesCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', '$localStorage', "ngAudio", function ($scope, $rootScope, $http, ProfileService, $localStorage, ngAudio) {
 	$scope.editToggle = false;
-	$scope.keyValues = ["C","C#/Db","D","D#/Eb","E","F","F#/Gb","G","G#/Ab","A","A#/Bb","B"];
-	$scope.typeValues = ["One Shot","Loop"];
+	$scope.keyValues = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
+	$scope.typeValues = ["One Shot", "Loop"];
 	$scope.adminAuthSamples = false;
 	$scope.authenticated = false;
-	
+	$scope.lovedSamplesArray = [];
 	//Second Parm is route to sign in
-	isAuthenticated($http,false,function(username){
-	    if(username == 'kcedge'){
+	isAuthenticated($http, false, function (username) {
+	    if (username == 'kcedge') {
 		$scope.adminAuthSamples = true;
 		$scope.authenticated = true;
 	    }
-	    if(username != 0){
+	    if (username != 0) {
 		$scope.authenticated = true;
 		$scope.username = username;
-	    }    
+	    }
 	});
-	
-	$scope.getName = function(sample){
+
+	$scope.getName = function (sample) {
 	    return sample.orginalName;
 	}
-	
+
+	$scope.downloadedSamplesArray = [];
 	$scope.downloadClicked = function (sample) {
+	    var sampleId = sample._id;
 	    if ($scope.authenticated) {
+
+		if (sample.isDownloaded == null) {
+		    sample.isDownloaded = false;
+		}
+		sample.isDownloaded = !sample.isDownloaded;
+
+		var downloadedIndex = $scope.$parent.downloadedSamples.indexOf(sampleId);
+
+
+		if (!sample.hasOwnProperty('downloadCount')) {
+		    sample.downloadCount = 0;
+		}
+		sample.downloadCount++;
+
+		//Not found in loved array push it on
+		if (downloadedIndex == -1) {
+		    $scope.$parent.downloadedSamples.push(sampleId)
+		}
+		else {
+		    $scope.$parent.downloadedSamples.splice(downloadedIndex, 1);
+		    //updatedPoints = currentPoints - 1;
+		}
+
+//		if (sample.hasOwnProperty('points')) {
+//		    if (downloadedIndex == -1) {
+//			updatedPoints = currentPoints + 1;
+//		    }
+//		}
+//		else {
+//		    updatedPoints = 2;
+//		}
+//		$scope.updateSamplePoints(updatedPoints);
+
+
+
 		var link = document.createElement("a");
 		link.target = '_self';
-		link.href = sample.destination;
+		if (runningProduction)
+		    link.href = sample.destination;
+		else
+		    link.href = sample.path;
+
 		link.click();
+
+		ProfileService.postProfileDownloadedSamples($scope.username, JSON.stringify($scope.$parent.downloadedSamples)).then(function (response) {
+		    var response = response.data;
+
+		    //$scope.$apply();
+
+		    //$scope.parentobj.comments = response.data;
+		});
+
+		var req = {
+		    method: 'PUT',
+		    url: '/samplePageUpdateDownloadTipsCount',
+		    headers: {
+			'Content-Type': "application/json"
+		    },
+		    data: {sampleId: sampleId,
+			downloadCount: sample.downloadCount
+		    }
+		}
+
+		$http(req).then(function success(response) {
+		    $scope.submitMessage = "Success"
+
+		    //$scope.getSamples();
+
+		}, function failure(response) {
+		    $scope.submitMessage = "Failure"
+		    $scope.responseData = response.data;
+
+		});
+
+
+
 	    }
-	    else{
-		window.location.href = '/signUp/sampleLib';
+	    else {
+		window.location.href = '/signUp/sampleLib/' + sampleId;
 	    }
 	}
-	
-	
-	
-	$scope.progressInputClicked = function(sample,e){
-	    var width = $("#duration"+sample._id).width();
+
+	$scope.updateSamplePoints = function (sample, updatedPoints) {
+	    var sampleId = sample._id;
+	    var req = {
+		method: 'PUT',
+		url: '/samplePageUpdatePoints',
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {sampleId: sampleId,
+		    points: updatedPoints
+		}
+	    }
+
+	    $http(req).then(function success(response) {
+		$scope.submitMessage = "Success"
+
+		//$scope.getSamples();
+
+	    }, function failure(response) {
+		$scope.submitMessage = "Failure"
+		$scope.responseData = response.data;
+
+	    });
+	}
+	$scope.loveSampleClicked = function (sample) {
+	    //  $scope.sampleClicked(sample);
+	    if (!$scope.authenticated) {
+		$scope.likedTipsArray = [];
+		$scope.lovedTipsArray = [];
+		$scope.dislikedTipsArray = [];
+		$(location).attr('href', '/signUp');
+
+	    }
+	    else {
+		var sampleObj = sample;
+
+		if (sample.isLoved == null) {
+		    sample.isLoved = false;
+		}
+		sample.isLoved = !sample.isLoved;
+		var sampleId = sample._id;
+
+		var lovedIndex = $scope.lovedSamplesArray.indexOf(sampleId);
+		var currentPoints = sample.points;
+		var updatedPoints = sample.points;
+
+		//Not found in loved array push it on
+		if (lovedIndex == -1) {
+		    $scope.lovedSamplesArray.push(sampleId)
+		}
+		else {
+		    $scope.lovedSamplesArray.splice(lovedIndex, 1);
+		    updatedPoints = currentPoints - 1;
+		}
+
+
+		if (sample.hasOwnProperty('points')) {
+		    if (lovedIndex == -1) {
+			updatedPoints = currentPoints + 1;
+		    }
+		}
+		else {
+		    updatedPoints = 2;
+		}
+		$scope.updateSamplePoints(updatedPoints);
+		//$scope.updateProfile();
+	    }
+	}
+
+
+	$scope.progressInputClicked = function (sample, e) {
+	    var width = $("#duration" + sample._id).width();
 	    var x = e;
-	    var progressPercent = (e.layerX-5)/width;
+	    var progressPercent = (e.layerX - 5) / width;
 	    sample.audio.progress = progressPercent;
 	    if (sample.audio) {
 		sample.audio.play();
 	    }
 	}
-	$scope.samplePlayClicked = function(sample){
-	    if(sample.audio){
+	$scope.samplePlayClicked = function (sample) {
+	    if (sample.audio) {
 		sample.audio.paused ? sample.audio.play() : sample.audio.pause();
 	    }
 	}
-	
-	$scope.editSampleClicked = function(sample){
+
+	$scope.editSampleClicked = function (sample) {
 	    $scope.editToggle = true;
 	    $scope.editSample = sample;
 	    $scope.editSample.bpm = parseInt($scope.editSample.bpm);
 	}
-	
+
 	$scope.editSaveSample = function (sample) {
 	    var req = {
 		method: 'PUT',
@@ -582,111 +810,111 @@ angular.module("myApp").controller('samplesCtrl', ['$scope', '$rootScope', '$htt
 	}
     }]);
 
-angular.module("myApp").controller('packsCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', '$localStorage', "ngAudio", function ($scope, $rootScope, $http, ProfileService, $localStorage,ngAudio ) {
-	$scope.setActivePack = function(pack,$index)
+angular.module("myApp").controller('packsCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', '$localStorage', "ngAudio", function ($scope, $rootScope, $http, ProfileService, $localStorage, ngAudio) {
+	$scope.setActivePack = function (pack, $index)
 	{
-	    for(var p = 0; p<$scope.$parent.packs.length;p++){
+	    for (var p = 0; p < $scope.$parent.packs.length; p++) {
 		$scope.$parent.packs[p].active = false;
 	    }
-	    if($scope.$parent.packs[$index]){
+	    if ($scope.$parent.packs[$index]) {
 		$scope.$parent.activePack = $scope.$parent.packs[$index];
 		$scope.$parent.activePackIndex = $index;
 		$scope.$parent.packs[$index].active = true;
 	    }
-	  
-	    
-	   
+
+
+
 	}
-	
+
 	$scope.packWidth = 0;
-	$scope.getPackWrapperStyle = function(){
+	$scope.getPackWrapperStyle = function () {
 	    var packWrapper = $(".packWrapper");
 	    var width = packWrapper.width();
-	    var updatedWidth =false;
-	    if($scope.packWidth == 0){
-		    $scope.packWidth = width;
-		    updatedWidth = true;
-	    }
-	    else if($scope.packWidth != width){
+	    var updatedWidth = false;
+	    if ($scope.packWidth == 0) {
+		$scope.packWidth = width;
 		updatedWidth = true;
 	    }
-	    
-	    
-	    if(updatedWidth && width){
+	    else if ($scope.packWidth != width) {
+		updatedWidth = true;
+	    }
+
+
+	    if (updatedWidth && width) {
 		var windowHeight = $(window).height();
 		//$(".packWrapper").height(width/2);//SQUARE
-		$(".packDescWrapper").height((width-20)/2);
+		$(".packDescWrapper").height((width - 20) / 2);
 		//$(".packHeaderWrapper").height((width-20)/2);
-		$(".packViewBanner").height(width*2-100);
-		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() -50 - 50);
-		$(".packList").height($(window).height() -$(".filterBoxStyle").height() -50 - 60);
+		$(".packViewBanner").height(width * 2 - 100);
+		$(".sampleListWrapper").height(windowHeight - $(".packViewBanner").height() - $(".filterBoxStyle").height() - 50 - 50);
+		$(".packList").height($(window).height() - $(".filterBoxStyle").height() - 50 - 60);
 		//$("#addContent").height = window.height();
-		$('.packWrapper').height(width*.8);
-		$('.packHeaderWrapper').height(width*.7);
-		$('.packHeaderWrapper').css('background-size','contain');
-		 $('.packBackGroundImage').height(width);
+		$('.packWrapper').height(width * .8);
+		$('.packHeaderWrapper').height(width * .7);
+		$('.packHeaderWrapper').css('background-size', 'contain');
+		$('.packBackGroundImage').height(width);
 	    }
-	   
-	   // return $(".packWrapper").css();
+
+	    // return $(".packWrapper").css();
 	}
-	
-	
-	
+
+
+
 	$scope.editPackToggle = false;
-	$scope.editPackClicked = function(pack,$index){
+	$scope.editPackClicked = function (pack, $index) {
 	    $scope.editPackToggle = !$scope.editPackToggle;
 	    $scope.editPackIndex = $index;
-	    if($scope.editPack){
-		 $scope.editPack.title = pack.packname;
-		 $scope.editPack.desc = pack.packdesc;
+	    if ($scope.editPack) {
+		$scope.editPack.title = pack.packname;
+		$scope.editPack.desc = pack.packdesc;
 	    }
-	    else{
+	    else {
 		$scope.editPack = {};
-		 $scope.editPack.title = pack.packname;
-		 $scope.editPack.desc = pack.packdesc;
+		$scope.editPack.title = pack.packname;
+		$scope.editPack.desc = pack.packdesc;
 	    }
-	    
-	    
-	    
+
+
+
 	}
 	$scope.activePackTmpIndex = 0;
-	
-	$scope.setActivePackBanner=function(pack,$index){
-	    $scope.$parent.activePack =  $scope.$parent.packs[$index];
+
+	$scope.setActivePackBanner = function (pack, $index) {
+	    $scope.$parent.activePack = $scope.$parent.packs[$index];
 	}
-	
-	$scope.packMouseOver = function(pack,$index){
+
+	$scope.packMouseOver = function (pack, $index) {
 	    $scope.$parent.updatePacks();
 	    $scope.$parent.packs[$index].showTitle = false;
 	    $scope.$parent.packs[$index].showDesc = true;
-	    
+
 	    $scope.activePackTmpIndex = $scope.$parent.activePackIndex;
-	    $scope.setActivePackBanner(pack,$index);
+	    $scope.setActivePackBanner(pack, $index);
 	}
-	$scope.packMouseLeave = function(pack,$index){
+	$scope.packMouseLeave = function (pack, $index) {
 	    $scope.$parent.updatePacks();
 	    $scope.$parent.packs[$index].showTitle = true;
 	    $scope.$parent.packs[$index].showDesc = false;
-	    
+
 
 	    $scope.setActivePackBanner(pack, $scope.activePackTmpIndex);
 	}
-	
-	$scope.editPackSave = function(){
-	    if($scope.$parent.packs[$scope.editPackIndex]){
-		
+
+	$scope.editPackSave = function () {
+	    if ($scope.$parent.packs[$scope.editPackIndex]) {
+
 		$scope.$parent.packs[$scope.editPackIndex].packname = $scope.editPack.title;
 		$scope.$parent.packs[$scope.editPackIndex].packdesc = $scope.editPack.desc;
 		$scope.$parent.savePack($scope.$parent.packs[$scope.editPackIndex]);
 	    }
 	}
-	
-	$scope.packClicked = function(pack,$index){
-	     $scope.activePackTmpIndex = $index;
-	    $scope.setActivePack(pack,$index);
+
+	$scope.packClicked = function (pack, $index) {
+	    $scope.activePackTmpIndex = $index;
+	    $scope.setActivePack(pack, $index);
 	    $scope.$parent.updateSamples(pack);
-	     
+
 	}
-	
+
 
     }]);

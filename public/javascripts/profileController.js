@@ -10,6 +10,7 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 	    username: "",
 	    userSignedIn: false
 	});
+	
 	$scope.currentTip = {} // Current Tip Previewing
 
 	var username = $("#userName").html();

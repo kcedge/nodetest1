@@ -56,28 +56,62 @@ var photoBucket = new AWS.S3({params: {Bucket: 'tip-photos-bucket'}});
 console.log("Photo Bucket is")
 console.log(photoBucket);
 var upload = "";
-if(runningProduction){
-     upload = multer({ storage : multerS3({
-	s3: photoBucket,
-	bucket: 'tip-photos-bucket',
-	acl: 'public-read',
-	metadata: function (req, file, cb) {
-	  cb(null, {fieldName: file.fieldname});
-	},
-	key: function (req, file, cb) {
-	  cb(null, Date.now().toString())
-	}
-      })
+if (runningProduction) {
+    upload = multer({storage: multerS3({
+	    s3: photoBucket,
+	    bucket: 'tip-photos-bucket',
+	    acl: 'public-read',
+	    metadata: function (req, file, cb) {
+		cb(null, {fieldName: file.fieldname});
+	    },
+	    key: function (req, file, cb) {
+		cb(null, Date.now().toString())
+	    }
+	})
+    }).single('file');
+     uploadSample = multer({storage: multerS3({
+	    s3: sampleBucket,
+	    bucket: 'tip-samples-bucket',
+	    acl: 'public-read',
+	    metadata: function (req, file, cb) {
+		cb(null, {fieldName: file.fieldname});
+	    },
+	    key: function (req, file, cb) {
+		cb(null, Date.now().toString())
+	    }
+	})
     }).single('file');
 }
-else{
+else {
     upload = multer({dest: appRoot + '/public/resources/images'}).single('file');
+    uploadSample = multer({dest: appRoot + '/public/resources/samples'}).single('file');
 }
 
+var tipAudioSampleUpload = "";
+if (runningProduction) {
+    tipAudioSampleUpload = multer({storage: multerS3({
+	    s3: photoBucket,
+	    bucket: 'tip-audio-sample-bucket',
+	    acl: 'public-read',
+	    metadata: function (req, file, cb) {
+		cb(null, {fieldName: file.fieldname});
+	    },
+	    key: function (req, file, cb) {
+		cb(null, Date.now().toString())
+	    }
+	})
+    }).single('file');
+}
+else {
+    tipAudioSampleUpload = multer({dest: appRoot + '/public/resources/tipAudioSamples'}).single('file');
+}
+
+
+
 module.exports = function (router, passport) {
-    
-    
-    
+
+
+
     router.get('/authenticated', function (req, res) {
 	// If this function gets called, authentication was successful.
 	// `req.user` contains the authenticated user.
@@ -109,13 +143,13 @@ module.exports = function (router, passport) {
     router.get('/signIn', function (req, res) {
 	console.log(req);
 	res.render('signIn', {title: 'Sign In',
-				messages: req.flash('loginMessage') });
+	    messages: req.flash('loginMessage')});
     });
     router.get('/signIn/:redirect', function (req, res) {
 	var redirect = req.params.redirect;
 	res.render('signIn', {title: 'Sign In',
-			      message: req.flash('signupMessage'),
-			      redirect:redirect});
+	    message: req.flash('signupMessage'),
+	    redirect: redirect});
     });
     /* GET Comments Template. */
     router.get('/comments-list', function (req, res) {
@@ -131,66 +165,66 @@ module.exports = function (router, passport) {
 	console.log('loading packs template');
 	res.render('packs-list', {title: 'pack template'});
     });
-      // process the login form
+    // process the login form
     router.post('/signIn', passport.authenticate('local-login', {
-        // redirect to the secure profile section
-        failureRedirect : '/signIn', // redirect back to the signup page if there is an error
-        failureFlash : true // allow flash messages
-    }),function(req,res){
+	// redirect to the secure profile section
+	failureRedirect: '/signIn', // redirect back to the signup page if there is an error
+	failureFlash: true // allow flash messages
+    }), function (req, res) {
 	console.log("Sign in success redirecting to " + req.body['redirect']);
 	res.redirect('/' + req.body['redirect']);
     });
 
     router.get('/signUp', function (req, res) {
 	res.render('signUp', {title: 'Sign Up',
-			      message: req.flash('signupMessage'),
-			      redirect:"profile"});
+	    message: req.flash('signupMessage'),
+	    redirect: "profile"});
     });
     router.get('/signUp/:redirect', function (req, res) {
 	var redirect = req.params.redirect;
 	res.render('signUp', {title: 'Sign Up',
-			      message: req.flash('signupMessage'),
-			      redirect:redirect});
+	    message: req.flash('signupMessage'),
+	    redirect: redirect});
     });
 
 //process the signup form
-    router.post('/signUp', passport.authenticate('local-signup', { // redirect to the secure profile section
+    router.post('/signUp', passport.authenticate('local-signup', {// redirect to the secure profile section
 	failureRedirect: '/signUp', // redirect back to the signup page if there is an error
 	failureFlash: true // allow flash messages
-    }),function(req,res){
+    }), function (req, res) {
 	console.log("Sign up success redirecting to " + req.body['redirect']);
 	res.redirect('/' + req.body['redirect']);
     });
 
     router.get('/profile', isLoggedIn, function (req, res) {
 	res.render('profile', {username: req.user.local.username,
-				localuser:req.user,
-				greeting:"Welcome "});
+	    localuser: req.user,
+	    greeting: "Welcome "});
     });
-    
-     router.get('/profile/:username', function (req, res) {
+
+    router.get('/profile/:username', function (req, res) {
 	console.log('getting profile for ')
 	var userName = req.params.username;
 	console.log(userName);
 	res.render('profile', {username: userName,
-				localuser:req.user});
+	    localuser: req.user});
     });
-    
-    router.get('/soundCloudAuth',passport.authenticate('soundcloud-token', {
+
+    router.get('/soundCloudAuth', passport.authenticate('soundcloud-token', {
 	successRedirect: '/profile', // redirect to the secure profile section
 	failureRedirect: '/signUp', // redirect back to the signup page if there is an error
 	failureFlash: true // allow flash messages
-     }));
- // =====================================
+    }));
+    // =====================================
     // LOGOUT ==============================
     // =====================================
-    router.get('/logout', function(req, res) {
+    router.get('/logout', function (req, res) {
 	console.log(req);
 	console.log("Logging out user")
-        req.logout();
-        res.redirect('/signIn');
+	req.logout();
+	res.redirect('/signIn');
     });
-    
+
     /* GET Hello World page. */
     router.get('/tipLib', function (req, res) {
 	// Use connect method to connect to the Server
@@ -228,20 +262,20 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		var collection = db.collection('tipsCollection');
-		cursor = collection.find({_id:ObjectId(id)}).toArray(function (err, item) {
+		cursor = collection.find({_id: ObjectId(id)}).toArray(function (err, item) {
 		    if (err) {
 			console.log('Unable to get tip', err);
 		    }
 		    else {
-			res.render('tipLib', {title: 'Tip Library with Id', item: item, id:id});
-			
+			res.render('tipLib', {title: 'Tip Library with Id', item: item, id: id});
+
 		    }
 		    db.close();
 		});
 	    }
 	    db.close();
 	});
-	
+
     });
     router.get('/tipsPageGet', function (req, res) {
 
@@ -273,7 +307,7 @@ module.exports = function (router, passport) {
 	});
 
     });
-    
+
     router.post('/tipsPagePost', function (req, res) {
 
 	console.log("tipsPagePost");
@@ -284,12 +318,13 @@ module.exports = function (router, passport) {
 	var vstJson = req.body['vstJson'];
 	var dawJson = req.body['dawJson'];
 	var imageDataJson = req.body['imageDataJson'];
+	var audioSampleObjectJson = req.body['audioSampleObjectJson'];
 	var videoLinkJson = req.body['videoLinkJson'];
 	var filtersJson = req.body['filtersJson'];
 	var submittedBy = req.body['submittedBy'];
 	var points = req.body['points'];
 	var dateSubmitted = req.body['dateSubmitted'];
-	
+
 	console.log(tipDescJson);
 	console.log(genreJson);
 	console.log(tipTypeJson);
@@ -299,7 +334,7 @@ module.exports = function (router, passport) {
 	console.log(videoLinkJson);
 	console.log(submittedBy);
 	console.log(points);
-	
+
 	MongoClient.connect(url, function (err, db) {
 	    if (err) {
 		console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -310,7 +345,7 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		var collection = db.collection('tipsCollection');
-		collection.insert({tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson,filtersJson:filtersJson, submittedBy:submittedBy,tipPoints:points,dateSubmitted:dateSubmitted}, function (err, docsInserted) {
+		collection.insert({tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson,audioSampleObjectJson:audioSampleObjectJson, videoLinkJson: videoLinkJson, filtersJson: filtersJson, submittedBy: submittedBy, tipPoints: points, dateSubmitted: dateSubmitted}, function (err, docsInserted) {
 		    if (err) {
 
 			console.log('Unable to add tip to tipsCollection', err);
@@ -327,7 +362,7 @@ module.exports = function (router, passport) {
 	});
 
     });
-    router.post("/profileInfoPostGet/:username",function(req,res){
+    router.post("/profileInfoPostGet/:username", function (req, res) {
 	console.log('profileInfoGetHere');
 	var userName = req.params.username;
 	var userNameTest = req.body['username'];
@@ -344,8 +379,8 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		console.log("Profile Data Includes");
-		console.log(db.collection('profileCollection').find({userName:userName}));
-		db.collection('profileCollection').find({userName:userName}).toArray(function (err, items) {
+		console.log(db.collection('profileCollection').find({userName: userName}));
+		db.collection('profileCollection').find({userName: userName}).toArray(function (err, items) {
 		    if (err) {
 			res.status(500).send('error retreiving data');
 		    }
@@ -356,17 +391,17 @@ module.exports = function (router, passport) {
 
 	    }
 	    db.close();
-	});	
+	});
     });
-    router.put('/tipsPageUpdateProfile',function(req,res){
+    router.put('/tipsPageUpdateProfile', function (req, res) {
 	console.log("tips page profile update");
-	
+
 	var userName = req.body['username'];
 	var lovedTipsJson = req.body['lovedTips'];
 	var likedTipsJson = req.body['likedTips'];
 	var dislikedTipsJson = req.body['dislikedTips'];
 	var submittedTipsJson = req.body['submittedTips'];
-	
+
 	MongoClient.connect(url, function (err, db) {
 	    if (err) {
 		console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -377,7 +412,7 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		var collection = db.collection('profileCollection');
-		collection.update({userName:userName},{$set:{lovedTipsJson: lovedTipsJson,likedTipsJson: likedTipsJson,dislikedTipsJson: dislikedTipsJson,submittedTips:submittedTipsJson}}, {upsert: true}, function (err, db) {
+		collection.update({userName: userName}, {$set: {lovedTipsJson: lovedTipsJson, likedTipsJson: likedTipsJson, dislikedTipsJson: dislikedTipsJson, submittedTips: submittedTipsJson}}, {upsert: true}, function (err, db) {
 		    if (err) {
 			console.log('Unable to edit profile', err);
 			res.send('Tip edit failed');
@@ -391,7 +426,7 @@ module.exports = function (router, passport) {
 	});
 
     })
-    router.put('/tipsPageUpdatePoints',function(req,res){
+    router.put('/tipsPageUpdatePoints', function (req, res) {
 	console.log("tipsPage Update Points")
 	var tipId = req.body['tipId'];
 	var points = req.body['points'];
@@ -406,7 +441,7 @@ module.exports = function (router, passport) {
 		// Get the documents collection
 		var collection = db.collection('tipsCollection');
 		console.log(tipId);
-		collection.update({_id:ObjectId(tipId)},{$set:{tipPoints: points}}, {upsert: true}, function (err, db) {
+		collection.update({_id: ObjectId(tipId)}, {$set: {tipPoints: points}}, {upsert: true}, function (err, db) {
 		    if (err) {
 			console.log('Unable to edit tip to tipsCollection', err);
 			res.send(points);
@@ -418,7 +453,7 @@ module.exports = function (router, passport) {
 	    }
 	    db.close();
 	});
-	
+
     })
     router.put('/tipsPagePut', function (req, res) {
 	console.log("tipsPagePUT");
@@ -429,21 +464,21 @@ module.exports = function (router, passport) {
 	var tipTypeJson = req.body['tipTypeJson'];
 	var vstJson = req.body['vstJson'];
 	var dawJson = req.body['dawJson'];
-	
+
 	var updatingImages = false;
 	var imageDataJson = "";
-	if(req.body['imageDataJson']){
+	if (req.body['imageDataJson']) {
 	    imageDataJson = req.body['imageDataJson'];
 	    updatingImages = true;
 	}
-	
+
 	var videoLinkJson = req.body['videoLinkJson'];
 	var filtersJson = req.body['filtersJson'];
-	
+
 	var submittedBy = req.body['submittedBy'];
 	var tipPoints = req.body['points'];
 	var dateSubmitted = req.body['dateSubmitted'];
-	
+
 	MongoClient.connect(url, function (err, db) {
 	    if (err) {
 		console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -456,7 +491,7 @@ module.exports = function (router, passport) {
 		var collection = db.collection('tipsCollection');
 		console.log(tipId);
 		if (updatingImages) {
-		    collection.update({_id: ObjectId(tipId)}, {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson,filtersJson:filtersJson, submittedBy: submittedBy, tipPoints: tipPoints,dateSubmitted:dateSubmitted}, function (err, db) {
+		    collection.update({_id: ObjectId(tipId)}, {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson, filtersJson: filtersJson, submittedBy: submittedBy, tipPoints: tipPoints, dateSubmitted: dateSubmitted}, function (err, db) {
 			if (err) {
 			    console.log('Unable to edit tip to tipsCollection', err);
 			    res.send('Tip edit failed');
@@ -466,8 +501,8 @@ module.exports = function (router, passport) {
 			}
 		    });
 		}
-		else{
-		        collection.update({_id: ObjectId(tipId)}, {$set: {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, videoLinkJson: videoLinkJson,filtersJson:filtersJson, submittedBy: submittedBy, tipPoints: tipPoints,dateSubmitted:dateSubmitted}}, function (err, db) {
+		else {
+		    collection.update({_id: ObjectId(tipId)}, {$set: {tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, videoLinkJson: videoLinkJson, filtersJson: filtersJson, submittedBy: submittedBy, tipPoints: tipPoints, dateSubmitted: dateSubmitted}}, function (err, db) {
 			if (err) {
 			    console.log('Unable to edit tip to tipsCollection', err);
 			    res.send('Tip edit failed');
@@ -480,7 +515,7 @@ module.exports = function (router, passport) {
 	    }
 	    db.close();
 	});
-    
+
     });
     router.post('/uploadImage', function (req, res) {
 	upload(req, res, function (err) {
@@ -515,16 +550,16 @@ module.exports = function (router, passport) {
 			    console.log('Added image to collection', err);
 			    console.log('Added image to collection', err);
 			    //Production
-			    if(runningProduction){
+			    if (runningProduction) {
 				res.send(req.file.location);
 			    }
-			    else{
-				 //Local
+			    else {
+				//Local
 				res.send(req.file.filename);
 			    }
-			   
-			   
-			    
+
+
+
 			}
 		    });
 
@@ -532,11 +567,11 @@ module.exports = function (router, passport) {
 		db.close();
 	    });
 	});
-	
+
 
     });
-   
-	
+
+
 
     router.delete('/tipsPageDelete', function (req, res) {
 
@@ -561,10 +596,10 @@ module.exports = function (router, passport) {
 	});
 
     });
-    
-    
+
+
     //FILTER ROUTES
-    router.post('/addFilter', function(req,res){
+    router.post('/addFilter', function (req, res) {
 	console.log('add filter');
 	var name = req.body['name'];
 	var type = req.body['type'];
@@ -580,7 +615,7 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		var collection = db.collection('filterCollection');
-		collection.insert({name:name,type:type,parent:parent}, function (err, docsInserted) {
+		collection.insert({name: name, type: type, parent: parent}, function (err, docsInserted) {
 		    if (err) {
 			console.log('Unable to add filter to filterCollection', err);
 			res.send('filter upload failed');
@@ -609,7 +644,7 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		//var TipsCollection = db.collection('tipsCollection');
-		var cursorArray = db.collection('filterCollection').find({parent:null}).toArray(function (err, items) {
+		var cursorArray = db.collection('filterCollection').find({parent: null}).toArray(function (err, items) {
 		    if (err) {
 			res.status(500).send('error retreiving data')
 		    }
@@ -620,7 +655,7 @@ module.exports = function (router, passport) {
 	    db.close();
 	});
     });
-     router.get('/getFilters/:parent', function (req, res) {
+    router.get('/getFilters/:parent', function (req, res) {
 	console.log('get sub filters');
 	var parent = req.params['parent'];
 	MongoClient.connect(url, function (err, db) {
@@ -634,7 +669,7 @@ module.exports = function (router, passport) {
 		// do some work here with the database.
 		// Get the documents collection
 		//var TipsCollection = db.collection('tipsCollection');
-		var cursorArray = db.collection('filterCollection').find({parent:parent}).toArray(function (err, items) {
+		var cursorArray = db.collection('filterCollection').find({parent: parent}).toArray(function (err, items) {
 		    if (err) {
 			res.status(500).send('error retreiving data')
 		    }
@@ -668,8 +703,95 @@ module.exports = function (router, passport) {
 	});
 
     });
-    
-   
+
+    router.post('/uploadTipAudioSample', function (req, res) {
+	uploadSample(req, res, function (err) {
+	    if (err) {
+		console.log(err);
+		return res.end("Error uploading sample.");
+	    }
+	    MongoClient.connect(url, function (err, db) {
+		//console.log("BPM " + req.body.bpm);
+		if (err) {
+		    console.log('Unable to connect to the mongoDB server. Error:', err);
+		} else {
+		    //HURRAY!! We are connected. :)
+		    console.log('Connection established to', url);
+
+		    // do some work here with the database.
+		    // Get the documents collection
+		    console.log("uploading sample..");
+		    console.dir(req);
+		    var collection = db.collection('tipAudioSampleCollection');
+		    collection.insert({fieldName: req.file.fieldname,
+			originalName: req.file.originalname,
+			encoding: req.file.encoding,
+			mimetype: req.file.mimetype,
+			destination: req.file.location,
+			fileName: req.file.filename,
+			path: req.file.path,
+			fileSize: req.file.size,
+		    },
+			    function (err, docsInserted) {
+				if (err) {
+				    console.log('Unable to add image to image collection', err);
+				    res.send('Image uploaded failed');
+				}
+				else {
+				    console.dir(req);
+
+				    //Production
+				    if (runningProduction) {
+					res.send(docsInserted.ops[0]._id);
+				    }
+				    else {
+					//Local
+					res.send(docsInserted.ops[0]._id);
+				    }
+
+
+
+				}
+			    });
+
+		}
+		db.close();
+	    });
+	});
+
+    });
+     router.get('/getTipAudioSample/:tipIndex/:audioIndex/:id', function (req, res) {
+	var id = req.params.id;
+	var tipIndex = req.params.tipIndex;
+	var audioIndex = req.params.audioIndex;
+	
+	console.log('getting samples');
+	// Use connect method to connect to the Server
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('tipAudioSampleCollection');
+		cursor = collection.find({_id: ObjectId(id)}).toArray(function (err, item) {
+		    if (err) {
+			console.log('Unable to get tip', err);
+		    }
+		    else {
+			res.send({item:item,tipIndex:tipIndex,audioIndex:audioIndex});
+
+		    }
+		    db.close();
+		});
+	    }
+	});
+    });
+
+
 
 //router.get('/images/:imageId', function (req, res, next) {
     // console.log("SERVING IMAGE");

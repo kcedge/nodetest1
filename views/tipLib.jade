@@ -139,9 +139,35 @@ append body
 							#TipTitlePanel.panel.panel-default
 								#panelBody.panel-body.panel-body(style="text-indent: 0px;padding-bottom:0px;")
 									div.tipDescription.row#tipBody(style="text-indent: 0px;padding-bottom:0px;" ng-repeat="tipPart in tip.tipBodyArray")			
-										div#descBody(ng-bind-html="tipPart.tipDescription | to_trusted")
-										.col-xs-10.col-sm-10.col-md-10.col-lg-10.imgDiv(ng-if="tipPart.hasImage" style='margin-left:5%')
-											img(ng-show="tipPart.hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')				
+										div#descBody.descBody(ng-bind-html="tipPart.tipDescription | to_trusted")
+										
+										
+												hr
+										.col-xs-11.col-sm-11.col-md-11.col-lg-11.imgDiv(ng-if="tipPart.hasImage" style='margin-left:3%' class='form-group')
+											img(ng-show="tipPart.hasImage" ng-src="{{tipPart.imageFileName}}" style='width:100%;padding-top:2px;')
+										.col-xs-12.col-sm-12.col-md-12.col-lg-12.sampleDiv(ng-if="tipPart.audioSampleObject._id" style='' class='form-group')
+											
+											div#tipSampleNameAndTags.small.row(style='overflow:hidden')
+													div#tipSampleName.hover(style='    font-style: italic;')
+														{{tipPart.audioSampleObject.originalName}}
+													div#tags(style='display:inline-block')
+														div(ng-repeat='tag in tipPart.audioSampleObject.tags' style='float:left')
+															label.label-primary(style='margin-right:3px;') {{tag.text}}
+											div.tipSampleRowWrapper.row(ng-show='true')
+												div.playbtn.btn.btn-primary(style='float:left' ng-click='samplePlayClicked(tipPart.audioSampleObject)')
+													span(ng-show='tipPart.audioSampleObject.audio.paused' style='margin-top:5px;').glyphicon.glyphicon-play-circle
+													span(ng-show='!tipPart.audioSampleObject.audio.paused' style='margin-top:5px;').glyphicon.glyphicon-pause
+												div.col-xs-10.col-sm-10.col-md-10.col-lg-10.hover(id="duration{{tipPart.audioSampleObject._id}}" style='height:40px' ng-click="progressInputClicked(tipPart.audioSampleObject,$event)")
+														div(style='height:10px; border-style:solid; width:0px;' ng-style="{ 'width': tipPart.audioSampleObject.audio.progress*100 + '%' }" type="range" min="0" max="1" step="0.01" ng-model="tipPart.audioSampleObject.audio.progress")
+														div#sampleAudio(style='')
+															span {{tipPart.audioSampleObject.audio.currentTime| number : fractionSize}} / {{tipPart.audioSampleObject.audio.currentTime+tipPart.audioSampleObject.audio.remaining| number : fractionSize}}
+												
+												//div.other(style='float:right')
+												//	//span.hover.glyphicon.glyphicon-edit(style='margin-right:5px;' ng-click='editSampleClicked(sample)' ng-show='adminAuth')
+												//	//span.hover.glyphicon.glyphicon-heart(style='margin-right:5px;' ng-click='loveSampleClicked(sample)' ng-class="{activeHeart:sample.isLoved}")
+												//	//a(id='download{{sample._id}}' ng-click='downloadClicked(sample)' ng-class="{activeDownloaded:sample.isDownloaded}" )
+												//	//	span.hover.glyphicon.glyphicon-download(style='margin-right:5px;')
+												//	//span.hover.glyphicon.glyphicon-menu-hamburger(style='margin-right:5px;')
 									div#TagsAndSubmittedBy(style="text-indent: 0px;padding-bottom:0px;padding-top:10px;")
 										#tipTagsDiv(ng-repeat='tipTag in tip.filtersJson track by $index' style='display:inline-block;')
 											
@@ -183,6 +209,7 @@ append body
 								span(style='float:right') {{fileErrorMessage}}
 							.inputWrapper						
 								input.inputClass(type="file",nv-file-select uploader="uploader")
+
 								ul
 									li(ng-repeat="item in uploader.queue")
 										{{item.file.name}}
@@ -204,6 +231,30 @@ append body
 								button.btn.btn-success.btn-xs(ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length" style='margin-left:5px;')
 												span.glyphicon.glyphicon-upload
 												&nbsp Upload 
+						.audioUploaderInputWrapper(sytle='margin-top:5px')
+							.headerImageInput(style="font-size:small;color:#777777")
+								span Audio Uploader
+								span(style='float:right') {{fileErrorMessage}}
+							.inputWrapper						
+								input.inputClass(type="file",nv-file-select uploader="audioUploader")
+								ul
+									li(ng-repeat="item in audioUploader.queue")
+										{{item.file.name}}
+										button.btn.btn-default.btn-xs(ng-click="item.remove()" style=";color:black;margin-left:5px;")
+											span.glyphicon.glyphicon-remove
+							.progress
+								.progress-bar(role="progressbar" ng-style="{width:audioUploader.progress + '%'}" style="width:0%;")
+							#imgUploadButtonsDiv(ng-show="audioUploader.queue.length > 0" style='margin-bottom:5px;')
+								button.btn.btn-danger.btn-xs(ng-click="audioUploader.clearQueue()" ng-disabled="!audioUploader.queue.length" )
+												span.glyphicon.glyphicon-trash 
+												&nbsp Remove all
+								button.btn.btn-warning.btn-xs(ng-click="audioUploader.cancelAll()" ng-disabled="!audioUploader.isUploading" style='margin-left:5px;')
+												span.glyphicon.glyphicon-ban-circle 
+												&nbsp Cancel
+								button.btn.btn-success.btn-xs(ng-click="audioUploader.uploadAll()" ng-disabled="!audioUploader.getNotUploadedItems().length" style='margin-left:5px;')
+												span.glyphicon.glyphicon-upload
+												&nbsp Upload 
+
 
 						.headerFilterInput(style="font-size:small;color:#777777")
 								span Add Filter Tags

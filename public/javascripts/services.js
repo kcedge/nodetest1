@@ -124,6 +124,34 @@ myApp.service('ProfileService', ['$http', function ($http) {
 			return "no data";
 		    });
 	}
+	this.postProfileDownloadedSamples = function (username, downloadedSamples) {
+	    console.log('posting downloadedSamples data');
+	    console.log(downloadedSamples);
+	    var req = {
+		method: 'POST',
+		url: '/postProfileDownloadedSamples/' + username,
+		headers: {
+		    'Content-Type': "application/json"
+		},
+		data: {downloadedSamples: downloadedSamples
+		}
+	    };
+
+	    return $http(req)
+		    .then(function (data) {
+			//console.log(data);
+			//angular.forEach(data, function (item) {
+			//    item.datePublished = new Date(item.datePublished);
+			//});
+			console.log("Posted profileImageJson image data");
+			console.log(data);
+			return data;
+		    })
+		    .catch(function (data, status) {
+			console.log('ERROR: ' + status + '. We can\'t upload image right now, please try again later');
+			return "no data";
+		    });
+	}
 	this.postTotalPoints = function (username, totalpoints) {
 	    console.log('posting postTotalPoints data');
 	    console.log(totalpoints);
@@ -237,6 +265,23 @@ myApp.service('ProfileService', ['$http', function ($http) {
 		data: {
 		}
 	    };
+	    
+//	this.getProfileSampleData = function (username) {
+//	    return $http.get('/getSampleProfileInfo/' + username)
+//		    .then(function (data) {
+//			//console.log(data);
+//			//angular.forEach(data, function (item) {
+//			//    item.datePublished = new Date(item.datePublished);
+//			//});
+//			console.log("Retreived profile data");
+//			console.log(data);
+//			return data;
+//		    })
+//		    .catch(function (data, status) {
+//			console.log('ERROR: ' + status + '. We can\'t get the profile right now, please try again later');
+//			return "no data";
+//		    });
+//	};
 
 
 	    return $http(req)
@@ -309,3 +354,5 @@ myApp.service('TipsService', ['$http', function ($http) {
 		    });
 	};
     }]);
+
+

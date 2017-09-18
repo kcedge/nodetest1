@@ -75,10 +75,10 @@ angular.module("myApp").controller('signUpController', ['$scope', '$http', '$loc
 	    window.location.href = '/signIn/' + $('#redirect').text();
 	}
 	var imageUrl = ''
-	if(!runningProduction){
+	if (!runningProduction) {
 	    imageUrl = '../resources/images/520202ce90b6e971987929a73550424c'
 	}
-	else{
+	else {
 	    imageUrl = 'https://tip-photos-bucket.s3-us-west-2.amazonaws.com/1499998967136'
 	}
 	$('.bgImage').css('background-image', 'url("' + imageUrl + '")');
@@ -141,17 +141,17 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 	    username: "",
 	    userSignedIn: false
 	});
-	
+
 	//SET background image
 	var imageUrl = ''
-	if(!runningProduction){
+	if (!runningProduction) {
 	    imageUrl = '../resources/images/520202ce90b6e971987929a73550424c'
 	}
-	else{
+	else {
 	    imageUrl = 'https://tip-photos-bucket.s3-us-west-2.amazonaws.com/1499998967136'
 	}
 	$('.bgImage').css('background-image', 'url("' + imageUrl + '")');
-	
+
 	$scope.signInWithSoundCloud = function () {
 	    var req = {
 		method: 'GET',
@@ -891,7 +891,7 @@ angular.module("myApp").factory('TipData', function () {
 });
 
 
-angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootScope', '$http', '$localStorage', 'FileUploader', 'TipData', 'CommentsService', 'ProfileService', function ($scope, $rootScope, $http, $localStorage, FileUploader, TipData, CommentsService, ProfileService) {
+angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootScope', '$http', '$localStorage', 'FileUploader', 'TipData', 'CommentsService', 'ProfileService', 'ngAudio', function ($scope, $rootScope, $http, $localStorage, FileUploader, TipData, CommentsService, ProfileService, ngAudio) {
 
 
 	$scope.title = "HELLLOOO";
@@ -940,6 +940,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    return i;
 		}
 	    }
+	    return -1;
 	}
 	$scope.setCurrentTipCounter = function (currentTipId) {
 	    if (currentTipId)
@@ -955,7 +956,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.tipClicked = function (tip) {
 	    var tipIdClicked = tip._id;
 	    $scope.tipCounter = $scope.findInTipArray(tipIdClicked);
-	    $scope.updateBodyArray();
+	    //$scope.updateBodyArray();
 
 	}
 	$scope.toggleNavBarRight = function () {
@@ -970,17 +971,32 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    }
 
 	}
-	window.onload = function () {
+	$scope.updateTipsData = function () {
 	    // var currentTipId = $scope.currentTipId;
 
 	    if ($scope.tipCounter === undefined) {
 		$scope.tipCounter = 0;
 	    }
+	    $scope.tipCounterTmp = $scope.tipCounter;
+	    $scope.tipCounter =0;
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
-		$scope.tipNavBarClicked($scope.tipArrayData[i]);
+		$scope.updateBodyArray();
+		$scope.tipCounter++;
 	    }
+	     $scope.tipCounter =  $scope.tipCounterTmp;
 
-	    $scope.updateBodyArray();
+	};
+	window.onload = function () {
+	    // var currentTipId = $scope.currentTipId;
+//
+//	    if ($scope.tipCounter === undefined) {
+//		$scope.tipCounter = 0;
+//	    }
+//	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
+//		$scope.tipNavBarClicked($scope.tipArrayData[i]);
+//	    }
+//
+//	    $scope.updateBodyArray();
 
 	};
 	var convertProfileDataToJson = function (profileArrayData) {
@@ -1105,38 +1121,38 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 		});
 	    });
-	    $(window).scroll(function () {
-
-		if ($(window).scrollTop() >= $scope.stickyHeaderTop - 50) {
-		    $('#stickyheader').css({position: 'fixed', top: $scope.navbarHeight, height: $scope.stickyHeight + 10, width: $scope.stickyWidth});
-		    $('#stickyalias').css('display', 'block');
-		    $('#stickyalias').css('height', $scope.stickyHeight + "px");
-		    $('#stickyheaderNavLeft').css({position: 'fixed', top: $scope.stickyHeight + $scope.navbarHeight + 5, height: 100 + '%', width: $scope.stickyNavLeftWidth});
-		    $('#stickyaliasNavLeft').css('display', 'block');
-		    $('#stickyaliasNavLeft').css('height', $scope.stickyNavLeftHeight + "px");
-		    $('#stickyheaderNavRight').css({position: 'fixed', top: $scope.stickyHeight + $scope.navbarHeight + 5, height: 100 + '%', width: $scope.stickyNavRightWidth});
-		    $('#stickyaliasNavRight').css('display', 'block');
-		    $('#stickyaliasNavRight').css('height', $scope.stickyNavRightHeight + $scope.navbarHeight + "px");
-		    $('#stickyheaderNavRight').css('left', 75 + '%');
-		    $('#stickyaliasNavRight').css('height', $scope.stickyHeight + $scope.navbarHeight + "px");
-
-		    $('#scrollable').css('left', 25 + '%');
-		    $('#stickyalias').css('height', $scope.stickyHeight + "px");
-
-		} else {
-		    $('#stickyheader').css({position: '', top: '', height: '', width: ''});
-		    $('#stickyalias').css('display', 'none');
-		    $('#stickyheaderNavLeft').css({position: '', top: '', width: ''});
-		    $('#stickyaliasNavLeft').css('display', '');
-		    $('#stickyheaderNavRight').css({position: '', top: '', width: ''});
-		    $('#stickyaliasNavRight').css('display', '');
-		    $('#stickyheaderNavRight').css('left', '');
-		    $('#scrollable').css('left', '');
-
-		}
-
-
-	    });
+//	    $(window).scroll(function () {
+//
+//		if ($(window).scrollTop() >= $scope.stickyHeaderTop - 50) {
+//		    $('#stickyheader').css({position: 'fixed', top: $scope.navbarHeight, height: $scope.stickyHeight + 10, width: $scope.stickyWidth});
+//		    $('#stickyalias').css('display', 'block');
+//		    $('#stickyalias').css('height', $scope.stickyHeight + "px");
+//		    $('#stickyheaderNavLeft').css({position: 'fixed', top: $scope.stickyHeight + $scope.navbarHeight + 5, height: 100 + '%', width: $scope.stickyNavLeftWidth});
+//		    $('#stickyaliasNavLeft').css('display', 'block');
+//		    $('#stickyaliasNavLeft').css('height', $scope.stickyNavLeftHeight + "px");
+//		    $('#stickyheaderNavRight').css({position: 'fixed', top: $scope.stickyHeight + $scope.navbarHeight + 5, height: 100 + '%', width: $scope.stickyNavRightWidth});
+//		    $('#stickyaliasNavRight').css('display', 'block');
+//		    $('#stickyaliasNavRight').css('height', $scope.stickyNavRightHeight + $scope.navbarHeight + "px");
+//		    $('#stickyheaderNavRight').css('left', 75 + '%');
+//		    $('#stickyaliasNavRight').css('height', $scope.stickyHeight + $scope.navbarHeight + "px");
+//
+//		    $('#scrollable').css('left', 25 + '%');
+//		    $('#stickyalias').css('height', $scope.stickyHeight + "px");
+//
+//		} else {
+//		    $('#stickyheader').css({position: '', top: '', height: '', width: ''});
+//		    $('#stickyalias').css('display', 'none');
+//		    $('#stickyheaderNavLeft').css({position: '', top: '', width: ''});
+//		    $('#stickyaliasNavLeft').css('display', '');
+//		    $('#stickyheaderNavRight').css({position: '', top: '', width: ''});
+//		    $('#stickyaliasNavRight').css('display', '');
+//		    $('#stickyheaderNavRight').css('left', '');
+//		    $('#scrollable').css('left', '');
+//
+//		}
+//
+//
+//	    });
 	});
 	$scope.isAdmin = function () {
 	    return $localStorage.username === "kcedge";
@@ -1153,8 +1169,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    return true;
 		}
 		if ($scope.tipArrayData.length) {
-		    if ($scope.tipArrayData[$scope.tipCounter].submittedBy == $localStorage.username) {
-			return true;
+		    if ($scope.tipArrayData[$scope.tipCounter]) {
+			if ($scope.tipArrayData[$scope.tipCounter].submittedBy == $localStorage.username) {
+			    return true;
+			}
 		    }
 		}
 		return false;
@@ -1165,8 +1183,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    return true;
 		}
 		if ($scope.tipArrayData.length) {
-		    if ($scope.tipArrayData[$scope.tipCounter].submittedBy == $localStorage.username) {
-			return true;
+		    if ($scope.tipArrayData[$scope.tipCounter]) {
+			if ($scope.tipArrayData[$scope.tipCounter].submittedBy == $localStorage.username) {
+			    return true;
+			}
 		    }
 		}
 
@@ -2011,7 +2031,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	    $scope.addATipToggle = false;
 	    $scope.editATipToggle = false;
-	    $scope.updateBodyArray();
+	   // $scope.updateBodyArray();
 
 	    //   $scope.updateImageFileName();
 
@@ -2023,13 +2043,31 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    if ($scope.tipArrayData[i].hasOwnProperty("tipDescJson")) {
 			$scope.tipArrayData[i].tipDescJson = JSON.parse($scope.tipArrayData[i].tipDescJson);
 		    }
-		    $scope.tipArrayData[i].dawJson = JSON.parse($scope.tipArrayData[i].dawJson);
-		    $scope.tipArrayData[i].genreJson = JSON.parse($scope.tipArrayData[i].genreJson);
-		    $scope.tipArrayData[i].imageDataJson = JSON.parse($scope.tipArrayData[i].imageDataJson);
-		    $scope.tipArrayData[i].tipTypeJson = JSON.parse($scope.tipArrayData[i].tipTypeJson);
-		    $scope.tipArrayData[i].videoLinkJson = JSON.parse($scope.tipArrayData[i].videoLinkJson);
-		    $scope.tipArrayData[i].filtersJson = JSON.parse($scope.tipArrayData[i].filtersJson);
-		    $scope.tipArrayData[i].vstJson = JSON.parse($scope.tipArrayData[i].vstJson);
+		    if ($scope.tipArrayData[i].hasOwnProperty("dawJson")) {
+			$scope.tipArrayData[i].dawJson = JSON.parse($scope.tipArrayData[i].dawJson);
+		    }
+		    if ($scope.tipArrayData[i].hasOwnProperty("genreJson")) {
+			$scope.tipArrayData[i].genreJson = JSON.parse($scope.tipArrayData[i].genreJson);
+		    }
+		    if ($scope.tipArrayData[i].hasOwnProperty("imageDataJson")) {
+			$scope.tipArrayData[i].imageDataJson = JSON.parse($scope.tipArrayData[i].imageDataJson);
+		    }
+		    if ($scope.tipArrayData[i].hasOwnProperty("audioSampleObjectJson")) {
+			$scope.tipArrayData[i].audioSampleObjectJson = JSON.parse($scope.tipArrayData[i].audioSampleObjectJson);
+
+		    }
+		    if ($scope.tipArrayData[i].hasOwnProperty("tipTypeJson")) {
+			$scope.tipArrayData[i].tipTypeJson = JSON.parse($scope.tipArrayData[i].tipTypeJson);
+		    }
+		    if ($scope.tipArrayData[i].hasOwnProperty("videoLinkJson")) {
+			$scope.tipArrayData[i].videoLinkJson = JSON.parse($scope.tipArrayData[i].videoLinkJson);
+		    }
+		    if ($scope.tipArrayData[i].hasOwnProperty("filtersJson")) {
+			$scope.tipArrayData[i].filtersJson = JSON.parse($scope.tipArrayData[i].filtersJson);
+		    }
+		    if ($scope.tipArrayData[i].hasOwnProperty("vstJson")) {
+			$scope.tipArrayData[i].vstJson = JSON.parse($scope.tipArrayData[i].vstJson);
+		    }
 		}
 	    }
 	}
@@ -2039,6 +2077,92 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    if (a.tipTitle > b.tipTitle)
 		return 1;
 	    return 0;
+	}
+
+	$scope.samplePlayClicked = function (sample) {
+	    if (sample.audio) {
+		sample.audio.paused ? sample.audio.play() : sample.audio.pause();
+	    }
+	}
+	$scope.progressInputClicked = function (sample, e) {
+	    var width = $("#duration" + sample._id).width();
+	    var x = e;
+	    var progressPercent = (e.layerX - 5) / width;
+	    sample.audio.progress = progressPercent;
+	    if (sample.audio) {
+		sample.audio.play();
+	    }
+	}
+
+	$scope.updateTipSamples = function () {
+	    for (var t = 0; t < $scope.tipArrayData.length; t++) {
+		var tip = $scope.tipArrayData[t];
+		for (var tb = 0; tb < tip.tipBodyArray.length; tb++) {
+		    if (tip.hasOwnProperty('tipBodayArray')) {
+			var tipbody = tip.tipBodayArray[tb];
+			if (tipbody.hasOwnProperty('audioSampleObject') && tipbody.audioSampleObject._id) {
+			    if (!runningProduction) {
+				$scope.tipArrayData[t].tipBodyArray[tb].audioSampleObject.audio = ngAudio.load("resources/samples/" + tipbody.audioSampleObject.fileName);
+
+			    }
+			    else {
+				$scope.tipArrayData[t].tipBodyArray[tb].audioSampleObject.audio = ngAudio.load(tipbody.audioSampleObject.destination);
+			    }
+			}
+		    }
+		}
+	    }
+	}
+
+
+	var getTipAudioSamples = function () {
+	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		if ($scope.tipArrayData[i].hasOwnProperty("audioSampleObjectJson")) {
+		    for (var j = 0; j < $scope.tipArrayData[i].audioSampleObjectJson.length; j++) {
+
+			var req = {
+			    method: 'GET',
+			    url: '/getTipAudioSample/' + i + '/' + j + '/' + $scope.tipArrayData[i].audioSampleObjectJson[j]._id,
+			    headers: {
+				'Content-Type': "application/json",
+				'tipCount': i,
+				'audioCount': j
+			    },
+			    data: {}
+			}
+			$http(req).then(function success(response) {
+			    var audioId = response.config.url.replace("/getTipAudioSample/", "");
+
+			    var tipIndex = parseInt(response.data.tipIndex);
+			    var audioIndex = parseInt(response.data.audioIndex);
+			    $scope.tipArrayData[tipIndex].audioSampleObjectJson[parseInt(audioIndex)].audioSampleObject = response.data.item[0];
+
+			    if ($scope.tipArrayData[tipIndex].tipBodyArray[audioIndex] != null) {
+				$scope.tipArrayData[tipIndex].tipBodyArray[audioIndex].audioSampleObject = response.data.item[0];
+				if (!runningProduction) {
+				    $scope.tipArrayData[tipIndex].tipBodyArray[audioIndex].audioSampleObject.audio = ngAudio.load("resources/samples/" + $scope.tipArrayData[tipIndex].tipBodyArray[audioIndex].audioSampleObject.fileName);
+
+				}
+				else {
+				    $scope.tipArrayData[tipIndex].tipBodyArray[audioIndex].audioSampleObject.audio = ngAudio.load($scope.tipArrayData[tipIndex].tipBodyArray[audioIndex].audioSampleObject.destination);
+				}
+
+			    }
+			    // $scope.updateTipSamples();
+
+			}, function failure(response) {
+
+			    $scope.submitMessage = "Failure"
+			    $scope.responseData = response.data;
+
+			});
+		    }
+
+		}
+
+	    }
+
+
 	}
 
 	$scope.getTipsFromMongo = function () {
@@ -2058,8 +2182,11 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.tipArrayData = response.data;
 		$scope.tipArrayData.sort(compare);
 		convertTipDataToJson();
+
+
+
 		$scope.profileDataFromMongo();
-		$scope.initilizeTipData();
+		//$scope.initilizeTipData();
 		CommentsService.getComments().then(function (response) {
 		    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 
@@ -2086,14 +2213,13 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 //		    $scope.tipCounter++
 		}
 		//$scope.tipCounter =  $scope.tipArrayData.length - 1;
-		$scope.setCurrentTipCounter($scope.currentTipId);
 
-		$scope.submitMessage = "Success"
-		$scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
-		$scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-		$scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
+
 		//	$scope.updateImageFileName();
-		$scope.updateBodyArray();
+		//$scope.updateBodyArray();		
+		$scope.updateTipsData();
+		getTipAudioSamples();
+
 		$scope.navBarArray = "[";
 		for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		    var object = '{text:"' + $scope.tipArrayData[i].tipTitle + '",href:"#"},';
@@ -2186,7 +2312,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    }, function failure(response) {
 
 		$scope.submitMessage = "Failure"
-		$scope.responseData = response.data;
+		//$scope.responseData = response.data;
 
 	    });
 	    //$scope.updateBodyArray();
@@ -2206,9 +2332,17 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			var submittedByLocal = $scope.tipArrayData[ti].submittedBy;
 			var submittedDateLocal = $scope.tipArrayData[ti].dateSubmitted;
 			var imageFileNameLocal = "";
+			var audioSampleLocal = {};
+
+
+
 
 			if ($scope.tipArrayData[ti].imageDataJson[i - 1]) {
 			    imageFileNameLocal = $scope.tipArrayData[ti].imageDataJson[i - 1].newFileName;
+			}
+
+			if ($scope.tipArrayData[ti].audioSampleObjectJson[i - 1]) {
+			    audioSampleLocal = $scope.tipArrayData[ti].audioSampleObjectJson[i - 1].audioSampleObject;
 			}
 
 			if (!runningProduction) {
@@ -2216,11 +2350,11 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			}
 			var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/" && imageFileNameLocal != "resources/images/undefined");
 			if ($scope.tipArrayData[ti].hasOwnProperty("tipBodyArray")) {
-			    $scope.tipArrayData[ti].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			    $scope.tipArrayData[ti].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, audioSampleObject: audioSampleLocal, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
 			}
 			else {
 			    $scope.tipArrayData[ti].tipBodyArray = [];
-			    $scope.tipArrayData[ti].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			    $scope.tipArrayData[ti].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, audioSampleObject: audioSampleLocal, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
 			}
 
 			if (hasImage) {
@@ -2249,8 +2383,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			}
 			var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/");
 			if (hasImage) {
-			    $scope.tipArrayData[ti].tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
-			    $scope.tipArrayData[ti].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			    $scope.tipArrayData[ti].tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, audioSampleObject: audioSampleLocal, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			    $scope.tipArrayData[ti].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, audioSampleObject: audioSampleLocal, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
 			}
 		    }
 		}
@@ -2261,8 +2395,16 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    if ($scope.tipArrayData.length) {
 		$scope.tipBodyArray = [];
 		$scope.tipImageArray = [];
-		$scope.tipArrayData[$scope.tipCounter].tipImageArray = [];
-		$scope.tipArrayData[$scope.tipCounter].tipBodyArray = []
+		
+		
+
+		if (!$scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipImageArray")) {
+		    $scope.tipArrayData[$scope.tipCounter].tipImageArray = [];
+		}
+		if (!$scope.tipArrayData[$scope.tipCounter].hasOwnProperty("tipBodyArray")) {
+		    $scope.tipArrayData[$scope.tipCounter].tipBodyArray = [];
+		}
+
 
 		for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		    $scope.tipArrayData[i].isActive = false;
@@ -2283,16 +2425,20 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			var submittedByLocal = $scope.tipArrayData[$scope.tipCounter].submittedBy;
 			var submittedDateLocal = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
 			var imageFileNameLocal = "";
+			var audioSampleLocal = {};
 
 			if ($scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1]) {
 			    imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1].newFileName;
+			}
+			if ($scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1] && $scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1].hasOwnProperty('audioSampleObject')) {
+			    audioSampleLocal = $scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1].audioSampleObject;
 			}
 
 			if (!runningProduction) {
 			    imageFileNameLocal = "resources/images/" + imageFileNameLocal;
 			}
 			var hasImage = (imageFileNameLocal != "" && imageFileNameLocal != "resources/images/" && imageFileNameLocal != "resources/images/undefined");
-			$scope.tipArrayData[$scope.tipCounter].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
+			$scope.tipArrayData[$scope.tipCounter].tipBodyArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, audioSampleObject: audioSampleLocal, submittedBy: submittedByLocal, submittedDate: submittedDateLocal})
 			if (hasImage) {
 			    $scope.tipArrayData[$scope.tipCounter].tipImageArray.push({tipDescriptionNumber: i, tipDescription: tipDescriptionLocal, imageFileName: imageFileNameLocal, hasImage: hasImage, submittedBy: submittedByLocal, submittedDate: submittedDateLocal});
 			}
@@ -2375,7 +2521,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 
-
+		//$scope.$apply();
 		$scope.showButton('Edit');
 		$scope.showButton('Delete');
 //		$('html, body').animate({
@@ -2392,15 +2538,20 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    comments[i].showReplies = true;
 		    var tipId = comments[i].tip_id;
 		    var tipCounter = $scope.findInTipArray(tipId);
-		    $scope.tipArrayData[tipCounter].comments.push(comments[i]);
-		    if (comments[i].parentComment_id == -1) {
+		    if (tipCounter != -1) {
+			if (!$scope.tipArrayData[tipCounter].hasOwnProperty('comments')) {
+			    $scope.tipArrayData[tipCounter].comments = [];
 
-			$scope.tipArrayData[tipCounter].parentComments.push(comments[i]);
-		    }
-		    else {
-			$scope.tipArrayData[tipCounter].replyComments.push(comments[i]);
-		    }
+			}
+			$scope.tipArrayData[tipCounter].comments.push(comments[i]);
+			if (comments[i].parentComment_id == -1) {
 
+			    $scope.tipArrayData[tipCounter].parentComments.push(comments[i]);
+			}
+			else {
+			    $scope.tipArrayData[tipCounter].replyComments.push(comments[i]);
+			}
+		    }
 		}
 	    }
 
@@ -2659,7 +2810,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
 
 	    // $scope.updateImageFileName();
-	    $scope.updateBodyArray();
+	   // $scope.updateBodyArray();
 
 	}
 	$scope.prevButtonClicked = function () {
@@ -2680,7 +2831,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
 	    $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
 	    //  $scope.updateImageFileName();
-	    $scope.updateBodyArray();
+	 //   $scope.updateBodyArray();
 	}
 	$scope.backToTipsClicked = function () {   //dd tip to database
 	    $scope.addATipToggle = false;
@@ -2805,6 +2956,15 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    dateModified: 0, newFileName: imageName});
 	    }
 	    var imageDataObjectJson = JSON.stringify(imageDataObject);
+
+
+	    var audioSampleDataObject = [];
+	    //Audio Sample
+	    for (var i = 0; i < $scope.uploadedAudioSamples.length; i++) {
+
+		audioSampleDataObject.push({_id: $scope.uploadedAudioSamples[i]});
+	    }
+	    var audioSampleObjectJson = JSON.stringify(audioSampleDataObject);
 	    //}
 	    /* var imageDataObject = [{}]
 	     for (var i = 0; i < $scope.uploader.queue.length; i++) {
@@ -2841,6 +3001,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    vstJson: vstObjectJson,
 		    dawJson: dawObjectJson,
 		    imageDataJson: imageDataObjectJson,
+		    audioSampleObjectJson: audioSampleObjectJson,
 		    videoLinkJson: videoLinkJson,
 		    filtersJson: filtersJson,
 		    submittedBy: $localStorage.username,
@@ -3081,6 +3242,27 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    }
 	});
 
+	var audioUploader = $scope.audioUploader = new FileUploader({
+	    url: '/uploadTipAudioSample'
+	});
+
+	// FILTERS
+
+	audioUploader.filters.push({
+	    name: 'customFilter',
+	    fn: function (item /*{File|FileLikeObject}*/, options) {
+		return this.queue.length < 10;
+	    }
+	});
+
+	uploader.filters.push({
+	    name: 'sizeFilter',
+	    fn: function (item /*{File|FileLikeObject}*/, options) {
+		console.log(item);
+		return item.size <= 1000000;
+	    }
+	});
+
 
 	// CALLBACKS
 	$scope.uploadedImages = [];
@@ -3136,6 +3318,71 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	uploader.onCompleteAll = function () {
 	    console.info('onCompleteAll');
 	};
+
+
+	// CALLBACKS
+	$scope.uploadedAudioSamples = [];
+	var numberOfAudioSamples = 0;
+
+	audioUploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+	    $scope.fileErrorMessage = "";
+	    if (filter.name = 'sizeFilter') {
+		$scope.fileErrorMessage = "File too big. Upload file limit 1 MB";
+	    }
+	    console.info('onWhenAddingFileFailed', item, filter, options);
+	};
+	audioUploader.onAfterAddingFile = function (fileItem) {
+	    $scope.fileErrorMessage = "";
+	    console.info('onAfterAddingFile', fileItem);
+	};
+	audioUploader.onAfterAddingAll = function (addedFileItems) {
+	    console.info('onAfterAddingAll', addedFileItems);
+	};
+	audioUploader.onBeforeUploadItem = function (item) {
+	    console.info('onBeforeUploadItem', item);
+	};
+	audioUploader.onProgressItem = function (fileItem, progress) {
+	    console.info('onProgressItem', fileItem, progress);
+	};
+	audioUploader.onProgressAll = function (progress) {
+	    console.info('onProgressAll', progress);
+	};
+	audioUploader.onSuccessItem = function (fileItem, response, status, headers) {
+	    console.info('onSuccessItem', fileItem, response, status, headers);
+
+	};
+	audioUploader.onErrorItem = function (fileItem, response, status, headers) {
+	    console.info('onErrorItem', fileItem, response, status, headers);
+	};
+	audioUploader.onCancelItem = function (fileItem, response, status, headers) {
+	    console.info('onCancelItem', fileItem, response, status, headers);
+	};
+	audioUploader.onCompleteItem = function (fileItem, response, status, headers) {
+	    console.info('onCompleteItem', fileItem, response, status, headers);
+
+
+	    //$scope.uploadedAudioSamples[numberOfAudioSamples] = response;
+	    $scope.uploadedAudioSamples.push(response);
+
+
+
+	    var imageFileNameLocal = response;
+	    if (!runningProduction) {
+		imageFileNameLocal = "resources/images/" + response;
+	    }
+	    if ($scope.tipAudioSampleArray == null) {
+		$scope.tipAudioSampleArray = [];
+	    }
+	    //  $scope.tipAudioSampleArray.push({});
+	    numberOfAudioSamples++;
+
+	};
+	audioUploader.onCompleteAll = function () {
+	    console.info('onCompleteAll');
+	    //$scope.tipArrayData[$scope.tipCounter].uploadedAudioSamples =  $scope.uploadedAudioSamples;
+	};
+
+
 
 	$scope.getTipsFromMongo();
 

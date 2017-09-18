@@ -241,14 +241,13 @@ module.exports = function (router, passport) {
 	    db.close();
 	});
     });
-    
-     router.post('/postProfilePoints/:username',function(req,res){
+    router.post('/postProfileMetaData/:username',function(req,res){
 	var username = req.params.username;
 	console.log(req);
-	var totalpoints = req.body['totalpoints'];
+	var profileMetaDataJson = req.body['profileMetaDataJson'];
 
 	//var tipIdArray = req.body['tipArray'];
-	console.log('posting totalpoints Data' + totalpoints);
+	console.log('posting profileImageJson Data' + profileMetaDataJson);
 	
 	console.log('username:' + username);
 	MongoClient.connect(url, function (err, db) {
@@ -262,18 +261,56 @@ module.exports = function (router, passport) {
 		// Get the documents collection
 		var collection = db.collection('profileCollection');
 		if (true) {
-		    collection.update({userName: username},  {$set:{totalpoints:totalpoints}}, function (err, db) {
+		    collection.update({userName: username},  {$set:{profileMetaDataJson:profileMetaDataJson}}, function (err, db) {
 			if (err) {
 			    console.log('Unable to edit profile', err);
-			    res.send('totalpoints  save failed');
+			    res.send('profileMetaDataJson save failed');
 			}
 			else {
-			    res.send('totalpoints Profile edit successful');
+			    res.send('profileMetaDataJson edit successful');
 			}
 		    })
 		}
 		else{
-		    res.send("No totalpoints found");
+		    res.send("No profileImageJson found");
+		}
+	    }
+	    db.close();
+	});
+    });
+    
+     router.post('/postProfileDownloadedSamples/:username',function(req,res){
+	var username = req.params.username;
+	console.log(req);
+	var downloadedSamples = req.body['downloadedSamples'];
+
+	//var tipIdArray = req.body['tipArray'];
+	console.log('posting postProfileDownloadedSamples Data' + downloadedSamples);
+	
+	console.log('username:' + username);
+	MongoClient.connect(url, function (err, db) {
+	    if (err) {
+		console.log('Unable to connect to the mongoDB server. Error:', err);
+	    } else {
+		//HURRAY!! We are connected. :)
+		console.log('Connection established to', url);
+
+		// do some work here with the database.
+		// Get the documents collection
+		var collection = db.collection('profileCollection');
+		if (true) {
+		    collection.update({userName: username},  {$set:{downloadedSamples:downloadedSamples}}, function (err, db) {
+			if (err) {
+			    console.log('Unable to edit profile', err);
+			    res.send('downloadedSamples  save failed');
+			}
+			else {
+			    res.send('downloadedSamples Profile edit successful');
+			}
+		    })
+		}
+		else{
+		    res.send("No downloadedSamples found");
 		}
 	    }
 	    db.close();

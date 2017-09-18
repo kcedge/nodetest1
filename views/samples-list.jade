@@ -22,6 +22,10 @@ ul.panel-body.comment-detail-list(style='margin-top:25px;')
 				span BPM	
 				span.glyphicon.glyphicon-menu-down.small(ng-show="sortType == 'bpm'&&!sortReverse")
 				span.glyphicon.glyphicon-menu-up.small(ng-show="sortType == 'bpm'&&sortReverse" class="fa fa-caret-up")
+		div.bpm.col-xs-1.col-sm-1.col-md-1.col-lg-1.hover(ng-click="sortType = 'downloads';sortReverse = !sortReverse")
+				span Downloads	
+				span.glyphicon.glyphicon-menu-down.small(ng-show="sortType == 'downloads'&&!sortReverse")
+				span.glyphicon.glyphicon-menu-up.small(ng-show="sortType == 'downloads'&&sortReverse" class="fa fa-caret-up")
 	div(ng-repeat="sample in $parent.samples | orderBy:sortType:sortReverse| filter:searchSample")
 		div.sampleRowWrapper.row(ng-show='sample.show')
 			div.playbtn.btn.btn-primary(style='float:left' ng-click='samplePlayClicked(sample)')
@@ -39,12 +43,14 @@ ul.panel-body.comment-detail-list(style='margin-top:25px;')
 						label.label-primary(style='margin-right:3px;') {{tag.text}}
 			div.key.col-xs-1.col-sm-1.col-md-1.col-lg-1
 				span(ng-show='sample.key!="undefined"') {{sample.key}}
-			div.bpm.col-xs-1.col-sm-1.col-md-1.col-lg-1(ng-show='sample.bpm')
+			div.bpm.col-xs-1.col-sm-1.col-md-1.col-lg-1()
 				span {{sample.bpm}}
+			div.bpm.col-xs-1.col-sm-1.col-md-1.col-lg-1()
+				span {{sample.downloadCount}}
 			div.other(style='float:right')
 				span.hover.glyphicon.glyphicon-edit(style='margin-right:5px;' ng-click='editSampleClicked(sample)' ng-show='adminAuth')
-				span.hover.glyphicon.glyphicon-heart(style='margin-right:5px;')
-				a(id='download{{sample._id}}' ng-click='downloadClicked(sample)' )
+				span.hover.glyphicon.glyphicon-heart(style='margin-right:5px;' ng-click='loveSampleClicked(sample)' ng-class="{activeHeart:sample.isLoved}")
+				a(id='download{{sample._id}}' ng-click='downloadClicked(sample)' ng-class="{activeDownloaded:sample.isDownloaded}" )
 					span.hover.glyphicon.glyphicon-download(style='margin-right:5px;')
 				span.hover.glyphicon.glyphicon-menu-hamburger(style='margin-right:5px;')
 	div#editSampleWrapper(ng-show='editToggle')
