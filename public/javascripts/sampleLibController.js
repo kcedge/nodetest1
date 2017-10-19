@@ -501,6 +501,9 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	}
 	$scope.uploadAPackToggle = false;
 	$scope.uploadPackToggleClicked = function () {
+	    if(!$scope.authenticated){
+		window.location.href = '/signUp/sampleLib/';
+	    } 
 	    $scope.uploadAPackToggle = !$scope.uploadAPackToggle;
 	}
 	
