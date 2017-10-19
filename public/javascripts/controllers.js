@@ -956,7 +956,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.tipClicked = function (tip) {
 	    var tipIdClicked = tip._id;
 	    $scope.tipCounter = $scope.findInTipArray(tipIdClicked);
-	    
+
 	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
 		$scope.tipArrayData[i].isActive = false;
 	    }
@@ -999,21 +999,21 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.submittedDate = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
 	    // $scope.updateBodyArray(); //update current tip
 	};
-	$(window).load(function() {
-	     var currentTipId = $scope.currentTipId;
+	$(window).load(function () {
+	    var currentTipId = $scope.currentTipId;
 
 	    if ($scope.tipCounter === undefined) {
 		$scope.tipCounter = 0;
 	    }
-	   
-	    $scope.tipNavBarClicked($scope.tipArrayData[$scope.tipCounter]);
-	   
 
-	  //  $scope.updateBodyArray();
+	    $scope.tipNavBarClicked($scope.tipArrayData[$scope.tipCounter]);
+
+
+	    //  $scope.updateBodyArray();
 
 	});
-	
-	
+
+
 	var convertProfileDataToJson = function (profileArrayData) {
 	    for (var i = 0; i < profileArrayData.length; i++) {
 		if (profileArrayData[i].hasOwnProperty("bannerImageJson")) {
@@ -1598,7 +1598,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	}
 	$scope.addATipClicked = function () {
 	    //Start with one description
-	    
+
 	    $scope.removeAllButOneTipDescriptions("Add");
 	    $scope.responseData = "";
 	    $scope.addATipToggle = !$scope.addATipToggle;
@@ -1607,7 +1607,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	    $scope.tipImageArray = [];
 	    tinyMCE.get('textAreaTip').setContent('');
-	    
+
 	    if (!$scope.isLoggedIn()) {
 		$scope.likedTipsArray = [];
 		$scope.lovedTipsArray = [];
@@ -2042,29 +2042,30 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	$scope.tipNavBarClicked = function (tip) {
 
-	    //$scope.tipArrayData[$scope.tipCounter].isActive = false;
-	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
-		$scope.tipArrayData[i].isActive = false;
+	    if (tip.hasOwnProperty("_id")) {
+		//$scope.tipArrayData[$scope.tipCounter].isActive = false;
+		for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		    $scope.tipArrayData[i].isActive = false;
+		}
+
+		var tipIdClicked = tip._id;
+		var tipObjClicked = $("#tipsWrapper" + tipIdClicked);
+		var tipObjClickedOffset = tipObjClicked[0].offsetTop;
+		var scrollWrapper = $("#tipsScrollWrapper");
+		scrollWrapper.scrollTop(tipObjClickedOffset - 90);
+
+		$scope.tipCounter = $scope.findInTipArray(tip._id);
+		$scope.tipArrayData[$scope.tipCounter].isActive = true;
+		// $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
+		// $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
+		// $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
+
+		$scope.addATipToggle = false;
+		$scope.editATipToggle = false;
+		// $scope.updateBodyArray();
+
+		//   $scope.updateImageFileName();
 	    }
-
-	    var tipIdClicked = tip._id;
-	    var tipObjClicked = $("#tipsWrapper" + tipIdClicked);
-	    var tipObjClickedOffset = tipObjClicked[0].offsetTop;
-	    var scrollWrapper = $("#tipsScrollWrapper");
-	    scrollWrapper.scrollTop(tipObjClickedOffset - 90);
-
-	    $scope.tipCounter = $scope.findInTipArray(tip._id);
-	    $scope.tipArrayData[$scope.tipCounter].isActive = true;
-	    // $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
-	    // $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-	    // $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
-
-	    $scope.addATipToggle = false;
-	    $scope.editATipToggle = false;
-	    // $scope.updateBodyArray();
-
-	    //   $scope.updateImageFileName();
-
 	}
 
 	var convertTipDataToJson = function () {
@@ -2247,14 +2248,14 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 		//	$scope.updateImageFileName();
 		//$scope.updateBodyArray();	
-		
-		
+
+
 		//check if current tip id was set through the url
-		if($scope.currentTipId!=null){
-		    $scope.tipCounter = $scope.findInTipArray($scope.currentTipId);		    
+		if ($scope.currentTipId != null) {
+		    $scope.tipCounter = $scope.findInTipArray($scope.currentTipId);
 		}
 		$scope.updateTipsData();
-		
+
 
 		getTipAudioSamples();
 
@@ -2466,10 +2467,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			if ($scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1]) {
 			    imageFileNameLocal = $scope.tipArrayData[$scope.tipCounter].imageDataJson[i - 1].newFileName;
 			}
-			if($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("audioSampleObjectJson") && $scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson.length > (i-1))
-			if ($scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1] && $scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1].hasOwnProperty('audioSampleObject')) {
-			    audioSampleLocal = $scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1].audioSampleObject;
-			}
+			if ($scope.tipArrayData[$scope.tipCounter].hasOwnProperty("audioSampleObjectJson") && $scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson.length > (i - 1))
+			    if ($scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1] && $scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1].hasOwnProperty('audioSampleObject')) {
+				audioSampleLocal = $scope.tipArrayData[$scope.tipCounter].audioSampleObjectJson[i - 1].audioSampleObject;
+			    }
 
 			if (!runningProduction) {
 			    imageFileNameLocal = "resources/images/" + imageFileNameLocal;
