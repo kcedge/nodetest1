@@ -147,11 +147,16 @@ module.exports = function (router, passport) {
 	res.render('signIn', {title: 'Sign In',
 	    messages: req.flash('loginMessage')});
     });
+    
     router.get('/signIn/:redirect', function (req, res) {
 	var redirect = req.params.redirect;
 	res.render('signIn', {title: 'Sign In',
 	    message: req.flash('signupMessage'),
 	    redirect: redirect});
+    });
+    router.get('/contactMe', function (req, res) {
+	console.log(req);
+	res.render('contactMe', {});
     });
     /* GET Comments Template. */
     router.get('/comments-list', function (req, res) {

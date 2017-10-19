@@ -956,6 +956,11 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.tipClicked = function (tip) {
 	    var tipIdClicked = tip._id;
 	    $scope.tipCounter = $scope.findInTipArray(tipIdClicked);
+	    
+	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
+		$scope.tipArrayData[i].isActive = false;
+	    }
+	    $scope.tipArrayData[$scope.tipCounter].isActive = true;
 	    //$scope.updateBodyArray();
 
 	}
@@ -994,19 +999,21 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	    $scope.submittedDate = $scope.tipArrayData[$scope.tipCounter].dateSubmitted;
 	    // $scope.updateBodyArray(); //update current tip
 	};
-	window.onload = function () {
-	    // var currentTipId = $scope.currentTipId;
-//
-//	    if ($scope.tipCounter === undefined) {
-//		$scope.tipCounter = 0;
-//	    }
-//	    for (var i = 0; i < $scope.tipArrayData.length; i++) {
-//		$scope.tipNavBarClicked($scope.tipArrayData[i]);
-//	    }
-//
-//	    $scope.updateBodyArray();
+	$(window).load(function() {
+	     var currentTipId = $scope.currentTipId;
 
-	};
+	    if ($scope.tipCounter === undefined) {
+		$scope.tipCounter = 0;
+	    }
+	   
+	    $scope.tipNavBarClicked($scope.tipArrayData[$scope.tipCounter]);
+	   
+
+	  //  $scope.updateBodyArray();
+
+	});
+	
+	
 	var convertProfileDataToJson = function (profileArrayData) {
 	    for (var i = 0; i < profileArrayData.length; i++) {
 		if (profileArrayData[i].hasOwnProperty("bannerImageJson")) {
@@ -1525,13 +1532,13 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		return "tipTitle";
 	    }
 	    if ($scope.sortType == "Rating") {
-		$scope.sortReverse = true;
+		//$scope.sortReverse = true;
 		//$scope.tipArrayData.sort(compareRating);
 		return "tipPoints";
 
 	    }
 	    if ($scope.sortType == "Latest") {
-		$scope.sortReverse = true;
+		//$scope.sortReverse = true;
 		//$scope.tipArrayData.sort(compareRating);
 		return "dateSubmitted";
 
@@ -1591,6 +1598,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	}
 	$scope.addATipClicked = function () {
 	    //Start with one description
+	    
 	    $scope.removeAllButOneTipDescriptions("Add");
 	    $scope.responseData = "";
 	    $scope.addATipToggle = !$scope.addATipToggle;
@@ -1599,6 +1607,13 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	    $scope.tipImageArray = [];
 	    tinyMCE.get('textAreaTip').setContent('');
+	    
+	    if (!$scope.isLoggedIn()) {
+		$scope.likedTipsArray = [];
+		$scope.lovedTipsArray = [];
+		$scope.dislikedTipsArray = [];
+		$(location).attr('href', '/signUp');
+	    }
 	}
 
 	$scope.deleteATipClicked = function () {
@@ -2231,8 +2246,16 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 		//	$scope.updateImageFileName();
-		//$scope.updateBodyArray();		
+		//$scope.updateBodyArray();	
+		
+		
+		//check if current tip id was set through the url
+		if($scope.currentTipId!=null){
+		    $scope.tipCounter = $scope.findInTipArray($scope.currentTipId);		    
+		}
 		$scope.updateTipsData();
+		
+
 		getTipAudioSamples();
 
 		$scope.navBarArray = "[";

@@ -39,6 +39,14 @@ append body
 									a(ng-click="navBarFilterClick(sortFilter)"){{sortFilter}}
 						//label.label.label-default#navBarSortBtn(ng-click="sortByClicked()")
 						//	{{arrowUnicode}}
+						
+						#addTipButton.right
+							button.btn.btn-default#addATipButton(title="Add a tip" style="margin-right:5px;" ng-click="addATipClicked()" ng-class="{active:addATipToggle}" ) 
+								span.glyphicon.glyphicon-plus(style='margin-right:5px')
+								span Add
+						#editATipButton.right.small
+							button.btn.btn-default.editATipButton(title="Edit tip" style="margin-left:5px;" ng-click="editATipClicked()" ng-show="showButton('Edit')" )
+												span.glyphicon.glyphicon-edit
 						span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
 						span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
 					navBarItem.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse" ng-show="showItem(tip)")
@@ -122,6 +130,7 @@ append body
 
 
 									h2(style="float:left;max-width:450px;margin-left: 3px;margin-top:15px;") {{tip.tipTitle}}
+									
 									span#currentTipId(ng-show="false")
 										{{currentTipId}}
 									span#currentTipIdToLoad(ng-show="false")
@@ -133,7 +142,7 @@ append body
 											span.glyphicon.glyphicon-arrow-down
 										button.btn.btn-default#likeButton(title="upvote tip" style="margin-right:5px;" ng-click="likeButtonClicked(tip)" ng-class="{active:tip.isLiked}" )
 											span.glyphicon.glyphicon-arrow-up
-										button.btn.btn-default#loveButton(title="save tip" ng-click="loveButtonClicked(tip)" ng-class="{active:tip.isLoved}")
+										button.btn.btn-default#loveButton(title="save tip" ng-click="loveButtonClicked(tip)" ng-class="{active:tip.isLoved,isActiveLoved:tip.isLoved}")
 											span.glyphicon.glyphicon-heart
 
 							#TipTitlePanel.panel.panel-default
