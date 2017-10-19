@@ -33,43 +33,45 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope', '$rootScope', '$ht
 	    if (!$scope.authenticated) {
 		window.location.href = '/signUp';
 	    }
-	    console.log('Posting a comment');
-	    var username = $localStorage.username;
-	    var comment = $scope.postCommentAdd;
-	    $scope.postCommentAdd = "";
-	    var parentScope = $scope.$parent;
-	    var tipId = parentScope.tip._id;
-	    //var tipId = $("#currentTipId").html();
-	    console.log(username);
-	    console.log(comment);
+	    else {
+		console.log('Posting a comment');
+		var username = $localStorage.username;
+		var comment = $scope.postCommentAdd;
+		$scope.postCommentAdd = "";
+		var parentScope = $scope.$parent;
+		var tipId = parentScope.tip._id;
+		//var tipId = $("#currentTipId").html();
+		console.log(username);
+		console.log(comment);
 
 
 
-	    var req = {
-		method: 'POST',
-		url: '/postComment',
-		headers: {
-		    'Content-Type': "application/json"
-		},
-		data: {username: username,
-		    comment: comment,
-		    tip_id: tipId,
-		    date_published: new Date(),
-		    commentPoints: 0,
-		    parentComment_id: -1}
-	    }
-	    $http(req).then(function success(response) {
-		console.log("added comment, with tip_id:")
-		console.log(response);
-		CommentsService.getComments(tipId).then(function (response) {
-		    $scope.$parent.comments = response.data;
-		    $scope.$parent.getTipsFromMongo();
+		var req = {
+		    method: 'POST',
+		    url: '/postComment',
+		    headers: {
+			'Content-Type': "application/json"
+		    },
+		    data: {username: username,
+			comment: comment,
+			tip_id: tipId,
+			date_published: new Date(),
+			commentPoints: 0,
+			parentComment_id: -1}
+		}
+		$http(req).then(function success(response) {
+		    console.log("added comment, with tip_id:")
+		    console.log(response);
+		    CommentsService.getComments(tipId).then(function (response) {
+			$scope.$parent.comments = response.data;
+			$scope.$parent.getTipsFromMongo();
+		    });
+		}, function failure(response) {
+		    $scope.submitMessage = "Failure"
+		    $scope.responseData = response.data;
+
 		});
-	    }, function failure(response) {
-		$scope.submitMessage = "Failure"
-		$scope.responseData = response.data;
-
-	    });
+	    }
 	}
 	$scope.replyCommentSavedClicked = function (parentComment) {
 	    console.log('Replying to comment');
