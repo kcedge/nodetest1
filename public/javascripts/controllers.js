@@ -2041,30 +2041,31 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	}
 
 	$scope.tipNavBarClicked = function (tip) {
+	    if (tip != null) {
+		if (tip.hasOwnProperty("_id")) {
+		    //$scope.tipArrayData[$scope.tipCounter].isActive = false;
+		    for (var i = 0; i < $scope.tipArrayData.length; i++) {
+			$scope.tipArrayData[i].isActive = false;
+		    }
 
-	    if (tip.hasOwnProperty("_id")) {
-		//$scope.tipArrayData[$scope.tipCounter].isActive = false;
-		for (var i = 0; i < $scope.tipArrayData.length; i++) {
-		    $scope.tipArrayData[i].isActive = false;
+		    var tipIdClicked = tip._id;
+		    var tipObjClicked = $("#tipsWrapper" + tipIdClicked);
+		    var tipObjClickedOffset = tipObjClicked[0].offsetTop;
+		    var scrollWrapper = $("#tipsScrollWrapper");
+		    scrollWrapper.scrollTop(tipObjClickedOffset - 90);
+
+		    $scope.tipCounter = $scope.findInTipArray(tip._id);
+		    $scope.tipArrayData[$scope.tipCounter].isActive = true;
+		    // $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
+		    // $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
+		    // $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
+
+		    $scope.addATipToggle = false;
+		    $scope.editATipToggle = false;
+		    // $scope.updateBodyArray();
+
+		    //   $scope.updateImageFileName();
 		}
-
-		var tipIdClicked = tip._id;
-		var tipObjClicked = $("#tipsWrapper" + tipIdClicked);
-		var tipObjClickedOffset = tipObjClicked[0].offsetTop;
-		var scrollWrapper = $("#tipsScrollWrapper");
-		scrollWrapper.scrollTop(tipObjClickedOffset - 90);
-
-		$scope.tipCounter = $scope.findInTipArray(tip._id);
-		$scope.tipArrayData[$scope.tipCounter].isActive = true;
-		// $scope.tipTitle = $scope.tipArrayData[$scope.tipCounter].tipTitle
-		// $scope.tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDesc;
-		// $scope.submittedBy = $scope.tipArrayData[$scope.tipCounter].submittedBy;
-
-		$scope.addATipToggle = false;
-		$scope.editATipToggle = false;
-		// $scope.updateBodyArray();
-
-		//   $scope.updateImageFileName();
 	    }
 	}
 
@@ -2628,37 +2629,39 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 
 	$scope.updateProfile = function () {
-	    var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
-	    var userName = $localStorage.username;
-	    var likedTipsJson = JSON.stringify($scope.likedTipsArray);
-	    var lovedTipsJson = JSON.stringify($scope.lovedTipsArray);
-	    var dislikedTipsJson = JSON.stringify($scope.dislikedTipsArray);
-	    var tipsSubmittedJson = JSON.stringify($scope.submittedTipsArray);
+	    if ($scope.tipCounter != -1) {
+		var tipId = $scope.tipArrayData[$scope.tipCounter]._id;
+		var userName = $localStorage.username;
+		var likedTipsJson = JSON.stringify($scope.likedTipsArray);
+		var lovedTipsJson = JSON.stringify($scope.lovedTipsArray);
+		var dislikedTipsJson = JSON.stringify($scope.dislikedTipsArray);
+		var tipsSubmittedJson = JSON.stringify($scope.submittedTipsArray);
 
-	    var req = {
-		method: 'PUT',
-		url: '/tipsPageUpdateProfile',
-		headers: {
-		    'Content-Type': "application/json"
-		},
-		data: {username: userName,
-		    lovedTips: lovedTipsJson,
-		    likedTips: likedTipsJson,
-		    dislikedTips: dislikedTipsJson,
-		    submittedTips: tipsSubmittedJson
+		var req = {
+		    method: 'PUT',
+		    url: '/tipsPageUpdateProfile',
+		    headers: {
+			'Content-Type': "application/json"
+		    },
+		    data: {username: userName,
+			lovedTips: lovedTipsJson,
+			likedTips: likedTipsJson,
+			dislikedTips: dislikedTipsJson,
+			submittedTips: tipsSubmittedJson
+		    }
 		}
+
+		$http(req).then(function success(response) {
+		    $scope.submitMessage = "Success"
+		    $scope.profileUpdateData = response.data;
+		    $scope.getTipsFromMongo();//add to current tips array
+
+		}, function failure(response) {
+		    $scope.submitMessage = "Failure"
+		    $scope.profileUpdateData = response.data;
+
+		});
 	    }
-
-	    $http(req).then(function success(response) {
-		$scope.submitMessage = "Success"
-		$scope.profileUpdateData = response.data;
-		$scope.getTipsFromMongo();//add to current tips array
-
-	    }, function failure(response) {
-		$scope.submitMessage = "Failure"
-		$scope.profileUpdateData = response.data;
-
-	    });
 
 	}
 	$scope.likedTipsArray = [];
