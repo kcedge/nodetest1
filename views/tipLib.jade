@@ -24,8 +24,8 @@ append body
 
 		.row
 			#stickyaliasNavLeft
-			#stickyheaderNavLeft
-				#navBarWrapper().col-xs-3.col-sm-3.col-md-3.col-lg-3
+			#stickyheaderNavLeft.col-xs-0.col-sm-3.col-md-3.col-lg-3
+				#navBarWrapper()
 					//#blockForMargin(style="height:11px;width:100%")
 					#sortNavBarWrapper(style="display:inline-block;width:100%;margin-bottom:5px;")
 						#labelSort
@@ -71,7 +71,7 @@ append body
 								div.col-xs-12.col-sm-12.col-md-12.col-lg-12
 									div#navDescWrapper.navDescriptionWrapper(ng-bind-html='tip.tipDescJson[1].tipDescription  | to_trusted' style='')
 						
-			.col-xs-6.col-sm-6.col-md-6.col-lg-6#middleDivTipLib
+			.col-xs-0.col-sm-6.col-md-6.col-lg-6#middleDivTipLib
 				a.minimize.hover(ng-click='filtersToggle=!filtersToggle' ng-model='filtersToggle' ng-show='!filtersToggle') Show Filters
 				a.minimize.hover(ng-click='filtersToggle=!filtersToggle' ng-model='filtersToggle' ng-show='filtersToggle') Hide Filters
 				.row.filterBoxStyle#stickyheader(ng-style="filtersBoxStyle" ng-show='filtersToggle')
