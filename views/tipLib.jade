@@ -3,8 +3,8 @@ extends layout
 append body
 	//.bgImage
 	.pageController(ng-controller="bodyTipHelperController" style = '' id='controllerDiv' )
-		.div.userDetailsDivTipLib
-			.div.username
+		.div.userDetailsDivTipLib.row.hidden-xs
+			.div.username.col-xs-0
 				span.greeting Hey there	
 				a(href='/profile/{{username}}'){{username}}!
 		.div(style="text-align:center;margin-top:65px")
