@@ -147,10 +147,11 @@ a {
 }
 /*Sign In Style*/
 #signInWrapper{
-    margin: 0 auto;
-    width:40%;
-    min-width: 150px;
-   //margin-top: 25%;
+     border-radius: 10px;
+    border-style: solid;
+    border-width: thick;
+    border: blueviolet;
+    padding: 15px;
 
 }
 
