@@ -8,33 +8,34 @@ append body
 		.aleartTop
 			+alert-i-warning("Signing up with Music Production Helper allows you to view your profile page.  With a profile on mphelper.io you can: contribute to the Tip Library, save tips, comment on tips, network yourself with other producers, link your SoundCloud, and gain a good rep for helping others!")
 		
-		
-		#signUpWrapper.formInputWrapper
+		#pagerow.row
+			.signUpLeftMargin.col-lg-3.col-md-3.col-sm-3.col-xs-0
+			#signUpWrapper.formInputWrapper.col-lg-6.col-md-6.col-sm-6.col-xs-0
+				.titleBannerDiv.row(display:inline-block)
+					#sampleProfileDiv.small(style='float:right')
+						a(href='/profile/kcedge') Sample profile
+					h3
+						#titleName= title
+					#redirect(ng-hide='true' ng-model='redirect')= redirect
+				form#signInDetails().row
 
-			.titleBannerDiv(display:inline-block)
-				#sampleProfileDiv.small(style='float:right')
-					a(href='/profile/kcedge') Sample profile
-				h3
-					#titleName= title
-				#redirect(ng-hide='true' ng-model='redirect')= redirect
-			form#signInDetails()
-
-				+label-info("Username:")
-				br
-				input#usernameInput.form-control(name="username" ng-model="signUpUsername" ng-required)
-				//+label-info("Email:")
-				//br
-				//input#emailInput.form-control(name="email" ng-model="signUpEmail")
-				+label-info("Password:")
-				br
-				input#passWordInput.form-control(type="password" name="password" ng-model="signUpPassword" ng-required)
-				+label-info("Password Confirm:")
-				input#signUpConfirmInput.form-control(type="password" ng-model="signUpPasswordConfirm" ng-required)
-				#btnSignInSubmit.keyButton(ng-click="signUpSubmitClicked()" )
-					button.btn.btn-primary(type="submit" ng-disabled='!signUpGood()' ng-click='signUpClicked()')
-						span Sign Up
-				#signInLinkWrapper
-					a#signInLink(ng-click='gotoSignInClicked()')
-						span Already a member? Sign In	
-				#signUpError.small(style='color:red')
-					{{signUpErrorMessage}}
+					+label-info("Username:")
+					br
+					input#usernameInput.form-control(name="username" ng-model="signUpUsername" ng-required)
+					//+label-info("Email:")
+					//br
+					//input#emailInput.form-control(name="email" ng-model="signUpEmail")
+					+label-info("Password:")
+					br
+					input#passWordInput.form-control(type="password" name="password" ng-model="signUpPassword" ng-required)
+					+label-info("Password Confirm:")
+					input#signUpConfirmInput.form-control(type="password" ng-model="signUpPasswordConfirm" ng-required)
+					#btnSignInSubmit.keyButton(ng-click="signUpSubmitClicked()" )
+						button.btn.btn-primary(type="submit" ng-disabled='!signUpGood()' ng-click='signUpClicked()')
+							span Sign Up
+					#signInLinkWrapper
+						a#signInLink(ng-click='gotoSignInClicked()')
+							span Already a member? Sign In	
+					#signUpError.small(style='color:red')
+						{{signUpErrorMessage}}
+			.signUpRightMargin.col-lg-4.col-md-4.col-sm-4.col-xs-0

@@ -155,10 +155,11 @@ a {
 }
 
 #signUpWrapper{
-    margin: 0 auto;
-    width:40%;
-    min-width: 150px;
-   //margin-top: 25%;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: thick;
+    border: blueviolet;
+    padding: 15px;
 
 }
 .labelDisplayStrong{
@@ -435,6 +436,8 @@ a {
     border-color: #d1d2d2;
     border-style: solid;
     border-width: thin;
+    overflow:auto;
+    max-height: 100%;
 }
 .rightWidetWrapper{
     background-color: white;
