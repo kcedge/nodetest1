@@ -10,7 +10,7 @@ $(".facebookLink").children().first().attr("target", "_blank");
 $(".twitterLink").children().first().attr("target", "_blank");
 
 //angular.module("myApp", ["$scope","$http", "ngCookies"]);
-var runningProduction = true;
+var runningProduction = false;
 function isAuthenticated($http, routeToSignUp, callback) {
     var req = {
 	method: 'GET',
@@ -1900,7 +1900,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 	    var dawObjectJson = JSON.stringify(dawObject);
 
-	    var updatingImages = false;
+	    var updatingImages = false; //TO DO Make this toggle when different than images we have
 
 	    //if(($scope.tipBodyArray.length != $scope.tipArrayData[$scope.tipCounter].imageDataJson.length) || $scope.removeImageBodyArray){
 	    var imageDataObject = [];
@@ -1916,7 +1916,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		    dateModified: 0, newFileName: imageName});
 	    }
 	    var imageDataObjectJson = JSON.stringify(imageDataObject);
-	    updatingImages = true;
+	    // updatingImages = true;
 	    //}
 
 
@@ -1996,7 +1996,6 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			tipTypeJson: tipTypeObjectJson,
 			vstJson: vstObjectJson,
 			dawJson: dawObjectJson,
-			imageDataJson: imageDataObjectJson,
 			filtersJson: filtersJson,
 			submittedBy: $localStorage.username,
 			points: tipPoints,
