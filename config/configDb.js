@@ -8,7 +8,7 @@
 // Functions which will be available to external callers
 module.exports = {dbSettings: function () {
 	//CHANGE THIS TO RUN LOCAL OR PRODUCTION DB
-	var runningProd = false;
+	var runningProd = true;
 	var url = "";
 	if (runningProd) {
 	   // url = "mongodb://mphelperDbUser:mphelper91!@ec2-54-174-236-80.compute-1.amazonaws.com:27017/mphelperDb"

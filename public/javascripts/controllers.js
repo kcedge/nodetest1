@@ -10,7 +10,7 @@ $(".facebookLink").children().first().attr("target", "_blank");
 $(".twitterLink").children().first().attr("target", "_blank");
 
 //angular.module("myApp", ["$scope","$http", "ngCookies"]);
-var runningProduction = false;
+var runningProduction = true;
 var user = {};
 function isAuthenticated($http, routeToSignUp, callback) {
 	var req = {
