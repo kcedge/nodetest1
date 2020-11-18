@@ -4,7 +4,47 @@
  * and open the template in the editor.
  */
 
-angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', 'CommentsService', '$localStorage','FileUploader', function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStorage,FileUploader) {
+angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', 'CommentsService', '$localStorage','FileUploader','UserDataService', 
+function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStorage, FileUploader, UserDataService) {
+
+
+	var vm = this;
+
+
+	if($localStorage.user == undefined){
+		var req = {
+			method: 'GET',
+			url: '/getUserData',
+			headers: {
+				'Content-Type': "application/json"
+			},
+			data: {
+			
+			}
+		}
+
+		$http(req).then(function success(response) {
+			$scope.user = response.data.user;
+			$localStorage.user = response.data.user;
+			$scope.displayName = '';
+			$scope.firstName = '';
+			$scope.city = '';
+			//$scope.state = '';
+			$scope.country = '';
+			$scope.bio = '';
+			$scope.soundCloud = '';
+			$scope.twitter = '';
+			$scope.facebook = '';
+
+		}, function failure(response) {
+			vm.authres = response.data;
+
+		});
+	}
+	else{
+		$scope.user = $localStorage.user;
+	}
+
 
 	$scope.$storage = $localStorage.$default({
 	    username: "",
@@ -14,10 +54,20 @@ angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$htt
 	$scope.currentTip = {} // Current Tip Previewing
 
 	var username = $("#userName").html();
+
+
+	//vm.userInfo = UserDataService.getFormData();
+
+	// set up user profile
 	$scope.currentProfileUsername = username;
 	$scope.$storage = $localStorage;
 	$scope.$storage.userSignedIn = true;
 	$scope.$storage.username = username;
+	vm.user = $localStorage.user;
+
+
+
+
 	$scope.totalpoints = 0;
 	$scope.tipsSubmitted = [];
 	$scope.tipsFavorited = [];

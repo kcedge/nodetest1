@@ -1,7 +1,8 @@
 /data
 /node_modules/angular-file-upload
 /node_modules/
-
+node_modules\
+.vscode\
 
 # Windows image file caches
 Thumbs.db
@@ -56,3 +57,4 @@ public/resources/images/*
 public/resources/samples/*
 resources/keypair/mphelperT2Key.pem
 resources/keypair/mphelperT2Key.ppk
+node_modules/angular-route/angular-route.js

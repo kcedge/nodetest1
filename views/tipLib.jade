@@ -49,7 +49,7 @@ append body
 												span.glyphicon.glyphicon-edit
 						span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-bottom.arrowBtnClass(ng-show="sortReverse" ng-click="sortReverseClicked()")
 						span#sortReverseButton.hoverButton.glyphicon.glyphicon-triangle-top.arrowBtnClass(ng-show="!sortReverse" ng-click="sortReverseClicked()")
-					navBarItem.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse" ng-show="showItem(tip)")
+					navBarItem.tipContainer.list-unstyled.row.hover(ng-repeat="tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse" ng-show="showItem(tip)")
 						.tipNavItem.row.animated(ng-click="tipNavBarClicked(tip)" ng-mouseover='navBarHoverMouseOver(tip)'  ng-mouseleave='navBarHoverMouseLeave(tip)')
 							.div.navBarTopDiv.row( ng-show='true' ng-class='{navBarTipActive:tip.isActive}' )
 								.div.col-xs-12.col-sm-12.col-md-12.col-lg-12(style='padding-left:5px;margin-top:-5px;')
@@ -322,6 +322,13 @@ append body
 								span.glyphicon.glyphicon-minus
 							#noteWrapper(style="float:left;margin-left:5%;width:80%;")
 									span(style="font-style:italic;") Note: For now, images are displayed in the order they are uploaded.  If you want an image between paragraphs, add a description.  The first image uploaded is displayed after the first description, the second image after the second description.. and so on.
+						#editImagesContainer(class="row")
+							.col-xs-2.col-sm-2.col-md-2.col-lg-2#image(ng-repeat="tipImage in imageContainer" style='margin-left:3%' class='form-group')
+									img( ng-src="{{tipImage.imageFileName}}" style='width:100%;padding-top:2px;')
+									select.imageSectionInput(name="imageSectionSelect" type="select")
+												option(value="imageSection" ng-repeat="imageSection in imageSectionSelectionArray"){{imageSection}}
+									#removeImage.keyButton(ng-click="removeImage()")
+											+btn-xs("Delete")
 						#uploadedImagesWrapper(style='display:inline-block;')
 							#imageWrapper(style='float:left; width:130px; height:130px' ng-repeat='tipPart in tipImageArray' )
 								img.img-thumbnail.imageThumbNail(class='imageAttached{{$index}}' ng-show="tipPart.hasImage" ng-src='{{tipPart.imageFileName}}' ng-click='editImageClicked($index);')

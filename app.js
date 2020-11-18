@@ -12,18 +12,18 @@ var opts = {
   pretty: true
 };
 
-jade.fromSource('/views/profile.jade', opts, function(err, html) {
-  console.log("//** Compiler Output **//");
-  console.log(err);
-  console.log(html);
-});
+// jade.fromSource('/views/profile.jade', opts, function(err, html) {
+//   console.log("//** Compiler Output **//");
+//   console.log(err);
+//   console.log(html);
+// });
 
-jade.fromFile('/views/profile.jade', opts, function (err, html) {
-    console.log("//** Compiler Output 2 **//");
-    console.log(err);
+// jade.fromFile('/views/profile.jade', opts, function (err, html) {
+//     console.log("//** Compiler Output 2 **//");
+//     console.log(err);
 
-    console.log(html);
-});
+//     console.log(html);
+// });
 
 
 var bodyParser = require('body-parser');
@@ -31,6 +31,10 @@ var passport = require('passport');
 var flash    = require('connect-flash');
 
 var mongoose = require('mongoose');
+
+// Just add bluebird to your package.json, and then the following line should work
+mongoose.Promise = require('bluebird');
+
 // New Code
 var mongo = require('mongodb');
 var monk = require('monk');
@@ -44,8 +48,10 @@ var url = dbConfig.dbSettings().url;
 //Set global root path
 global.appRoot = path.resolve(__dirname);
 
-var db = monk(url);
+//var db = monk(url);
+//mongoose connection
 mongoose.connect(url); 
+var db = mongoose.connection;
 
 var app = express();
 

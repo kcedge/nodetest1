@@ -5,7 +5,8 @@ append body
 		.div.userDetailsDiv
 			.div.username(style='margin-top: -34px;')
 				span.greeting Hey there	
-				a(href='/profile/{{username}}'){{username}}!
+				a(href='/profile/{{username}}')
+					span {{user.displayName}}
 		.profilePageWrapper.row(style='margin-top:50px')
 			.profilePageLeft.col-sm-0.col-md-1.col-lg-1.col-xs-0
 				div.container.col-xs-12.col-sm-12.col-lg-12.col-md-12

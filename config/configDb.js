@@ -8,14 +8,14 @@
 // Functions which will be available to external callers
 module.exports = {dbSettings: function () {
 	//CHANGE THIS TO RUN LOCAL OR PRODUCTION DB
-	var runningProd = true;
+	var runningProd = false;
 	var url = "";
 	if (runningProd) {
 	   // url = "mongodb://mphelperDbUser:mphelper91!@ec2-54-174-236-80.compute-1.amazonaws.com:27017/mphelperDb"
 	   url = "mongodb://mphelperDbUser:mphelper91!@ec2-54-174-236-80.compute-1.amazonaws.com:27017/mphelperDb";
 	}
 	else {
-	    url = "mongodb://localhost:27017/tipsDb"
+	    url = "mongodb://127.0.0.1:27017/tipsDb"
 	}
 
 	return {

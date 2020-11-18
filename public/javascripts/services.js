@@ -6,6 +6,18 @@
 
 
 myApp.service('ProfileService', ['$http', function ($http) {
+	var vm = this;
+	var user = {};
+
+
+	this.setUserInfo = function(user){
+		user = user;
+	}
+
+	this.getUserInfo = function(){
+		return user;
+	}
+
 	this.getProfileInfo = function (username) {
 	    return $http.get('/getProfileInfo/' + username)
 		    .then(function (data) {
