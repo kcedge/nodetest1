@@ -4,7 +4,7 @@
 extends layout
 append body
 	.bgImage
-	.pageController(ng-controller="signUpController as signUp" style="margin:0 auto;width:90%;max-width:966px;")
+	.pageController(ng-controller="signUpController as vm" style="margin:0 auto;width:90%;max-width:966px;")
 		.aleartTop
 			+alert-i-warning("Signing up with Music Production Helper allows you to view your profile page.  With a profile on mphelper.io you can: contribute to the Tip Library, save tips, comment on tips, network yourself with other producers, link your SoundCloud, and gain a good rep for helping others!")
 		
@@ -12,32 +12,38 @@ append body
 			.signUpLeftMargin.col-lg-3.col-md-3.col-sm-3.col-xs-0
 			#signUpWrapper.formInputWrapper.col-lg-6.col-md-6.col-sm-6.col-xs-0
 				.titleBannerDiv.row(display:inline-block)
-					#sampleProfileDiv.small(style='float:right')
-						a(href='/profile/kcedge') Sample profile
-					h3
-						#titleName= title
-					#redirect(ng-hide='true' ng-model='redirect')= redirect
+					#rightSignUpLinks
+						#sampleProfileDiv.small(style='float:right')
+							a(href='/profile/kcedge') Sample profile
+						#signoutButton
+							a(ng-click="vm.signOut()")
+								span Sign Out
+						h3
+							#titleName= title
+						#redirect(ng-hide='true' ng-model='redirect')= redirect
 				form#signInDetails().row
 
 					+label-info("Username:")
 					br
-					input#usernameInput.form-control(name="username" ng-model="signUp.signUpUsername" ng-required)
+					input#usernameInput.form-control(name="username" ng-model="vm.signUpUsername" ng-required)
 					//+label-info("Email:")
 					//br
 					//input#emailInput.form-control(name="email" ng-model="signUpEmail")
 					+label-info("Password:")
 					br
-					input#passWordInput.form-control(type="password" name="password" ng-model="signUp.signUpPassword" ng-required)
+					input#passWordInput.form-control(type="password" name="password" ng-model="vm.signUpPassword" ng-required)
 					+label-info("Password Confirm:")
-					input#signUpConfirmInput.form-control(type="password" ng-model="signUp.signUpPasswordConfirm" ng-required)
-					#btnSignInSubmit.keyButton(ng-click="signUp.signUpSubmitClicked()" )
-						button.btn.btn-primary(type="submit" ng-disabled='!signUp.signUpGood()' ng-click='signUp.signUpClicked()')
+					input#signUpConfirmInput.form-control(type="password" ng-model="vm.signUpPasswordConfirm" ng-required)
+					#btnSignInSubmit.keyButton(ng-click="vm.signUpSubmitClicked()" )
+						button.btn.btn-primary(type="submit" ng-disabled='!vm.signUpGood()' ng-click='vm.signUpClicked()')
 							span Sign Up
-					#signInLinkWrapper
-						a#signInLink(ng-click='signUp.gotoSignInClicked()')
-							span Already a member? Sign In	
 					#signUpError.small(style='color:red')
-						{{signUpErrorMessage}}
+						span {{vm.signUpErrorMessage}}		
+					#signInLinkWrapper
+						a#signInLink(ng-click='vm.gotoSignInClicked()')
+							span Already a member? Sign In	
+				
 				div(class="g-signin2"  data-onsuccess="onSignIn")
 				//a(href="/googleSignUp") sign up with google
 			.signUpRightMargin.col-lg-4.col-md-4.col-sm-4.col-xs-0
+		

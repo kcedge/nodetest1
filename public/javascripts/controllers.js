@@ -40,6 +40,38 @@ function isAuthenticated($http, routeToSignUp, callback) {
 
 }
 
+function fetchStream(stream) {
+	const reader = stream.getReader();
+	let charsReceived = 0;
+	let result = '';
+	let para = '';
+
+	// read() returns a promise that resolves
+	// when a value has been received
+	reader.read().then(function processText({ done, value }) {
+		// Result objects contain two properties:
+		// done  - true if the stream has already given you all its data.
+		// value - some data. Always undefined when done is true.
+		if (done) {
+			console.log("Stream complete");
+			para.textContent = value;
+			return;
+		}
+
+		// value for fetch streams is a Uint8Array
+		charsReceived += value.length;
+		const chunk = value;
+		let listItem = document.createElement('li');
+		listItem.textContent = 'Received ' + charsReceived + ' characters so far. Current chunk = ' + chunk;
+		//list2.appendChild(listItem);
+
+		result += chunk;
+
+		// Read some more, and call this function again
+		return reader.read().then(processText);
+	});
+}
+
 function onSignIn(googleUser) {
 	var profile = googleUser.getBasicProfile();
 	console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
@@ -50,19 +82,77 @@ function onSignIn(googleUser) {
 	// $scope.signUpEmail = profile.getEmail();
 	//Token verified, update user profile
 	// $scope.signUpPassword = 'googleAuth';
-	
-	$("#userName").text(profile.U3);
-	if (profile.U3 != null) {
+
+	   // The ID token you need to pass to your backend:
+	   var id_token = googleUser.getAuthResponse().id_token;
+	   console.log("ID Token: " + id_token);
+
+	//$("#usernameInput").text(profile.kt);
+	$('#googleUserProfile').attr('value', profile);
+
+
+	//	$("#usernameInput").text(profile.getEmail());
+	if (profile.U3 == null) {
 		//New user, verify token
 		var xmlHttp = new XMLHttpRequest();
-		var id_token = googleUser.getAuthResponse().id_token;
+		var x = googleUser.getAuthResponse().id_token;
 		var bearerUserSignUpData = {
-			"profileId": profile.getId(),
+			"profile": googleUser.getAuthResponse(),
 		}
-		xmlHttp.open("GET", '/bearerSignUp', true); // true for asynchronous 
-		xmlHttp.setRequestHeader('Content-Type', "application/json");
-		xmlHttp.setRequestHeader('Authorization', 'Bearer ' + id_token);
 
+		//xmlHttp.open("GET", '/googleSignUp', true); // true for asynchronous 
+		//xmlHttp.setRequestHeader('Content-Type', "application/json");
+		//xmlHttp.setRequestHeader('Authorization', 'Bearer ' + id_token);
+
+		var URL = '../googleAuth';
+
+		var params = new Object();
+		params.email = profile.getEmail();
+		// Turn the data object into an array of URL-encoded key/value pairs.
+		let urlEncodedData = "", urlEncodedDataPairs = [], name;
+		for (name in params) {
+			urlEncodedDataPairs.push(encodeURIComponent(name) + '=' + encodeURIComponent(params[name]));
+		}
+
+		console.log('Response fully received');
+
+		async function read(response) {
+			const reader = response.body.getReader();
+			while (true) {
+				const { value, done } = await reader.read();
+				if (done) break;
+				console.log('Received', value);
+			}
+		}
+
+
+		// const response = fetch(URL, {
+		// 	method: 'post',
+		// 	headers: {
+		// 		'Content-Type': 'application/json'
+		// 		// 'Content-Type': 'application/x-www-form-urlencoded',
+		// 	},
+		// 	redirect: 'follow', // manual, *follow, error
+
+		// 	body: JSON.stringify(googleUser)
+		// }).then(response => response.json())
+		// 	.then(data => {
+		// 		console.log('data.user:');
+		// 		console.log(data.user);
+		// 		//window.location.href = '/profile/'+ data.user.userId;
+		// 		//$localStorage.user = data.user;
+		// 		$("#userId").text(data.user.userId);
+			
+
+		// 	});
+
+
+
+		console.log('Response fully received');
+
+		xmlHttp.open("POST", '/googleSignUp', true); // true for asynchronous 
+		xmlHttp.setRequestHeader('Content-Type', "application/json");
+		xmlHttp.setRequestHeader('Content-Type', "application/json");
 		xmlHttp.onreadystatechange = function () {
 			if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
 
@@ -107,17 +197,8 @@ function onSignIn(googleUser) {
 				}
 				xmlHttpNewBearerUser.send(newBearerUserData);//send bearer sign up
 			}
+			xmlHttp.send(bearerUserSignUpData);//send bearer sign up
 		}
-		xmlHttp.send(bearerUserSignUpData);//send bearer sign up
-
-
-
-
-
-
-
-
-
 
 	}
 }
@@ -146,6 +227,11 @@ angular.module("myApp").controller('bodyController', ['$scope', '$http', '$local
 	$scope.signOutClicked = function () {
 		$localStorage.username = "";
 		$localStorage.userSignedIn = false;
+		
+		var auth2 = gapi.auth2.getAuthInstance();
+		auth2.signOut().then(function () {
+			console.log('User signed out.');
+		});
 
 	}
 }]);
@@ -164,29 +250,12 @@ angular.module("myApp").controller('signUpController', ['$scope', '$http', '$loc
 	vm.gotoSignInClicked = function () {
 		window.location.href = '/signIn/' + $('#redirect').text();
 	}
-
-	// vm.onSignIn = function(googleUser){
-	// 	var profile = googleUser.getBasicProfile();
-	// console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-	// console.log('Name: ' + profile.getName());
-	// console.log('Image URL: ' + profile.getImageUrl());
-	// console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-
-	// // $scope.signUpUsername = profile.getName();
-	// // $scope.signUpEmail = profile.getEmail();
-
-
-	// // $scope.signUpPassword = 'googleAuth';
-	// $("#userName").text(profile.U3);
-	// if(profile.U3!=null){
-
-
-
-	// 	//redirect: $("#redirect").text()
-	// 	//$scope.signUpClicked();//make sure google user is stored in our db
-	// 	window.location.href = "/bearerSignUp";
-	// }
-	// }
+	vm.signOut = function () {
+		var auth2 = gapi.auth2.getAuthInstance();
+		auth2.signOut().then(function () {
+			console.log('User signed out.');
+		});
+	}
 
 
 
@@ -226,6 +295,7 @@ angular.module("myApp").controller('signUpController', ['$scope', '$http', '$loc
 		return true;
 	}
 
+
 	vm.signUpClicked = function () {
 		var req = {
 			method: 'POST',
@@ -261,6 +331,13 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 			username: "",
 			userSignedIn: false
 		});
+
+		$scope.signOut = function () {
+			var auth2 = gapi.auth2.getAuthInstance();
+			auth2.signOut().then(function () {
+				console.log('User signed out.');
+			});
+		}
 
 
 
@@ -834,7 +911,7 @@ angular.module("myApp").controller('bodyMelodyHelperController', ['$scope', '$ht
 		var noteCount = 0;
 		var formulaArray = $scope.getCurrentScaleFormula();
 		var indexForFormula = 0;
-		for (var i = noteIndex + 1; indexForFormula < formulaArray.length; i++ , indexForFormula++) {
+		for (var i = noteIndex + 1; indexForFormula < formulaArray.length; i++, indexForFormula++) {
 			if (i == $scope.noteOrderForChart.length) {
 				i = 0;
 			}
@@ -864,7 +941,7 @@ angular.module("myApp").controller('bodyMelodyHelperController', ['$scope', '$ht
 		//	}
 		// }
 		var indexForFormula = 0;
-		for (var i = noteIndex + 1; indexForFormula < formulaArray.length; i++ , indexForFormula++) {
+		for (var i = noteIndex + 1; indexForFormula < formulaArray.length; i++, indexForFormula++) {
 			if (i == $scope.noteOrderForChart.length) {
 				i = 0;
 			}
@@ -885,7 +962,7 @@ angular.module("myApp").controller('bodyMelodyHelperController', ['$scope', '$ht
 			colorSetArray);
 		$scope.UpdateChromaticWheel();
 		var indexForFormula = 0;
-		for (var i = noteIndex + 1; indexForFormula < formulaArray.length; i++ , indexForFormula++) {
+		for (var i = noteIndex + 1; indexForFormula < formulaArray.length; i++, indexForFormula++) {
 			if (i == $scope.noteOrderForChart.length) {
 				i = 0;
 			}
@@ -1249,7 +1326,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 		$('#stickyheaderNavRight').css('height', ($(window).height() - 122));
 
-		
+
 
 
 
@@ -1742,10 +1819,10 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.responseData = "";
 		$scope.addATipToggle = !$scope.addATipToggle;
 		$scope.tipTitleAdd = "";
-		$scope.tipDescAdd = "";
+		//$scope.tipDescAdd = "";
 
 		$scope.tipImageArray = [];
-		tinyMCE.get('textAreaTip').setContent('');
+		// tinyMCE.get('textAreaTip').setContent('');
 
 		if (!$scope.isLoggedIn()) {
 			$scope.likedTipsArray = [];
@@ -1840,14 +1917,14 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 				$scope.imageSectionSelectionArray.push(i);
 				if (i == 1) {
 					var tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription;
-					var mce = tinyMCE.get('textAreaEditTip');
+					// var mce = tinyMCE.get('textAreaEditTip');
 					mce.setContent(tipDesc);
 
 					//$("#textAreaEditTip").val(tipDesc);
 				}
 				else {
 					$scope.editAddDescription();//put text area elements into the DOM 
-					tinyMCE.get('textAreaEditTip' + i).setContent($scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription);
+					// tinyMCE.get('textAreaEditTip' + i).setContent($scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription);
 					//$("#textAreaEditTip" + i).val($scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription);
 				}
 			}
@@ -1881,56 +1958,56 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 				}
 			}
 		}
-	    /*
-	     for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].dawJson.length; i++) {
-	     var dawName = $scope.tipArrayData[$scope.tipCounter].dawJson[i].dawName;
-	     
-	     if ($scope.tipArrayData[$scope.tipCounter].dawJson[i].dawToggle) {
-	     if (dawName) {
-	     $("#editInputDawId" + dawName).prop("checked", true);
-	     }
-	     }
-	     else {
-	     if (dawName) {
-	     $("#editInputDawId" + dawName).prop("checked", false);
-	     }
-	     }
-	     
-	     }
-	     
-	     //Mark VST
-	     for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].vstJson.length; i++) {
-	     var vstName = $scope.tipArrayData[$scope.tipCounter].vstJson[i].vstName;
-	     if ($scope.tipArrayData[$scope.tipCounter].vstJson[i].vstToggle) {
-	     if (vstName) {
-	     $("#editInputVstId" + vstName).prop("checked", true);
-	     }
-	     
-	     }
-	     else {
-	     $("#editInputVstId" + vstName).prop("checked", false);
-	     
-	     }
-	     }
-	     //Mark Genre
-	     for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].genreJson.length; i++) {
-	     var genreName = $scope.tipArrayData[$scope.tipCounter].genreJson[i].genreName;
-	     if ($scope.tipArrayData[$scope.tipCounter].genreJson[i].genreToggle) {
-	     if (genreName) {
-	     $("#editInputGenreId" + genreName).prop("checked", true);
-	     }
-	     }
-	     else {
-	     $("#editInputGenreId" + genreName).prop("checked", false);
-	     }
-	     }
-	     //Mark Tip TYPE
-	     $("#editMixingYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.mixingTip);
-	     $("#editTheoryYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.theoryTip);
-	     $("#editMasteringYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.masteringTip);
-	     $("#editWorkFlowYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.workFlowTip);
-	     $("#editSoundDesignYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.soundDesignTip);
-	     */
+		/*
+		 for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].dawJson.length; i++) {
+		 var dawName = $scope.tipArrayData[$scope.tipCounter].dawJson[i].dawName;
+		 
+		 if ($scope.tipArrayData[$scope.tipCounter].dawJson[i].dawToggle) {
+		 if (dawName) {
+		 $("#editInputDawId" + dawName).prop("checked", true);
+		 }
+		 }
+		 else {
+		 if (dawName) {
+		 $("#editInputDawId" + dawName).prop("checked", false);
+		 }
+		 }
+		 
+		 }
+		 
+		 //Mark VST
+		 for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].vstJson.length; i++) {
+		 var vstName = $scope.tipArrayData[$scope.tipCounter].vstJson[i].vstName;
+		 if ($scope.tipArrayData[$scope.tipCounter].vstJson[i].vstToggle) {
+		 if (vstName) {
+		 $("#editInputVstId" + vstName).prop("checked", true);
+		 }
+		 
+		 }
+		 else {
+		 $("#editInputVstId" + vstName).prop("checked", false);
+		 
+		 }
+		 }
+		 //Mark Genre
+		 for (var i = 0; i < $scope.tipArrayData[$scope.tipCounter].genreJson.length; i++) {
+		 var genreName = $scope.tipArrayData[$scope.tipCounter].genreJson[i].genreName;
+		 if ($scope.tipArrayData[$scope.tipCounter].genreJson[i].genreToggle) {
+		 if (genreName) {
+		 $("#editInputGenreId" + genreName).prop("checked", true);
+		 }
+		 }
+		 else {
+		 $("#editInputGenreId" + genreName).prop("checked", false);
+		 }
+		 }
+		 //Mark Tip TYPE
+		 $("#editMixingYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.mixingTip);
+		 $("#editTheoryYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.theoryTip);
+		 $("#editMasteringYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.masteringTip);
+		 $("#editWorkFlowYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.workFlowTip);
+		 $("#editSoundDesignYes").prop("checked", $scope.tipArrayData[$scope.tipCounter].tipTypeJson.soundDesignTip);
+		 */
 	}
 	$scope.descriptionCounter = 1;
 	$scope.addDescription = function () {
@@ -1941,24 +2018,24 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		textArea.addClass("form-control");
 		textArea.addClass("tipDescInput");
 		$("#descriptionWrapper").append(textArea);
-		tinyMCE.init({
-			selector: '#textAreaTip' + $scope.descriptionCounter,
-			plugins: "link",
-			menubar: 'file edit insert view format table tools',
-			toolbar: "link | fontselect| undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
-			target_list: [
-				{ title: 'None', value: '' },
-				{ title: 'Same page', value: '_self' },
-				{ title: 'New page', value: '_blank' },
-				{ title: 'LIghtbox', value: '_lightbox' }
-			],
-			font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n'
+		// tinyMCE.init({
+		// 	selector: '#textAreaTip' + $scope.descriptionCounter,
+		// 	plugins: "link",
+		// 	menubar: 'file edit insert view format table tools',
+		// 	toolbar: "link | fontselect| undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+		// 	target_list: [
+		// 		{ title: 'None', value: '' },
+		// 		{ title: 'Same page', value: '_self' },
+		// 		{ title: 'New page', value: '_blank' },
+		// 		{ title: 'LIghtbox', value: '_lightbox' }
+		// 	],
+		// 	font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n'
 
-		});
+		// });
 	}
 	$scope.subtractDescription = function () {
 		if ($scope.descriptionCounter > 1) {
-			tinyMCE.remove('#textAreaTip' + $scope.descriptionCounter);
+			// tinyMCE.remove('#textAreaTip' + $scope.descriptionCounter);
 			$("#textAreaTip" + $scope.descriptionCounter).last().remove();
 			$scope.descriptionCounter--;
 
@@ -1972,22 +2049,22 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		textArea.addClass("form-control");
 		textArea.addClass("tipDescInput");
 		$("#editDescriptionWrapper").append(textArea);
-		tinyMCE.init({
-			selector: '#textAreaEditTip' + $scope.descriptionCounter,
-			plugins: "link",
-			menubar: 'file edit insert view format table tools',
-			toolbar: "link |fontselect| undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
-			target_list: [
-				{ title: 'None', value: '' },
-				{ title: 'Same page', value: '_self' },
-				{ title: 'New page', value: '_blank' },
-				{ title: 'LIghtbox', value: '_lightbox' }
-			],
-			font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n'
-		});
+		// tinyMCE.init({
+		// 	selector: '#textAreaEditTip' + $scope.descriptionCounter,
+		// 	plugins: "link",
+		// 	menubar: 'file edit insert view format table tools',
+		// 	toolbar: "link |fontselect| undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+		// 	target_list: [
+		// 		{ title: 'None', value: '' },
+		// 		{ title: 'Same page', value: '_self' },
+		// 		{ title: 'New page', value: '_blank' },
+		// 		{ title: 'LIghtbox', value: '_lightbox' }
+		// 	],
+		// 	font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n'
+		// });
 	}
 	$scope.editSubtractDescription = function () {
-		tinyMCE.remove('#textAreaEditTip' + $scope.descriptionCounter);
+		// tinyMCE.remove('#textAreaEditTip' + $scope.descriptionCounter);
 		if ($scope.descriptionCounter > 1) {
 			$("#textAreaEditTip" + $scope.descriptionCounter).last().remove();
 			$scope.descriptionCounter--;
@@ -1996,14 +2073,14 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.removeAllButOneTipDescriptions = function (editOrAdd) {
 		if (editOrAdd == "Add") {
 			for (i = $scope.descriptionCounter; i > 1; i--) {
-				tinyMCE.remove('#textAreaTip' + $scope.descriptionCounter);
-				$("#textAreaTip" + $scope.descriptionCounter).last().remove();
-				$scope.descriptionCounter--;
+				// tinyMCE.remove('#textAreaTip' + $scope.descriptionCounter);
+				 $("#textAreaTip" + $scope.descriptionCounter).last().remove();
+				 $scope.descriptionCounter--;
 			}
 		}
 		else if (editOrAdd == "Edit") {
 			for (i = $scope.descriptionCounter; i > 1; i--) {
-				tinyMCE.remove('#textAreaEditTip' + $scope.descriptionCounter);
+				// tinyMCE.remove('#textAreaEditTip' + $scope.descriptionCounter);
 				$("#textAreaEditTip" + $scope.descriptionCounter).last().remove();
 				$scope.descriptionCounter--;
 			}
@@ -2032,13 +2109,13 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		//Collect Tip Description JSON
 		for (var i = 1; i <= $scope.descriptionCounter; i++) {
 			if (i == 1) {
-				// var tipDescriptionLocal = $("#textAreaEditTip").val();
-				var tipDescriptionLocal = tinyMCE.get('textAreaEditTip').getContent();
+				var tipDescriptionLocal = $("#textAreaEditTip").val();
+				//var tipDescriptionLocal = tinyMCE.get('textAreaEditTip').getContent();
 				tipDescObject[i] = { tipNumber: i, tipDescription: tipDescriptionLocal }
 			}
 			else {
-				//var tipDescriptionLocal = $("#textAreaEditTip" + i).val();
-				var tipDescriptionLocal = tinyMCE.get('textAreaEditTip' + i).getContent();
+				var tipDescriptionLocal = $("#textAreaEditTip" + i).val();
+				//var tipDescriptionLocal = tinyMCE.get('textAreaEditTip' + i).getContent();
 				tipDescObject[i] = { tipNumber: i, tipDescription: tipDescriptionLocal }
 			}
 		}
@@ -2079,15 +2156,15 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		//}
 
 
-	    /*   if ($scope.uploader.queue.length > 0) {
-	     var imageDataObject = $scope.tipArrayData[$scope.tipCounter].imageDataJson;
-	     for (var i = 0; i < $scope.uploader.queue.length; i++) {
-	     imageDataObject.push({imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
-	     dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]});
-	     }
-	     var imageDataObjectJson = JSON.stringify(imageDataObject);
-	     updatingImages = true;
-	     }*/
+		/*   if ($scope.uploader.queue.length > 0) {
+		 var imageDataObject = $scope.tipArrayData[$scope.tipCounter].imageDataJson;
+		 for (var i = 0; i < $scope.uploader.queue.length; i++) {
+		 imageDataObject.push({imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
+		 dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]});
+		 }
+		 var imageDataObjectJson = JSON.stringify(imageDataObject);
+		 updatingImages = true;
+		 }*/
 
 
 		var videoLink = $("#editVideoLink")[0].value;
@@ -3041,24 +3118,24 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.editATipToggle = false;
 	}
 
-	tinyMCE.init({
-		selector: '#textAreaTip',
-		plugins: "link image paste lists advlist",
-		menubar: 'file edit insert view format table tools',
-		toolbar: "link | undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
-		target_list: [
-			{ title: 'None', value: '' },
-			{ title: 'Same page', value: '_self' },
-			{ title: 'New page', value: '_blank' },
-			{ title: 'LIghtbox', value: '_lightbox' }
-		], paste_as_text: false,
-		forced_root_block: '', force_br_newlines: true,
-		force_p_newlines: false,
-		advlist_bullet_styles: "square"
+	// tinyMCE.init({
+	// 	selector: '#textAreaTip',
+	// 	plugins: "link image paste lists advlist",
+	// 	menubar: 'file edit insert view format table tools',
+	// 	toolbar: "link | undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+	// 	target_list: [
+	// 		{ title: 'None', value: '' },
+	// 		{ title: 'Same page', value: '_self' },
+	// 		{ title: 'New page', value: '_blank' },
+	// 		{ title: 'LIghtbox', value: '_lightbox' }
+	// 	], paste_as_text: false,
+	// 	forced_root_block: '', force_br_newlines: true,
+	// 	force_p_newlines: false,
+	// 	advlist_bullet_styles: "square"
 
-		//font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n',
-	});
-	tinyMCE.init({
+	// 	//font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n',
+	// });
+	/*tinyMCE.init({
 		selector: '#textAreaEditTip',
 		plugins: "link image  paste lists advlist",
 		menubar: 'file edit insert view format table tools',
@@ -3073,13 +3150,13 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		forced_root_block: '',
 		force_br_newlines: true,
 		force_p_newlines: false// Needed for 3.x
-	});
+	});*/
 	$scope.isReadyForSubmit = function () {
-		var content = "";
-		if (tinyMCE.get('textAreaTip')) {
-			content = tinyMCE.get('textAreaTip').getContent();
-		}
-		$scope.tipDescAdd = content;
+		//var content = "";
+		//if (tinyMCE.get('textAreaTip')) {
+			//content = tinyMCE.get('textAreaTip').getContent();
+		//}
+		//$scope.tipDescAdd = content;
 
 
 		var imagesUploaded = true;
@@ -3116,13 +3193,13 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 
 		for (var i = 1; i <= $scope.descriptionCounter; i++) {
 			if (i == 1) {
-				var tipDescriptionLocal = tinyMCE.get('textAreaTip').getContent();
-				// var tipDescriptionLocal = $("#textAreaTip").val();
+				//var tipDescriptionLocal = tinyMCE.get('textAreaTip').getContent();
+				 var tipDescriptionLocal = $("#textAreaTip").val();
 				tipDescObject[i] = { tipNumber: i, tipDescription: tipDescriptionLocal }
 			}
 			else {
-				var tipDescriptionLocal = tinyMCE.get('textAreaTip' + i).getContent();
-				//var tipDescriptionLocal = $("#textAreaTip" + i).val();
+				//var tipDescriptionLocal = tinyMCE.get('textAreaTip' + i).getContent();
+				var tipDescriptionLocal = $("#textAreaTip" + i).val();
 				tipDescObject[i] = { tipNumber: i, tipDescription: tipDescriptionLocal }
 			}
 		}
@@ -3171,12 +3248,12 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		}
 		var audioSampleObjectJson = JSON.stringify(audioSampleDataObject);
 		//}
-	    /* var imageDataObject = [{}]
-	     for (var i = 0; i < $scope.uploader.queue.length; i++) {
-	     imageDataObject[i] = {imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
-	     dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]};
-	     }
-	     */
+		/* var imageDataObject = [{}]
+		 for (var i = 0; i < $scope.uploader.queue.length; i++) {
+		 imageDataObject[i] = {imageName: $scope.uploader.queue[i]._file.name, imageSize: $scope.uploader.queue[i]._file.size,
+		 dateModified: $scope.uploader.queue[i]._file.lastModifiedDate, newFileName: $scope.uploadedImages[i]};
+		 }
+		 */
 
 
 		var videoLink = $("#videoLink")[0].value;

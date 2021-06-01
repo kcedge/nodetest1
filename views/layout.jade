@@ -69,8 +69,9 @@ html(lang="en" ng-app='myApp')
                         script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js')
                         script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js' )
                         script(src='//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
-                        script(src='//cdn.tinymce.com/4/tinymce.min.js')
+                        //script(src='//cdn.tinymce.com/4/tinymce.min.js')
                         script(src='//apis.google.com/js/platform.js' async defer)
+                        script(src='//apis.google.com/js/platform.js?onload=renderButton')
                         script(src='javascripts/ng-tags-input.min.js')
                         script(src='javascripts/jquery.canvasjs.min.js')
                         script(src='javascripts/angular-file-upload.min.js')
@@ -105,4 +106,8 @@ html(lang="en" ng-app='myApp')
                 #profileLoggedIn(ng-show="isLoggedIn()" style="float:right;")
                         a(href="/logout" ng-click="signOutClicked()") Sign out
                 block body
+                #googleUserProfile(ng-show="false")
+                #userId(ng-show="false")
+
+
 
