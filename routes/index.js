@@ -3,12 +3,9 @@ var router = express.Router();
 
 var fs = require('fs');
 var passport = require('passport');
+var session = require('express-session');
 
 var assert = require('assert');
-
-
-
-
 
 //lets require/import the mongodb native drivers.
 var mongodb = require('mongodb');
@@ -121,13 +118,12 @@ else {
 module.exports = function (router, passport) {
 
 
-
 	router.get('/authenticated', function (req, res) {
 		// If this function gets called, authentication was successful.
 		// `req.user` contains the authenticated user.
 		console.log("checking authentication")
 		if (req.user) {
-			res.send(req.user.local.username);
+			res.send(req.user);
 		}
 		else {
 			res.send(false);
@@ -183,7 +179,7 @@ module.exports = function (router, passport) {
 					if (validateEmail(req.body[key][key2])) {
 						userEmail = req.body[key][key2];
 					}
-					if(req.body[key].hasOwnProperty('id_token')){
+					if (req.body[key].hasOwnProperty('id_token')) {
 						idToken = req.body[key].id_token;
 					}
 				}
@@ -266,11 +262,18 @@ module.exports = function (router, passport) {
 	// process the login form
 	router.post('/signIn', passport.authenticate('local-login', {
 		// redirect to the secure profile section
+		//successRedirect: '/profile',
 		failureRedirect: '/signIn', // redirect back to the signup page if there is an error
 		failureFlash: true // allow flash messages
 	}), function (req, res) {
-		// console.log("Sign in success redirecting to " + req.body['redirect']);
-		// res.redirect('/' + req.body['redirect']);
+		console.log("Sign in success redirecting to " + req.body['redirect']);
+
+		var user = req.user;
+		//  res.redirect("/" + req.body['redirect'] + "/" + user.local.username);
+
+		//  res.render('profile');
+
+
 		res.send({ message: 'sign in success', user: req.user });
 	});
 
@@ -300,39 +303,35 @@ module.exports = function (router, passport) {
 	});
 
 	router.get('/getUserData', function (req, res) {
-		var redirect = req.params.redirect;
+		try {
+			var redirect = req.params.redirect;
+			const db = req.app.locals.db;
 
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-				res.status(500).send("unable to connect to mongo server");
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
+			var collection = db.collection('users');
 
-				var collection = db.collection('users');
+			cursor = collection.find({ _id: ObjectId(req.user.id) }).toArray(function (err, item) {
+				if (err) {
+					console.log('error', err);
+				}
+				else {
+					if (item.length > 0) {
+						console.log('found user', err);
+						res.send({ message: 'user exists', user: req.user, newUser: false });
 
-				cursor = collection.find({ _id: ObjectId(req.user.id) }).toArray(function (err, item) {
-					if (err) {
-						console.log('error', err);
+
 					}
 					else {
-						if (item.length > 0) {
-							console.log('found user', err);
-							res.send({ message: 'user exists', user: req.user, newUser: false });
-
-
-						}
-						else {
-							console.log('user not found', err);
-							res.send({ message: 'user does not exist', user: req.user, newUser: true });
-						}
+						console.log('user not found', err);
+						res.send({ message: 'user does not exist', user: req.user, newUser: true });
 					}
-				});
+				}
+			});
+		}
+		catch {
 
-			}
-			db.close();
-		});
+		}
+
+
 	});
 
 
@@ -440,8 +439,7 @@ module.exports = function (router, passport) {
 
 	router.get('/profile', isLoggedIn, function (req, res) {
 		res.render('profile', {
-			username: req.user.local.username,
-			localuser: req.user,
+			user: req.user,
 			greeting: "Welcome "
 		});
 	});
@@ -456,16 +454,16 @@ module.exports = function (router, passport) {
 		});
 	});
 
-	router.get('/profile/:userId', function (req, res) {
-		console.log('getting profile for ')
-		var userId = req.params.userId;
-		console.log(userId);
-		//Todo grab user data based on userId
-		res.render('profile', {
-			username: req.params.userId,
-			localuser: req.user
-		});
-	});
+	// router.get('/profile/:userId', function (req, res) {
+	// 	console.log('getting profile for ')
+	// 	var userId = req.params.userId;
+	// 	console.log(userId);
+	// 	//Todo grab user data based on userId
+	// 	res.render('profile', {
+	// 		username: req.params.userId,
+	// 		localuser: req.user
+	// 	});
+	// });
 
 
 	router.get('/soundCloudAuth', passport.authenticate('soundcloud-token', {
@@ -485,24 +483,18 @@ module.exports = function (router, passport) {
 
 	/* GET Hello World page. */
 	router.get('/tipLib', function (req, res) {
-		// Use connect method to connect to the Server
-		var cursor;
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
+		try {
+			const db = req.app.locals.db;
+			var collection = db.collection('tipsCollection');
+			var cursor;
 
-				// do some work here with the database.
-				// Get the documents collection
-				var collection = db.collection('tipsCollection');
-				cursor = collection.find();
-				db.close()
-			}
-			db.close();
-		});
-		res.render('tipLib', { title: 'Tip Library', dbCursor: cursor });
+			cursor = collection.find();
+			res.render('tipLib', { title: 'Tip Library', dbCursor: cursor });
+		}
+		catch {
+
+		}
+
 	});
 	/* GET Hello World page. */
 	router.get('/tipLib/:id', function (req, res) {
@@ -536,120 +528,102 @@ module.exports = function (router, passport) {
 
 	});
 	router.get('/tipsPageGet', function (req, res) {
+		try {
+			var itemsTest;
+			const db = req.app.locals.db;
+			var cursorArray = db.collection('tipsCollection').find().toArray(function (err, items) {
+				if (err) {
+					res.status(500).send('error retreiving data')
+				}
+				console.log("items");
+				res.send(items);
 
-
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-				res.status(500).send("unable to connect to mongo server");
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
-
-				// do some work here with the database.
-				// Get the documents collection
-				//var TipsCollection = db.collection('tipsCollection');
-
-				var itemsTest;
-				var cursorArray = db.collection('tipsCollection').find().toArray(function (err, items) {
-					if (err) {
-						res.status(500).send('error retreiving data')
-					}
-					console.log("items");
-					res.send(items);
-
-				});
-
-			}
-			db.close();
-		});
+			});
+		}
+		catch (e) {
+			console.log(e);
+		}
 
 	});
 
 	router.post('/tipsPagePost', function (req, res) {
+		try {
+			console.log("tipsPagePost");
+			var tipTitle = req.body['tipTitle'];
+			var tipDescJson = req.body['tipDescJson'];
+			var genreJson = req.body['genreJson'];
+			var tipTypeJson = req.body['tipTypeJson'];
+			var vstJson = req.body['vstJson'];
+			var dawJson = req.body['dawJson'];
+			var imageDataJson = req.body['imageDataJson'];
+			var audioSampleObjectJson = req.body['audioSampleObjectJson'];
+			var videoLinkJson = req.body['videoLinkJson'];
+			var filtersJson = req.body['filtersJson'];
+			var submittedBy = req.body['submittedBy'];
+			var points = req.body['points'];
+			var dateSubmitted = req.body['dateSubmitted'];
 
-		console.log("tipsPagePost");
-		var tipTitle = req.body['tipTitle'];
-		var tipDescJson = req.body['tipDescJson'];
-		var genreJson = req.body['genreJson'];
-		var tipTypeJson = req.body['tipTypeJson'];
-		var vstJson = req.body['vstJson'];
-		var dawJson = req.body['dawJson'];
-		var imageDataJson = req.body['imageDataJson'];
-		var audioSampleObjectJson = req.body['audioSampleObjectJson'];
-		var videoLinkJson = req.body['videoLinkJson'];
-		var filtersJson = req.body['filtersJson'];
-		var submittedBy = req.body['submittedBy'];
-		var points = req.body['points'];
-		var dateSubmitted = req.body['dateSubmitted'];
+			console.log(tipDescJson);
+			console.log(genreJson);
+			console.log(tipTypeJson);
+			console.log(vstJson);
+			console.log(dawJson);
+			console.log(imageDataJson);
+			console.log(videoLinkJson);
+			console.log(submittedBy);
+			console.log(points);
 
-		console.log(tipDescJson);
-		console.log(genreJson);
-		console.log(tipTypeJson);
-		console.log(vstJson);
-		console.log(dawJson);
-		console.log(imageDataJson);
-		console.log(videoLinkJson);
-		console.log(submittedBy);
-		console.log(points);
+			const db = req.app.locals.db;
 
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
+			// do some work here with the database.
+			// Get the documents collection
+			var collection = db.collection('tipsCollection');
+			collection.insert({ tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, audioSampleObjectJson: audioSampleObjectJson, videoLinkJson: videoLinkJson, filtersJson: filtersJson, submittedBy: submittedBy, tipPoints: points, dateSubmitted: dateSubmitted }, function (err, docsInserted) {
+				if (err) {
 
-				// do some work here with the database.
-				// Get the documents collection
-				var collection = db.collection('tipsCollection');
-				collection.insert({ tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, audioSampleObjectJson: audioSampleObjectJson, videoLinkJson: videoLinkJson, filtersJson: filtersJson, submittedBy: submittedBy, tipPoints: points, dateSubmitted: dateSubmitted }, function (err, docsInserted) {
-					if (err) {
-
-						console.log('Unable to add tip to tipsCollection', err);
-						res.send('Tip upload failed');
-					}
-					else {
-						console.log(docsInserted.ops[0]._id);
-						res.send(docsInserted.ops[0]);
-					}
-				});
-
-			}
-			db.close();
-		});
+					console.log('Unable to add tip to tipsCollection', err);
+					res.send('Tip upload failed');
+				}
+				else {
+					console.log(docsInserted.ops[0]._id);
+					res.send(docsInserted.ops[0]);
+				}
+			});
+		}
+		catch (e) {
+			console.log(e);
+		}
 
 	});
 	router.post("/profileInfoPostGet/:username", function (req, res) {
-		console.log('profileInfoGetHere');
-		var userName = req.params.username;
-		var userNameTest = req.body['username'];
-		console.log(userName);
-		console.log(userNameTest);
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-				res.status(500).send("unable to connect to mongo server");
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
+		try {
 
-				// do some work here with the database.
-				// Get the documents collection
-				console.log("Profile Data Includes");
-				console.log(db.collection('profileCollection').find({ userName: userName }));
-				db.collection('profileCollection').find({ userName: userName }).toArray(function (err, items) {
-					if (err) {
-						res.status(500).send('error retreiving data');
-					}
-					console.log(items);
-					res.send(items);
+			console.log('profileInfoGetHere');
+			var userName = req.params.username;
+			var userNameTest = req.body['username'];
+			console.log(userName);
+			console.log(userNameTest);
+			const db = req.app.locals.db;
 
-				});
+			console.log('Connection established to', url);
 
-			}
-			db.close();
-		});
+			// do some work here with the database.
+			// Get the documents collection
+			console.log("Profile Data Includes");
+			console.log(db.collection('profileCollection').find({ userName: userName }));
+			db.collection('profileCollection').find({ userName: userName }).toArray(function (err, items) {
+				if (err) {
+					res.status(500).send('error retreiving data');
+				}
+				console.log(items);
+				res.send(items);
+
+			});
+		}
+		catch {
+
+		}
+
 	});
 	router.put('/tipsPageUpdateProfile', function (req, res) {
 		console.log("tips page profile update");
@@ -685,121 +659,106 @@ module.exports = function (router, passport) {
 
 	})
 	router.put('/tipsPageUpdatePoints', function (req, res) {
-		console.log("tipsPage Update Points")
-		var tipId = req.body['tipId'];
-		var points = req.body['points'];
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
+		try {
+			console.log("tipsPage Update Points")
+			var tipId = req.body['tipId'];
+			var points = req.body['points'];
+		}
+		catch {
+			console.log('Connection established to', url);
+			const db = req.app.locals.db;
 
-				// do some work here with the database.
-				// Get the documents collection
-				var collection = db.collection('tipsCollection');
-				console.log(tipId);
-				collection.update({ _id: ObjectId(tipId) }, { $set: { tipPoints: points } }, { upsert: true }, function (err, db) {
+			// do some work here with the database.
+			// Get the documents collection
+			var collection = db.collection('tipsCollection');
+			console.log(tipId);
+			collection.update({ _id: ObjectId(tipId) }, { $set: { tipPoints: points } }, { upsert: true }, function (err, db) {
+				if (err) {
+					console.log('Unable to edit tip to tipsCollection', err);
+					res.send(points);
+				}
+				else {
+					res.send('Tip edit successfuly submitted');
+				}
+			});
+		}
+
+	})
+	router.put('/tipsPagePut', function (req, res) {
+		try {
+			console.log("tipsPagePUT");
+			var tipId = req.body['tipId'];
+			var tipTitle = req.body['tipTitle'];
+			var tipDescJson = req.body['tipDescJson'];
+			var genreJson = req.body['genreJson'];
+			var tipTypeJson = req.body['tipTypeJson'];
+			var vstJson = req.body['vstJson'];
+			var dawJson = req.body['dawJson'];
+
+			var updatingImages = false;
+			var imageDataJson = "";
+			if (req.body['imageDataJson']) {
+				imageDataJson = req.body['imageDataJson'];
+				updatingImages = true;
+			}
+
+			var videoLinkJson = req.body['videoLinkJson'];
+			var filtersJson = req.body['filtersJson'];
+
+			var submittedBy = req.body['submittedBy'];
+			var tipPoints = req.body['points'];
+			var dateSubmitted = req.body['dateSubmitted'];
+
+			console.log('Connection established to', url);
+			const db = req.app.locals.db;
+
+			// do some work here with the database.
+			// Get the documents collection
+			var collection = db.collection('tipsCollection');
+			console.log(tipId);
+			if (updatingImages) {
+				collection.update({ _id: ObjectId(tipId) }, { tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson, filtersJson: filtersJson, submittedBy: submittedBy, tipPoints: tipPoints, dateSubmitted: dateSubmitted }, function (err, db) {
 					if (err) {
 						console.log('Unable to edit tip to tipsCollection', err);
-						res.send(points);
+						res.send('Tip edit failed');
 					}
 					else {
 						res.send('Tip edit successfuly submitted');
 					}
 				});
 			}
-			db.close();
-		});
+			else {
+				collection.update({ _id: ObjectId(tipId) }, { $set: { tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, videoLinkJson: videoLinkJson, filtersJson: filtersJson, submittedBy: submittedBy, tipPoints: tipPoints, dateSubmitted: dateSubmitted } }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit tip to tipsCollection', err);
+						res.send('Tip edit failed');
+					}
+					else {
+						res.send('Tip edit successfuly submitted');
+					}
+				});
+			}
+		}
+		catch {
 
-	})
-	router.put('/tipsPagePut', function (req, res) {
-		console.log("tipsPagePUT");
-		var tipId = req.body['tipId'];
-		var tipTitle = req.body['tipTitle'];
-		var tipDescJson = req.body['tipDescJson'];
-		var genreJson = req.body['genreJson'];
-		var tipTypeJson = req.body['tipTypeJson'];
-		var vstJson = req.body['vstJson'];
-		var dawJson = req.body['dawJson'];
-
-		var updatingImages = false;
-		var imageDataJson = "";
-		if (req.body['imageDataJson']) {
-			imageDataJson = req.body['imageDataJson'];
-			updatingImages = true;
 		}
 
-		var videoLinkJson = req.body['videoLinkJson'];
-		var filtersJson = req.body['filtersJson'];
 
-		var submittedBy = req.body['submittedBy'];
-		var tipPoints = req.body['points'];
-		var dateSubmitted = req.body['dateSubmitted'];
-
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
-
-				// do some work here with the database.
-				// Get the documents collection
-				var collection = db.collection('tipsCollection');
-				console.log(tipId);
-				if (updatingImages) {
-					collection.update({ _id: ObjectId(tipId) }, { tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, imageDataJson: imageDataJson, videoLinkJson: videoLinkJson, filtersJson: filtersJson, submittedBy: submittedBy, tipPoints: tipPoints, dateSubmitted: dateSubmitted }, function (err, db) {
-						if (err) {
-							console.log('Unable to edit tip to tipsCollection', err);
-							res.send('Tip edit failed');
-						}
-						else {
-							res.send('Tip edit successfuly submitted');
-						}
-					});
-				}
-				else {
-					collection.update({ _id: ObjectId(tipId) }, { $set: { tipTitle: tipTitle, tipDescJson: tipDescJson, genreJson: genreJson, tipTypeJson: tipTypeJson, vstJson: vstJson, dawJson: dawJson, videoLinkJson: videoLinkJson, filtersJson: filtersJson, submittedBy: submittedBy, tipPoints: tipPoints, dateSubmitted: dateSubmitted } }, function (err, db) {
-						if (err) {
-							console.log('Unable to edit tip to tipsCollection', err);
-							res.send('Tip edit failed');
-						}
-						else {
-							res.send('Tip edit successfuly submitted');
-						}
-					});
-				}
-			}
-			db.close();
-		});
 
 	});
 	router.post('/uploadImage', function (req, res) {
 		upload(req, res, function (err) {
-			if (err) {
-				console.log(err);
-				return res.end("Error uploading file.");
-			}
-			MongoClient.connect(url, function (err, db) {
+			try{
 				if (err) {
-					console.log('Unable to connect to the mongoDB server. Error:', err);
-				} else {
-					//HURRAY!! We are connected. :)
-					console.log('Connection established to', url);
+					console.log(err);
+					return res.end("Error uploading file.");
+				}
+				const db = req.app.locals.db;
 
-					// do some work here with the database.
-					// Get the documents collection
-					var collection = db.collection('imageCollection');
+				var collection = db.collection('imageCollection');
 					collection.insert({
-						fieldName: req.file.fieldname,
-						originalName: req.file.originalname,
-						encoding: req.file.encoding,
-						mimetype: req.file.mimetype,
-						destination: req.file.destination,
-						fileName: req.file.filename,
-						path: req.file.path,
-						imageSize: req.file.size
+						fieldName: req.file.fieldname,originalName: req.file.originalname,encoding: req.file.encoding,
+						mimetype: req.file.mimetype,destination: req.file.destination,fileName: req.file.filename,path: req.file.path,imageSize: req.file.size
 					},
 						function (err, db) {
 							if (err) {
@@ -823,9 +782,10 @@ module.exports = function (router, passport) {
 							}
 						});
 
-				}
-				db.close();
-			});
+					}
+			catch{
+
+			}
 		});
 
 
@@ -891,54 +851,38 @@ module.exports = function (router, passport) {
 		});
 	});
 	router.get('/getFilters', function (req, res) {
-		console.log('get filters');
+		try {
+			console.log('get filters');
+			const db = req.app.locals.db;
+			var cursorArray = db.collection('filterCollection').find({ parent: null }).toArray(function (err, items) {
+				if (err) {
+					res.status(500).send('error retreiving data')
+				}
+				res.send(items);
+			});
 
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-				res.status(500).send("unable to connect to mongo server");
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
+		}
+		catch {
 
-				// do some work here with the database.
-				// Get the documents collection
-				//var TipsCollection = db.collection('tipsCollection');
-				var cursorArray = db.collection('filterCollection').find({ parent: null }).toArray(function (err, items) {
-					if (err) {
-						res.status(500).send('error retreiving data')
-					}
-					res.send(items);
-				});
-
-			}
-			db.close();
-		});
+		}
 	});
 	router.get('/getFilters/:parent', function (req, res) {
-		console.log('get sub filters');
-		var parent = req.params['parent'];
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-				res.status(500).send("unable to connect to mongo server");
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
+		try {
+			console.log('get sub filters');
+			var parent = req.params['parent'];
+			const db = req.app.locals.db;
+			var cursorArray = db.collection('filterCollection').find({ parent: parent }).toArray(function (err, items) {
+				if (err) {
+					res.status(500).send('error retreiving data')
+				}
+				res.send(items);
+			});
+		}
+		catch {
 
-				// do some work here with the database.
-				// Get the documents collection
-				//var TipsCollection = db.collection('tipsCollection');
-				var cursorArray = db.collection('filterCollection').find({ parent: parent }).toArray(function (err, items) {
-					if (err) {
-						res.status(500).send('error retreiving data')
-					}
-					res.send(items);
-				});
+		}
 
-			}
-			db.close();
-		});
+
 	});
 	router.delete('/deleteFilter/:id', function (req, res) {
 
@@ -1099,6 +1043,18 @@ module.exports = function (router, passport) {
 		// if they aren't redirect them to the home page
 		res.redirect('/signUp');
 	}
+
+	passport.serializeUser(function (user, cb) {
+		process.nextTick(function () {
+			cb(null, { id: user.id, username: user.username });
+		});
+	});
+
+	passport.deserializeUser(function (user, cb) {
+		process.nextTick(function () {
+			return cb(null, user);
+		});
+	});
 
 
 

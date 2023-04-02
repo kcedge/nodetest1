@@ -10,9 +10,9 @@ $(".facebookLink").children().first().attr("target", "_blank");
 $(".twitterLink").children().first().attr("target", "_blank");
 
 //angular.module("myApp", ["$scope","$http", "ngCookies"]);
-var runningProduction = true;
+var runningProduction = false;
 var user = {};
-function isAuthenticated($http, routeToSignUp, callback) {
+function isAuthenticated($http, $localStorage, routeToSignUp, callback) {
 	var req = {
 		method: 'GET',
 		url: '/authenticated',
@@ -24,14 +24,10 @@ function isAuthenticated($http, routeToSignUp, callback) {
 	}
 	$http(req).then(function success(response) {
 		if (response.data) {
-			return callback(response.data);
+			return callback($localStorage.username);
 		}
 		else {
-			if (routeToSignUp)
-				window.location.href = '/signUp';
-			else {
-				callback(0);//calls back with false if no need to route to sign in
-			}
+			window.location.href = '/signUp';		
 		}
 	}, function failure(response) {
 		window.location.href = '/signUp';
@@ -377,7 +373,9 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 				method: 'POST',
 				url: '/signIn',
 				headers: {
-					'Content-Type': "application/json"
+					'Content-Type': "application/json",
+					'Access-Control-Request-Methods': 'POST',
+					'Access-Control-Request-Headers' : 'X-PINGOTHER, Content-Type',
 				},
 				data: {
 					username: $scope.signInUsername,
@@ -388,18 +386,52 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 
 			$http(req).then(function success(response) {
 				if (response.status == 200) {
-					//ProfileService.setUserInfo(response.data.user);//set user info in service
+					ProfileService.setUserInfo(response.data.user);//set user info in service
 					//UserDataService.setFormData(response.data.user);
-					$localStorage.user = response.data.user;
+					var user = response.data.user;
+				    $localStorage.user = response.data.user;
+					$localStorage.username = response.data.user.local.username;
 
-					window.location.href = '/profile';
-					$scope.authres = response.data;
+					var reqProf = {method: 'GET',
+					url: '/tipLib'};
+					window.location.href = '/tipLib';
+
+					$http(reqProf).then(function success(response){
+						var x = response;
+						// document.open('text/html');
+						// document.write(response.data);
+						// document.close();
+						window.location.href = '/tipLib';
+						//window.location.reload();
+
+					})
+					
+
+
+				
+				//	$scope.authres = response.data.user;   
+
+					// $.get("/profile",function(data,status){
+					// 	alert("DATA" + data + "\nStatus: "  + status);
+					// })
+
+					// var xmlHttp = new XMLHttpRequest();
+					// xmlHttp.open( "GET",  'profile/'+ $scope.signInUsername, false ); // false for synchronous request
+					// xmlHttp.setRequestHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
+
+					// //xmlHttp.setRequestHeader("Sec-Fetch-Dest","document");
+
+					// xmlHttp.send( null );
+					// return xmlHttp.responseText;
+			
+				//	window.location.href = '/tibLib'
+
 				}
 
 			}, function failure(response) {
-				$scope.authres = response.data;
+				// $scope.authres = response.data;
 
-			});
+			})
 		}
 
 
@@ -1127,17 +1159,17 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	//$scope.tipCounter = $scope.findInTipArray(objectIdToLoad);
 	//$scope.updateBodyArray();
 	//});
+	var user = ProfileService.getUserInfo();
 
-
-	isAuthenticated($http, false, function (username) {
+	isAuthenticated($http, $localStorage, false, function (username) {
 		// $scope.authenticated = true;
 		// $scope.username = "username";
 
-		if (username == 'kcedge') {
+		if (username) {
 			$scope.adminAuth = true;
 			$scope.authenticated = true;
 		}
-		if (username != 0) {
+		if (username) {
 			$scope.authenticated = true;
 			$scope.username = username;
 		}

@@ -101,7 +101,7 @@ module.exports = function (passport) {
                 // find a user whose email is the same as the forms email
                 // we are checking to see if the user trying to login already exists
 
-                User.findOne({ 'local.username': username }, function (err, user) {
+                User.findOne({ 'local.username': username }).then(function (err, user) {
                     // if there are any errors, return the error
                     if (err)
                         return done(err);
@@ -122,9 +122,8 @@ module.exports = function (passport) {
                         newUser.local.password = newUser.generateHash(password);
 
                         // save the user
-                        newUser.save(function (err) {
-                            if (err)
-                                throw err;
+                        newUser.save().then(function (err) {
+                            
                             return done(null, newUser);
                         });
                     }
@@ -145,11 +144,8 @@ module.exports = function (passport) {
             console.log("SIGN IN INDVIDUAL")
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
-            User.findOne({ 'local.username': username }, function (err, user) {
-                // if there are any errors, return the error before anything else
-                if (err)
-                    return done(err);
-
+            User.findOne({ 'local.username': username }).then(function (user) {
+              
                 // if no user is found, return the message
                 if (!user) {
                     console.log('No user found');

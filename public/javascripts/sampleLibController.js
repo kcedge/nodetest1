@@ -24,18 +24,29 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 
 
 	
-	isAuthenticated($http, false, function (username) {
-	    if (username == 'kcedge') {
-		$scope.adminAuth = true;
-		$scope.authenticated = true;
-	    }
-	    if (username != 0) {
-		$scope.authenticated = true;
-		$scope.username = username;
-		$scope.profileDataFromMongo();
-		
-	    }
-	});
+	function isAuthenticated($http, $localStorage, routeToSignUp, callback) {
+		var req = {
+			method: 'GET',
+			url: '/authenticated',
+			headers: {
+				'Content-Type': "application/json"
+			},
+			data: {
+			}
+		}
+		$http(req).then(function success(response) {
+			if (response.data) {
+				return callback($localStorage.username);
+			}
+			else {
+				window.location.href = '/signUp';		
+			}
+		}, function failure(response) {
+			window.location.href = '/signUp';
+			return false;
+		});
+	
+	}
 
 	$scope.parseJson = function (jsonArray) {
 	    for (var i = 0; i < jsonArray.length; i++) {
@@ -501,9 +512,7 @@ angular.module("myApp").controller('bodySampleController', ['$scope', '$rootScop
 	}
 	$scope.uploadAPackToggle = false;
 	$scope.uploadPackToggleClicked = function () {
-	    if(!$scope.authenticated){
-		window.location.href = '/signUp/sampleLib/';
-	    } 
+
 	    $scope.uploadAPackToggle = !$scope.uploadAPackToggle;
 	}
 	
@@ -596,7 +605,7 @@ angular.module("myApp").controller('samplesCtrl', ['$scope', '$rootScope', '$htt
 	$scope.authenticated = false;
 	$scope.lovedSamplesArray = [];
 	//Second Parm is route to sign in
-	isAuthenticated($http, false, function (username) {
+	isAuthenticated($http,localStorage, false, function (username) {
 	    if (username == 'kcedge') {
 		$scope.adminAuthSamples = true;
 		$scope.authenticated = true;

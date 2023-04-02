@@ -1,5 +1,6 @@
 
 var express = require('express');
+var cors = require('cors');
 var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -28,6 +29,9 @@ var opts = {
 
 var bodyParser = require('body-parser');
 var passport = require('passport');
+
+var session = require('express-session');
+
 var flash    = require('connect-flash');
 
 var mongoose = require('mongoose');
@@ -50,7 +54,7 @@ global.appRoot = path.resolve(__dirname);
 
 //var db = monk(url);
 //mongoose connection
-mongoose.connect(url); 
+mongoose.connect(url,{useNewUrlParser: true, useUnifiedTopology: true}); 
 var db = mongoose.connection;
 
 var app = express();
@@ -79,6 +83,9 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cors());
+
 
 /*var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -120,7 +127,12 @@ app.use(function(req, res, next) {
 });
 
 // error handlers
-
+app.use((err, req, res, next) => {
+  res.locals.error = err;
+  const status = err.status || 500;
+  res.status(status);
+  res.render('error');
+});
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
@@ -143,10 +155,38 @@ app.use(function(err, req, res, next) {
   });
 });
 
+var mongodb = require('mongodb');
+
+var path = require('path');
+var dbConfig = require(appRoot + '/config/configDb');
+var runningProduction = dbConfig.dbSettings().runningProd;
+var url = dbConfig.dbSettings().url;
+var MongoClient = mongodb.MongoClient;
 
 
+// Create a MongoDB connection pool and start the application
+// after the database connection is ready
+MongoClient.connect(url, { promiseLibrary: Promise }, (err, client) => {
+  if (err) {
+    logger.warn(`Failed to connect to the database. ${err.stack}`);
+  }
+  app.locals.db = client.db('krazyl3gzDb');
+  app.listen('28017', () => {
+    //logger.info(`Node.js app is listening at http://localhost:28017`);
+  });
+ 
+});
 
 
+var SQLiteStore = require('connect-sqlite3')(session);
+
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  store: new SQLiteStore({ db: app.locals.db })
+}));
+app.use(passport.authenticate('session'));
 
 
 module.exports = app;
