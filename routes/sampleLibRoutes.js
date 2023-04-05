@@ -353,33 +353,28 @@ module.exports = function (router, passport) {
 		}
 	});
 	router.put('/samplePageUpdateDownloadTipsCount', function (req, res) {
+		try{
+			console.log("updating sample download count");
+			var sampleId = req.body['sampleId'];
+			var downloadCount = req.body['downloadCount'];
+			const db = req.app.locals.db;
 
-		console.log("updating sample download count");
-		var sampleId = req.body['sampleId'];
-		var downloadCount = req.body['downloadCount'];
+			var collection = db.collection('sampleCollection');
 
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
+			collection.update({ _id: ObjectId(sampleId) }, { $set: { downloadCount: downloadCount } }, { upsert: true }, function (err, db) {
+				if (err) {
+					console.log('Unable to edit sample in sampleCollection', err);
+					res.send(sampleId);
+				}
+				else {
+					res.send('Sample edit successfuly submitted');
+				}
+			});
+		}
+		catch{
 
-				// do some work here with the database.
-				// Get the documents collection
-				var collection = db.collection('sampleCollection');
-				collection.update({ _id: ObjectId(sampleId) }, { $set: { downloadCount: downloadCount } }, { upsert: true }, function (err, db) {
-					if (err) {
-						console.log('Unable to edit sample in sampleCollection', err);
-						res.send(sampleId);
-					}
-					else {
-						res.send('Sample edit successfuly submitted');
-					}
-				});
-			}
-			db.close();
-		});
+		}
+
 	});
 
 

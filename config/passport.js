@@ -2,7 +2,6 @@
 
 // load all the things we need
 var LocalStrategy = require('passport-local').Strategy;
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
 //var GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 var SoundCloudTokenStrategy = require('passport-soundcloud-token');
@@ -51,18 +50,6 @@ module.exports = function (passport) {
 
     //google sign in 
 
-    passport.use(new GoogleStrategy({
-        clientID: "14072704931-t3airv9cjge19gns43tj0saa72kp89f0.apps.googleusercontent.com",
-        clientSecret: "GQZkP2gc_Zd4k9Jr_LEGmzoB",
-        callbackURL: "/googleSignUpCallback",
-        passReqToCallback: true
-    },
-        function (accessToken, refreshToken, profile, done) {
-            User.findOrCreate({ googleId: profile.id }, function (err, user) {
-                return done(err, user);
-            });
-        }
-    ));
 
     //  //SOUND CLOUD SIGN UP
     //  passport.use(new SoundCloudTokenStrategy({

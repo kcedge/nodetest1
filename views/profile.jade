@@ -5,11 +5,10 @@ append body
 		.div.userDetailsDiv
 			.div.username(style='margin-top: -34px;')
 				span.greeting Hey there	
-				a(href='/profile/{{username}}')
-					span {{user.displayName}}
-		.profilePageWrapper.row(style='margin-top:50px')
-			.profilePageLeft.col-sm-0.col-md-1.col-lg-1.col-xs-0
-				div.container.col-xs-12.col-sm-12.col-lg-12.col-md-12
+				a(href='/profile/{{username}}'){{username}}!
+		.profilePageWrapper.row(style='margin:5px')
+			.profilePageLeft.col-sm-3.col-md-3.col-lg-3.col-xs-0
+				div.container.col-xs-6.col-sm-6.col-lg-6.col-md-6
 							.div.headerbanner.row()
 								h3.left(style='margin-top:-1px')
 									//#greeting= greeting
@@ -90,7 +89,7 @@ append body
 									a(href='/profile')#userName=username
 							//.div.imageWrapper.bannerWrapper.row(style='position:absolute')
 								img.col-xs-12.col-sm-12.col-md-12.col-xl-12(ng-src='{{profileInfo[0].image}}' style='height:250px')
-				div.container.col-xs-0.col-sm-0.col-lg-12.col-md-12
+				div.container.col-xs-0.col-sm-0.col-lg-3.col-md-3
 					hr
 					.div.profileDataWrapper.row()
 						//label.label-primary.metaDataLabel.col-sm-0.col-md-12.col-lg-12.col-xs-0
@@ -133,7 +132,7 @@ append body
 								span Facebook:	
 
 
-			.profilePageCenter.col-sm-9.col-md-9.col-lg-9.col-xs-9
+			.profilePageCenter.col-sm-6.col-md-6.col-lg-6.col-xs-6
 				.profileNotify(ng-show="!isLoggedIn()")
 				.profilePageBanner.contentWrapper(ng-show="isLoggedIn()" style='height: 300px;')
 					.div.row(ng-style="{'background-image': 'url(' + profileInfo.bannerImageJson[0].image + ')'}" style='background-size: cover;background-size: contain;height: 100%;')

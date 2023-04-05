@@ -12,29 +12,8 @@ $(".twitterLink").children().first().attr("target", "_blank");
 //angular.module("myApp", ["$scope","$http", "ngCookies"]);
 var runningProduction = false;
 var user = {};
-function isAuthenticated($http, $localStorage, routeToSignUp, callback) {
-	var req = {
-		method: 'GET',
-		url: '/authenticated',
-		headers: {
-			'Content-Type': "application/json"
-		},
-		data: {
-		}
-	}
-	$http(req).then(function success(response) {
-		if (response.data) {
-			return callback($localStorage.username);
-		}
-		else {
-			window.location.href = '/signUp';		
-		}
-	}, function failure(response) {
-		window.location.href = '/signUp';
-		return false;
-	});
 
-}
+
 
 function fetchStream(stream) {
 	const reader = stream.getReader();
@@ -79,9 +58,9 @@ function onSignIn(googleUser) {
 	//Token verified, update user profile
 	// $scope.signUpPassword = 'googleAuth';
 
-	   // The ID token you need to pass to your backend:
-	   var id_token = googleUser.getAuthResponse().id_token;
-	   console.log("ID Token: " + id_token);
+	// The ID token you need to pass to your backend:
+	var id_token = googleUser.getAuthResponse().id_token;
+	console.log("ID Token: " + id_token);
 
 	//$("#usernameInput").text(profile.kt);
 	$('#googleUserProfile').attr('value', profile);
@@ -138,7 +117,7 @@ function onSignIn(googleUser) {
 		// 		//window.location.href = '/profile/'+ data.user.userId;
 		// 		//$localStorage.user = data.user;
 		// 		$("#userId").text(data.user.userId);
-			
+
 
 		// 	});
 
@@ -208,26 +187,21 @@ angular.module('myApp')
 			return $sce.trustAsHtml(text);
 		};
 	}]);
-angular.module("myApp").controller('bodyController', ['$scope', '$http', '$localStorage', '$sessionStorage', function ($scope, $http, $localStorage, $sessionStorage) {
+angular.module("myApp").controller('bodyController', ['$scope', '$http', '$localStorage', '$sessionStorage','ProfileService', function ($scope, $http, $localStorage, $sessionStorage, ProfileService) {
 	$scope.isLoggedIn = function () {
-		if ($localStorage.username != "" && $localStorage.username) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return ProfileService.isLoggedIn();
 	}
 	console.log("MYAPP");
 	console.log(angular.module("myApp"));
 
 	$scope.signOutClicked = function () {
-		$localStorage.username = "";
-		$localStorage.userSignedIn = false;
-		
-		var auth2 = gapi.auth2.getAuthInstance();
-		auth2.signOut().then(function () {
-			console.log('User signed out.');
-		});
+		// $localStorage.username = "";
+		// $localStorage.userSignedIn = false;
+
+		// var auth2 = gapi.auth2.getAuthInstance();
+		// auth2.signOut().then(function () {
+		// 	console.log('User signed out.');
+		// });
 
 	}
 }]);
@@ -375,7 +349,7 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 				headers: {
 					'Content-Type': "application/json",
 					'Access-Control-Request-Methods': 'POST',
-					'Access-Control-Request-Headers' : 'X-PINGOTHER, Content-Type',
+					'Access-Control-Request-Headers': 'X-PINGOTHER, Content-Type',
 				},
 				data: {
 					username: $scope.signInUsername,
@@ -389,27 +363,18 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 					ProfileService.setUserInfo(response.data.user);//set user info in service
 					//UserDataService.setFormData(response.data.user);
 					var user = response.data.user;
-				    $localStorage.user = response.data.user;
+					$localStorage.user = response.data.user;
 					$localStorage.username = response.data.user.local.username;
 
-					var reqProf = {method: 'GET',
-					url: '/tipLib'};
+					var reqProf = {
+						method: 'GET',
+						url: '/tipLib'
+					};
 					window.location.href = '/tipLib';
 
-					$http(reqProf).then(function success(response){
-						var x = response;
-						// document.open('text/html');
-						// document.write(response.data);
-						// document.close();
-						window.location.href = '/tipLib';
-						//window.location.reload();
-
-					})
-					
 
 
-				
-				//	$scope.authres = response.data.user;   
+					//	$scope.authres = response.data.user;   
 
 					// $.get("/profile",function(data,status){
 					// 	alert("DATA" + data + "\nStatus: "  + status);
@@ -423,8 +388,8 @@ angular.module("myApp").controller('signInController', ['$scope', '$http', '$loc
 
 					// xmlHttp.send( null );
 					// return xmlHttp.responseText;
-			
-				//	window.location.href = '/tibLib'
+
+					//	window.location.href = '/tibLib'
 
 				}
 
@@ -1161,19 +1126,28 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	//});
 	var user = ProfileService.getUserInfo();
 
-	isAuthenticated($http, $localStorage, false, function (username) {
+	ProfileService.isAuthenticated(function (user) {
 		// $scope.authenticated = true;
 		// $scope.username = "username";
-
-		if (username) {
+		if (user.userName == "kcedge") {
 			$scope.adminAuth = true;
 			$scope.authenticated = true;
 		}
-		if (username) {
+		if (user.userName) {
 			$scope.authenticated = true;
-			$scope.username = username;
+			$scope.username = user.userName;
 		}
+		else{
+			$scope.authenticated = true;
+			//no username yet, just google display name
+			$scope.username = user.name;
+		}
+		//ProfileService.setUserInfo(user);
+
 	});
+
+	$scope.messagesToggle = true; //default yes messdagesz
+
 
 	$scope.findInTipArray = function (id) {
 		for (var i = 0; i < $scope.tipArrayData.length; i++) {
@@ -1876,7 +1850,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		}
 		$http(req).then(function success(response) {
 			$scope.deleteResponse = response.data;
-
+			window.location.href = '/tipsLib'
 
 		}, function failure(response) {
 
@@ -1950,7 +1924,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 				if (i == 1) {
 					var tipDesc = $scope.tipArrayData[$scope.tipCounter].tipDescJson[i].tipDescription;
 					// var mce = tinyMCE.get('textAreaEditTip');
-					mce.setContent(tipDesc);
+					//mce.setContent(tipDesc);
 
 					//$("#textAreaEditTip").val(tipDesc);
 				}
@@ -2106,8 +2080,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		if (editOrAdd == "Add") {
 			for (i = $scope.descriptionCounter; i > 1; i--) {
 				// tinyMCE.remove('#textAreaTip' + $scope.descriptionCounter);
-				 $("#textAreaTip" + $scope.descriptionCounter).last().remove();
-				 $scope.descriptionCounter--;
+				$("#textAreaTip" + $scope.descriptionCounter).last().remove();
+				$scope.descriptionCounter--;
 			}
 		}
 		else if (editOrAdd == "Edit") {
@@ -3186,7 +3160,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	$scope.isReadyForSubmit = function () {
 		//var content = "";
 		//if (tinyMCE.get('textAreaTip')) {
-			//content = tinyMCE.get('textAreaTip').getContent();
+		//content = tinyMCE.get('textAreaTip').getContent();
 		//}
 		//$scope.tipDescAdd = content;
 
@@ -3226,7 +3200,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		for (var i = 1; i <= $scope.descriptionCounter; i++) {
 			if (i == 1) {
 				//var tipDescriptionLocal = tinyMCE.get('textAreaTip').getContent();
-				 var tipDescriptionLocal = $("#textAreaTip").val();
+				var tipDescriptionLocal = $("#textAreaTip").val();
 				tipDescObject[i] = { tipNumber: i, tipDescription: tipDescriptionLocal }
 			}
 			else {
@@ -3334,6 +3308,8 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 			$scope.updateProfile();
 			$scope.getTipsFromMongo();//add to current tips array
 			$scope.addATipToggle = false;
+
+			window.location.href = '/tipLib';
 
 		}, function failure(response) {
 			$scope.submitMessage = "Failure"

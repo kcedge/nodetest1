@@ -28,12 +28,13 @@ var opts = {
 
 
 var bodyParser = require('body-parser');
-var passport = require('passport');
 
 var session = require('express-session');
+var passport = require('passport');
+
 
 var flash    = require('connect-flash');
-
+//session store
 var mongoose = require('mongoose');
 
 // Just add bluebird to your package.json, and then the following line should work
@@ -100,8 +101,13 @@ require('./routes/index')(app,passport);
 require('./routes/comments')(app,passport);
 require('./routes/profile')(app,passport);
 require('./routes/sampleLibRoutes')(app,passport);
+//require('./routes/auth')(app,passport);
+var authRouter = require('./routes/auth');
+app.use('/', authRouter);
+
 
 require('./config/passport')(passport); // pass passport for configuration
+
 //
 // required for passport
 
@@ -155,6 +161,9 @@ app.use(function(err, req, res, next) {
   });
 });
 
+
+
+
 var mongodb = require('mongodb');
 
 var path = require('path');
@@ -164,21 +173,29 @@ var url = dbConfig.dbSettings().url;
 var MongoClient = mongodb.MongoClient;
 
 
-// Create a MongoDB connection pool and start the application
-// after the database connection is ready
-MongoClient.connect(url, { promiseLibrary: Promise }, (err, client) => {
-  if (err) {
-    logger.warn(`Failed to connect to the database. ${err.stack}`);
-  }
-  app.locals.db = client.db('krazyl3gzDb');
-  app.listen('28017', () => {
-    //logger.info(`Node.js app is listening at http://localhost:28017`);
-  });
+var mongoUtil = require( './mongoUtil' );
+mongoUtil.connectToServer(app, function( err, client ) {
+  if (err) console.log(err);
+  // start the rest of your app here
+} );
+
+// // Create a MongoDB connection pool and start the application
+// // after the database connection is ready
+// MongoClient.connect(url, { promiseLibrary: Promise }, (err, client) => {
+//   if (err) {
+//     logger.warn(`Failed to connect to the database. ${err.stack}`);
+//   }
+//   app.locals.db = client.db('krazyl3gzDb');
+
+//   app.listen('28017', () => {
+//     //logger.info(`Node.js app is listening at http://localhost:28017`);
+//   });
  
-});
+// });
 
 
 var SQLiteStore = require('connect-sqlite3')(session);
+
 
 app.use(session({
   secret: 'keyboard cat',
@@ -187,6 +204,7 @@ app.use(session({
   store: new SQLiteStore({ db: app.locals.db })
 }));
 app.use(passport.authenticate('session'));
+
 
 
 module.exports = app;

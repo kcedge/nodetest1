@@ -26,9 +26,9 @@ append body
 					+label-info("Username:")
 					br
 					input#usernameInput.form-control(name="username" ng-model="vm.signUpUsername" ng-required)
-					//+label-info("Email:")
-					//br
-					//input#emailInput.form-control(name="email" ng-model="signUpEmail")
+					+label-info("Email:")
+					br
+					input#emailInput.form-control(name="email" ng-model="vm.signUpEmail")
 					+label-info("Password:")
 					br
 					input#passWordInput.form-control(type="password" name="password" ng-model="vm.signUpPassword" ng-required)

@@ -26,7 +26,7 @@ var url = dbConfig.dbSettings().url;
 
 module.exports = function (router, passport) {
 
-	router.get('/getProfileInfo/:username',  function (req, res, next) {
+	router.get('/getProfileInfo/:username', function (req, res, next) {
 		try {
 			const db = req.app.locals.db;
 			var username = req.params.username;
@@ -34,16 +34,16 @@ module.exports = function (router, passport) {
 			console.log(username);
 			//	const id = new ObjectID(req.params.id);
 
-			const info = db.collection('profileCollection').find({username:username});
+			const info = db.collection('profileCollection').find({ username: username });
 			if (info) {
-					res.send("profileInfo");
+				res.send("profileInfo");
 			}
 			else {
 				res.send("No profile data found");
 			}
 
 		}
-		catch(e) {
+		catch (e) {
 			var e = e;
 		}
 	});
@@ -122,58 +122,91 @@ module.exports = function (router, passport) {
 
 	});
 	router.post('/getRecentTips', function (req, res) {
-		try{
+		try {
 			console.log(req);
 			//var tipIdArray = req.body['tipArray'];
 			console.log('getting Recent Tips');
 			const db = req.app.locals.db;
 			var collection = db.collection('tipsCollection');
-				if (true) {
-					var cursorArray = collection.find().sort({ dateSubmitted: -1 }).toArray(function (err, items) {
-						if (err) {
-							console.log('error 500');
-							res.status(500).send('error retreiving data');
-						}
-						console.log('ITEMS');
-						console.log(items);
-						res.send(items);
-					});
-				}
-				else {
-					res.send("No tips found");
-				}
-			
+			if (true) {
+				var cursorArray = collection.find().sort({ dateSubmitted: -1 }).toArray(function (err, items) {
+					if (err) {
+						console.log('error 500');
+						res.status(500).send('error retreiving data');
+					}
+					console.log('ITEMS');
+					console.log(items);
+					res.send(items);
+				});
+			}
+			else {
+				res.send("No tips found");
+			}
+
 		}
-		catch{
+		catch {
 
 		}
 
 	});
 	router.get('/getTopUsers/:period', function (req, res) {
-		try{
+		try {
 			console.log(req);
 			var period = req.params.period;
 			if (period == 'MONTH') {
-	
+
 			}
 			//var tipIdArray = req.body['tipArray'];
 			console.log('getting Top Users');
 			const db = req.app.locals.db;
 			var collection = db.collection('profileCollection');
-				if (true) {//period=='ALL TIME'
-					var cursorArray = collection.find().sort({ totalpoints: -1 }).toArray(function (err, items) {
-						if (err) {
-							console.log('error 500');
-							res.status(500).send('error retreiving data');
-						}
-						console.log('ITEMS');
-						console.log(items);
-						res.send(items);
-					});
-				}
-				else {
-					res.send("No profiless found");
-				}
+			if (true) {//period=='ALL TIME'
+				var cursorArray = collection.find().sort({ totalpoints: -1 }).toArray(function (err, items) {
+					if (err) {
+						console.log('error 500');
+						res.status(500).send('error retreiving data');
+					}
+					console.log('ITEMS');
+					console.log(items);
+					res.send(items);
+				});
+			}
+			else {
+				res.send("No profiless found");
+			}
+		}
+		catch {
+
+		}
+
+	});
+	router.post('/postProfileMetaData/:username', function (req, res) {
+		try{
+			var username = req.params.username;
+			console.log(req);
+			var profileMetaDataJson = req.body['profileMetaDataJson'];
+	
+			//var tipIdArray = req.body['tipArray'];
+			console.log('posting profileImageJson Data' + profileMetaDataJson);
+	
+			console.log('username:' + username);
+			const db = req.app.locals.db;
+
+			var collection = db.collection('profileCollection');
+			if (true) {
+				collection.update({ userName: username }, { $set: { profileMetaDataJson: profileMetaDataJson } }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit profile', err);
+						res.send('profileMetaDataJson save failed');
+					}
+					else {
+						res.send('profileMetaDataJson edit successful');
+					}
+				})
+			}
+			else {
+				res.send("No profileImageJson found");
+			}
 		}
 		catch{
 
@@ -181,193 +214,141 @@ module.exports = function (router, passport) {
 		
 	});
 	router.post('/postProfileMetaData/:username', function (req, res) {
-		var username = req.params.username;
-		console.log(req);
-		var profileMetaDataJson = req.body['profileMetaDataJson'];
+		try{
+			var username = req.params.username;
+			console.log(req);
+			var profileMetaDataJson = req.body['profileMetaDataJson'];
+	
+			//var tipIdArray = req.body['tipArray'];
+			console.log('posting profileImageJson Data' + profileMetaDataJson);
+	
+			console.log('username:' + username);
+			const db = req.app.locals.db;
 
-		//var tipIdArray = req.body['tipArray'];
-		console.log('posting profileImageJson Data' + profileMetaDataJson);
-
-		console.log('username:' + username);
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
-
-				// do some work here with the database.
-				// Get the documents collection
-				var collection = db.collection('profileCollection');
-				if (true) {
-					collection.update({ userName: username }, { $set: { profileMetaDataJson: profileMetaDataJson } }, function (err, db) {
-						if (err) {
-							console.log('Unable to edit profile', err);
-							res.send('profileMetaDataJson save failed');
-						}
-						else {
-							res.send('profileMetaDataJson edit successful');
-						}
-					})
-				}
-				else {
-					res.send("No profileImageJson found");
-				}
+			var collection = db.collection('profileCollection');
+			if (true) {
+				collection.update({ userName: username }, { $set: { profileMetaDataJson: profileMetaDataJson } }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit profile', err);
+						res.send('profileMetaDataJson save failed');
+					}
+					else {
+						res.send('profileMetaDataJson edit successful');
+					}
+				})
 			}
-			db.close();
-		});
-	});
-	router.post('/postProfileMetaData/:username', function (req, res) {
-		var username = req.params.username;
-		console.log(req);
-		var profileMetaDataJson = req.body['profileMetaDataJson'];
-
-		//var tipIdArray = req.body['tipArray'];
-		console.log('posting profileImageJson Data' + profileMetaDataJson);
-
-		console.log('username:' + username);
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
-
-				// do some work here with the database.
-				// Get the documents collection
-				var collection = db.collection('profileCollection');
-				if (true) {
-					collection.update({ userName: username }, { $set: { profileMetaDataJson: profileMetaDataJson } }, function (err, db) {
-						if (err) {
-							console.log('Unable to edit profile', err);
-							res.send('profileMetaDataJson save failed');
-						}
-						else {
-							res.send('profileMetaDataJson edit successful');
-						}
-					})
-				}
-				else {
-					res.send("No profileImageJson found");
-				}
+			else {
+				res.send("No profileImageJson found");
 			}
-			db.close();
-		});
+		}
+		catch{
+
+		}
+		
 	});
 
 	router.post('/postProfileDownloadedSamples/:username', function (req, res) {
-		var username = req.params.username;
-		console.log(req);
-		var downloadedSamples = req.body['downloadedSamples'];
 
-		//var tipIdArray = req.body['tipArray'];
-		console.log('posting postProfileDownloadedSamples Data' + downloadedSamples);
+		try {
+			var username = req.params.username;
+			console.log(req);
+			var downloadedSamples = req.body['downloadedSamples'];
 
-		console.log('username:' + username);
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
+			//var tipIdArray = req.body['tipArray'];
+			console.log('posting postProfileDownloadedSamples Data' + downloadedSamples);
 
-				// do some work here with the database.
-				// Get the documents collection
-				var collection = db.collection('profileCollection');
-				if (true) {
-					collection.update({ userName: username }, { $set: { downloadedSamples: downloadedSamples } }, function (err, db) {
-						if (err) {
-							console.log('Unable to edit profile', err);
-							res.send('downloadedSamples  save failed');
-						}
-						else {
-							res.send('downloadedSamples Profile edit successful');
-						}
-					})
-				}
-				else {
-					res.send("No downloadedSamples found");
-				}
+			console.log('username:' + username);
+			var collection = db.collection('profileCollection');
+			if (true) {
+				collection.update({ userName: username }, { $set: { downloadedSamples: downloadedSamples } }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit profile', err);
+						res.send('downloadedSamples  save failed');
+					}
+					else {
+						res.send('downloadedSamples Profile edit successful');
+					}
+				})
 			}
-			db.close();
-		});
+			else {
+				res.send("No downloadedSamples found");
+			}
+
+		}
+		catch {
+
+		}
+
 	});
 	router.post('/postProfileImage/:username', function (req, res) {
-		var username = req.params.username;
-		console.log(req);
-		var profileImageJson = req.body['profileImageJson'];
+		try {
+			var username = req.params.username;
+			console.log(req);
+			var profileImageJson = req.body['profileImageJson'];
 
-		//var tipIdArray = req.body['tipArray'];
-		console.log('posting profileImageJson Data' + profileImageJson);
+			//var tipIdArray = req.body['tipArray'];
+			console.log('posting profileImageJson Data' + profileImageJson);
 
-		console.log('username:' + username);
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
+			console.log('username:' + username);
+			const db = req.app.locals.db;
 
-				// do some work here with the database.
-				// Get the documents collection
-				var collection = db.collection('profileCollection');
-				if (true) {
-					collection.update({ userName: username }, { $set: { profileImageJson: profileImageJson } }, function (err, db) {
-						if (err) {
-							console.log('Unable to edit profile', err);
-							res.send('profileImageJson image save failed');
-						}
-						else {
-							res.send('Profile edit successful');
-						}
-					})
-				}
-				else {
-					res.send("No profileImageJson found");
-				}
+			var collection = db.collection('profileCollection');
+			if (true) {
+				collection.update({ userName: username }, { $set: { profileImageJson: profileImageJson } }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit profile', err);
+						res.send('profileImageJson image save failed');
+					}
+					else {
+						res.send('Profile edit successful');
+					}
+				})
 			}
-			db.close();
-		});
+			else {
+				res.send("No profileImageJson found");
+			}
+
+		}
+		catch {
+
+		}
+
 	});
 	router.post('/postBannerImage/:username', function (req, res) {
-		var username = req.params.username;
-		console.log(req);
-		var bannerImageJson = req.body['bannerImageJson'];
+		try {
+			var username = req.params.username;
+			console.log(req);
+			var bannerImageJson = req.body['bannerImageJson'];
 
-		//var tipIdArray = req.body['tipArray'];
-		console.log('posting Banner Data' + bannerImageJson);
+			//var tipIdArray = req.body['tipArray'];
+			console.log('posting Banner Data' + bannerImageJson);
 
-		console.log('username:' + username);
-		MongoClient.connect(url, function (err, db) {
-			if (err) {
-				console.log('Unable to connect to the mongoDB server. Error:', err);
-			} else {
-				//HURRAY!! We are connected. :)
-				console.log('Connection established to', url);
+			console.log('username:' + username);
+			const db = req.app.locals.db;
 
-				// do some work here with the database.
-				// Get the documents collection
-				var collection = db.collection('profileCollection');
-				if (true) {
-					collection.update({ userName: username }, { $set: { bannerImageJson: bannerImageJson } }, function (err, db) {
-						if (err) {
-							console.log('Unable to edit profile', err);
-							res.send('Banner image save failed');
-						}
-						else {
-							res.send('Profile edit successful');
-						}
-					})
-				}
-				else {
-					res.send("No banner image found");
-				}
+			var collection = db.collection('profileCollection');
+			if (true) {
+				collection.update({ userName: username }, { $set: { bannerImageJson: bannerImageJson } }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit profile', err);
+						res.send('Banner image save failed');
+					}
+					else {
+						res.send('Profile edit successful');
+					}
+				})
 			}
-			db.close();
-		});
+			else {
+				res.send("No banner image found");
+			}
+		}
+		catch {
+
+		}
 	});
+
 	router.post('/getTopTips', function (req, res) {
-		try{
+		try {
 			console.log(req);
 			//var tipIdArray = req.body['tipArray'];
 			console.log('getting Top Tips');
@@ -376,27 +357,55 @@ module.exports = function (router, passport) {
 			console.log('getting Recent Tips');
 			const db = req.app.locals.db;
 			// do some work here with the database.
-				// Get the documents collection
-				var collection = db.collection('tipsCollection');
-				if (true) {
-					var cursorArray = collection.find().sort({ tipPoints: -1 }).toArray(function (err, items) {
-						if (err) {
-							console.log('error 500');
-							res.status(500).send('error retreiving data');
-						}
-						console.log('ITEMS');
-						console.log(items);
-						res.send(items);
-					});
-				}
-				else {
-					res.send("No tips found");
-				}
+			// Get the documents collection
+			var collection = db.collection('tipsCollection');
+			if (true) {
+				var cursorArray = collection.find().sort({ tipPoints: -1 }).toArray(function (err, items) {
+					if (err) {
+						console.log('error 500');
+						res.status(500).send('error retreiving data');
+					}
+					console.log('ITEMS');
+					console.log(items);
+					res.send(items);
+				});
+			}
+			else {
+				res.send("No tips found");
+			}
 		}
-		catch{
+		catch {
 
 		}
-	
 
+
+	});
+
+	//Get tips for a profile 
+	router.get('/getUserProfile/:authenticated', function (req, res, next) {
+		try {
+			const db = req.app.locals.db;
+			var authenticated = req.params.authenticated;
+			console.log('Getting profile');
+			console.log(authenticated);
+			var authenticatedid = req.params.authenticated;
+
+			// do some work here with the database.
+			// Get the documents collection
+			var collection = db.collection('users');
+			//if (collection.find({submittedBy: username})) {
+			var cursorArray = collection.find({ _id: ObjectId(authenticatedid) }).toArray(function (err, items) {
+				if (err) {
+					res.status(500).send('error retreiving data');
+				}
+				//console.log('ITEMS');
+				//console.log(items);
+				res.send(items);
+			});
+
+		}
+		catch {
+
+		}
 	});
 };

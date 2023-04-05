@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-angular.module("myApp").controller('CommentsCtrl', ['$scope', '$rootScope', '$http', 'CommentsService', '$localStorage', function ($scope, $rootScope, $http, CommentsService, $localStorage) {
+angular.module("myApp").controller('CommentsCtrl', ['$scope', '$rootScope', '$http', 'CommentsService', '$localStorage','ProfileService', function ($scope, $rootScope, $http, CommentsService, $localStorage,ProfileService) {
+
 
 	CommentsService.getCommentsWithTipId($scope.tipId)
 		.then(function (response) {
@@ -18,20 +19,39 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope', '$rootScope', '$ht
 	    var tipCounter = $scope.$parent.findInTipArray(tip._id);
 	    $scope.$parent.tipArrayData[tipCounter].showComments = !$scope.$parent.tipArrayData[tipCounter].showComments;
 	}
-	isAuthenticated($http, false, function (username) {
-	    if (username == 'kcedge') {
-		$scope.adminAuth = true;
-		$scope.authenticated = true;
-	    }
-	    if (username != 0) {
-		$scope.authenticated = true;
-		$scope.username = username;
-	    }
-	});
+
+	// function isAuthenticated($http, $localStorage, routeToSignUp, callback) {
+	// 	var req = {
+	// 		method: 'GET',
+	// 		url: '/authenticated',
+	// 		headers: {
+	// 			'Content-Type': "application/json"
+	// 		},
+	// 		data: {
+	// 		}
+	// 	}
+	// 	$http(req).then(function success(response) {
+	// 		if (response.data) {
+	// 			return callback($localStorage.username);
+	// 		}
+	// 		else {
+	// 			window.location.href = '/signUp';		
+	// 		}
+	// 	}, function failure(response) {
+	// 		window.location.href = '/signUp';
+	// 		return false;
+	// 	});
+	
+
+		
+	// }
+
+
+
 	$scope.postACommentClicked = function () {
 
 	    if (!$scope.authenticated) {
-		window.location.href = '/signUp';
+			window.location.href = '/signUp';
 	    }
 	    else {
 		console.log('Posting a comment');

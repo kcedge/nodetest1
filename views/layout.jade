@@ -85,11 +85,14 @@ html(lang="en" ng-app='myApp')
                         script(src='javascripts/commentsController.js')
                         script(src='javascripts/profileController.js')
                         script(src='javascripts/sampleLibController.js')
+                        script(src='javascripts/devDashController.js')
+                        script(src='javascripts/popUpController.js')
+
                         script(src='javascripts/filters.js')
                         script(src='javascripts/directives.js')
         body(data-spy="scroll",data-target=".scrollspy" ng-controller="bodyController")
                     #navbar_menu(style='margin-bottom:0px;height:50px;')
-                        +navbar("L3GZ WORLD","navbarWidget")
+                        +navbar("L3GZ WRLD","navbarWidget")
                                 +nav_item("/") Chromatic Wheel
                                 +nav_item("tipLib") Tip Library 
                                 +nav_item("sampleLib") Sample Library 
@@ -103,11 +106,24 @@ html(lang="en" ng-app='myApp')
                                         +nav_item("signUp") Sign Up
                                         +nav_item("signIn") Sign In
                                         +nav_item("contactMe") Contact
+                                +nav_item("devDash") DevDash
+
                 #profileLoggedIn(ng-show="isLoggedIn()" style="float:right;")
                         a(href="/logout" ng-click="signOutClicked()") Sign out
                 block body
-                #googleUserProfile(ng-show="false")
-                #userId(ng-show="false")
+                div.pageController(ng-controller="popUpController" style="margin:0 auto;margin-top:50px" )
+                        .div.loginPopup(ng-show="showPopUp()")
+                                .div.formPopup#popupForm
+                                        form.formContainer()
+                                                .row#dismissPopUp
+                                                        a.clickableLink(ng-click="dismissClicked()") Dismiss
+                                                h2 Please enter email 	
+                                                label(for="email")
+                                                        strong email 
+                                                input(type='text' id="email" placeholder="email@email.com" name="email" required ng-model='popUpEmailAddress')
+                                                label(for="confirm")
+                                                        strong confirm 
+                                                input(type='text' id="confirm" placeholder="email@email.com" name="email confirm" required ng-model='popUpEmailAddressCofirm')
 
-
+                                                button(ng-click="popUpFormSubmit()") Submit
 

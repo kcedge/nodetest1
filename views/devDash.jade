@@ -1,0 +1,46 @@
+<script>
+//Sound cloud script
+</script>
+extends layout
+append body
+	.pageController(ng-controller="devDashController" style="margin:0 auto;margin-top:50px")
+		.div.userDetailsDiv
+			.div.username(style='margin-top: -34px;')
+				span.greeting Hey there	
+				a(href='/profile/{{username}}'){{username}}!
+		.aleartTop.center90div
+			+alert-i-warning("devDashg up with Music Production Helper allows you to view your profile page.  With a profile on mphelper.io you can: contribute to the Tip Library, save tips, comment on tips, network yourself with other producers, link your SoundCloud, and gain a good rep for helping others!")
+		#pagerow.row
+			#devDashWrapper.center90div.formInputWrapper()
+				.titleBannerDiv()
+					.labelDisplayStrong.devDashLabel
+						#titleName= title	
+				#dropdownWrapper.dropdown(style="float:left")
+								span.label.label-default.dropdown-toggle#rightBarWidgetDropdown1(data-toggle='dropdown') Dropdown
+				
+									span.glyphicon.glyphicon-menu-down
+								ul.dropdown-menu(aria-labelledby="rightBarWidgetDropdown1" display='')
+									li(ng-repeat='app in devDashApps')
+										a(ng-click="appSelectedClicked(app.name)") {{app.name}}
+			
+					
+				#selectedRow.row 
+					#selectedAppWrapper.row
+						#selectedAppDisplayStrong.devDashLabel
+							span {{appSelected}}				
+							//div.alert#note #{messages}
+				#AppWrapper.row
+					#FilterScriptAppWrapper(ng-show="appSelected == 'Filter Script'") 
+						span Hello this is filter script.  Used to populate the Mongo Db with a good init state.
+					#UserManagementAppWrapper(ng-show="appSelected == 'User Management'") 
+						span User Management is used to view and edit user data
+						#currentUserWrapper.row 
+							span.label.label-default.dropdown-toggle Current User 
+							#userName.col-lg-2.form-control
+								span {{currentUser.username}}
+						
+					#redirect(ng-hide='true' ng-model='redirect')= redirect
+		popUp
+
+
+			

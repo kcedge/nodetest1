@@ -2,13 +2,21 @@ extends layout
 
 append body
 	//.bgImage
-	.pageController(ng-controller="bodyTipHelperController" style = '' id='controllerDiv' )
+	.pageController(ng-controller="bodyTipHelperController"  id='controllerDiv' )
 		.div.userDetailsDivTipLib.row.hidden-xs
 			.div.username.col-xs-0
 				span.greeting Hey there	
 				a(href='/profile/{{username}}'){{username}}!
-		.div(style="text-align:center;margin-top:65px")
-			+alert-i-warning("Find your favorite music production tutorials and tips here!","heart")
+
+		.div.messageContainerTop.row(style="text-align:center;margin-top:65px" )
+			//- .div#messagesShowHide
+			//- 	a.minimize.hover(ng-click='messagesToggle=!messagesToggle' ng-model='messagesToggle' ng-show='!messagesToggle') Show Messages
+			//- 	a.minimize.hover(ng-click='messagesToggle=!messagesToggle' ng-model='messagesToggle' ng-show='messagesToggle') Hide Messages
+
+			.div( ng-show='messagesToggle')
+				+alert-i-warning("Find your favorite music production tutorials and tips here!","heart")
+				
+
 		#stickyalias
 		
 		.row(ng-show='addFilterToggle')

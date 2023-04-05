@@ -32,4 +32,6 @@ append body
 					#signInLinkWrapper
 						a#signInLink(href="/signUp")
 							span Not a member? Sign Up
-				div(class="g-signin2"  data-onsuccess="onSignIn")
+				//div(class="g-signin2"  data-onsuccess="onSignIn")
+				.div#signInGoogle
+					a.button.google(href="/login/federated/google") Sign in with Google

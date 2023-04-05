@@ -25,7 +25,6 @@ function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStor
 
 		$http(req).then(function success(response) {
 			$scope.user = response.data.user;
-			$localStorage.user = response.data.user;
 			$scope.displayName = '';
 			$scope.firstName = '';
 			$scope.city = '';
@@ -45,26 +44,12 @@ function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStor
 		$scope.user = $localStorage.user;
 	}
 
-
-	$scope.$storage = $localStorage.$default({
-	    username: "",
-	    userSignedIn: false
-	});
 	
 	$scope.currentTip = {} // Current Tip Previewing
 
-	var username = $("#userName").html();
 
 
 	//vm.userInfo = UserDataService.getFormData();
-
-	// set up user profile
-	$scope.currentProfileUsername = username;
-	$scope.$storage = $localStorage;
-	$scope.$storage.userSignedIn = true;
-	$scope.$storage.username = username;
-	vm.user = $localStorage.user;
-
 
 
 
@@ -93,24 +78,38 @@ function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStor
 	$scope.navBarRightFilterClick = function(sortFilter){
 	    
 	}
+
+	$scope.currentUser = {};
 	
-	isAuthenticated($http,false,function(username){
-	    if(username == 'kcedge'){
-		$scope.adminAuth = true;
-		$scope.authenticated = true;
-	    }
-	    if(username != 0){
-		$scope.authenticated = true;
-		$scope.username = username;
-	    }    
+	ProfileService.isAuthenticated(function (user) {
+		$scope.currentUser = user;
+		$scope.currentProfileUsername = user.userName;
+		// set up user profile
+		$scope.$storage = $localStorage;
+		$scope.$storage.userSignedIn = true;
+		$scope.$storage.username = user.userName;;
+
+		if (user.userName == "kcedge") {
+			$scope.adminAuth = true;
+			$scope.authenticated = true;
+		}
+		if (user.userName) {
+			$scope.authenticated = true;
+			$scope.username = user.userName;
+		}
+		else{
+			$scope.authenticated = true;
+			//no username yet, just google display name
+			$scope.username = user.name;
+		}
+
 	});
-	
 	
 	var setTotalPoints = function () {
 	    $scope.tipsSubmitted.forEach(function (tip) {
 		$scope.totalpoints += tip.tipPoints;
 	    });
-	    ProfileService.postTotalPoints($scope.$storage.username,$scope.totalpoints)
+	    ProfileService.postTotalPoints($scope.username ,$scope.totalpoints)
 	}
 	var convertTipDataToJsonArray = function (tipArrayData) {
 	    for (var i = 0; i < tipArrayData.length; i++) {
@@ -191,33 +190,33 @@ function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStor
 		});
 	//ProfileService.getTopUsers($scope.filterPeriodTopUsersDropDown);
 
-	ProfileService.getProfileInfo($scope.currentProfileUsername)
-		.then(function (response) {
-		    $scope.profileInfo = response.data;
-		    if ($scope.profileInfo[0].bannerImageJson) {
-			$scope.profileInfo.bannerImageJson = JSON.parse($scope.profileInfo[0].bannerImageJson);
-		    }
-		    if ($scope.profileInfo[0].profileImageJson) {
-			$scope.profileInfo.profileImageJson = JSON.parse($scope.profileInfo[0].profileImageJson);
-		    }
-		    if ($scope.profileInfo[0].profileMetaDataJson) {
-			$scope.profileInfo.profileMetaDataJson = JSON.parse($scope.profileInfo[0].profileMetaDataJson);
-		    }
-		    if ($scope.profileInfo[0].lovedTipsJson) {
-			getTips($scope.profileInfo[0].lovedTipsJson);
-			  $scope.lovedTips = JSON.parse($scope.profileInfo[0].lovedTipsJson);
-			  $scope.likedTips = JSON.parse($scope.profileInfo[0].likedTipsJson);
-			  $scope.dislikedTips = JSON.parse($scope.profileInfo[0].dislikedTipsJson);
-		    }
+	function getProfileData(){
+		ProfileService.getProfileInfo($scope.currentUser.username)
+			.then(function (response) {
+				$scope.profileInfo = response.data;
+				if ($scope.profileInfo[0].bannerImageJson) {
+				$scope.profileInfo.bannerImageJson = JSON.parse($scope.profileInfo[0].bannerImageJson);
+				}
+				if ($scope.profileInfo[0].profileImageJson) {
+				$scope.profileInfo.profileImageJson = JSON.parse($scope.profileInfo[0].profileImageJson);
+				}
+				if ($scope.profileInfo[0].profileMetaDataJson) {
+				$scope.profileInfo.profileMetaDataJson = JSON.parse($scope.profileInfo[0].profileMetaDataJson);
+				}
+				if ($scope.profileInfo[0].lovedTipsJson) {
+				getTips($scope.profileInfo[0].lovedTipsJson);
+				$scope.lovedTips = JSON.parse($scope.profileInfo[0].lovedTipsJson);
+				$scope.likedTips = JSON.parse($scope.profileInfo[0].likedTipsJson);
+				$scope.dislikedTips = JSON.parse($scope.profileInfo[0].dislikedTipsJson);
+				}
+			
+				//$scope.$apply();
 
-		  
-		    //$scope.$apply();
+				//$scope.parentobj.comments = response.data;
+			});
+	}
 
-		    //$scope.parentobj.comments = response.data;
-		});
-
-
-	ProfileService.getTipsSubmitted($scope.currentProfileUsername)
+	ProfileService.getTipsSubmitted($scope.currentUser.username)
 		.then(function (response) {
 		    response.data = convertTipDataToJsonArray(response.data);
 		    $scope.tipsSubmitted = response.data;
@@ -396,7 +395,7 @@ function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStor
 		
 		var profileMetaDataJson = JSON.stringify(profileMetaData);
 		
-	        ProfileService.postProfileMetaData($scope.$storage.username,profileMetaDataJson);
+	        ProfileService.postProfileMetaData($scope.currentUser.username,profileMetaDataJson);
 
 		
 
@@ -475,7 +474,7 @@ function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStor
 	    //$sc
 	    $scope.queue = [];
 	    var bannerImageJson = JSON.stringify($scope.bannerImagesUploaded);
-	    ProfileService.postBannerImage($scope.$storage.username,bannerImageJson)
+	    ProfileService.postBannerImage($scope.currentUser.username,bannerImageJson)
 	   // numberOfImages++;
 
 	};
@@ -558,7 +557,7 @@ function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStor
 	    //$sc
 	    $scope.queue = [];
 	    var profileImageJson = JSON.stringify($scope.profileImagesUploaded);
-	    ProfileService.postProfileImage($scope.$storage.username,profileImageJson)
+	    ProfileService.postProfileImage($scope.currentUser.username,profileImageJson)
 	   // numberOfImages++;
 
 	};
