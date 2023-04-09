@@ -303,7 +303,7 @@ module.exports = function (router, passport) {
 		});
 	});
 
-	
+
 
 	router.get('/getUserData', function (req, res) {
 		try {
@@ -468,12 +468,12 @@ module.exports = function (router, passport) {
 	// 	});
 	// });
 
-	router.get('/flags/:size/:name',function(req,res){
+	router.get('/flags/:size/:name', function (req, res) {
 		const options = {
 			//root: path.join(__dirname)
 		};
 
-		res.sendFile(path.resolve('node_modules/flag-icons/flags/' +req.params.size + '/' + req.params.name), options, function(err){
+		res.sendFile(path.resolve('node_modules/flag-icons/flags/' + req.params.size + '/' + req.params.name), options, function (err) {
 			if (err) {
 				next(err);
 			} else {
@@ -481,20 +481,31 @@ module.exports = function (router, passport) {
 		});
 	});
 
-	router.get('/filterScriptFile',function(req,res){
+	router.get('/filterScriptFile', function (req, res) {
 		const options = {
-			//root: path.join(__dirname)
+			root: path.join(__dirname)
 		};
 
-		res.sendFile(path.resolve('resources/filterL3gz.txt'), options, function(err){
+		const fs = require('fs');
+		fs.readFile('../public/resources/filterL3gz.txt', 'utf-8', (err, fileString) => {
+			if(err){
+				return;
+			}
+			console.log(fileString);
+		})
+
+
+		res.sendFile('../public/resources/filterL3gz.txt', options, function (err) {
 			if (err) {
 				next(err);
 			} else {
+
 			}
+
 		});
 	});
 
-	
+
 
 
 	router.get('/soundCloudAuth', passport.authenticate('soundcloud-token', {
@@ -508,7 +519,7 @@ module.exports = function (router, passport) {
 	router.get('/logout', function (req, res) {
 		console.log(req);
 		console.log("Logging out user")
-		req.logout(function(response){
+		req.logout(function (response) {
 			res.redirect('/signIn');
 		});
 	});
@@ -530,7 +541,7 @@ module.exports = function (router, passport) {
 	});
 	/* GET Hello World page. */
 	router.get('/tipLib/:id', function (req, res) {
-		try{
+		try {
 			var id = req.params.id;
 			console.log("loading tip " + id);
 			// Use connect method to connect to the Server
@@ -548,11 +559,11 @@ module.exports = function (router, passport) {
 				}
 			});
 		}
-		catch{
+		catch {
 
-		}		
+		}
 	});
-	
+
 	router.get('/tipsPageGet', function (req, res) {
 		try {
 			var itemsTest;
