@@ -32,12 +32,14 @@ append body
 				#AppWrapper.row
 					#FilterScriptAppWrapper(ng-show="appSelected == 'Filter Script'") 
 						span Hello this is filter script.  Used to populate the Mongo Db with a good init state.
+						button#readFile(ng-click="readFilterScriptFile()") read file
 					#UserManagementAppWrapper(ng-show="appSelected == 'User Management'") 
 						span User Management is used to view and edit user data
 						#currentUserWrapper.row 
 							span.label.label-default.dropdown-toggle Current User 
 							#userName.col-lg-2.form-control
 								span {{currentUser.username}}
+					
 						
 					#redirect(ng-hide='true' ng-model='redirect')= redirect
 		popUp

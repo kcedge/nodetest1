@@ -481,6 +481,21 @@ module.exports = function (router, passport) {
 		});
 	});
 
+	router.get('/filterScriptFile',function(req,res){
+		const options = {
+			//root: path.join(__dirname)
+		};
+
+		res.sendFile(path.resolve('resources/filterL3gz.txt'), options, function(err){
+			if (err) {
+				next(err);
+			} else {
+			}
+		});
+	});
+
+	
+
 
 	router.get('/soundCloudAuth', passport.authenticate('soundcloud-token', {
 		successRedirect: '/profile', // redirect to the secure profile section

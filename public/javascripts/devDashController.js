@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 
-angular.module("myApp").controller('devDashController', ['$scope', '$rootScope', '$http', 'ProfileService', '$localStorage', "FileUploader", "ngAudio", function ($scope, $rootScope, $http, ProfileService, $localStorage, FileUploader, ngAudio) {	
+angular.module("myApp").controller('devDashController', ['$scope', '$rootScope', '$http', 'ProfileService', '$localStorage', "FileUploader", "ngAudio", function ($scope, $rootScope, $http, ProfileService, $localStorage, FileUploader, ngAudio) {
 
 
 	$scope.currentUser = ProfileService.getUserInfo();
-	
+
 
 
 	ProfileService.isAuthenticated(function (user) {
@@ -23,21 +23,21 @@ angular.module("myApp").controller('devDashController', ['$scope', '$rootScope',
 		//ProfileService.setUserInfo(user);
 
 	});
-	
+
 
 	$scope.parseJson = function (jsonArray) {
-	    for (var i = 0; i < jsonArray.length; i++) {
-		if (jsonArray[i].hasOwnProperty("packImageJson") && jsonArray[i].packImageJson) {
-		    jsonArray[i].packImageJson = JSON.parse(jsonArray[i].packImageJson);
+		for (var i = 0; i < jsonArray.length; i++) {
+			if (jsonArray[i].hasOwnProperty("packImageJson") && jsonArray[i].packImageJson) {
+				jsonArray[i].packImageJson = JSON.parse(jsonArray[i].packImageJson);
+			}
 		}
-	    }
 
-	    return jsonArray;
+		return jsonArray;
 	}
 
 
 	window.onload = function () {
-	 
+
 	}
 
 	// $(window).resize(function () {
@@ -48,15 +48,27 @@ angular.module("myApp").controller('devDashController', ['$scope', '$rootScope',
 	//     $(".sampleListWrapper").height(height - 50 - 90); //For banner and filter menu
 	// }
 
-	$scope.devDashApps = [{name:"Filter Script" }, {name:"User Management"}, {name:"Pop Up Tester"}];
+	$scope.devDashApps = [{ name: "Filter Script" }, { name: "User Management" }, { name: "Pop Up Tester" }];
 
-	$scope.appSelectedClicked = function(name){
+	$scope.appSelectedClicked = function (name) {
 		$scope.appSelected = name;
 
 	}
 
 
+	$scope.filterTagsDefault = [{ name: 'Mixing', type: '', parent: '' }, { name: 'Mastering', type: '', parent: '' },
+	{ name: '', type: '', parent: '' }, { name: '', type: '', parent: '' },
+	];
 
-	
+	$scope.readFilterScriptFile = function () {
+		// 
 
-    }]);
+		$http.get('/filterScriptFile').then(function(response){
+			var file = response;
+		});
+	}
+
+
+
+
+}]);

@@ -1,0 +1,74 @@
+Life
+	Lifestyle
+	Health
+	Practice Teqniques
+	Practice Habits 
+Mixing
+	Dynamic Range
+	Distortion
+	Saturation
+	Reverb
+Mastering
+	Ozone 7
+	LUFS
+	A/B Testing
+People
+	Singer
+	Lead Singer
+	Drummer
+	Bassest
+	Background Vocalist
+	Keyboardest
+	Producer
+	Engineer
+	Guitarist
+	Groupie
+	Fan
+Vocals
+	Singing
+	Rapping
+	Verse Writing
+	Chorus Writing
+	Rhyme Scheme
+Music Theory
+	Chords
+	Progressions
+	Melodies
+	Scales
+	Chord Extensions
+	Song Structure
+	Sound Design
+Software
+	Serem
+	VST
+	Komplete
+	Kontakt
+	Midi
+DAW
+	FL Studio
+	Abelton
+	Logic Pro
+Sounds
+	Kick
+	Clap
+	Rhythm Guitar
+	Vocal
+	Percussion
+		Snare
+		High Hat
+		Chrash
+		Cymbols
+		Shaker
+		Clicks
+		Hits
+		Toms
+		Chant
+	Lead
+		Lead Vocal
+		Lead Synth
+		Lead Instrument
+		Lead Guitar
+	Pad
+	Bass
+	FX
+		Vocal FX
