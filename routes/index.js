@@ -468,6 +468,19 @@ module.exports = function (router, passport) {
 	// 	});
 	// });
 
+	router.get('/flags/:size/:name',function(req,res){
+		const options = {
+			//root: path.join(__dirname)
+		};
+
+		res.sendFile(path.resolve('node_modules/flag-icons/flags/' +req.params.size + '/' + req.params.name), options, function(err){
+			if (err) {
+				next(err);
+			} else {
+			}
+		});
+	});
+
 
 	router.get('/soundCloudAuth', passport.authenticate('soundcloud-token', {
 		successRedirect: '/profile', // redirect to the secure profile section

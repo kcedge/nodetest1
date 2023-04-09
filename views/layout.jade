@@ -64,6 +64,7 @@ html(lang="en" ng-app='myApp')
                         link(rel='stylesheet' type="text/css"  href='/stylesheets/animate.css')
                         link(rel='stylesheet' type="text/css"  href='/stylesheets/ng-tags-input.css')
                         link(rel='stylesheet' type="text/css"  href='/stylesheets/ng-tags-input.bootstrap.css')
+                        link(rel='stylesheet' href="/scriptsFlagRoute/flag-icons.min.css")
                 base(href="/")
                 block scripts
                         script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js')
@@ -87,9 +88,11 @@ html(lang="en" ng-app='myApp')
                         script(src='javascripts/sampleLibController.js')
                         script(src='javascripts/devDashController.js')
                         script(src='javascripts/popUpController.js')
-
+                        script(src='javascripts/popUpService.js')
                         script(src='javascripts/filters.js')
                         script(src='javascripts/directives.js')
+                        script(src='javascripts/ng-country-select.js')
+                        
         body(data-spy="scroll",data-target=".scrollspy" ng-controller="bodyController")
                     #navbar_menu(style='margin-bottom:0px;height:50px;')
                         +navbar("L3GZ WRLD","navbarWidget")
@@ -112,9 +115,9 @@ html(lang="en" ng-app='myApp')
                         a(href="/logout" ng-click="signOutClicked()") Sign out
                 block body
                 div.pageController(ng-controller="popUpController" style="margin:0 auto;margin-top:50px" )
-                        .div.loginPopup(ng-show="showPopUp()")
-                                .div.formPopup#popupForm
-                                        form.formContainer()
+                        .div.loginPopup(ng-show="showPopUp('email')")
+                                .div.row.formPopup#popupForm
+                                        form.formContainer.col-lg-9.col-md-9.col-sm-9()
                                                 .row#dismissPopUp
                                                         a.clickableLink(ng-click="dismissClicked()") Dismiss
                                                 h2 Please enter email 	
@@ -126,4 +129,119 @@ html(lang="en" ng-app='myApp')
                                                 input(type='text' id="confirm" placeholder="email@email.com" name="email confirm" required ng-model='popUpEmailAddressCofirm')
 
                                                 button(ng-click="popUpFormSubmit()") Submit
+                                        div.row.popUpMessageForUser 
+                                                span {{popUpMessageForUser}}
+                        .div.row.loginPopup(ng-show="showPopUp('profile')")
+                                .div.formPopup#popupForm.col-lg-10.col-md-10.col-sm-10.col-xs-10
+                                        form.formContainer()
+                                                .row#dismissPopUp
+                                                                a.clickableLink(ng-click="dismissClicked()" style="float:right") Dismiss
+                                                .profileFields(ng-show="showPage('profileInit')")
+                                                        .row
+                                                                h2 Lets set you up a L3GZ WRLD profile!	
+                                                                h7 Welcome to the community you.  I think you found excatly what you are looking for.  I hope so!
+                                                        br
+                                                        label(for="username")
+                                                                strong  username
+                                                        input( id="userNameInput" type='text' required placeholder="username" name="username" ng-model='userData.username' ng-change="changingUserName(userData.username)" )
+                                                        label(for="url")
+                                                                strong  /url
+                                                        input(type='text' id="url" placeholder="/profile/kcedge" name="url" required ng-model='userData.url' ng-disabled="true" ) 
+                                                        //- label(for="city")
+                                                        //-         strong  City
+                                                        //- input(type='text' id="city" placeholder="city" name="city" required ng-model='userData.city')
+                                                        label(for="country")
+                                                                strong  Country
+                                                        country-select.btn.btn-default(cs-priorities="AU, DE, GB, US" ng-model="userData.country" class="countrySelectClass" )
+                                                        div.flagDisplay.row
+                                                                 span#flagDisplay(class="fi fi-{{userData.country  | lowercase}}") 
+                                                        //-flag(code='userData.country' size='lg' effect='round')
+                                                        //-input(type='text' id="country" placeholder="country" name="country" required ng-model='userData.country')
+                                                        br
+                                                        label(for="bio")
+                                                                strong  Bio
+                                                        div#bio.row
+                                                                textarea.form-control(ng-model='userData.bio' type='text' placeholder="about you.. and your links" style="margin-bottom: 10px;")
+                                                        //- label(for="links")
+                                                        //-         strong  Links
+                                                        //- div#links.row(ng-repeat='link in links')
+                                                        //-         inputl#linkDataEntry.form-control(ng-model='userData.link' type='url' placeholder="links")     
+                                                        //-         button#removeLinkDataEntry(ng-click="removeLink()") X
+                                                        //- div#addLinkButtonWrapper.row
+                                                        //-         button(ng-click="addLink()") Add Link
+                                                        label(for="soundcloud")
+                                                                strong  SoundCloud
+                                                        input(type='text' id="soundcloud" placeholder="soundcloud" name="soundcloud" required ng-model='userData.soundcloud')    
+                                                 .profileImgFields.profileFields(ng-show="showPage('profileImgr')")
+                                                        .row
+                                                                h2 Lets add some pictures to your profile to express YOU
+                                                                h7 Please upload a picture of you or something you love 
+                                                        br
+                                                        
+                                                        div.row
+                                                                input.btn.btn-primary#selectedFile(type="file" name="profileImage" nv-file-select uploader="profileImageUploader" style="display:none")
+                                                                input.btn.btn-primary(value="Upload Profile Image" ng-click="profileImageUploadClicked()")
+                                                                
+                                                                div.row.marginBottom10
+                                                                        div(ng-repeat="item in profileImageUploader.queue")
+
+                                                                                button.btn-xs(ng-click="item.remove()") remove {{item.file.name}}   
+                                                                                        span.glyphicon.glyphicon-remove
+                                                                //- .progress       
+                                                                //-         .progress-bar(role="progressbar" ng-style="{width:profileImageUploader.progress + '%'}" style="width:0%;")
+                                                                .profilePictureHorizonalScroll.frame
+                                                                        .profilePictureThumbsWidget
+                                                                                .thumbnailWrapper.marginBottom10(ng-repeat='profileImg in profileImagesUploaded')
+                                                                                        img.img-thumbnail.imageThumbNailProfile( class='imageAttached{{$index}}' ng-src='{{profileImg.image}}' ng-show='{{profileImg.isProfile}}' ng-click='editImageClicked($index);')
+                                                                                        #imgUploadButtonsDiv.row(ng-show="profileImg" style='margin-bottom:5px;')
+                                                                                                button.editButtonStyle(ng-click="editProfileImgClicked(profileImg)" )
+                                                                                                        span.glyphicon.glyphicon-pencil
+                                                                                                button.editButtonStyle(ng-click="removeProfileBannerImgClicked(profileImg)" )
+                                                                                                        span.glyphicon.glyphicon-remove-circle
+                                                                div.buttonWrapper            
+                                                                        button.btn.btn-xs.row(ng-show="profileImageUploader.queue.length > 0" ng-click="profileUploadClicked()" ng-disabled="!profileImageUploader.getNotUploadedItems().length")
+                                                                                span.glyphicon.glyphicon-upload
+                                                                                        &nbsp Upload
+                                                        div.bannerInputWrapper.row  
+                                                                .row
+                                                                        h7 Make your profile more yours with a banner.  Wide images work best :)
+                                                                div.row
+                                                                input.btn.btn-primary#selectedBannerFile(type="file" name="profileBannerImage" nv-file-select uploader="profileBannerImageUploader" style="display:none")
+                                                                input.btn.btn-primary(value="Upload Profile Image Banner" ng-click="profileBannerImageUploadClicked()" onclick="")
+                                                                
+                                                                div.row.marginBottom10
+                                                                        div(ng-repeat="item in profileBannerImageUploader.queue")
+
+                                                                                button.btn-xs(ng-click="item.remove()") remove {{item.file.name}}   
+                                                                                        span.glyphicon.glyphicon-remove
+                                                                //- .progress       
+                                                                //-         .progress-bar(role="progressbar" ng-style="{width:profileBannerImageUploader.progress + '%'}" style="width:0%;")
+                                                                .profilePictureHorizonalScroll.frame
+                                                                        .profilePictureThumbsWidget
+                                                                                .thumbnailWrapper.row.marginBottom10(ng-repeat='img in profileBannerImagesUploaded')
+                                                                                        img.img-thumbnail.imageThumbNailProfileBanner(class='imageAttached{{$index}}' ng-src='{{img.image}}' ng-show='{{img.isProfile}}' ng-click='editImageClicked($index);')
+                                                                                        #imgUploadButtonsDiv.row(ng-show="img" style='margin-bottom:5px;')
+                                                                                                button.editButtonStyle(ng-click="editProfileBannerImgClicked(img)" )
+                                                                                                        span.glyphicon.glyphicon-pencil
+                                                                                                button.editButtonStyle(ng-click="removeProfileBannerImgClicked(img)" )
+                                                                                                        span.glyphicon.glyphicon-remove-circle
+                                                                div.buttonWrapper              
+                                                                        button.btn.btn-xs.row(ng-show="profileBannerImageUploader.queue.length > 0" ng-click="profileBannerUploadClicked()" ng-disabled="!profileBannerImageUploader.getNotUploadedItems().length")
+                                                                                span.glyphicon.glyphicon-upload
+                                                                                        &nbsp Upload Banner
+                                                                
+                                                div#nextbuttons
+                                                        button.btn-default(ng-click="backPage()") Back
+                                                        button.btn-default(ng-click="nextPage()") Next
+                                                div#pagesWidget
+                                                        span Page: {{currentPageIndex+1}} / {{popUpTotalPages}}   
+                                                        #debugPageFields(ng-show='false')  
+                                                                span PopUp Name : {{popUp.name}}
+                                                                br   
+                                                                span Current Page Name : {{popUp.pages[currentPageIndex].pageName}}         
+
+                                                div#submitProfilePopUp
+                                                        button(ng-click="popUpFormSubmit()") Submit
+                                                div.row.popUpMessageForUser 
+                                                        span {{popUpMessageForUser}}
 

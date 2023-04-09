@@ -181,14 +181,14 @@ module.exports = function (router, passport) {
 
 	});
 	router.post('/postProfileMetaData/:username', function (req, res) {
-		try{
+		try {
 			var username = req.params.username;
 			console.log(req);
 			var profileMetaDataJson = req.body['profileMetaDataJson'];
-	
+
 			//var tipIdArray = req.body['tipArray'];
 			console.log('posting profileImageJson Data' + profileMetaDataJson);
-	
+
 			console.log('username:' + username);
 			const db = req.app.locals.db;
 
@@ -208,20 +208,20 @@ module.exports = function (router, passport) {
 				res.send("No profileImageJson found");
 			}
 		}
-		catch{
+		catch {
 
 		}
-		
+
 	});
 	router.post('/postProfileMetaData/:username', function (req, res) {
-		try{
+		try {
 			var username = req.params.username;
 			console.log(req);
 			var profileMetaDataJson = req.body['profileMetaDataJson'];
-	
+
 			//var tipIdArray = req.body['tipArray'];
 			console.log('posting profileImageJson Data' + profileMetaDataJson);
-	
+
 			console.log('username:' + username);
 			const db = req.app.locals.db;
 
@@ -241,10 +241,10 @@ module.exports = function (router, passport) {
 				res.send("No profileImageJson found");
 			}
 		}
-		catch{
+		catch {
 
 		}
-		
+
 	});
 
 	router.post('/postProfileDownloadedSamples/:username', function (req, res) {
@@ -280,21 +280,20 @@ module.exports = function (router, passport) {
 		}
 
 	});
-	router.post('/postProfileImage/:username', function (req, res) {
+	router.post('/postProfileImage', function (req, res) {
 		try {
-			var username = req.params.username;
+			
 			console.log(req);
+			var userId = req.body['userId'];
 			var profileImageJson = req.body['profileImageJson'];
 
 			//var tipIdArray = req.body['tipArray'];
 			console.log('posting profileImageJson Data' + profileImageJson);
-
-			console.log('username:' + username);
 			const db = req.app.locals.db;
-
 			var collection = db.collection('profileCollection');
+			
 			if (true) {
-				collection.update({ userName: username }, { $set: { profileImageJson: profileImageJson } }, function (err, db) {
+				collection.update({ userId: ObjectId(userId) }, { $set: { profileImageJson: profileImageJson } }, function (err, db) {
 					if (err) {
 						console.log('Unable to edit profile', err);
 						res.send('profileImageJson image save failed');
@@ -392,20 +391,105 @@ module.exports = function (router, passport) {
 
 			// do some work here with the database.
 			// Get the documents collection
-			var collection = db.collection('users');
-			//if (collection.find({submittedBy: username})) {
-			var cursorArray = collection.find({ _id: ObjectId(authenticatedid) }).toArray(function (err, items) {
-				if (err) {
-					res.status(500).send('error retreiving data');
-				}
-				//console.log('ITEMS');
-				//console.log(items);
-				res.send(items);
-			});
+			var collection = db.collection('profileCollection');
+			var usersCollection = db.collection('users');
+			var cursorArrayUsers = usersCollection.aggregate([{ $lookup: { from: 'profileCollection', localField: '_id', foreignField: 'userId', as: 'profileDetails' } }])
+				.toArray(function (err, userItems) {
+					if (err) {
+						res.status(500).send('error retreiving data');
+					}
+					var user = userItems.filter(obj => {
+						var objectidStr = ObjectId(obj._id).toString();
+						return  (objectidStr === authenticatedid);
+					});
+					
+					
+					res.send(user);
+					//if (collection.find({submittedBy: username})) {
+					// var cursorArray = collection.find({ userId: ObjectId(authenticatedid) }).toArray(function (err, items) {
+					// 	if(items.length == 0){
+					// 		var profileInit = {};
+					// 		userItems.userInfo = userItems;
+					// 		res.send(profileInit);
+					// 	}else{
+					// 		items[0].userInfo = userItems;
+					// 		res.send(items);
+					// 	}
+
+					// });
+					//console.log('ITEMS');
+					//console.log(items);
+
+				});
+			
 
 		}
 		catch {
 
 		}
 	});
+
+
+
+	router.post('/popUpSubmit', function (req, res) {
+		try {
+			console.log(req);
+			var email = req.body['email'];
+			var user = req.body['user'];
+
+
+			const db = req.app.locals.db;
+
+			var collection = db.collection('users');
+			if (true) {
+				collection.update({ _id: ObjectId(user._id) }, { $set: { email: email } }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit profile', err);
+						res.send('Banner image save failed');
+					}
+					else {
+						res.send('Profile edit successful');
+					}
+				})
+			}
+			else {
+				res.send("No banner image found");
+			}
+		}
+		catch {
+
+		}
+	});
+
+	router.post('/popUpProfileSubmit', function (req, res) {
+		try {
+			console.log(req);
+			var userData = req.body['userData'];
+			var user = req.body['user'];
+
+
+			const db = req.app.locals.db;
+
+			var collection = db.collection('profileCollection');
+			if (true) {
+				collection.update({ userId: ObjectId(user._id) }, { $set: { username: userData.username, bio: userData.bio, country: userData.country, soundcloud:userData.soundcloud } }, { upsert: true }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit profile', err);
+						res.send('Banner image save failed');
+					}
+					else {
+						res.send('Profile edit successful');
+					}
+				})
+			}
+			else {
+				res.send("No banner image found");
+			}
+		}
+		catch {
+
+		}
+	});
+
+
 };

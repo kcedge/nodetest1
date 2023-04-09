@@ -16,8 +16,37 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 	
 	vm.userReturned = false;
 	
-	this.getShowPopUp = function(){
-		return vm.showPopUp;
+
+	this.getProfileImages= function(type) {
+		if(vm.user &&  vm.user.profileDetails){
+			var json = vm.user.profileDetails[0].profileImageJson;
+			vm.user.profileDetails[0].profileImages = JSON.parse(json);
+			if(type){
+				var profileImages = vm.user.profileDetails[0].profileImages.filter(obj => {
+					return  (obj.imageType === type);
+				});
+			}
+			else{
+				var profileImages = vm.user.profileDetails[0].profileImages;
+			}
+
+			return profileImages;
+		}
+		else{
+			return [];
+		}
+	}
+
+	this.getShowPopUp = function(popUpName){
+		if(popUpName == 'email'){
+			return vm.showPopUp;
+		}
+		if(popUpName == 'profile'){
+
+			return !vm.popUpDismissed;
+		}
+
+
 	}
 
 	this.setShowPopUp = function(){
@@ -26,7 +55,6 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 		}
 		else{
 			vm.showPopUp = false;
-
 		}
 	}
 
@@ -58,7 +86,7 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 				});
 			}
 			else{
-				window.location.href = '/signUp';
+				deffered.resolve(callback('authentication failed'));
 			}
 		});
 	
@@ -219,16 +247,17 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 			});
 	}
 
-	this.postProfileImage = function (username, profileImageJson) {
+	this.postProfileImage = function (userId, profileImageJson) {
 		console.log('posting banner image data');
 		console.log(profileImageJson);
 		var req = {
 			method: 'POST',
-			url: '/postProfileImage/' + username,
+			url: '/postProfileImage/',
 			headers: {
 				'Content-Type': "application/json"
 			},
 			data: {
+				userId: userId,
 				profileImageJson: profileImageJson
 			}
 		};
@@ -241,7 +270,7 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 				//});
 				console.log("Posted profileImageJson image data");
 				console.log(data);
-				window.href.location = '/profile'
+				//window.href.location = '/profile'
 				return data;
 			})
 			.catch(function (data, status) {

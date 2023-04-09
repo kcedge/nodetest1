@@ -74,6 +74,8 @@ a {
 .right{
     float:right;
 }
+
+
 .titleBannerDiv{
     margin-bottom: 10px;
     margin-left: -10px;
@@ -516,6 +518,7 @@ a {
 }
 .sampleListWrapper,.packList {
     overflow:auto;
+    max-height: 500px;
 }
 .tipNavItem:hover{
     max-height: 125px;
@@ -691,6 +694,15 @@ li{
     max-width:116px;
 }
 .imageThumbNail.active,.imageThumbNail:active,.imageThumbNail:hover{
+    background-color: darkgreen;
+}
+
+.imageThumbNailProfile{
+    height: 260px;
+    
+    max-width: 290px;
+}
+.imageThumbNailProfile.active,.imageThumbNailProfile:active,.imageThumbNailProfile:hover{
     background-color: darkgreen;
 }
 .imgDiv{
@@ -910,16 +922,21 @@ li{
   }
   .formPopup {
     position: fixed;
-    left: 45%;
+    left: 50%;
     top: 5%;
     transform: translate(-50%, 5%);
     border: 3px solid #999999;
     z-index: 9;
+    max-height: 800px;
+    min-width: 350px;
+    max-width: 700px;
+    overflow: auto;
+    padding-left: 0px;
   }
   .formContainer {
-    max-width: 300px;
     padding: 20px;
     background-color: #fff;
+    
   }
   .formContainer input[type=text],
   .formContainer input[type=password] {
@@ -954,3 +971,119 @@ li{
   .clickableLink{
         cursor:pointer
   }
+  .labelLeft{
+    float:left;
+  }
+
+  .profileFields{
+    overflow: auto;
+    max-height: 650px;
+    min-height:650px;
+  }
+
+  #imgUploadButtonsDiv{
+  
+  }
+  .imageThumbNailProfileBanner {
+    height: 260px;
+    max-width: 750px;
+}
+  .editButtonStyle{
+    color: #37c3c3;
+    background-color: lightgoldenrodyellow;
+    border: none;
+    /* border-style: dotted;
+    border-width: thin; */
+  }
+  #pagesWidget{
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+  }
+ #flagDisplay{
+    
+
+      background-size: cover;
+      width: 60%;
+      padding-top: 40%;
+
+
+ }
+
+ #linkDataEntry{
+    width: 80%;
+ }
+
+ #removeLinkDataEntry{
+    margin-right: 0px;
+    float: right;
+    margin-top: -35px;
+ }
+
+ .countrySelectClass{
+    padding-right: 2px !important;
+ }
+
+ @media screen and (max-width: 500px) {
+    #stickyheaderNavLeft {
+        display: none !important;
+    }
+    #stickyheaderNavLeft {
+        display: none !important;
+    }
+}
+
+.imageThumbNailProfileBanner{
+    max-height: 220px;
+}
+.profilePictureThumbsWidget{
+    width: fit-content;
+    white-space: nowrap;
+    background: #efefef;
+    margin: .1rem;
+    padding: .2rem .7rem;
+    border: 1px solid #efefef;
+}
+
+.profilePictureThumbsWidget:hover{
+    cursor: pointer;
+    border-color: #ccc;
+
+}
+.marginBottom10{
+    min-width: 30px;
+    display: inline-block;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+}
+.profilePictureHorizonalScroll{
+    max-height: 300px;
+    /* background-color: #a5cc68;  */
+    overflow: auto;
+    white-space: nowrap;
+    overflow-x:scroll;
+   
+    padding-bottom:10px;
+
+
+}
+.bannerInputWrapper{
+    margin-top: 20px;
+}
+
+.frame::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+.frame::-webkit-scrollbar:horizontal {
+    height: 11px;
+}
+.frame::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid white;
+    background-color: rgba(0, 0, 0, .5);
+}
+.frame::-webkit-scrollbar-track { 
+    background-color: #fff; 
+    border-radius: 8px; 
+} 

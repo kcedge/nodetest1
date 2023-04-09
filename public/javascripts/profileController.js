@@ -556,8 +556,13 @@ function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStor
 	    $scope.profileImagesUploaded.push({image:imagePath,isProfile:true});
 	    //$sc
 	    $scope.queue = [];
-	    var profileImageJson = JSON.stringify($scope.profileImagesUploaded);
-	    ProfileService.postProfileImage($scope.currentUser.username,profileImageJson)
+
+
+		var images = $scope.profileImagesUploaded.concat($scope.profileBannerImagesUploaded);
+
+
+	    var profileImageJson = JSON.stringify(images);
+	    ProfileService.postProfileImage($scope.currentUser._id,profileImageJson)
 	   // numberOfImages++;
 
 	};

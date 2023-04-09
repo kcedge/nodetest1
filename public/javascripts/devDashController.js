@@ -12,13 +12,13 @@ angular.module("myApp").controller('devDashController', ['$scope', '$rootScope',
 
 
 	ProfileService.isAuthenticated(function (user) {
-		if (user.userName == "kcedge") {
+		if (user.username == "kcedge") {
 			$scope.adminAuth = true;
 			$scope.authenticated = true;
 		}
 		if (user.userName) {
 			$scope.authenticated = true;
-			$scope.username = user.userName;
+			$scope.username = user.username;
 		}
 		//ProfileService.setUserInfo(user);
 

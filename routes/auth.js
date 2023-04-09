@@ -146,9 +146,6 @@ router.post('/signUp', passport.authenticate('local-signup', {// redirect to the
     res.redirect('/' + req.body['redirect']);
 });
 
-
-
-
 router.get('/login/federated/google', passport.authenticate('google'));
 
 passport.use(new GoogleStrategy({

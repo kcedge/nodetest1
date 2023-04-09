@@ -8,8 +8,9 @@
 
 /* global angular */
 
-// Declare app level module which depends on filters, and services ['ngAnimate']
-var myApp = angular.module('myApp', ['angularFileUpload','ngStorage','ngAnimate','ngTagsInput','ngAudio']);
+
+
+var myApp = angular.module('myApp' , ['angularFileUpload','ngStorage','ngAnimate','ngTagsInput','ngAudio', 'countrySelect']);
  
 myApp.directive('commentList', [
   function () {

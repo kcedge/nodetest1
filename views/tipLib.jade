@@ -6,9 +6,10 @@ append body
 		.div.userDetailsDivTipLib.row.hidden-xs
 			.div.username.col-xs-0
 				span.greeting Hey there	
-				a(href='/profile/{{username}}'){{username}}!
+				a(href='/profile/{{userData.username}}' ng-show="user.name"){{user.name}}!
+				a(href='/profile/{{userData.username}}' ng-hide="user.name"){{userData.username}}!
 
-		.div.messageContainerTop.row(style="text-align:center;margin-top:65px" )
+		.div.messageContainerTop.row(style="text-align:center;" )
 			//- .div#messagesShowHide
 			//- 	a.minimize.hover(ng-click='messagesToggle=!messagesToggle' ng-model='messagesToggle' ng-show='!messagesToggle') Show Messages
 			//- 	a.minimize.hover(ng-click='messagesToggle=!messagesToggle' ng-model='messagesToggle' ng-show='messagesToggle') Hide Messages
@@ -32,7 +33,7 @@ append body
 
 		.row
 			#stickyaliasNavLeft
-			#stickyheaderNavLeft.col-xs-0.col-sm-3.col-md-3.col-lg-3
+			#stickyheaderNavLeft.col-xs-3.col-sm-3.col-md-3.col-lg-3
 				#navBarWrapper.mh-100()
 					//#blockForMargin(style="height:11px;width:100%")
 					#sortNavBarWrapper(style="display:inline-block;width:100%;margin-bottom:5px;")

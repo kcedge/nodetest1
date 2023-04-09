@@ -1127,24 +1127,25 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 	var user = ProfileService.getUserInfo();
 
 	ProfileService.isAuthenticated(function (user) {
-		// $scope.authenticated = true;
-		// $scope.username = "username";
-		if (user.userName == "kcedge") {
-			$scope.adminAuth = true;
-			$scope.authenticated = true;
-		}
-		if (user.userName) {
-			$scope.authenticated = true;
-			$scope.username = user.userName;
+		if (user._id) {
+			$scope.user = user;
+			$scope.userData = user.profileDetails[0];		
+			$scope.currentUser = user;		
+			$scope.userFound = true;
+			
+
+			if ($scope.userData.username == "kcedge") {
+				$scope.adminAuth = true;
+				$scope.authenticated = true;
+			}
+		
 		}
 		else{
-			$scope.authenticated = true;
-			//no username yet, just google display name
-			$scope.username = user.name;
+			$scope.displayErrorPopUp = true;
 		}
-		//ProfileService.setUserInfo(user);
 
 	});
+
 
 	$scope.messagesToggle = true; //default yes messdagesz
 
@@ -1330,7 +1331,7 @@ angular.module("myApp").controller('bodyTipHelperController', ['$scope', '$rootS
 		$scope.stickyNavRightHeight = $('#stickyaliasNavRight').height();
 		$scope.stickyNavRightWidth = $('#stickyaliasNavRight').width();
 
-		$('#stickyheaderNavRight').css('height', ($(window).height() - 122));
+		//$('#stickyheaderNavRight').css('height', ($(window).height() - 122));
 
 
 
