@@ -22,11 +22,11 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 
 				$scope.profileImagesUploaded = ProfileService.getProfileImagesByType('profilePicture');
 				$scope.profileBannerImagesUploaded = ProfileService.getProfileImagesByType('profileBanner');
-				$scope.interestTags = ProfileService.getProfileInterests();
-				$scope.roleTags = ProfileService.getProfileRoles();
-
 
 				$scope.allProfileImages = ProfileService.getProfileImages();
+
+				$scope.userData.interestTags = ProfileService.getProfileInterests();
+				$scope.userData.roleTags = ProfileService.getProfileRoles();
 
 				$scope.userNameSet = ($scope.userData.username != "" && $scope.userData.username != undefined);
 				if (!$scope.userNameSet && user.local != undefined) {
@@ -202,6 +202,7 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 							$scope.popUpMessageForUser = "Email updated successfully.  Thank You"
 							$scope.popUpResponseData = response.data;
 							if(exit == 'exit'){
+								window.location.href = '/profile';
 
 							}
 							//Dismiss popup for user
@@ -215,12 +216,12 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 			else if (PopUpService.getCurrentPopUp() == 'profile') {
 				var usersInterests = [];
 				var interestFound = false;
-				if ($scope.interestTags != null) {
-					for (var j = 0; j < $scope.interestTags.length; j++) {
+				if ($scope.userData.interestTags != null) {
+					for (var j = 0; j < $scope.userData.interestTags.length; j++) {
 						for (var i = 0; i < $scope.interests.length; i++) {
 							interestFound = false;
 							var str1 = $scope.interests[i].text.replace(/-|\s/g,"");
-							var str2 = $scope.interestTags[j].text.replace(/-|\s/g,"");
+							var str2 = $scope.userData.interestTags[j].text.replace(/-|\s/g,"");
 
 							if (str1 === str2) {
 								usersInterests.push($scope.interests[i]);
@@ -230,7 +231,7 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 						}
 						if (!interestFound) {
 							var newTag = {};
-							newTag.text = $scope.interestTags[j].text;
+							newTag.text = $scope.userData.interestTags[j].text;
 							newTag.createdBy = 'kcedge';
 							interestFound = false;
 							usersInterests.push(newTag);
@@ -239,6 +240,9 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 				}
 
 				$scope.userData.interests = JSON.stringify(usersInterests); //user interests here
+				
+				$scope.userData.roles = JSON.stringify($scope.userData.roleTags); //user roles here
+
 
 				var req = {
 					method: 'POST',
@@ -261,6 +265,9 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 						$scope.popUpResponseData = response.data;
 						//Dismiss popup for user
 						//ProfileService.dismissClicked();
+						if(exit == 'exit'){
+							window.location.href = '/profile';
+						}
 
 					}
 				});

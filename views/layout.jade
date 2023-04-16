@@ -248,7 +248,7 @@ html(lang="en" ng-app='myApp')
                                                                
                                                                 div#tagInputWrapper
                                                                         h5 
-                                                                        tags-input#profileInterestTagInput(ng-model='interestTags' placeholder="Add Interests")
+                                                                        tags-input#profileInterestTagInput(ng-model='userData.interestTags' placeholder="Add Interests")
                                                                                 auto-complete(source='getIntrestTags($query)' autocomplete="on" ) 
                                                                         //- button(ng-click="addInterest()")  
                                                                         #interetSuggestionsWrapper
@@ -262,7 +262,7 @@ html(lang="en" ng-app='myApp')
                                                                 h5      Interests    
                                                                 div            
                                                                         ul#interests(class='col-sm-12 col-md-12 col-lg-12 col-xs-12')
-                                                                                li.interestTags(ng-repeat="tag in interestTags")
+                                                                                li.interestTags(ng-repeat="tag in userData.interestTags")
                                                                                         span.interestTag {{tag.text}} 
                                                                                                 a.remove-button.clickableLink(ng-click="removeInterestTagProfile()") x
                                                         //- div#roleInputWrapper.row
@@ -278,7 +278,7 @@ html(lang="en" ng-app='myApp')
                                                                 div
                                                                         h7(style="font-style: italic;") You can upgrade roles by interacting in L3gz world!           
                                                                         ul#interests(class='col-sm-12 col-md-12 col-lg-12 col-xs-12')
-                                                                                li.interestTags(ng-repeat="role in roleTags")
+                                                                                li.interestTags(ng-repeat="role in userData.roleTags" )
                                                                                         span.interestTag {{role.text}} 
                                                                                         div
                                                                                                 i.miniIcon.bi(class="bi-{{role.bootStrapIcon}}")
@@ -296,7 +296,7 @@ html(lang="en" ng-app='myApp')
                                                 div#submitProfilePopUp(ng-show="currentPageIndex+1 != popUpTotalPages")
                                                         button(ng-click="popUpFormSubmit()") Save
                                                  div#submitProfilePopUp(ng-show="currentPageIndex+1 == popUpTotalPages")
-                                                        button(ng-click="popUpFormSubmitExit()") Save & Exit
+                                                        button(ng-click="popUpFormSubmit('exit')") Save & Exit
                                                 
                                         div.popUpMessageForUser 
                                                 span {{popUpMessageForUser}}

@@ -1035,12 +1035,18 @@ li{
     margin-bottom:10px;
  }
  #userDataBio{
-    margin-bottom:10px
+    
+    margin-bottom: 10px;
+    /* padding: 10px;
+    border-style: groove;
+    border-width: thin;
+    border-radius: 5px; */
+    max-width: 90%;
  }
  .iconDisplay{
     /*position: absolute; */
-    float: right;
-    margin-top: -40px;
+
+    margin-top: -60px;
     /* margin-left: 30px; */
     margin-left: 80px;
  }
@@ -1225,4 +1231,17 @@ li{
 
 #roleInputWrapper{
     margin-top:20px;
+}
+#rolesWrapper{
+    position: relative;
+    display: inline-block;
+}
+.profileIcon{
+DISPLAY: INLINE-BLOCK;
+position: relative;
+width:1.33333333em;
+margin-right: 5px;
+}
+.interestTagWrapperUl{
+    margin-left:-15px;
 }

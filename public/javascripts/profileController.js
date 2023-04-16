@@ -28,6 +28,19 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 			$scope.userData = response;
 			$scope.profileImagesUploaded = $scope.userData.profileImageJson;
 			$scope.profileBannerImagesUploaded = $scope.userData.profileBannerImageJson;
+			if(typeof $scope.userData.interests == 'string'){
+				$scope.userData.interests =  JSON.parse($scope.userData.interests);
+			}
+			else{
+				$scope.userData.interests =  $scope.userData.interests;
+			}
+			if(typeof $scope.userData.roles == 'string'){
+				$scope.userData.roles =  JSON.parse($scope.userData.roles);
+			}
+			else{
+				$scope.userData.roles =  $scope.userData.roles;
+			}
+			
 		});//
 	}
 
@@ -125,6 +138,8 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 			}
 			$scope.profileImagesUploaded = ProfileService.getProfileImagesByType('profilePicture');
 			$scope.profileBannerImagesUploaded = ProfileService.getProfileImagesByType('profileBanner');
+			$scope.userData.interestTags = ProfileService.getProfileInterests();
+			$scope.userData.roleTags = ProfileService.getProfileRoles();
 		}
 
 	

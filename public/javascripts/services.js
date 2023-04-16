@@ -142,18 +142,37 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 
 	}
 	this.getProfileInterests = function () {
-		return JSON.parse(vm.user.profileDetails[0].interests);
+		if(vm.user.profileDetails[0].interests != null && typeof vm.user.profileDetails[0].interests != 'string'){
+			return vm.user.profileDetails[0].interests;
+		}
+		if(typeof vm.user.profileDetails[0].interests == 'string'){
+			return JSON.parse(vm.user.profileDetails[0].interests);
+		}
+		else{
+			return [];
+		}
 	}
 	this.getProfileRoles = function () {
-		if(vm.user.profileDetails[0].roles){
-			return JSON.parse(vm.user.profileDetails[0].interests);
-
+		if(vm.user.profileDetails[0].roles != null && typeof vm.user.profileDetails[0].roles != 'string'){
+			return vm.user.profileDetails[0].roles;
+		}
+		else if(typeof vm.user.profileDetails[0].roles == 'string'){
+			return JSON.parse(vm.user.profileDetails[0].roles);
 		}
 		else{
 			return [{text:"General", type:"General" , iconImg:"icons8-wwi-german-helmet-50.png" },{text:"Reader", type:"General" , bootStrapIcon: "book"}];
 		}
 	}
 
+	var processUserJsonData = function(user){
+		if(user.profileDetails[0].roles){
+			user.profileDetails[0].roles = JSON.parse(user.profileDetails[0].roles);
+		}
+		if(user.profileDetails[0].interests){
+			user.profileDetails[0].interests = JSON.parse(user.profileDetails[0].interests);
+		}
+		return user;
+	};
 
 	this.getUserProfile = function (authenticated) {
 		let deffered = $q.defer();
@@ -174,8 +193,9 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 
 				//success, returning user
 				vm.userReturned = true;
-
 				setUserName(vm.user);//set username in one spot
+				vm.user = processUserJsonData(vm.user);
+
 				deffered.resolve(vm.user);
 				return vm.user;
 			})

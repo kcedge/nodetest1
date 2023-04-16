@@ -15,12 +15,16 @@ append body
 									a(href='/profile/{{userData.username}}'){{userData.username}}
 								hr
 								.iconDisplay
-									span#userFlag(class='fi fi-{{userData.country  | lowercase}}' title="{{userData.country}}")
+									span#rolesWrapper.profileIcon(ng-repeat="role in userData.roles" ng-show="role.text != 'Reader'")
+										i.miniIcon.bi.profileIcon(class="bi-{{role.bootStrapIcon}}")
+										image.miniIcon.profileIcon(ng-show="role.iconImg"  ng-src="icon/{{role.iconImg}}")
+									span#userFlag.profileIcon(class='fi fi-{{userData.country  | lowercase}}' title="{{userData.country}}")
 							.div.editProfile.hover#editProfileButton
 								button.btn.btn-default(ng-click='editProfileClicked()') Edit Profile
 							hr
 							.div.profileBio.row#userDataBio
 								span {{userData.bio}}
+							.div.row#interestsWrapper
 							.div.profileLinks.row
 								
 								a#editProfileLink(ng-click='editProfileToggle = !editProfileToggle')
@@ -101,6 +105,17 @@ append body
 										a(href='/profile')#userName=username
 								//.div.imageWrapper.bannerWrapper.row(style='position:absolute')
 									img.col-xs-12.col-sm-12.col-md-12.col-xl-12(ng-src='{{profileInfo[0].image}}' style='height:250px')
+							hr
+							div.row.profileLeftDisplay     
+								div
+									h5      Interests    
+									div            
+										ul.interestTagWrapperUl#interests(class='col-sm-12 col-md-12 col-lg-12 col-xs-12')
+											li.interestTags(ng-repeat="tag in userData.interests")
+												span.interestTag {{tag.text}} 								
+							
+							
+							
 				div#userDetailsMeta.container
 					hr
 					.div.profileDataWrapper

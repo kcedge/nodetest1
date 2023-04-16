@@ -507,7 +507,7 @@ module.exports = function (router, passport) {
 
 			var collection = db.collection('profileCollection');
 			if (true) {
-				collection.update({ userId: ObjectId(user._id) }, { $set: { username: userData.username, bio: userData.bio, country: userData.country, soundcloud:userData.soundcloud, interests:userData.interests } }, { upsert: true }, function (err, db) {
+				collection.update({ userId: ObjectId(user._id) }, { $set: { username: userData.username, bio: userData.bio, country: userData.country, soundcloud:userData.soundcloud, interests:userData.interests, roles:userData.roles } }, { upsert: true }, function (err, db) {
 					if (err) {
 						console.log('Unable to edit profile', err);
 						res.send('Banner image save failed');
