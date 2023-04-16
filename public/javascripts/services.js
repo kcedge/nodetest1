@@ -5,75 +5,94 @@
  */
 
 
-myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
+myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 	var vm = this;
 	vm.user = {};
 	vm.user.userName = '';
 	vm.user.userType = '';
-	
+
 	vm.showPopUp = false;
 	vm.popUpDismissed = false;
-	
+
 	vm.userReturned = false;
-	
 
-	this.getProfileImages= function(type) {
-		if(vm.user &&  vm.user.profileDetails){
-			var json = vm.user.profileDetails[0].profileImageJson;
-			vm.user.profileDetails[0].profileImages = JSON.parse(json);
-			if(type){
-				var profileImages = vm.user.profileDetails[0].profileImages.filter(obj => {
-					return  (obj.imageType === type);
-				});
+	vm.profileImagesArray = [];
+
+	this.getProfileImages = function () {
+		return vm.profileImagesArray;
+	}
+	this.setImages = function (images) {
+		vm.profileImages = images;
+	}
+	this.getProfileImagesByType = function (type) {
+		var profileImages = [];
+		if (type == 'profilePicture') {
+			if (vm.user && vm.user.profileDetails.length > 0 && vm.user.profileDetails[0].profileImageJson != null) {
+				var json = vm.user.profileDetails[0].profileImageJson;
+				if (typeof json == "string") {
+					vm.user.profileDetails[0].profileImages = JSON.parse(json);
+					vm.profileImagesArray = vm.user.profileDetails[0].profileImages;
+					if (type) {
+						var profileImages = vm.user.profileDetails[0].profileImages.filter(obj => {
+							return (obj.imageType === type);
+						});
+					}
+					else {
+						var profileImages = vm.user.profileDetails[0].profileImages;
+					}
+					return profileImages;
+				}
+				else if (typeof json === "object") {
+					profileImages.push(json);
+
+					return profileImages;
+
+				}
 			}
-			else{
-				var profileImages = vm.user.profileDetails[0].profileImages;
+		}
+		else if (type == 'profileBanner') {
+			if (vm.user && vm.user.profileDetails.length > 0 && vm.user.profileDetails[0].profileBannerImageJson != null) {
+				var json = vm.user.profileDetails[0].profileBannerImageJson;
+				if (typeof json == "string") {
+					vm.user.profileDetails[0].profileImages = JSON.parse(json);
+					vm.profileImagesArray = vm.user.profileDetails[0].profileImages;
+					if (type) {
+						var profileImages = vm.user.profileDetails[0].profileImages.filter(obj => {
+							return (obj.imageType === type);
+						});
+					}
+					else {
+						var profileImages = vm.user.profileDetails[0].profileImages;
+					}
+					return profileImages;
+				}
+				else if (typeof json === "object") {
+					profileImages.push(json);
+
+					return profileImages;
+
+				}
 			}
-
-			return profileImages;
-		}
-		else{
-			return [];
-		}
-	}
-
-	this.getShowPopUp = function(popUpName){
-		if(popUpName == 'email'){
-			return vm.showPopUp;
-		}
-		if(popUpName == 'profile'){
-
-			return !vm.popUpDismissed;
 		}
 
-
-	}
-
-	this.setShowPopUp = function(){
-		if((vm.user.email == '' || vm.user.email == null) && !vm.popUpDismissed){
-			vm.showPopUp = true;
-		}
-		else{
-			vm.showPopUp = false;
-		}
-	}
-
-	this.dismissClicked = function(){
-		vm.popUpDismissed = true;
-		vm.setShowPopUp();
+		return [];
 	}
 
 
-	this.isLoggedIn = function(){
-		if(vm.user!=null &&vm.user._id){
+
+
+
+
+	this.isLoggedIn = function () {
+		if (vm.user != null && vm.user._id) {
 			return true;
 		}
-		else{
+		else {
 			return false
 		}
 	}
-	
-	this.isAuthenticated = function(callback) {
+
+	this.isAuthenticated = function (callback) {
 		let deffered = $q.defer();
 
 		var callback = callback;
@@ -85,15 +104,15 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 
 				});
 			}
-			else{
+			else {
 				deffered.resolve(callback('authentication failed'));
 			}
 		});
-	
+
 		return deffered.promise;
 	};
 
-	this.authenticated = function(){
+	this.authenticated = function () {
 		let deffered = $q.defer();
 
 		var req = {
@@ -108,42 +127,64 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 		$http(req).then(function success(response) {
 			deffered.resolve(response);
 
-		
+
 		});
 
 		return deffered.promise;
 	}
+	function setUserName(user) {
+		if (user.username == null) {
+			if (user.profileDetails.length > 0 && user.profileDetails[0].username) {
+				var userDetails = user.profileDetails[0];
+				user.username = userDetails.username;
+			}
+		}
 
-	this.getUserProfile = function(authenticated){
+	}
+	this.getProfileInterests = function () {
+		return JSON.parse(vm.user.profileDetails[0].interests);
+	}
+	this.getProfileRoles = function () {
+		if(vm.user.profileDetails[0].roles){
+			return JSON.parse(vm.user.profileDetails[0].interests);
+
+		}
+		else{
+			return [{text:"General", type:"General" , iconImg:"icons8-wwi-german-helmet-50.png" },{text:"Reader", type:"General" , bootStrapIcon: "book"}];
+		}
+	}
+
+
+	this.getUserProfile = function (authenticated) {
 		let deffered = $q.defer();
 		$http.get('/getUserProfile/' + authenticated)
-		.then(function (response) {
-			//console.log(data);
-			//angular.forEach(data, function (item) {
-			//    item.datePublished = new Date(item.datePublished);
-			//});
+			.then(function (response) {
+				//console.log(data);
+				//angular.forEach(data, function (item) {
+				//    item.datePublished = new Date(item.datePublished);
+				//});
 
-			console.log("profile info gathered");
-			console.log(response);
-			//set local storage and make sure this.user/this.username is set.
-			
-			
-			vm.user = response.data[0];//one result
-			vm.setUserInfo(vm.user);
+				console.log("profile info gathered");
+				console.log(response);
+				//set local storage and make sure this.user/this.username is set.
 
-			//success, returning user
-			vm.userReturned = true;
 
-			vm.setShowPopUp();
-			deffered.resolve(vm.user);
-			return vm.user;
-		})
-		.catch(function (data, status) {
-			console.log('ERROR: ' + status + '. We can\'t get the profile right now, please try again later');
-			deffered.response(data);
+				vm.user = response.data[0];//one result
+				vm.setUserInfo(vm.user);
 
-			return "no data";
-		});
+				//success, returning user
+				vm.userReturned = true;
+
+				setUserName(vm.user);//set username in one spot
+				deffered.resolve(vm.user);
+				return vm.user;
+			})
+			.catch(function (data, status) {
+				console.log('ERROR: ' + status + '. We can\'t get the profile right now, please try again later');
+				deffered.response(data);
+
+				return "no data";
+			});
 
 		return deffered.promise;
 
@@ -154,7 +195,7 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 
 	vm.setUserInfo = function (user) {
 		if (user.local != undefined) {
-			vm.user.userName = user.local.username;
+			vm.user.username = user.local.username;
 			vm.user.userType = 'local';
 		}
 
@@ -179,6 +220,7 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 			return 'google';
 		}
 	}
+
 	this.getProfileInfo = function (username) {
 
 
@@ -197,6 +239,45 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 				console.log('ERROR: ' + status + '. We can\'t get the profile right now, please try again later');
 				return "no data";
 			});
+	};
+	vm.processUserData = function (data) {
+
+		if (data.hasOwnProperty("profileBannerImageJson")) {
+			data.profileBannerImageJson = JSON.parse(data.profileBannerImageJson);
+		}
+		if (data.hasOwnProperty("profileImageJson")) {
+			data.profileImageJson = JSON.parse(data.profileImageJson);
+		}
+		if (data.hasOwnProperty("interests")) {
+			data.interests = JSON.parse(data.interests);
+		}
+		return data;
+
+	};
+	this.getProfileInfoByName = function (username) {
+		let deffered = $q.defer();
+
+
+		$http.get('/getProfileInfo/' + username)
+			.then(function (response) {
+				//console.log(data);
+				//angular.forEach(data, function (item) {
+				//    item.datePublished = new Date(item.datePublished);
+				//});
+				console.log("Retreived profile data");
+				console.log(response);
+
+				var data = vm.processUserData(response.data[0]);
+				deffered.resolve(data);
+
+			})
+			.catch(function (data, status) {
+				console.log('ERROR: ' + status + '. We can\'t get the profile right now, please try again later');
+				deffered.resolve(data);
+			});
+
+		return deffered.promise;
+
 	};
 	this.getTopUsers = function (period) {
 		return $http.get('/getTopUsers/' + period)
@@ -270,8 +351,43 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 				//});
 				console.log("Posted profileImageJson image data");
 				console.log(data);
-				//window.href.location = '/profile'
-				return data;
+
+				window.location.href = '/profile/editing'
+
+					;
+			})
+			.catch(function (data, status) {
+				console.log('ERROR: ' + status + '. We can\'t upload image right now, please try again later');
+				return "no data";
+			});
+	}
+	this.postBannerProfileImage = function (userId, profileBannerImageJson) {
+		console.log('posting banner image data');
+		console.log(profileBannerImageJson);
+		var req = {
+			method: 'POST',
+			url: '/postBannerProfileImage/',
+			headers: {
+				'Content-Type': "application/json"
+			},
+			data: {
+				userId: userId,
+				profileBannerImageJson: profileBannerImageJson
+			}
+		};
+
+		return $http(req)
+			.then(function (data) {
+				//console.log(data);
+				//angular.forEach(data, function (item) {
+				//    item.datePublished = new Date(item.datePublished);
+				//});
+				console.log("Posted profileImageJson image data");
+				console.log(data);
+
+				window.location.href = '/profile/editing'
+
+					;
 			})
 			.catch(function (data, status) {
 				console.log('ERROR: ' + status + '. We can\'t upload image right now, please try again later');
@@ -442,6 +558,28 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 				return "no data";
 			});
 	};
+
+	vm.getUsersForUserManagement = function () {
+		let deffered = $q.defer();
+		console.log('getting users for user management');
+		var req = {
+			method: 'GET',
+			url: '/getUsersForUserManagement',
+			headers: {
+				'Content-Type': "application/json"
+			},
+			data: {
+			}
+		}
+
+		$http(req).then(function (data) {
+			var data = data;
+			deffered.resolve(data.data);
+		});
+
+		return deffered.promise;
+
+	}
 	this.getTopTips = function () {
 		console.log('gettingTopTips');
 		var req = {
@@ -453,24 +591,6 @@ myApp.service('ProfileService', ['$http','$q', function ($http, $q) {
 			data: {
 			}
 		};
-
-		//	this.getProfileSampleData = function (username) {
-		//	    return $http.get('/getSampleProfileInfo/' + username)
-		//		    .then(function (data) {
-		//			//console.log(data);
-		//			//angular.forEach(data, function (item) {
-		//			//    item.datePublished = new Date(item.datePublished);
-		//			//});
-		//			console.log("Retreived profile data");
-		//			console.log(data);
-		//			return data;
-		//		    })
-		//		    .catch(function (data, status) {
-		//			console.log('ERROR: ' + status + '. We can\'t get the profile right now, please try again later');
-		//			return "no data";
-		//		    });
-		//	};
-
 
 		return $http(req)
 			.then(function (data) {

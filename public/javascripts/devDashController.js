@@ -12,16 +12,20 @@ angular.module("myApp").controller('devDashController', ['$scope', '$rootScope',
 
 
 	ProfileService.isAuthenticated(function (user) {
-		if (user.username == "kcedge") {
-			$scope.adminAuth = true;
-			$scope.authenticated = true;
+		if (user._id) {
+			if (user.username == "kcedge") {
+				$scope.adminAuth = true;
+				$scope.authenticated = true;
+			}
+			if (user.userName) {
+				$scope.authenticated = true;
+				$scope.username = user.username;
+			}
+			//ProfileService.setUserInfo(user);
 		}
-		if (user.userName) {
-			$scope.authenticated = true;
-			$scope.username = user.username;
+		else {
+			window.location.href = '/signUp';
 		}
-		//ProfileService.setUserInfo(user);
-
 	});
 
 
@@ -52,7 +56,11 @@ angular.module("myApp").controller('devDashController', ['$scope', '$rootScope',
 
 	$scope.appSelectedClicked = function (name) {
 		$scope.appSelected = name;
-
+		if($scope.appSelected == 'User Management'){
+			ProfileService.getUsersForUserManagement().then(function(results){
+				$scope.usersCollection = results;
+			});
+		}
 	}
 
 
@@ -63,8 +71,93 @@ angular.module("myApp").controller('devDashController', ['$scope', '$rootScope',
 	$scope.readFilterScriptFile = function () {
 		// 
 
-		$http.get('/filterScriptFile').then(function(response){
+		$http.get('/filterScriptFile').then(function (response) {
 			var file = response;
+			$scope.filters = response.data;
+		});
+	}
+
+	$scope.readInterestsScriptFile = function () {
+		// 
+		$http.get('/interestsScriptFile').then(function (response) {
+			var file = response;
+			$scope.interests = response.data;
+		});
+	}
+
+	$scope.readRolesScriptFile = function () {
+		// 
+		$http.get('/rolesScriptFile').then(function (response) {
+			var file = response;
+			$scope.roles = response.data;
+		});
+	}
+
+	$scope.importFilters = function () {
+
+		var stringFilters = JSON.stringify($scope.filters);
+
+		var req = {
+			method: 'POST',
+			url: '/importFiltersScript',
+			headers: {
+				'Content-Type': "application/json",
+				'Access-Control-Request-Methods': 'POST',
+				'Access-Control-Request-Headers': 'X-PINGOTHER, Content-Type',
+			},
+			data: {
+				filters: stringFilters
+			}
+		};
+
+		$http(req).then(function (response) {
+			$scope.filtersImportMessage = response.data;
+		});
+	}
+
+
+	$scope.importInterests = function () {
+
+		var stringFilters = JSON.stringify($scope.interests);
+
+		var req = {
+			method: 'POST',
+			url: '/importInterestsScript',
+			headers: {
+				'Content-Type': "application/json",
+				'Access-Control-Request-Methods': 'POST',
+				'Access-Control-Request-Headers': 'X-PINGOTHER, Content-Type',
+			},
+			data: {
+				interests: stringFilters
+			}
+		};
+
+		$http(req).then(function (response) {
+			$scope.filtersImportMessage = response.data;
+		});
+	}
+
+
+	$scope.importRoles = function () {
+
+		var stringFilters = JSON.stringify($scope.roles);
+
+		var req = {
+			method: 'POST',
+			url: '/importRolesScript',
+			headers: {
+				'Content-Type': "application/json",
+				'Access-Control-Request-Methods': 'POST',
+				'Access-Control-Request-Headers': 'X-PINGOTHER, Content-Type',
+			},
+			data: {
+				roles: stringFilters
+			}
+		};
+
+		$http(req).then(function (response) {
+			$scope.filtersImportMessage = response.data;
 		});
 	}
 

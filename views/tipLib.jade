@@ -88,7 +88,7 @@ append body
 							div.filterWrapper#tipTypeFilterWrapper.btnWrapper.col-xs-3.col-sm-3.col-md-3.col-lg-3(style="margin-top:5px;")
 								//.label.label-default() Type:
 								div(style='display:inline-block')
-									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Type'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
 								//input.inputToggleClass(ng-model='theory_toggle'  type="checkbox",data-toggle="toggle" name='theoryInputYes' id='theoryInputYes')
 								//.label.label-primary( ng-class='{active:theory_toggle}' ng-click='theory_toggle = !theory_toggle') Theory
 								//input.inputToggleClass(ng-model='mixing_toggle' type="checkbox",data-toggle="toggle" name='mixingInputYes' id='mixingInputYes')
@@ -115,10 +115,10 @@ append body
 								
 								//.label.label-default() VST:
 								div(style='display:inline-block')
-									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'VST'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
-							div.addDeleteWrapper.row
-								.label.label-primary(ng-click="addFilterToggle = !addFilterToggle" ng-show='isAdmin()') Add
-								.label.label-primary(ng-click="deleteFilterToggle = !deleteFilterToggle"  ng-show='isAdmin()') Delete
+									.label.label-primary(style='float:left;margin-top:5px;' ng-repeat="f in filters | orderBy: 'name'" ng-show="f.type == 'Software'" ng-class='{active:f.toggle}'  ng-click='filterClicked(f)') {{f.name}}
+							div.addDeleteWrapper.row(ng-show='false')
+								button(ng-click="addFilterToggle = !addFilterToggle" ng-show='isAdmin()') Add
+								button(ng-click="deleteFilterToggle = !deleteFilterToggle"  ng-show='isAdmin()') Delete
 				.div#scrollable()
 					.tipsPageWrapper#tipsScrollWrapper(ng-hide="addATip()||editATip()")
 						//h2
@@ -137,7 +137,7 @@ append body
 							+btn-xs("Delete")
 						div.contentWrapper(id='tipsWrapper{{tip._id}}' ng-repeat='tip in tipArrayData | orderBy : getOrderByNavBar():sortReverse' ng-show="showItem(tip)" ng-click='tipClicked(tip)')
 							#tipTitleBlock.titleWrapper
-								#tipTitle.titleWrapper.page-header(style="display:inline-block;width:100%;padding-bottom:3px;")
+								#tipTitle.titleWrapper(style="display:inline-block;width:100%;padding-bottom:3px;")
 
 
 									h2(style="float:left;max-width:450px;margin-left: 3px;margin-top:15px;") {{tip.tipTitle}}
@@ -289,13 +289,13 @@ append body
 									.label.label-primary(){{f.name}}
 							.theoryInputWrapper(style="")
 								h7 Tip Type
-								.btnWrapper(ng-repeat='f in filters |orderBy:"name"'  ng-show="f.type == 'Type'")
+								.btnWrapper(ng-repeat='f in filters | orderBy:"name"' ng-if='f.name')
 									input.inputClass(type="checkbox",data-toggle="toggle" name='theoryYes' id='' ng-model='f.inputToggle')
 									.label.label-primary(){{f.name}}
 			
 							.vstInputWrapper(style="")
 								h7 VST
-								.btnWrapper(ng-repeat='f in filters |orderBy:"name"'  ng-show="f.type == 'VST'")							
+								.btnWrapper(ng-repeat='f in filters |orderBy:"name"'  ng-show="f.type == 'Software'")							
 									input.inputClass(type="checkbox",data-toggle="toggle" name='{{f.name}}' id='' ng-model='f.inputToggle')
 									+label-primary("{{f.name}}")
 							.dawInputWrapper(style="")

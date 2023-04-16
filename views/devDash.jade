@@ -30,15 +30,67 @@ append body
 							span {{appSelected}}				
 							//div.alert#note #{messages}
 				#AppWrapper.row
-					#FilterScriptAppWrapper(ng-show="appSelected == 'Filter Script'") 
+					#FilterScriptAppWrapper.row(ng-show="appSelected == 'Filter Script'") 
 						span Hello this is filter script.  Used to populate the Mongo Db with a good init state.
-						button#readFile(ng-click="readFilterScriptFile()") read file
+						button#readFile(ng-click="readFilterScriptFile()") read filters
+						button#readFile(ng-click="readInterestsScriptFile()") read interests
+						button#readFile(ng-click="readRolesScriptFile()") read roles
+					.row#filterFileDisplay 
+						#filterNameDisplay.col-lg-2.col-md-2.col-sm-2.col-xs-2(ng-repeat='filter in filters' style="margin-bottom:10px")
+							span {{filter.type}} 
+							br
+							span {{filter.text}}
+					.row#filterFileDisplay 
+						#filterNameDisplay.col-lg-2.col-md-2.col-sm-2.col-xs-2(ng-repeat='interest in interests' style="margin-bottom:10px")
+							span {{interest.type}} 
+							br
+							span {{interest.text}}
+					.row#interestsFileDisplay 
+							ul#interests(class='col-sm-12 col-md-12 col-lg-12 col-xs-12')
+								li.interestTags(ng-repeat="tag in intersests")
+									span.interestTag {{tag.text}} 
+										a.remove-button.clickableLink(ng-click="removeInterestTagProfile()") x
+					.row#rolesFileDisplay 
+						#filterNameDisplay.col-lg-2.col-md-2.col-sm-2.col-xs-2(ng-repeat='role in roles' style="margin-bottom:10px")
+							div.typeDisplay
+								span {{role.type}} 
+							//- br
+							//- span {{role.text}}
+							
+							div.interestTag
+								span {{role.text}}
+							div
+								i.miniIcon.bi(class="bi-{{role.bootStrapIcon}}")
+							image.miniIcon(ng-show="role.iconImg"  ng-src="icon/{{role.iconImg}}")
+							//- i.miniIcon.bi(class="bi-{{role.bootStrapIcon}}")
+							//- image.miniIcon(ng-show="role.iconImg"  ng-src="icon/{{role.iconImg}}")
+					
+					.row#ImportFiltersButton 	
+						button.btn.btn-default(ng-click="importFilters()" ng-show="filters.length > 0" style="float:right") Import
+					.row#ImportFiltersButton 	
+						button.btn.btn-default(ng-click="importInterests()" ng-show="interests.length > 0" style="float:right") Import Interests
+					.row#ImportFiltersButton 	
+						button.btn.btn-default(ng-click="importRoles()" ng-show="roles.length > 0" style="float:right") Import Roles
+						
+					.row#userMessage 
+						span {{$filtersImportMessage}}
 					#UserManagementAppWrapper(ng-show="appSelected == 'User Management'") 
-						span User Management is used to view and edit user data
+						h5 User Management is used to view and edit user data
 						#currentUserWrapper.row 
 							span.label.label-default.dropdown-toggle Current User 
 							#userName.col-lg-2.form-control
 								span {{currentUser.username}}
+						#userSelectionWrapper
+							h5 User Selection
+							div.row#userRow(ng-repeat="user in usersCollection")
+								div.col-lg-2.col-md-2.com-sm2#username 	
+									span {{user.profileDetails[0].username}}
+								div.col-lg-2.col-md-2.com-sm2#username 	
+									span {{user.local.username}}
+								div.col-lg-2.col-md-2.com-sm2#userEmail 	
+									span {{user.email}}
+								div.col-lg-2.col-md-2.com-sm2#userCountry 	
+									span {{user.country}}
 					
 						
 					#redirect(ng-hide='true' ng-model='redirect')= redirect

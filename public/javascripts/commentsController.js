@@ -20,37 +20,12 @@ angular.module("myApp").controller('CommentsCtrl', ['$scope', '$rootScope', '$ht
 	    $scope.$parent.tipArrayData[tipCounter].showComments = !$scope.$parent.tipArrayData[tipCounter].showComments;
 	}
 
-	// function isAuthenticated($http, $localStorage, routeToSignUp, callback) {
-	// 	var req = {
-	// 		method: 'GET',
-	// 		url: '/authenticated',
-	// 		headers: {
-	// 			'Content-Type': "application/json"
-	// 		},
-	// 		data: {
-	// 		}
-	// 	}
-	// 	$http(req).then(function success(response) {
-	// 		if (response.data) {
-	// 			return callback($localStorage.username);
-	// 		}
-	// 		else {
-	// 			window.location.href = '/signUp';		
-	// 		}
-	// 	}, function failure(response) {
-	// 		window.location.href = '/signUp';
-	// 		return false;
-	// 	});
+
 	
 
-		
-	// }
-
-
-
 	$scope.postACommentClicked = function () {
-
-	    if (!$scope.authenticated) {
+		$scope.user = ProfileService.getUserInfo();
+	    if ($scope.user == null || $scope.user._id == null) {
 			window.location.href = '/signUp';
 	    }
 	    else {

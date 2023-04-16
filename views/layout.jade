@@ -65,6 +65,9 @@ html(lang="en" ng-app='myApp')
                         link(rel='stylesheet' type="text/css"  href='/stylesheets/ng-tags-input.css')
                         link(rel='stylesheet' type="text/css"  href='/stylesheets/ng-tags-input.bootstrap.css')
                         link(rel='stylesheet' href="/scriptsFlagRoute/flag-icons.min.css")
+                        link(rel='stylesheet' href="/bootStrapIcons/bootstrap-icons.css")
+
+                        
                 base(href="/")
                 block scripts
                         script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js')
@@ -89,6 +92,7 @@ html(lang="en" ng-app='myApp')
                         script(src='javascripts/devDashController.js')
                         script(src='javascripts/popUpController.js')
                         script(src='javascripts/popUpService.js')
+                        script(src='javascripts/FeedService.js')
                         script(src='javascripts/filters.js')
                         script(src='javascripts/directives.js')
                         script(src='javascripts/ng-country-select.js')
@@ -117,9 +121,9 @@ html(lang="en" ng-app='myApp')
                 div.pageController(ng-controller="popUpController" style="margin:0 auto;margin-top:50px" )
                         .div.loginPopup(ng-show="showPopUp('email')")
                                 .div.row.formPopup#popupForm
-                                        form.formContainer.col-lg-9.col-md-9.col-sm-9()
+                                        form.formContainer
                                                 .row#dismissPopUp
-                                                        a.clickableLink(ng-click="dismissClicked()") Dismiss
+                                                        a.clickableLink(ng-click="dismissClicked('email')") Dismiss
                                                 h2 Please enter email 	
                                                 label(for="email")
                                                         strong email 
@@ -129,13 +133,13 @@ html(lang="en" ng-app='myApp')
                                                 input(type='text' id="confirm" placeholder="email@email.com" name="email confirm" required ng-model='popUpEmailAddressCofirm')
 
                                                 button(ng-click="popUpFormSubmit()") Submit
-                                        div.row.popUpMessageForUser 
+                                        div.popUpMessageForUser 
                                                 span {{popUpMessageForUser}}
                         .div.row.loginPopup(ng-show="showPopUp('profile')")
                                 .div.formPopup#popupForm.col-lg-10.col-md-10.col-sm-10.col-xs-10
                                         form.formContainer()
                                                 .row#dismissPopUp
-                                                                a.clickableLink(ng-click="dismissClicked()" style="float:right") Dismiss
+                                                                a.clickableLink(ng-click="dismissClicked('profile')" style="float:right") Dismiss
                                                 .profileFields(ng-show="showPage('profileInit')")
                                                         .row
                                                                 h2 Lets set you up a L3GZ WRLD profile!	
@@ -144,9 +148,16 @@ html(lang="en" ng-app='myApp')
                                                         label(for="username")
                                                                 strong  username
                                                         input( id="userNameInput" type='text' required placeholder="username" name="username" ng-model='userData.username' ng-change="changingUserName(userData.username)" )
-                                                        label(for="url")
-                                                                strong  /url
-                                                        input(type='text' id="url" placeholder="/profile/kcedge" name="url" required ng-model='userData.url' ng-disabled="true" ) 
+                                                        #url
+                                                                span {{userData.url}}        
+                                                        label(for="email")
+                                                                strong email 
+                                                        input(type='text' id="email" placeholder="email@email.com" name="email" required ng-model='popUpEmailAddress')
+                                                        
+                                                        
+                                                        //- label(for="url")
+                                                        //-         strong  /url
+                                                        //- input(type='text' id="url" placeholder="/profile/kcedge" name="url" required ng-model='userData.url' ng-disabled="true" ) 
                                                         //- label(for="city")
                                                         //-         strong  City
                                                         //- input(type='text' id="city" placeholder="city" name="city" required ng-model='userData.city')
@@ -188,18 +199,18 @@ html(lang="en" ng-app='myApp')
                                                                                 button.btn-xs(ng-click="item.remove()") remove {{item.file.name}}   
                                                                                         span.glyphicon.glyphicon-remove
                                                                 //- .progress       
-                                                                //-         .progress-bar(role="progressbar" ng-style="{width:profileImageUploader.progress + '%'}" style="width:0%;")
+                                                                //-         .progress-bar(role="progressbar" ng-style="{width:profileImageUploader.progress s+ '%'}" style="width:0%;")
                                                                 .profilePictureHorizonalScroll.frame
                                                                         .profilePictureThumbsWidget
                                                                                 .thumbnailWrapper.marginBottom10(ng-repeat='profileImg in profileImagesUploaded')
                                                                                         img.img-thumbnail.imageThumbNailProfile( class='imageAttached{{$index}}' ng-src='{{profileImg.image}}' ng-show='{{profileImg.isProfile}}' ng-click='editImageClicked($index);')
                                                                                         #imgUploadButtonsDiv.row(ng-show="profileImg" style='margin-bottom:5px;')
-                                                                                                button.editButtonStyle(ng-click="editProfileImgClicked(profileImg)" )
-                                                                                                        span.glyphicon.glyphicon-pencil
-                                                                                                button.editButtonStyle(ng-click="removeProfileBannerImgClicked(profileImg)" )
+                                                                                                //- button.editButtonStyle.clickable(ng-click="editProfileImgClicked(profileImg)" )
+                                                                                                //-         span.glyphicon.glyphicon-pencil
+                                                                                                button.editButtonStyle.clickable(ng-click="removeProfileImgClicked(profileImg)" )
                                                                                                         span.glyphicon.glyphicon-remove-circle
                                                                 div.buttonWrapper            
-                                                                        button.btn.btn-xs.row(ng-show="profileImageUploader.queue.length > 0" ng-click="profileUploadClicked()" ng-disabled="!profileImageUploader.getNotUploadedItems().length")
+                                                                        button.btn.btn-xs.row.profilePictureUploadButton(ng-show="profileImageUploader.queue.length > 0" ng-click="profileUploadClicked()" ng-disabled="!profileImageUploader.getNotUploadedItems().length")
                                                                                 span.glyphicon.glyphicon-upload
                                                                                         &nbsp Upload
                                                         div.bannerInputWrapper.row  
@@ -221,15 +232,57 @@ html(lang="en" ng-app='myApp')
                                                                                 .thumbnailWrapper.row.marginBottom10(ng-repeat='img in profileBannerImagesUploaded')
                                                                                         img.img-thumbnail.imageThumbNailProfileBanner(class='imageAttached{{$index}}' ng-src='{{img.image}}' ng-show='{{img.isProfile}}' ng-click='editImageClicked($index);')
                                                                                         #imgUploadButtonsDiv.row(ng-show="img" style='margin-bottom:5px;')
-                                                                                                button.editButtonStyle(ng-click="editProfileBannerImgClicked(img)" )
-                                                                                                        span.glyphicon.glyphicon-pencil
-                                                                                                button.editButtonStyle(ng-click="removeProfileBannerImgClicked(img)" )
+                                                                                                //- button.editButtonStyle.clickable(ng-click="editProfileBannerImgClicked(img)" )
+                                                                                                //-         span.glyphicon.glyphicon-pencil
+                                                                                                button.editButtonStyle.clickable(ng-click="removeProfileBannerImgClicked(img)" )
                                                                                                         span.glyphicon.glyphicon-remove-circle
-                                                                div.buttonWrapper              
-                                                                        button.btn.btn-xs.row(ng-show="profileBannerImageUploader.queue.length > 0" ng-click="profileBannerUploadClicked()" ng-disabled="!profileBannerImageUploader.getNotUploadedItems().length")
+                                                                div.buttonWrapper           
+                                                                        button.btn.btn-xs.row.profilePictureUploadButton#bannerUpload(ng-show="profileBannerImageUploader.queue.length > 0" ng-click="profileBannerUploadClicked()" ng-disabled="!profileBannerImageUploader.getNotUploadedItems().length")
                                                                                 span.glyphicon.glyphicon-upload
                                                                                         &nbsp Upload Banner
+                                                .profileImgFields.profileFields(ng-show="showPage('interests')")  
+                                                        div
+                                                                h2(style="margin-bottom:10px") What interests you? This helps us suggest information you like, but also helps others in the community learn about you! Which is exciting, that is reason for the exclamation.	
+                                                        hr
+                                                        #profileInterestInputWrapper.row
+                                                               
+                                                                div#tagInputWrapper
+                                                                        h5 
+                                                                        tags-input#profileInterestTagInput(ng-model='interestTags' placeholder="Add Interests")
+                                                                                auto-complete(source='getIntrestTags($query)' autocomplete="on" ) 
+                                                                        //- button(ng-click="addInterest()")  
+                                                                        #interetSuggestionsWrapper
+                                                                                ul#interestsSuggestions
+                                                                                        //- li.interestTags(ng-repeat="tag in ")
+                                                                                        //- span.interestTag {{tag.text}} 
                                                                 
+                                                                div(class='col-sm-1 col-md-1 col-lg-1 col-xs-1')
+                                                        
+                                                        div.row#tagDisplayWrapper     
+                                                                h5      Interests    
+                                                                div            
+                                                                        ul#interests(class='col-sm-12 col-md-12 col-lg-12 col-xs-12')
+                                                                                li.interestTags(ng-repeat="tag in interestTags")
+                                                                                        span.interestTag {{tag.text}} 
+                                                                                                a.remove-button.clickableLink(ng-click="removeInterestTagProfile()") x
+                                                        //- div#roleInputWrapper.row
+                                                        //-         tags-input#profileRoleTagInput(ng-model='roleTags' placeholder="What are some roles you want to fill? Ex: Singer, Engineer, Agent")
+                                                        //-                                 auto-complete(source='getRoleTags($query)' autocomplete="on" ) 
+                                                        //-                         //- button(ng-click="addInterest()")  
+                                                        //-                         #interetSuggestionsWrapper
+                                                        //-                                 ul#interestsSuggestions
+                                                                                                //- li.interestTags(ng-repeat="tag in ")
+                                                                                                //- span.interestTag {{tag.text}} 
+                                                        div.row#tagDisplayWrapper     
+                                                                h5      Roles    
+                                                                div
+                                                                        h7(style="font-style: italic;") You can upgrade roles by interacting in L3gz world!           
+                                                                        ul#interests(class='col-sm-12 col-md-12 col-lg-12 col-xs-12')
+                                                                                li.interestTags(ng-repeat="role in roleTags")
+                                                                                        span.interestTag {{role.text}} 
+                                                                                        div
+                                                                                                i.miniIcon.bi(class="bi-{{role.bootStrapIcon}}")
+                                                                                                image.miniIcon(ng-show="role.iconImg"  ng-src="icon/{{role.iconImg}}")
                                                 div#nextbuttons
                                                         button.btn-default(ng-click="backPage()") Back
                                                         button.btn-default(ng-click="nextPage()") Next
@@ -240,8 +293,13 @@ html(lang="en" ng-app='myApp')
                                                                 br   
                                                                 span Current Page Name : {{popUp.pages[currentPageIndex].pageName}}         
 
-                                                div#submitProfilePopUp
-                                                        button(ng-click="popUpFormSubmit()") Submit
-                                                div.row.popUpMessageForUser 
-                                                        span {{popUpMessageForUser}}
+                                                div#submitProfilePopUp(ng-show="currentPageIndex+1 != popUpTotalPages")
+                                                        button(ng-click="popUpFormSubmit()") Save
+                                                 div#submitProfilePopUp(ng-show="currentPageIndex+1 == popUpTotalPages")
+                                                        button(ng-click="popUpFormSubmitExit()") Save & Exit
+                                                
+                                        div.popUpMessageForUser 
+                                                span {{popUpMessageForUser}}
+
+
 

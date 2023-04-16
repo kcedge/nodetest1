@@ -90,6 +90,10 @@ app.use(cors());
 app.use('/scriptsRoute',express.static(__dirname + '/node_modules/ng-country-select/dist/'));
 app.use('/scriptsFlagRoute',express.static(__dirname + '/node_modules/flag-icons/css/'));
 app.use('/scriptsFlagIcons',express.static(__dirname + '/node_modules/flag-icons/flags'));
+
+app.use('/bootStrapIcons',express.static(__dirname + '/node_modules/bootstrap-icons/font'));
+
+
 app.use('/publicResources',express.static(__dirname + '/public/resources'));
 
 

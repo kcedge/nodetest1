@@ -447,6 +447,14 @@ module.exports = function (router, passport) {
 		});
 	});
 
+	router.get('/profile/editing', isLoggedIn, function (req, res) {
+		res.render('profile', {
+			user: req.user,
+			editing: true,
+			greeting: "Welcome "
+		});
+	});
+
 	router.get('/profile/:username', function (req, res) {
 		console.log('getting profile for ')
 		var userName = req.params.username;
@@ -481,29 +489,12 @@ module.exports = function (router, passport) {
 		});
 	});
 
-	router.get('/filterScriptFile', function (req, res) {
-		const options = {
-			root: path.join(__dirname)
-		};
-
-		const fs = require('fs');
-		fs.readFile('../public/resources/filterL3gz.txt', 'utf-8', (err, fileString) => {
-			if(err){
-				return;
-			}
-			console.log(fileString);
-		})
 
 
-		res.sendFile('../public/resources/filterL3gz.txt', options, function (err) {
-			if (err) {
-				next(err);
-			} else {
 
-			}
 
-		});
-	});
+
+
 
 
 
@@ -999,6 +990,258 @@ module.exports = function (router, passport) {
 
 		}
 	});
+
+	//FILTER SCRIPT
+	router.post('/importFiltersScript', function (req, res) {
+		var filters = req.body['filters'];
+		var filtersJson = JSON.parse(filters);
+
+		const db = req.app.locals.db;
+		var collection = db.collection('filterCollection');
+
+		var i = 0;
+		var docsInsertedArr = [];
+		for (i = 0; i < filtersJson.length; i++) {
+			collection.update({ name: filtersJson[i].name }, { $set: { name: filtersJson[i].name, type: filtersJson[i].type } }, { upsert: true }, function (err, docsInserted) {
+				if (err) { }
+				else {
+					docsInsertedArr.push(docsInserted);
+				}
+
+			});
+		}
+		res.send('filtersAdded');
+
+
+	});
+
+	//iNTERESTS SCRIPT
+	router.post('/importInterestsScript', function (req, res) {
+		var filters = req.body['interests'];
+		var filtersJson = JSON.parse(filters);
+
+		const db = req.app.locals.db;
+		var collection = db.collection('interestCollection');
+
+		var i = 0;
+		var docsInsertedArr = [];
+		for (i = 0; i < filtersJson.length; i++) {
+			collection.update({ text: filtersJson[i].text }, { $set: { text: filtersJson[i].text, type: filtersJson[i].type } }, { upsert: true }, function (err, docsInserted) {
+				if (err) { }
+				else {
+					docsInsertedArr.push(docsInserted);
+				}
+
+			});
+		}
+		res.send('interestsAdded');
+
+
+	});
+
+	//iNTERESTS SCRIPT
+	router.post('/importRolesScript', function (req, res) {
+		var filters = req.body['roles'];
+		var filtersJson = JSON.parse(filters);
+
+		const db = req.app.locals.db;
+		var collection = db.collection('rolesCollection');
+
+		var i = 0;
+		var docsInsertedArr = [];
+		for (i = 0; i < filtersJson.length; i++) {
+			collection.update({ text: filtersJson[i].text }, { $set: { text: filtersJson[i].text, type: filtersJson[i].type } }, { upsert: true }, function (err, docsInserted) {
+				if (err) { }
+				else {
+					docsInsertedArr.push(docsInserted);
+				}
+
+			});
+		}
+		res.send('rolesAdded');
+
+
+	});
+
+	router.get('/rolesScriptFile', function (req, res) {
+		const options = {
+			root: path.join(__dirname)
+		};
+
+		const fs = require('fs');
+		const fileContent = fs.readFileSync('public/resources/rolesL3gz.txt', 'utf-8');
+		var jsonArray = [];
+		var currentParent = "General";
+
+		fileContent.split(/\r?\n/).forEach(line => {
+
+			var temp = line;
+			var tabcount = (temp.match(/\t/g) || []).length;
+
+			var textInput = line.replace(/\t/g, '');
+
+			var bootStrapIconIndex = textInput.indexOf(".");
+			var iconImgIndex = textInput.indexOf("#");
+
+			var currentRole = {};
+
+			if (iconImgIndex > -1) {
+				spliced = textInput.slice(iconImgIndex);
+				currentRole.iconImg = spliced.substring(1);
+				currentRole.text = textInput.substring(0, iconImgIndex);
+				currentRole.type = currentParent;
+			}
+			else if (bootStrapIconIndex > -1) {
+				spliced = textInput.slice(bootStrapIconIndex);
+				currentRole.bootStrapIcon = spliced.substring(1);
+				currentRole.text = textInput.substring(0, bootStrapIconIndex);
+				currentRole.type = currentParent;
+			}
+			else {
+				currentRole.text = line;
+				currentRole.type = currentParent;
+			}
+
+			if (tabcount == 0) {
+				currentParent = currentRole.text;
+			}
+
+			jsonArray.push(currentRole);
+
+
+		});
+
+		res.send(jsonArray);
+
+	});
+
+	router.get('/getApplicationInterests', function (req, res) {
+		try {
+			const db = req.app.locals.db;
+			var collection = db.collection('interestCollection');
+			cursor = collection.find().toArray(function (err, items) {
+				if (err) {
+					console.log('Unable to get tip', err);
+				}
+				else {
+					res.send({ items: items });
+
+				}
+
+			});
+			db.close();
+		}
+		catch {
+
+		}
+	});
+
+	router.get('/getApplicationRoles', function (req, res) {
+		try {
+			const db = req.app.locals.db;
+			var collection = db.collection('rolesCollection');
+			cursor = collection.find().toArray(function (err, items) {
+				if (err) {
+					console.log('Unable to get tip', err);
+				}
+				else {
+					res.send({ items: items });
+
+				}
+
+			});
+			db.close();
+		}
+		catch {
+
+		}
+	});
+
+	router.get('/interestsScriptFile', function (req, res) {
+		const options = {
+			root: path.join(__dirname)
+		};
+
+		const fs = require('fs');
+		const fileContent = fs.readFileSync('public/resources/interestsL3gz.txt', 'utf-8');
+		var jsonArray = [];
+		var currentParent = "General";
+
+		fileContent.split(/\r?\n/).forEach(line => {
+			var currentInterest = {};
+			if (line.includes("\t")) {
+				var nameInput = line.replace(/\t/g, '');
+
+				currentInterest.text = nameInput;
+				currentInterest.parent = currentParent;
+				currentInterest.type = currentParent;
+			}
+			else {
+				currentInterest.text = line;
+				currentParent.parent = null;
+				currentInterest.type = line;
+
+				currentParent = line;
+
+			}
+			jsonArray.push(currentInterest);
+			console.log(`Line from file: ${line}`);
+
+		});
+
+		res.send(jsonArray);
+
+	});
+
+	router.get('/filterScriptFile', function (req, res) {
+		const options = {
+			root: path.join(__dirname)
+		};
+
+		const fs = require('fs');
+		const fileContent = fs.readFileSync('public/resources/filtersL3gz.txt', 'utf-8');
+		var jsonArray = [];
+		var currentParent = "Life";
+
+		fileContent.split(/\r?\n/).forEach(line => {
+			var currentFilter = {};
+			if (line.includes("\t")) {
+				var nameInput = line.replace(/\t/g, '');
+
+				currentFilter.name = nameInput;
+				currentFilter.parent = currentParent;
+				currentFilter.type = currentParent;
+			}
+			else {
+				currentFilter.name = line;
+				currentParent.parent = null;
+				currentFilter.type = line;
+
+				currentParent = line;
+
+			}
+			jsonArray.push(currentFilter);
+			console.log(`Line from file: ${line}`);
+
+		});
+
+		res.send(jsonArray);
+	});
+
+
+	router.get('/icon/:name', function (req, res) {
+		const options = {
+			//root: path.join(__dirname)
+		};
+
+		res.sendFile(path.resolve('public/resources/icons/' + req.params.name), options, function (err) {
+			if (err) {
+			} else {
+			}
+		});
+	});
+
+
 
 
 

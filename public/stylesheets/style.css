@@ -100,6 +100,9 @@ a {
     border-width: thin;
     border-color: #d1d2d2;
     z-index: 2;
+    max-height: 300px;
+    overflow: auto;
+
 }
 .userDetailsDiv{
     position: fixed;
@@ -330,6 +333,7 @@ a {
 }
 .profilePageWrapper{
     background-color: white;
+    padding: 15px;
 }
 
 
@@ -345,6 +349,8 @@ a {
 }
 .profilePageBanner{
     height: 200px;
+    
+    margin-left: -15px;
 }
 .bannerWrapper{
     width:100%;
@@ -673,6 +679,19 @@ li{
     padding: 0px;
     border-style: solid;
     border-width: thick;
+    width: 40%;
+    min-width: 200px;
+    max-width:300px;
+   /* width: fit-content; */
+    height: 200px;
+    background-size: cover;
+}
+.profileTableView{
+    margin-top: 20px;
+}
+.scrollable{
+    height: 750px;
+    overflow: auto;
 }
 
 .metaDataLabel{
@@ -849,7 +868,8 @@ li{
 }
 
 .commentList{
-
+    max-height: 250px;
+    overflow: auto;
 }
 
 .even{
@@ -923,12 +943,12 @@ li{
   .formPopup {
     position: fixed;
     left: 50%;
-    top: 5%;
+    top: 2%;
     transform: translate(-50%, 5%);
     border: 3px solid #999999;
     z-index: 9;
     max-height: 800px;
-    min-width: 350px;
+ 
     max-width: 700px;
     overflow: auto;
     padding-left: 0px;
@@ -994,7 +1014,9 @@ li{
     border: none;
     /* border-style: dotted;
     border-width: thin; */
+  
   }
+
   #pagesWidget{
     position: absolute;
     bottom: 0px;
@@ -1008,6 +1030,19 @@ li{
       padding-top: 40%;
 
 
+ }
+ #editProfileButton{
+    margin-bottom:10px;
+ }
+ #userDataBio{
+    margin-bottom:10px
+ }
+ .iconDisplay{
+    /*position: absolute; */
+    float: right;
+    margin-top: -40px;
+    /* margin-left: 30px; */
+    margin-left: 80px;
  }
 
  #linkDataEntry{
@@ -1023,14 +1058,33 @@ li{
  .countrySelectClass{
     padding-right: 2px !important;
  }
-
- @media screen and (max-width: 500px) {
+#tabFeed{
+    
+}
+ @media screen and (max-width: 680px) {
     #stickyheaderNavLeft {
         display: none !important;
     }
     #stickyheaderNavLeft {
         display: none !important;
     }
+    .profilePageLeft  {
+        display: none !important;
+    }
+    .profilePageRightWrapper {
+        display: none !important;
+    }
+    .profilePageCenter{
+        padding-left: 0px  !important;
+        width: 100% !important;; 
+    }
+    .greeting{
+        display: none !important;
+    }
+    #url{
+        display: none !important;
+    }
+  
 }
 
 .imageThumbNailProfileBanner{
@@ -1087,3 +1141,88 @@ li{
     background-color: #fff; 
     border-radius: 8px; 
 } 
+
+.popUpMessageForUser{
+    background: white;
+    margin-top: -5px;
+}
+#userDetailsMeta{
+    float: right;
+    margin-right: 0px;
+    margin-left: 300px;
+    z-index: 10;
+}
+
+@media screen and (max-width: 675) {
+    .profilePageLeft {
+        display: none !important;
+    }
+}
+
+.profilePictureUploadButton{
+    background-color: darkgreen !important;;
+}
+.bannerFrameInput{
+    min-height: 200px;
+}
+#url{
+        /* float: right; */
+        position: absolute;
+        margin-top: -55px;
+        /* margin-left: -50px; */
+        z-index: 300;
+        right: 30px;
+}
+.tag-item{
+   display:none !important;
+}
+#tagDisplayWrapper{
+    margin-top: 20px;
+    
+    border-color: #3f165c;
+    border-style: outset;
+    border-radius: 5px;
+    border-width: thin;
+}
+#interests{
+    margin-top:0px;
+}
+.interestTags{
+   display: inline-block;
+
+}
+#profileInterestInputWrapper{
+   margin-top:25px;
+   margin-left: 25px;
+   height: 50px;
+   max-width: 600px;
+}
+#interetSuggestionsWrapper{
+    background-color: #00cc66;
+}
+.interestTag{
+    margin: 2px;
+    padding: 0 5px;
+    display: inline-block;
+    float: left;
+    font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    height: 26px;
+    line-height: 25px;
+    border: 1px solid #acacac;
+    border-radius: 3px;
+    background: -webkit-linear-gradient(top, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%);
+    background: linear-gradient(to bottom, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%);
+}
+.miniIcon{
+    background-size: contain;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    position: relative;
+    display: inline-block;
+    width: 1.33333333em;
+    line-height: 1em;
+}
+
+#roleInputWrapper{
+    margin-top:20px;
+}

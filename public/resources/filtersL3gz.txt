@@ -38,6 +38,17 @@ Music Theory
 	Chord Extensions
 	Song Structure
 	Sound Design
+Genre
+	House
+	Trance
+	Breakbeat
+	Downtempo
+	Dubstep
+	Trap
+	Pop
+	Country
+	Rock
+	edm
 Software
 	Serem
 	VST
@@ -72,3 +83,4 @@ Sounds
 	Bass
 	FX
 		Vocal FX
+	

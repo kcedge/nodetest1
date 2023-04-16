@@ -4,11 +4,32 @@
  * and open the template in the editor.
  */
 
-angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$http', 'ProfileService', 'CommentsService', '$localStorage','FileUploader','UserDataService', 
-function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStorage, FileUploader, UserDataService) {
+angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$http', 'ProfileService','PopUpService', 'CommentsService','FeedService', '$localStorage','FileUploader','UserDataService', 
+function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsService, FeedService, $localStorage, FileUploader, UserDataService) {
 
 
 	var vm = this;
+	var url_in = window.location.href;
+	$scope.profileUserName = "";
+
+	if (url_in.charAt(url_in.length - 1) == '/') {
+		url_in = url_in.substring(0, url_in.length - 1);
+	}
+
+	var urlComponents = url_in.split("/");
+	var urlEnd = urlComponents[urlComponents.length - 1]
+
+
+
+	if(urlEnd!='profile' && urlEnd!='editing'){
+		$scope.profileUserName = urlComponents[urlComponents.length - 1];
+		//grab users profile we are viewing
+		ProfileService.getProfileInfoByName($scope.profileUserName).then(function(response){
+			$scope.userData = response;
+			$scope.profileImagesUploaded = $scope.userData.profileImageJson;
+			$scope.profileBannerImagesUploaded = $scope.userData.profileBannerImageJson;
+		});//
+	}
 
 
 	if($localStorage.user == undefined){
@@ -82,12 +103,31 @@ function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStor
 	$scope.currentUser = {};
 	
 	ProfileService.isAuthenticated(function (user) {
+		$scope.user = user;
+		
+
+
 		$scope.currentUser = user;
-		$scope.currentProfileUsername = user.userName;
-		// set up user profile
-		$scope.$storage = $localStorage;
-		$scope.$storage.userSignedIn = true;
-		$scope.$storage.username = user.userName;;
+		$scope.currentProfileUsername = user.username;
+	
+		
+		if($scope.profileUserName != ""){
+			ProfileService.getProfileInfo($scope.profileUserName);//
+		
+		}
+		else{
+		
+			if(user.profileDetails.length > 0){
+				$scope.userData = user.profileDetails[0];
+			}
+			else{
+				$scope.userData = {};
+			}
+			$scope.profileImagesUploaded = ProfileService.getProfileImagesByType('profilePicture');
+			$scope.profileBannerImagesUploaded = ProfileService.getProfileImagesByType('profileBanner');
+		}
+
+	
 
 		if (user.userName == "kcedge") {
 			$scope.adminAuth = true;
@@ -103,7 +143,24 @@ function ($scope, $rootScope, $http, ProfileService, CommentsService, $localStor
 			$scope.username = user.name;
 		}
 
+
 	});
+
+
+
+	FeedService.getTipsFromMongo().then(function(response){
+		$scope.feedArrayData = response;
+	})
+
+
+	$scope.editProfileClicked = function(){
+		PopUpService.openPopUp('profile');
+	}
+    $scope.showItem = function(item){
+		return true;//feed service
+	}
+
+
 	
 	var setTotalPoints = function () {
 	    $scope.tipsSubmitted.forEach(function (tip) {

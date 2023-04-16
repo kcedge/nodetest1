@@ -1,10 +1,181 @@
 myApp.service('PopUpService', ['$http', '$q', 'FileUploader', 'ProfileService', function ($http, $q, FileUploader, ProfileService) {
 	var vm = this;
 	vm.uploadingPictureType = "";
+	vm.showPopUp = false;
+
+	
+
+	vm.popUpDismissed = false;
+	vm.popUpDismissedEmail = false;
+	vm.popUpDismissedProfile = false;
+
+	vm.currentPopUp = "";
+	vm.currentPopUpIndex = 1;
+	vm.currentPageIndex = 0;
+	vm.popUpTypes = [{ name: "email", pages: [{ name: "email" }] }, { name: "profile", pages: [{ pageName: "profileInit" }, { pageName: "profileImgr" }, {pageName: "interests"}] }];
+	vm.popUp = vm.popUpTypes[vm.currentPopUpIndex];
+
+	vm.profileImages = [];
+	// this.getPopUp = function(){
+	// 	return vm.popUp;
+	// }
+	// this.setPopUp= function(){
+	// 	vm.popUp = popUp;
+	// }
+
+	this.getApplicationInterests = function () {
+		let deffered = $q.defer();
+		$http.get('/getApplicationInterests/')
+			.then(function (response) {
+				//console.log(data);
+				//angular.forEach(data, function (item) {
+				//    item.datePublished = new Date(item.datePublished);
+				//});
+				console.log("Retreived interests");
+				console.log(response);
+				deffered.resolve(response.data.items);
+			})
+			.catch(function (data, status) {
+				console.log('ERROR: ' + status + '. We can\'t get the profile right now, please try again later');
+				deffered.resolve(data);
+			});
+		return deffered.promise;
+	};
+	
+	this.getApplicationRoles = function () {
+		let deffered = $q.defer();
+		$http.get('/getApplicationRoles/')
+			.then(function (response) {
+				//console.log(data);
+				//angular.forEach(data, function (item) {
+				//    item.datePublished = new Date(item.datePublished);
+				//});
+				console.log("Retreived roles");
+				console.log(response);
+				deffered.resolve(response.data.items);
+			})
+			.catch(function (data, status) {
+				console.log('ERROR: ' + status + '. We can\'t get the profile right now, please try again later');
+				deffered.resolve(data);
+			});
+		return deffered.promise;
+	};
+	this.getProfileImages = function(){
+		return vm.profileImages;
+	}
+
+	this.getPageIndex = function(){
+		return vm.currentPageIndex;
+	}
+	this.getPopUpIndex = function(){
+		return vm.currentPopUpIndex;
+	}
+	this.getPopUpTypes= function(){
+		return vm.popUpTypes;
+	}
+	this.setPage= function(index){
+		vm.currentPageIndex = index;
+	}
+	this.setPopUp= function(index){
+		vm.popUp =  vm.popUpTypes[index];
+
+		vm.currentPopUpIndex = index;
+	}
+
+	this.showPage = function (pageName) {
+
+		var popUpPageName = vm.popUpTypes[vm.currentPopUpIndex].pages[vm.currentPageIndex].pageName;
+		if (pageName == popUpPageName) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 
 	this.setImageUploadingType = function (type) {
 		vm.uploadingPictureType = type;
 	}
+
+	this.dismissClicked = function(popUpName){
+		if(popUpName == 'email'){
+			vm.popUpDismissedEmail = true;
+		}
+		if(popUpName == 'profile'){
+			vm.popUpDismissedProfile = true;
+		}
+		this.setShowPopUp();
+		return false;
+	}
+	
+	this.openPopUp = function(popUpName){
+		vm.showPopUp = true;
+		vm.currentPopUp = 'profile';
+	}
+	this.getShowPopUp = function(popUpName){
+		if(popUpName == vm.currentPopUp){
+
+
+
+			return vm.showPopUp;
+		}
+		else{
+			return false;
+		}
+	}
+
+	this.getCurrentPopUp = function(){
+		return vm.currentPopUp;
+	}
+	this.setShowPopUp = function(user){
+		if(user){
+			if((user.email == '' || user.email == null) && !vm.popUpDismissedEmail){
+				vm.showPopUp = true;
+				vm.currentPopUp = 'email';
+			}
+			// else if(user.profileDetails[0] == null){
+			// 	vm.showPopUp = true;
+			// 	vm.currentPopUp = 'profile';
+			// }
+			else if((user.profileDetails.length == 0 || user.profileDetails[0].bio == '') && !vm.popUpDismissedProfile){
+				vm.showPopUp = true;
+				vm.currentPopUp = 'profile';
+			}
+			else if(vm.popUpDismissed){
+				vm.showPopUp = false;
+				vm.currentPopUp = '';
+			}
+			else{
+				vm.showPopUp = false;
+				vm.currentPopUp = '';
+			}
+		}
+		else{
+			vm.showPopUp = false;
+			vm.currentPopUp = '';
+		}
+		
+	}
+
+
+	vm.nextPage = function () {
+		if (vm.currentPageIndex != vm.popUp.pages.length - 1) {
+			vm.currentPageIndex++;
+		}
+	}
+	vm.backPage = function () {
+		if (vm.currentPageIndex != 0) {
+			vm.currentPageIndex--;
+		}
+	}
+
+
+
+
+
+
+
+
 	//PROFILE IMAGE LOADER
 	var profileImageUploader = vm.profileImageUploader = new FileUploader({
 		url: '/uploadImage'
@@ -95,11 +266,9 @@ myApp.service('PopUpService', ['$http', '$q', 'FileUploader', 'ProfileService', 
 		//$sc
 		vm.profileImageUploader.queue = [];
 
-		var profileImagesUploaded = ProfileService.getProfileImages();
-		
-		var images = profileImagesUploaded.concat(vm.profileImageUploader.profileImagesUploaded);
-		
-	    var profileImageJson = JSON.stringify(images);
+		var images = vm.profileImageUploader.profileImagesUploaded;
+		var previousImages = ProfileService.getProfileImagesByType('profilePicture');
+	    var profileImageJson = JSON.stringify(previousImages.concat(images));
 
 		var user = ProfileService.getUserInfo();
 
@@ -199,15 +368,15 @@ myApp.service('PopUpService', ['$http', '$q', 'FileUploader', 'ProfileService', 
 		//$sc
 		vm.profileBannerImageUploader.queue = [];
 
-		var profileImagesUploaded = ProfileService.getProfileImages();
+		//var profileImagesUploaded = ProfileService.getProfileImages();
 		
-		var images = profileImagesUploaded.concat(vm.profileBannerImageUploader.profileImagesUploaded);
+		var images = vm.profileBannerImageUploader.profileImagesUploaded;
 
-	    var profileImageJson = JSON.stringify(images);
+	    var profileBannerImageJson = JSON.stringify(images);
 
 		var user = ProfileService.getUserInfo();
 
-		ProfileService.postProfileImage(user._id, profileImageJson)
+		ProfileService.postBannerProfileImage(user._id, profileBannerImageJson)
 		// numberOfImages++;
 
 	};

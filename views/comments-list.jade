@@ -1,11 +1,9 @@
 
-textarea.textAreaTip#commentInput.form-control(style='width:100%;height:100px;margin-top:10px;resize:vertical' placeholder="Add a comment" ng-model="postCommentAdd")
-div.buttonWrapper
-	a.btn.btn-primary.btn-post-comment.pull-left#postCommentButton(title="save comment" style='margin-top:5px;' ng-click='postACommentClicked()') Save
-	br
+
 h3.comments-title
-a#showCommentLink.cursor(ng-click="showCommentToggle($parent.tip)" style='float:right; cursor: pointer;') Toggle Comments		
-ul.panel-body.comment-detail-list.commentList(style='margin-top:25px;' ng-show='$parent.tip.showComments')
+.row.toggleCommentRow
+	a#showCommentLink.cursor(ng-click="showCommentToggle($parent.tip)" style='float:right; cursor: pointer;' ng-show="$parent.getComments($parent.tip._id).length > 0") Toggle Comments		
+ul.panel-body.comment-detail-list.commentList( ng-show='$parent.tip.showComments')
 	.row.media(ng-repeat="comment in $parent.getComments($parent.tip._id)| orderBy:'-commentPoints'")
 		div#commentWrapper( style='display:inline-block; width:100%;' ng-show='!isReplyComment(comment)')
 			div#commentVoteWrapper.pull-left(style='width:4%')
@@ -38,3 +36,7 @@ ul.panel-body.comment-detail-list.commentList(style='margin-top:25px;' ng-show='
 					time.small.italics.pull-left(style='margin-left:10px;font-style: italic;'){{getTime(reply_comment)}}
 				div.commentBody.pull-left(style='width:96%;margin-top:5px;white-space:pre-wrap')
 					p {{reply_comment.comment}}
+textarea.textAreaTip#commentInput.form-control(style='width:100%;height:100px;margin-top:10px;resize:vertical' placeholder="Add a comment" ng-model="postCommentAdd")
+div.buttonWrapper
+	a.btn.btn-primary.btn-post-comment.pull-left#postCommentButton(title="save comment" style='margin-top:5px;' ng-click='postACommentClicked()') Save
+	br

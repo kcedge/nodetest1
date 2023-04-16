@@ -10,42 +10,69 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 		ProfileService.isAuthenticated(function (user) {
 			if (user._id) {
 				$scope.userFound = true;
-				
+
 				$scope.user = user;
 				$scope.currentUser = user;
-				$scope.userData = user.profileDetails[0];
-				
-				$scope.profileImagesUploaded = ProfileService.getProfileImages('profilePicture');
-				$scope.profileBannerImagesUploaded = ProfileService.getProfileImages('profileBanner');
+				if (user.profileDetails.length > 0) {
+					$scope.userData = user.profileDetails[0];
+				}
+				else {
+					$scope.userData = {};
+				}
+
+				$scope.profileImagesUploaded = ProfileService.getProfileImagesByType('profilePicture');
+				$scope.profileBannerImagesUploaded = ProfileService.getProfileImagesByType('profileBanner');
+				$scope.interestTags = ProfileService.getProfileInterests();
+				$scope.roleTags = ProfileService.getProfileRoles();
+
+
+				$scope.allProfileImages = ProfileService.getProfileImages();
 
 				$scope.userNameSet = ($scope.userData.username != "" && $scope.userData.username != undefined);
-				if(!$scope.userNameSet && user.local!=undefined)
-				{
+				if (!$scope.userNameSet && user.local != undefined) {
 					$scope.userData.username = user.local.username;
 				}
 
-				if($scope.userNameSet){
-					
+				if ($scope.userNameSet) {
+
 					$scope.userData.url = "/" + "profile" + "/" + $scope.userData.username;
 					$scope.currentProfileUsername = $scope.userData.username;
 				}
-			
+
 
 
 				if ($scope.userData.username == "kcedge") {
 					$scope.adminAuth = true;
 					$scope.authenticated = true;
 				}
-			
+
+				PopUpService.setShowPopUp(user);
+
+				if (window.location.href.includes('editing')) {
+					PopUpService.openPopUp('profile');
+					PopUpService.setPopUp(1)
+					PopUpService.setPage(1)//change to use name
+				}
+
+
+
 			}
-			else{
+			else {
 				$scope.displayErrorPopUp = true;
 			}
 
 		});
 
-		$scope.changingUserName = function(input){
-			$scope.userData.url = '/profile/'+input.toLowerCase();;
+		$scope.addInterest = function () {
+			var x = $scope.interestTags;
+		}
+		$scope.showPopUp = function (popUpName) {
+			return PopUpService.getShowPopUp(popUpName);
+		}
+
+
+		$scope.changingUserName = function (input) {
+			$scope.userData.url = '/profile/' + input.toLowerCase();;
 		}
 		$scope.userData = {};
 		$scope.profileImageUploader = PopUpService.getProfileImageUploader();
@@ -56,13 +83,15 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 
 		$scope.userData = {};
 		$scope.popUpMessageForUser = "";
+		$scope.links = [{ name: 'link1' }];
+
 
 		window.onload = function () {
 
 		}
-		$scope.currentPopUpIndex = 1;
-		$scope.currentPageIndex = 0;
-		$scope.popUpTypes = [{ name: "email", pages: [{ name: "email" }] }, { name: "profile", pages: [{ pageName: "profileInit" }, { pageName: "profileImgr" }] }];
+		$scope.currentPopUpIndex = PopUpService.getPopUpIndex();
+		$scope.currentPageIndex = PopUpService.getPageIndex();
+		$scope.popUpTypes = PopUpService.getPopUpTypes();
 
 		$scope.popUp = $scope.popUpTypes[$scope.currentPopUpIndex];
 		$scope.popUpTotalPages = $scope.popUp.pages.length;
@@ -78,50 +107,78 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 
 
 		$scope.nextPage = function () {
-			if ($scope.currentPageIndex != $scope.popUp.pages.length - 1) {
-				$scope.currentPageIndex++;
-			}
+			PopUpService.nextPage();
+			$scope.currentPageIndex = PopUpService.getPageIndex();
+
 		}
 		$scope.backPage = function () {
-			if ($scope.currentPageIndex != 0) {
-				$scope.currentPageIndex--;
-			}
+			PopUpService.backPage();
+			$scope.currentPageIndex = PopUpService.getPageIndex();
+
 		}
 		$scope.profileImageUploadClicked = function () {
 			var x = 'upload lcicked';
 		}
 
 		$scope.showPage = function (pageName) {
+			return PopUpService.showPage(pageName);
 
-			var popUpPageName = $scope.popUpTypes[$scope.currentPopUpIndex].pages[$scope.currentPageIndex].pageName;
-			if (pageName == popUpPageName) {
-				return true;
-			}
-			else {
-				return false;
-			}
 		}
 
-		$scope.showPopUp = function (popUpName) {
-			if (ProfileService.getShowPopUp(popUpName)) {
-				return true;
-			}
-			else {
-				return false
-			}
-		}
+
 
 		$scope.removeProfileImgClicked = function (profilePic) {
-			var x = profilePic;
-			console.log("removing profile pic..." + profilePic)
+
+			var result = confirm("Want to delete?");
+			if (result) {
+				//Logic to delete the item
+
+
+				var images = ProfileService.getProfileImagesByType('profilePicture');
+				var updatedImages = images.filter(obj => {
+					var objectidStr = obj.image;
+					return (objectidStr != profilePic.image);
+				});
+				updatedImages = JSON.stringify(updatedImages);
+
+				var req = {
+					method: 'POST',
+					url: '/deleteProfilePicture',
+					headers: {
+						'Content-Type': "application/json",
+						'Access-Control-Request-Methods': 'POST',
+						'Access-Control-Request-Headers': 'X-PINGOTHER, Content-Type',
+					},
+					data: {
+						user: $scope.user,
+						imgData: updatedImages
+					}
+				}
+
+				$http(req).then(function success(response) {
+					if (response.status == 200) {
+						$scope.popUpMessageForUser = "Picture removed"
+						$scope.popUpResponseData = response.data;
+						//Dismiss popup for user
+						//ProfileService.dismissClicked();
+						window.location.href = '/profile/editing'
+					}
+				});
+			}
+
+
+
+
+
 		}
 
-		$scope.dismissClicked = function () {
-			ProfileService.dismissClicked();
+		$scope.dismissClicked = function(name){
+			return PopUpService.dismissClicked(name);
 		}
-		$scope.popUpFormSubmit = function () {
 
-			if ($scope.popUp.name == 'email') {
+		$scope.popUpFormSubmit = function (exit) {
+			//Email popup
+			if (PopUpService.getCurrentPopUp() == 'email') {
 				var email = $scope.popUpEmailAddress;
 				var confirmedEmail = $scope.popUpEmailAddressCofirm;
 
@@ -144,6 +201,9 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 						if (response.status == 200) {
 							$scope.popUpMessageForUser = "Email updated successfully.  Thank You"
 							$scope.popUpResponseData = response.data;
+							if(exit == 'exit'){
+
+							}
 							//Dismiss popup for user
 							//ProfileService.dismissClicked();
 
@@ -151,7 +211,35 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 					});
 				}
 			}
-			else if ($scope.popUp.name == 'profile') {
+			//Profile popup 
+			else if (PopUpService.getCurrentPopUp() == 'profile') {
+				var usersInterests = [];
+				var interestFound = false;
+				if ($scope.interestTags != null) {
+					for (var j = 0; j < $scope.interestTags.length; j++) {
+						for (var i = 0; i < $scope.interests.length; i++) {
+							interestFound = false;
+							var str1 = $scope.interests[i].text.replace(/-|\s/g,"");
+							var str2 = $scope.interestTags[j].text.replace(/-|\s/g,"");
+
+							if (str1 === str2) {
+								usersInterests.push($scope.interests[i]);
+								interestFound = true;
+								break;
+							}
+						}
+						if (!interestFound) {
+							var newTag = {};
+							newTag.text = $scope.interestTags[j].text;
+							newTag.createdBy = 'kcedge';
+							interestFound = false;
+							usersInterests.push(newTag);
+						}
+					}
+				}
+
+				$scope.userData.interests = JSON.stringify(usersInterests); //user interests here
+
 				var req = {
 					method: 'POST',
 					url: '/popUpProfileSubmit',
@@ -206,18 +294,107 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 			document.getElementById('selectedBannerFile').click();
 		}
 
-		$("input#userNameInput").on({
-			keydown: function(e) {
-			  if (e.which === 32)
-				return false;
-			},
-			change: function() {
-			  this.value = this.value.replace(/\s/g, "");
-			}
-		  });
 
-		  $scope.links = [{name: 'link1'}];
+		$scope.removeProfileBannerImgClicked = function (profileImg) {
+			var result = confirm("Want to delete?");
+			if (result) {
+				var images = ProfileService.getProfileImagesByType('profileBanner');
+				var updatedImages = images.filter(obj => {
+					var objectidStr = obj.image;
+					return (objectidStr != profileImg.image);
+				});
+				updatedImages = JSON.stringify(updatedImages);
+
+				var req = {
+					method: 'POST',
+					url: '/deleteBannerProfilePicture',
+					headers: {
+						'Content-Type': "application/json",
+						'Access-Control-Request-Methods': 'POST',
+						'Access-Control-Request-Headers': 'X-PINGOTHER, Content-Type',
+					},
+					data: {
+						user: $scope.user,
+						imgData: updatedImages
+					}
+				}
+
+				$http(req).then(function success(response) {
+					if (response.status == 200) {
+						$scope.popUpMessageForUser = "Picture removed"
+						$scope.popUpResponseData = response.data;
+						//Dismiss popup for user
+						//ProfileService.dismissClicked();
+						window.location.href = '/profile/editing'
+					}
+				});
+			}
+		}
+
+		$("input#userNameInput").on({
+			keydown: function (e) {
+				if (e.which === 32)
+					return false;
+			},
+			change: function () {
+				this.value = this.value.replace(/\s/g, "");
+			}
+		});
+
+		PopUpService.getApplicationInterests().then(function (results) {
+			$scope.interests = results;
+		});
+
 		
+		PopUpService.getApplicationRoles().then(function (results) {
+			$scope.roles = results;
+		});
+
+		$scope.getIntrestTags = function (query) {
+			var autoCompleteInterests = [];
+			$scope.interests.filter(obj => {
+				var nameStr = obj.text;
+				if (nameStr.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+					autoCompleteInterests.push({ text: obj.text })
+				}
+			});
+
+
+			return autoCompleteInterests;
+		}
+
+		$scope.getRoleTags = function (query) {
+			var autoCompleteInterests = [];
+			$scope.roles.filter(obj => {
+				var nameStr = obj.text;
+				if (nameStr.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+					autoCompleteInterests.push({ text: obj.text })
+				}
+			});
+
+
+			return autoCompleteInterests;
+		}
+
+		
+
+		// $scope.getIntrestTags = function (query) {
+		// 	var autoCompleteInterests = $scope.interests.filter(obj => {
+		// 		var objectidStr = obj.image;
+		// 		return (obj.name.indexOf(query.toLowerCase()) >= 0);
+		// 	});
+
+
+		// 	return [
+		// 		{ text: 'drums', icon: 'drumIcon',category:'music' },
+		// 		{ text: 'piano' },
+		// 		{ text: 'singing' },
+		// 		{ text: 'dancing' },
+		// 		{ text: 'music production' },
+		// 	];
+		// }
+
+
 
 
 	}]);

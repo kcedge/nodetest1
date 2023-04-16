@@ -34,13 +34,15 @@ module.exports = function (router, passport) {
 			console.log(username);
 			//	const id = new ObjectID(req.params.id);
 
-			const info = db.collection('profileCollection').find({ username: username });
-			if (info) {
-				res.send("profileInfo");
-			}
-			else {
-				res.send("No profile data found");
-			}
+			const info = db.collection('profileCollection').find({ username: username }).toArray(function (err, items) {
+				if (err) {
+					res.status(500).send('error retreiving data');
+				}
+				//console.log('ITEMS');
+				//console.log(items);
+				res.send(items);
+			});
+			
 
 		}
 		catch (e) {
@@ -313,6 +315,39 @@ module.exports = function (router, passport) {
 		}
 
 	});
+	router.post('/postBannerProfileImage', function (req, res) {
+		try {
+			
+			console.log(req);
+			var userId = req.body['userId'];
+			var profileBannerImageJson = req.body['profileBannerImageJson'];
+
+			//var tipIdArray = req.body['tipArray'];
+			console.log('posting profileBannerImageJson Data' + profileBannerImageJson);
+			const db = req.app.locals.db;
+			var collection = db.collection('profileCollection');
+			
+			if (true) {
+				collection.update({ userId: ObjectId(userId) }, { $set: { profileBannerImageJson: profileBannerImageJson } }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit profile', err);
+						res.send('profileImageJson image save failed');
+					}
+					else {
+						res.send('Profile edit successful');
+					}
+				})
+			}
+			else {
+				res.send("No profileImageJson found");
+			}
+
+		}
+		catch {
+
+		}
+
+	});
 	router.post('/postBannerImage/:username', function (req, res) {
 		try {
 			var username = req.params.username;
@@ -472,7 +507,7 @@ module.exports = function (router, passport) {
 
 			var collection = db.collection('profileCollection');
 			if (true) {
-				collection.update({ userId: ObjectId(user._id) }, { $set: { username: userData.username, bio: userData.bio, country: userData.country, soundcloud:userData.soundcloud } }, { upsert: true }, function (err, db) {
+				collection.update({ userId: ObjectId(user._id) }, { $set: { username: userData.username, bio: userData.bio, country: userData.country, soundcloud:userData.soundcloud, interests:userData.interests } }, { upsert: true }, function (err, db) {
 					if (err) {
 						console.log('Unable to edit profile', err);
 						res.send('Banner image save failed');
@@ -490,6 +525,94 @@ module.exports = function (router, passport) {
 
 		}
 	});
+	
+
+	router.post('/deleteProfilePicture', function (req, res) {
+		try {
+			console.log(req);
+			var imgData = req.body['imgData'];
+			var user = req.body['user'];
+
+
+			const db = req.app.locals.db;
+
+			var collection = db.collection('profileCollection');
+			if (true) {
+				collection.update({ userId: ObjectId(user._id) }, { $set: { profileImageJson: imgData } }, { upsert: true }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit profile', err);
+						res.send('Banner image save failed');
+					}
+					else {
+						res.send('Profile edit successful');
+					}
+				})
+			}
+			else {
+				res.send("No banner image found");
+			}
+		}
+		catch {
+
+		}
+	});
+
+	
+	router.post('/deleteBannerProfilePicture', function (req, res) {
+		try {
+			console.log(req);
+			var imgData = req.body['imgData'];
+			var user = req.body['user'];
+
+
+			const db = req.app.locals.db;
+
+			var collection = db.collection('profileCollection');
+			if (true) {
+				collection.update({ userId: ObjectId(user._id) }, { $set: { profileBannerImageJson: imgData } }, { upsert: true }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit profile', err);
+						res.send('Banner image save failed');
+					}
+					else {
+						res.send('Profile edit successful');
+					}
+				})
+			}
+			else {
+				res.send("No banner image found");
+			}
+		}
+		catch {
+
+		}
+	});
+
+	router.get('/getUsersForUserManagement', function (req, res) {
+		try {
+			
+			const db = req.app.locals.db;
+
+			var collection = db.collection('profileCollection');
+			var usersCollection = db.collection('users');
+			
+			var cursorArrayUsers = usersCollection.aggregate([{ $lookup: { from: 'profileCollection', localField: '_id', foreignField: 'userId', as: 'profileDetails' } }])
+				.toArray(function (err, userItems) {
+					if (err) {
+						res.status(500).send('error retreiving data');
+					}
+					
+					res.send(userItems);
+					
+				});
+		}
+		catch {
+
+		}
+	});
+
+
+	
 
 
 };

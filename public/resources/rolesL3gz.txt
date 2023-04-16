@@ -1,0 +1,21 @@
+General#icons8-wwi-german-helmet-50.png
+	Reader.book
+	Writer.pencil-square
+	Teir1.1-square-fill
+	Teir2.2-square-fill
+	Teir3.3-square-fill
+	Superuser.asterisk
+	Admin.stars
+People.people-fill
+	Singer#icons8-singer-black.png
+	Drummer#icons8-drummer-51.png
+	Guitarist#icons8-guitarist-51.png
+	Bassist#icons8-bass-guitar-80.png
+	Music Producer#icons8-dj-64.png
+	Engineer#icons8-engineer-50.png
+	Video Producer#icons8-video-trimming-50.png
+	Artist.palette-fill
+	Digital Artist.bounding-box
+	Manager.person-fill-check
+	Cook#icons8-cook-48.png
+	Author.envelope-open-heart
