@@ -142,37 +142,114 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 
 	}
 	this.getProfileInterests = function () {
-		if(vm.user.profileDetails[0].interests != null && typeof vm.user.profileDetails[0].interests != 'string'){
+		if (vm.user.profileDetails[0].interests != null && typeof vm.user.profileDetails[0].interests != 'string') {
 			return vm.user.profileDetails[0].interests;
 		}
-		if(typeof vm.user.profileDetails[0].interests == 'string'){
+		if (typeof vm.user.profileDetails[0].interests == 'string') {
 			return JSON.parse(vm.user.profileDetails[0].interests);
 		}
-		else{
+		else {
 			return [];
 		}
 	}
 	this.getProfileRoles = function () {
-		if(vm.user.profileDetails[0].roles != null && typeof vm.user.profileDetails[0].roles != 'string'){
+		if (vm.user.profileDetails[0].roles != null && typeof vm.user.profileDetails[0].roles != 'string') {
 			return vm.user.profileDetails[0].roles;
 		}
-		else if(typeof vm.user.profileDetails[0].roles == 'string'){
+		else if (typeof vm.user.profileDetails[0].roles == 'string') {
 			return JSON.parse(vm.user.profileDetails[0].roles);
 		}
-		else{
-			return [{text:"General", type:"General" , iconImg:"icons8-wwi-german-helmet-50.png" },{text:"Reader", type:"General" , bootStrapIcon: "book"}];
+		else {
+			return [{ text: "General", type: "General", iconImg: "icons8-wwi-german-helmet-50.png" }, { text: "Reader", type: "General", bootStrapIcon: "book" }];
 		}
 	}
 
-	var processUserJsonData = function(user){
-		if(user.profileDetails[0].roles){
+	var processUserJsonData = function (user) {
+		if (user.profileDetails[0].roles) {
 			user.profileDetails[0].roles = JSON.parse(user.profileDetails[0].roles);
 		}
-		if(user.profileDetails[0].interests){
+		if (user.profileDetails[0].interests) {
 			user.profileDetails[0].interests = JSON.parse(user.profileDetails[0].interests);
+		}
+		if (user.profileDetails[0].links) {
+			user.profileDetails[0].links = JSON.parse(user.profileDetails[0].links);
+		}
+		if (user.profileDetails[0].followingArray) {
+			user.profileDetails[0].followingArray = JSON.parse(user.profileDetails[0].followingArray);
+		}
+		if (user.profileDetails[0].followerArray) {
+			user.profileDetails[0].followerArray = JSON.parse(user.profileDetails[0].followerArray);
 		}
 		return user;
 	};
+
+	this.getFollowers = function (userProfile) {
+		let deffered = $q.defer();
+
+		var userIds = userProfile.followerArray;
+		var getFollowers = true;
+		if (typeof userIds == 'undefined') {
+			getFollowers = false;
+			userIds = [{}];
+		}
+
+		if (getFollowers) {
+			var req = {
+				method: 'POST',
+				url: '/getFollowers',
+				headers: {
+					'Content-Type': "application/json"
+				},
+				data: {
+					userIds: userIds
+				}
+			}
+			$http(req).then(function success(response) {
+				vm.user.followers = response.data;
+				deffered.resolve(response.data);
+			});
+		}
+		else {
+			deffered.resolve(null);
+		}
+		return deffered.promise;
+
+
+	}
+
+	this.getFollowing = function (userProfile) {
+		let deffered = $q.defer();
+		var userIds = userProfile.followingArray;
+		var getFollowing = true;
+		if (typeof userIds == 'undefined') {
+			getFollowing = false;
+			userIds = [{}];
+		}
+		if (getFollowing) {
+			var req = {
+				method: 'POST',
+				url: '/getFollowings',
+				headers: {
+					'Content-Type': "application/json"
+				},
+				data: {
+					userIds: userIds
+				}
+			}
+			$http(req).then(function success(response) {
+				vm.user.followings = response.data;
+				deffered.resolve(response.data);
+
+
+			});
+		}
+		else {
+			deffered.resolve(null);
+		}
+		return deffered.promise;
+
+
+	}
 
 	this.getUserProfile = function (authenticated) {
 		let deffered = $q.defer();
@@ -194,7 +271,9 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 				//success, returning user
 				vm.userReturned = true;
 				setUserName(vm.user);//set username in one spot
+
 				vm.user = processUserJsonData(vm.user);
+
 
 				deffered.resolve(vm.user);
 				return vm.user;
@@ -241,6 +320,7 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 		}
 	}
 
+
 	this.getProfileInfo = function (username) {
 
 
@@ -270,6 +350,15 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 		}
 		if (data.hasOwnProperty("interests")) {
 			data.interests = JSON.parse(data.interests);
+		}
+		if (data.hasOwnProperty("links")) {
+			data.links = JSON.parse(data.links);
+		}
+		if (data.hasOwnProperty("followingArray")) {
+			data.followingArray = JSON.parse(data.followingArray);
+		}
+		if (data.hasOwnProperty("followerArray")) {
+			data.followerArray = JSON.parse(data.followerArray);
 		}
 		return data;
 
@@ -317,7 +406,77 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 				return "no data";
 			});
 	};
+	this.unfollowUser = function(followerUser, followingUser, username) {
+		console.log('following user');
+		let deffered = $q.defer();
+		var req = {
+			method: 'POST',
+			url: '/unfollowUser',
+			headers: {
+				'Content-Type': "application/json"
+			},
+			data: {
+				followerProfileId: followerUser.profileDetails[0]._id,
+				followingProfileId: followingUser._id,
+				username: followingUser.username
+			}
+		};
 
+		$http(req)
+			.then(function (data) {
+				//console.log(data);
+				//angular.forEach(data, function (item) {
+				//    item.datePublished = new Date(item.datePublished);
+				//});
+				console.log("unfollowed");
+				console.log(data);
+				deffered.resolve(data);
+				return data;
+			})
+			.catch(function (data, status) {
+				console.log('ERROR: ' + status + 'please try again later');
+				deffered.resolve(status);
+				return "no data";
+			});
+
+		return deffered.promise;
+	}
+	this.followUser = function (followerUser, followingUser, username) {
+		console.log('following user');
+		let deffered = $q.defer();
+		var req = {
+			method: 'POST',
+			url: '/followUser',
+			headers: {
+				'Content-Type': "application/json"
+			},
+			data: {
+				followerProfileId: followerUser.profileDetails[0]._id,
+				followingProfileId: followingUser._id,
+				username: followingUser.username
+			}
+		};
+
+		$http(req)
+			.then(function (data) {
+				//console.log(data);
+				//angular.forEach(data, function (item) {
+				//    item.datePublished = new Date(item.datePublished);
+				//});
+				console.log("followed");
+				console.log(data);
+				deffered.resolve(data);
+				return data;
+			})
+			.catch(function (data, status) {
+				console.log('ERROR: ' + status + 'please try again later');
+				deffered.resolve(status);
+				return "no data";
+			});
+
+		return deffered.promise;
+
+	}
 	this.postBannerImage = function (username, bannerImageJson) {
 		console.log('posting banner image data');
 		console.log(bannerImageJson);

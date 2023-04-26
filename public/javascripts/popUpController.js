@@ -96,7 +96,7 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 		$scope.popUp = $scope.popUpTypes[$scope.currentPopUpIndex];
 		$scope.popUpTotalPages = $scope.popUp.pages.length;
 		$scope.popUpCurrentPageNumber = $scope.currentPageIndex + 1;
-
+		$scope.linkTypes = ['Tik Tok','Soundcloud','Twitter','Instagram', 'Facebook', 'Other'];
 		// $(window).resize(function () {
 		//     styleSize();
 		// });
@@ -104,6 +104,64 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 		//     var height = $(window).height();
 		//     $(".sampleListWrapper").height(height - 50 - 90); //For banner and filter menu
 		// }
+		$scope.userLinks = [];
+		$scope.userLink = {};
+
+		$scope.removeLinkProfile= function(link){
+			var found = {};
+			for(var i = 0; i < $scope.userData.links.length; i++){
+				if($scope.userData.links[i] == link){
+					found = $scope.userData.links.splice(i,1);
+					break;
+				}
+			}
+		}
+		$scope.isOtherUrl = function(){
+			if(typeof $scope.userLink.userLinkTypeSelected == 'string' && $scope.userLink.userLinkTypeSelected!=""){
+				return $scope.userLink.userLinkTypeSelected == "Other"
+
+			}
+			return true;
+
+		}
+		$scope.linkTypeClicked = function(linkType){
+			
+			$scope.userLink.userLinkTypeSelected= linkType;
+		}
+
+		function isValidHttpUrl(string) {
+			let url;
+			try {
+			  url = new URL(string);
+			} catch (_) {
+			  return false;
+			}
+			return url.protocol === "http:" || url.protocol === "https:";
+		  }
+		$scope.addLinkClicked = function(userLink){
+			//validate link entry
+			if(isValidHttpUrl(userLink.url)){
+
+				if(typeof $scope.userData.links == 'string'){
+					$scope.userData.links = JSON.parse($scope.userData.links);
+				}
+
+				if($scope.userData == null){
+					$scope.userData = {};
+				}
+				if($scope.userData.links == null){
+					$scope.userData.links = [];
+				}
+				$scope.userData.links.push(userLink);
+				$scope.userLink = {};
+				$scope.linkMessage = ""
+			}
+			else{
+				$scope.linkMessage = "please enter a valid url"
+			}
+
+		}
+	
 
 
 		$scope.nextPage = function () {
@@ -169,6 +227,11 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 
 
 
+
+		}
+
+		$scope.colorChanged = function(){
+			var $p = $(".profileColorBar").css('background-color', $scope.userData.profileColor);
 
 		}
 
@@ -243,6 +306,9 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 				
 				$scope.userData.roles = JSON.stringify($scope.userData.roleTags); //user roles here
 
+				if(typeof $scope.userData.links != "string"){
+					$scope.userData.links = JSON.stringify($scope.userData.links); //user roles here
+				}
 
 				var req = {
 					method: 'POST',

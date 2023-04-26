@@ -91,8 +91,10 @@ html(lang="en" ng-app='myApp')
                         script(src='javascripts/sampleLibController.js')
                         script(src='javascripts/devDashController.js')
                         script(src='javascripts/popUpController.js')
+                        script(src='javascripts/notificationController.js')
                         script(src='javascripts/popUpService.js')
                         script(src='javascripts/FeedService.js')
+                        script(src='javascripts/NotificationService.js')
                         script(src='javascripts/filters.js')
                         script(src='javascripts/directives.js')
                         script(src='javascripts/ng-country-select.js')
@@ -117,6 +119,19 @@ html(lang="en" ng-app='myApp')
 
                 #profileLoggedIn(ng-show="isLoggedIn()" style="float:right;")
                         a(href="/logout" ng-click="signOutClicked()") Sign out
+               
+                div.pageController(ng-controller="notificationController" )
+                        #notificationCount(ng-show="notificationCount>0")
+                                span.circleNotification {{notificationCount}}
+                        #notificationBell
+                                i.bi.bi-hypnotize.clickableLink.activeIcon(ng-click="notificationWidgetClick()" ng-show="notificationWidgetActive()")
+                                i.bi.bi-hypnotize.clickableLink(ng-click="notificationWidgetClick()" ng-show="!notificationWidgetActive()")
+                        #notificationDiv(ng-show="notificationWidgetActive()")
+                                #notification.clickableLink(ng-repeat="notification in user.notifications" ng-click="notificationClicked(notification)")
+                                        div#notificationContent
+                                                span {{notification.content}}
+                                        #notificationTIme
+                                                time.row.small.pull-right(style='margin-left:5px;'){{notification.created_dt|date:"MM/dd/yyyy 'at' h:mma"}}
                 block body
                 div.pageController(ng-controller="popUpController" style="margin:0 auto;margin-top:50px" )
                         .div.loginPopup(ng-show="showPopUp('email')")
@@ -283,6 +298,34 @@ html(lang="en" ng-app='myApp')
                                                                                         div
                                                                                                 i.miniIcon.bi(class="bi-{{role.bootStrapIcon}}")
                                                                                                 image.miniIcon(ng-show="role.iconImg"  ng-src="icon/{{role.iconImg}}")
+                                                .profileLinks(ng-show="showPage('profileLinks')")  
+                                                        .row
+                                                                h2(style="margin-bottom:10px") Now lets add some very important infomation, your social media links and.. profile color!       
+                                                                .row.linksWrapperInput
+                                                                         #dropdownWrapper.dropdown(style="float:left")
+                                                                                span.label.label-default.dropdown-toggle#rightBarWidgetDropdown1(data-toggle='dropdown') For 
+                                                                                        span.glyphicon.glyphicon-menu-down
+                                                                                span#linkTypeSelected    {{userLink.userLinkTypeSelected}}
+                                                                                ul.dropdown-menu(aria-labelledby="linkType" display='')
+                                                                                        li(ng-repeat='link in linkTypes')
+                                                                                                a(ng-click="linkTypeClicked(link)") {{link}}
+                                                                        #fullLinkInput
+                                                                                input(type='text' placeholder="http://www.yoururl.com" ng-model='userLink.url' ng-show="isOtherUrl() || true")
+                                                                //- input(type='text' placeholder="username" ng-model='userLink.username')
+                                                        #linkMessage    
+                                                                span {{linkMessage}}
+                                                        #addLinkButton.row 
+                                                                button.btn-sm.btn.btn-primary(ng-click="addLinkClicked(userLink)") Add                
+                                                        div.row#linksDisplayWrapper(ng-show="userData.links.length != 0") 
+                                                                h5      Links    
+                                                                div            
+                                                                        ul#interests(class='col-sm-12 col-md-12 col-lg-12 col-xs-12')
+                                                                                li.interestTags(ng-repeat="link in userData.links")
+                                                                                        span.interestTag {{link.url}} 
+                                                                                                a.remove-button.clickableLink(ng-click="removeLinkProfile(link)") x
+                                                        .row#profileColorInput 
+                                                                span.label.label-default Profile Color:
+                                                                input(type="color" ng-change="colorChanged()" id="colorPicker" ng-model="userData.profileColor" )
                                                 div#nextbuttons
                                                         button.btn-default(ng-click="backPage()") Back
                                                         button.btn-default(ng-click="nextPage()") Next
@@ -293,11 +336,11 @@ html(lang="en" ng-app='myApp')
                                                                 br   
                                                                 span Current Page Name : {{popUp.pages[currentPageIndex].pageName}}         
 
-                                                div#submitProfilePopUp(ng-show="currentPageIndex+1 != popUpTotalPages")
+                                                div#submitProfilePopUp(ng-show="currentPageIndex+1 != popUpTotalPages || true")
                                                         button(ng-click="popUpFormSubmit()") Save
                                                  div#submitProfilePopUp(ng-show="currentPageIndex+1 == popUpTotalPages")
                                                         button(ng-click="popUpFormSubmit('exit')") Save & Exit
-                                                
+                                                 
                                         div.popUpMessageForUser 
                                                 span {{popUpMessageForUser}}
 

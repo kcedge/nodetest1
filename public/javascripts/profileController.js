@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 
-angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$http', 'ProfileService','PopUpService', 'CommentsService','FeedService', '$localStorage','FileUploader','UserDataService', 
-function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsService, FeedService, $localStorage, FileUploader, UserDataService) {
+angular.module("myApp").controller('ProfileCtrl', ['$scope', '$rootScope', '$http', 'ProfileService','PopUpService', 'CommentsService','FeedService', '$localStorage','FileUploader','UserDataService','NotificationService',
+function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsService, FeedService, $localStorage, FileUploader, UserDataService,NotificationService) {
 
 
 	var vm = this;
@@ -19,13 +19,15 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 	var urlComponents = url_in.split("/");
 	var urlEnd = urlComponents[urlComponents.length - 1]
 
-
+	
 
 	if(urlEnd!='profile' && urlEnd!='editing'){
 		$scope.profileUserName = urlComponents[urlComponents.length - 1];
 		//grab users profile we are viewing
 		ProfileService.getProfileInfoByName($scope.profileUserName).then(function(response){
 			$scope.userData = response;
+
+			var $p = $(".profileColorBar").css('background-color', $scope.userData.profileColor);
 			$scope.profileImagesUploaded = $scope.userData.profileImageJson;
 			$scope.profileBannerImagesUploaded = $scope.userData.profileBannerImageJson;
 			if(typeof $scope.userData.interests == 'string'){
@@ -40,6 +42,30 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 			else{
 				$scope.userData.roles =  $scope.userData.roles;
 			}
+			ProfileService.getFollowers($scope.userData).then(function(response){
+				$scope.userData.followers = response;
+
+				var numFollowers = 0;
+
+				if($scope.userData.followers!=null){
+					numFollowers = $scope.userData.followers.length;
+				}
+				$('.nav-tabs a[href="#tabFollowers"]').text('Followers');
+				$('.nav-tabs a[href="#tabFollowers"]').append("<span class='circleProfileColor'>" + numFollowers + "</span>");
+
+			});
+			ProfileService.getFollowing($scope.userData).then(function(response){
+				$scope.userData.followings = response;
+				var numFollowing = 0;
+				if($scope.userData.followings != null) {
+					numFollowing = $scope.userData.followings.length;
+				}
+
+				$('.nav-tabs a[href="#tabFollowing"]').text('Following');
+				$('.nav-tabs a[href="#tabFollowing"]').append("<span class='circleProfileColor'>" + numFollowing + "</span>");
+				
+			});
+
 			
 		});//
 	}
@@ -129,17 +155,42 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 		
 		}
 		else{
-		
 			if(user.profileDetails.length > 0){
 				$scope.userData = user.profileDetails[0];
 			}
 			else{
 				$scope.userData = {};
 			}
+
+			var $p = $(".profileColorBar").css('background-color', $scope.userData.profileColor);
 			$scope.profileImagesUploaded = ProfileService.getProfileImagesByType('profilePicture');
 			$scope.profileBannerImagesUploaded = ProfileService.getProfileImagesByType('profileBanner');
 			$scope.userData.interestTags = ProfileService.getProfileInterests();
 			$scope.userData.roleTags = ProfileService.getProfileRoles();
+			ProfileService.getFollowers($scope.user.profileDetails[0]).then(function(response){
+				$scope.userData.followers = response;
+
+				var numFollowers = 0;
+
+				if($scope.userData.followers!=null){
+					numFollowers = $scope.userData.followers.length;
+				}
+				$('.nav-tabs a[href="#tabFollowers"]').text('Followers');
+				$('.nav-tabs a[href="#tabFollowers"]').append("<span class='circleProfileColor'>" + numFollowers + "</span>");
+
+			});
+			ProfileService.getFollowing($scope.user.profileDetails[0]).then(function(response){
+				$scope.userData.followings = response;
+				var numFollowing = 0;
+				if($scope.userData.followings != null) {
+					numFollowing = $scope.userData.followings.length;
+				}
+
+				$('.nav-tabs a[href="#tabFollowing"]').text('Following');
+				$('.nav-tabs a[href="#tabFollowing"]').append("<span class='circleProfileColor'>" + numFollowing + "</span>");
+				
+			});
+
 		}
 
 	
@@ -161,12 +212,59 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 
 	});
 
+	///Follow actions
+	$scope.userFollowing = function(){
+		if($scope.user != null && $scope.user.profileDetails != null && $scope.user.profileDetails[0].followingArray){
+			for(var i = 0; i < $scope.user.profileDetails[0].followingArray.length;i++){
+				if($scope.user.profileDetails[0].followingArray[i]._id == $scope.userData._id){
+					return true;
+				}
+			}
+		}
+		return false;
 
+	}
+
+	$scope.followClickedToggle = false;
+	$scope.followingClicked = function(){
+		if(window.confirm("unfollow user?")){
+			ProfileService.unfollowUser($scope.user, $scope.userData, $scope.profileUserName).then(function(response) {
+				console.log(response);
+				$scope.followClickedToggle = false;
+				window.location.reload(); 
+			})
+		}
+		else{
+
+		}
+	}
+	$scope.followClicked = function(){
+		ProfileService.followUser($scope.user, $scope.userData, $scope.profileUserName).then(function(response) {
+			
+			console.log(response);
+			$scope.followClickedToggle = true;
+			// window.location.reload(); 
+
+
+		})
+	}
+
+
+
+
+	$scope.profileEditLinksClicked = function(){
+		PopUpService.openPopUp('profile', 'profileLinks');
+	}
 
 	FeedService.getTipsFromMongo().then(function(response){
 		$scope.feedArrayData = response;
 	})
-
+	$scope.linkClicked = function(link){
+		window.open(
+			link.url,
+			'_blank' // <- This is what makes it open in a new window.
+		  );
+	}
 
 	$scope.editProfileClicked = function(){
 		PopUpService.openPopUp('profile');
@@ -344,8 +442,8 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 	    var test = $scope.currentTip;
 	}
 	$scope.userNavBarClicked = function(user){
-	    $scope.userActive = user;
-	    window.location.href = '/profile/'+$scope.userActive.userName;
+	    
+	    window.location.href = '/profile/'+user.username;
 	    
 	}
 
@@ -474,6 +572,53 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 
 
 	};
+
+	$scope.feed = 'myFeed';
+
+	$scope.feedShow = function(feedName){
+		return feedName == $scope.feed;
+	}
+	$scope.feedAddClicked = function(){
+		if($scope.feed != 'add'){
+			$scope.feed = 'add';//MOVE TO POPUP
+			$scope.feed = 'myFeed';
+
+		}
+		else{
+			$scope.feed = 'myFeed';
+		}
+	}
+	$scope.myFeedClicked = function(){
+		if($scope.feed != 'myFeed'){
+			$scope.feed = 'myFeed';
+		}
+		else{
+			$scope.feed = 'myFeed';
+		}
+	}
+	$scope.trendingClicked = function(){
+		$scope.feed = 'trending';
+	}
+
+	$scope.getTags = function (query) {
+		var autoCompleteInterests = [];
+		$scope.userData.interests.filter(obj => {
+			var nameStr = obj.text;
+			if (nameStr.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+				autoCompleteInterests.push({ text: obj.text })
+			}
+		});
+
+
+		return autoCompleteInterests;
+	}
+
+
+
+
+
+
+	///Image uploaders
 	
 	var uploader = $scope.uploader = new FileUploader({
 	    url: '/uploadImage'

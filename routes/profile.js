@@ -42,7 +42,7 @@ module.exports = function (router, passport) {
 				//console.log(items);
 				res.send(items);
 			});
-			
+
 
 		}
 		catch (e) {
@@ -284,7 +284,7 @@ module.exports = function (router, passport) {
 	});
 	router.post('/postProfileImage', function (req, res) {
 		try {
-			
+
 			console.log(req);
 			var userId = req.body['userId'];
 			var profileImageJson = req.body['profileImageJson'];
@@ -293,7 +293,7 @@ module.exports = function (router, passport) {
 			console.log('posting profileImageJson Data' + profileImageJson);
 			const db = req.app.locals.db;
 			var collection = db.collection('profileCollection');
-			
+
 			if (true) {
 				collection.update({ userId: ObjectId(userId) }, { $set: { profileImageJson: profileImageJson } }, function (err, db) {
 					if (err) {
@@ -317,7 +317,7 @@ module.exports = function (router, passport) {
 	});
 	router.post('/postBannerProfileImage', function (req, res) {
 		try {
-			
+
 			console.log(req);
 			var userId = req.body['userId'];
 			var profileBannerImageJson = req.body['profileBannerImageJson'];
@@ -326,7 +326,7 @@ module.exports = function (router, passport) {
 			console.log('posting profileBannerImageJson Data' + profileBannerImageJson);
 			const db = req.app.locals.db;
 			var collection = db.collection('profileCollection');
-			
+
 			if (true) {
 				collection.update({ userId: ObjectId(userId) }, { $set: { profileBannerImageJson: profileBannerImageJson } }, function (err, db) {
 					if (err) {
@@ -435,10 +435,10 @@ module.exports = function (router, passport) {
 					}
 					var user = userItems.filter(obj => {
 						var objectidStr = ObjectId(obj._id).toString();
-						return  (objectidStr === authenticatedid);
+						return (objectidStr === authenticatedid);
 					});
-					
-					
+
+
 					res.send(user);
 					//if (collection.find({submittedBy: username})) {
 					// var cursorArray = collection.find({ userId: ObjectId(authenticatedid) }).toArray(function (err, items) {
@@ -456,7 +456,7 @@ module.exports = function (router, passport) {
 					//console.log(items);
 
 				});
-			
+
 
 		}
 		catch {
@@ -507,7 +507,7 @@ module.exports = function (router, passport) {
 
 			var collection = db.collection('profileCollection');
 			if (true) {
-				collection.update({ userId: ObjectId(user._id) }, { $set: { username: userData.username, bio: userData.bio, country: userData.country, soundcloud:userData.soundcloud, interests:userData.interests, roles:userData.roles } }, { upsert: true }, function (err, db) {
+				collection.update({ userId: ObjectId(user._id) }, { $set: { username: userData.username, bio: userData.bio, country: userData.country, soundcloud: userData.soundcloud, interests: userData.interests, roles: userData.roles, profileColor: userData.profileColor, links: userData.links } }, { upsert: true }, function (err, db) {
 					if (err) {
 						console.log('Unable to edit profile', err);
 						res.send('Banner image save failed');
@@ -525,7 +525,7 @@ module.exports = function (router, passport) {
 
 		}
 	});
-	
+
 
 	router.post('/deleteProfilePicture', function (req, res) {
 		try {
@@ -557,7 +557,7 @@ module.exports = function (router, passport) {
 		}
 	});
 
-	
+
 	router.post('/deleteBannerProfilePicture', function (req, res) {
 		try {
 			console.log(req);
@@ -590,20 +590,20 @@ module.exports = function (router, passport) {
 
 	router.get('/getUsersForUserManagement', function (req, res) {
 		try {
-			
+
 			const db = req.app.locals.db;
 
 			var collection = db.collection('profileCollection');
 			var usersCollection = db.collection('users');
-			
+
 			var cursorArrayUsers = usersCollection.aggregate([{ $lookup: { from: 'profileCollection', localField: '_id', foreignField: 'userId', as: 'profileDetails' } }])
 				.toArray(function (err, userItems) {
 					if (err) {
 						res.status(500).send('error retreiving data');
 					}
-					
+
 					res.send(userItems);
-					
+
 				});
 		}
 		catch {
@@ -611,8 +611,301 @@ module.exports = function (router, passport) {
 		}
 	});
 
+	function isLoggedIn(req, res, next) {
+		console.log("isLoggedIn Function")
 
+
+
+		// if user is authenticated in the session, carry on 
+		if (req.isAuthenticated())
+			return next();
+
+		// if they aren't redirect them to the home page
+		res.redirect('/signUp');
+	}
+
+	router.post('/unfollowUser', isLoggedIn, function (req, res) {
+		try {
+			console.log(req);
+			var profileIdFollower = req.body['followerProfileId'];
+			var profileIdFollowing = req.body['followingProfileId'];
+			var user = req.body['username'];
+
+			const db = req.app.locals.db;
+			var collection = db.collection('profileCollection');
+
+
+			//check followers profile
+			var cursorArray = collection.find({ _id: ObjectId(profileIdFollower) }).toArray(function (err, items) {
+				var followerProfile = items[0];
+				if (followerProfile.followingArray == null) {
+					followerProfile.followingArray = [];
+				}
+				else{
+					followerProfile.followingArray = JSON.parse(followerProfile.followingArray);
+					var removed = null;
+					for(var i = 0; i < followerProfile.followingArray.length; i++){
+						if(followerProfile.followingArray[i]._id == profileIdFollowing){
+							removed = followerProfile.followingArray.splice(i,1);
+							break;
+						}
+					}
+				}
+
+				var followingArrString = JSON.stringify(followerProfile.followingArray);
+
+				collection.update({ _id: ObjectId(profileIdFollower) }, { $set: { followingArray: followingArrString } }, { upsert: true }, function (err, db) {
+					if (err) {
+						console.log('following failed', err);
+					}
+
+				});
+			});
+
+			var cursorArray = collection.find({ _id: ObjectId(profileIdFollowing) }).toArray(function (err, items) {
+ 
+				if (err) {
+					console.log('follower failed', err);
+				}
+
+				var followingProfile =  items[0];
+				if (followingProfile.followerArray == null) {
+					followingProfile.followerArray = [];
+				}
+				else{
+					followingProfile.followerArray = JSON.parse(followingProfile.followerArray);
+					var removed = null;
+					for(var i = 0; i < followingProfile.followerArray.length; i++){
+						if(followingProfile.followerArray[i]._id == profileIdFollower){
+							removed = followingProfile.followerArray.splice(i,1);
+							break;
+						}
+					}
+				}
+				var followerArrString = JSON.stringify(followingProfile.followerArray);
+
+				collection.update({ _id: ObjectId(profileIdFollowing) }, { $set: { followerArray: followerArrString } }, { upsert: true }, function (err, db) {
+					if (err) {
+						console.log('follower failed', err);
+						res.send("err")
+
+					}
+					else {
+						res.send("success")
+					}
+				});
+			});
+
+			if (err) {
+				console.log('error 500');
+				res.status(500).send('error retreiving data');
+			}
+
+
+		}
+		catch {
+
+		}
+	});
+
+	var pushNotificationProfile = function(req,sender,receiver,type,content,callback){
+		try{
+			const db = req.app.locals.db;
+			var collection = db.collection('notificationCollection');
+			
+			collection.insert({ sender: ObjectId(sender), receiver:ObjectId(receiver), type:type, content:content ,is_read:false,created_dt:new Date()}, function (err, docsInserted) {
+				if (err) {
+					console.log('addedNotification fail', err);
+					return callback(err);
+
+				}
+				else {
+					
+					console.log(docsInserted.ops[0]._id);
+					return callback(docsInserted.ops[0]._id);
+				}
+			});
+
+		}
+		catch{
+
+		}
+	}
 	
+	router.post('/followUser', isLoggedIn, function (req, res) {
+		try {
+			console.log(req);
+			var profileIdFollower = req.body['followerProfileId'];
+			var profileIdFollowing = req.body['followingProfileId'];
+			var user = req.body['username'];
+
+			const db = req.app.locals.db;
+			var collection = db.collection('profileCollection');
+
+
+			//check followers profile
+			var cursorArray = collection.find({ _id: ObjectId(profileIdFollower) }).toArray(function (err, items) {
+				var followerProfile = items[0];
+				if (followerProfile.followingArray == null) {
+					followerProfile.followingArray = [];
+					followerProfile.followingArray.push({ _id: profileIdFollowing });
+				}
+				else if(typeof followerProfile.followingArray == 'string') {
+					followerProfile.followingArray = JSON.parse(followerProfile.followingArray);
+					followerProfile.followingArray.push({ _id: profileIdFollowing });
+				}
+				else{
+					followerProfile.followingArray.push({ _id: profileIdFollowing });
+				}
+
+				var followingArrString = JSON.stringify(followerProfile.followingArray);
+				if(followingArrString == "[]"){
+					followingArrString = "";
+				}
+				collection.update({ _id: ObjectId(profileIdFollower) }, { $set: { followingArray: followingArrString } }, { upsert: true }, function (err, db) {
+					if (err) {
+						console.log('following failed', err);
+					}
+
+				});
+			});
+
+			var cursorArray = collection.find({ _id: ObjectId(profileIdFollowing) }).toArray(function (err, items) {
+ 
+				if (err) {
+					console.log('follower failed', err);
+				}
+
+				var followingProfile =  items[0];
+				if (followingProfile.followerArray == null) {
+					followingProfile.followerArray = [];
+					followingProfile.followerArray.push({ _id: profileIdFollower })
+				}
+				else if(typeof followingProfile.followerArray == 'string') {
+					followingProfile.followerArray = JSON.parse(followingProfile.followerArray);
+					if(typeof followingProfile.followerArray.push == 'function'){
+						followingProfile.followerArray.push({ _id: profileIdFollower })
+					}
+				}
+				else{
+					followingProfile.followerArray.push({ _id: profileIdFollower })
+				}
+				var followerArrString = JSON.stringify(followingProfile.followerArray);
+				if(followerArrString == "[]"){
+					followerArrString = "";
+				}
+				collection.update({ _id: ObjectId(profileIdFollowing) }, { $set: { followerArray: followerArrString } }, { upsert: true }, function (err, db) {
+					if (err) {
+						console.log('follower failed', err);
+						res.send("err")
+					}
+					else {
+						//pushNotification
+						var notification = pushNotificationProfile(req,profileIdFollower,profileIdFollowing,'follow','you have a new follower!',function(response){
+							res.send({message: "success", notification:response});
+						})
+					}
+				});
+			});
+
+			if (err) {
+				console.log('error 500');
+				res.status(500).send('error retreiving data');
+			}
+
+
+		}
+		catch {
+
+		}
+	});
+
+	router.post('/getFollowers', function (req, res) {
+		try {
+			var ids = req.body['userIds'];
+
+			const db = req.app.locals.db;
+
+			var collection = db.collection('profileCollection');
+			var usersCollection = db.collection('users');
+
+			
+			var oids = [];
+			ids.forEach(function (item) {
+				oids.push(new ObjectId(item._id));
+			});
+			
+			var cursorArray = collection.find({ _id: { $in: oids } }).toArray(function (err, items) {
+				if (err) {
+					console.log('error 500');
+					res.status(500).send('error retreiving data');
+				}
+				console.log('ITEMS');
+				console.log(items);
+				res.send(items);
+			});
+		}
+		catch {
+
+		}
+	});
+
+	router.post('/getFollowings', function (req, res) {
+		try {
+			var ids = req.body['userIds'];
+
+			const db = req.app.locals.db;
+
+			var collection = db.collection('profileCollection');
+			var usersCollection = db.collection('users');
+
+			var oids = [];
+			ids.forEach(function (item) {
+				oids.push(new ObjectId(item._id));
+			});
+
+			var cursorArray = collection.find({ _id: { $in: oids } }).toArray(function (err, items) {
+				if (err) {
+					console.log('error 500');
+					res.status(500).send('error retreiving data');
+				}
+				console.log('ITEMS');
+				console.log(items);
+				res.send(items);
+			});
+		}
+		catch {
+
+		}
+	});
+
+
+	router.get('/getNotificationsUserProfile/:id', function (req, res, next) {
+		try {
+			const db = req.app.locals.db;
+			var id = req.params.id;
+			console.log('Getting the notification for')
+			console.log(id);
+			//	const id = new ObjectID(req.params.id);
+
+			const info = db.collection('notificationCollection').find({ receiver: ObjectId(id) }).toArray(function (err, items) {
+				if (err) {
+					res.status(500).send('error retreiving data');
+				}
+				//console.log('ITEMS');
+				//console.log(items);
+				res.send(items);
+			});
+
+
+		}
+		catch (e) {
+			var e = e;
+		}
+	});
+
+
+
 
 
 };

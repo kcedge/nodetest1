@@ -12,7 +12,14 @@ myApp.service('PopUpService', ['$http', '$q', 'FileUploader', 'ProfileService', 
 	vm.currentPopUp = "";
 	vm.currentPopUpIndex = 1;
 	vm.currentPageIndex = 0;
-	vm.popUpTypes = [{ name: "email", pages: [{ name: "email" }] }, { name: "profile", pages: [{ pageName: "profileInit" }, { pageName: "profileImgr" }, {pageName: "interests"}] }];
+	vm.popUpTypes = [
+		{ name: "email", pages: [{ name: "email" }] }, 
+		{ name: "profile", pages: [{ pageName: "profileInit" }, { pageName: "profileImgr" }, {pageName: "interests"}, {pageName: "profileLinks"}] },
+		{ name : "tip", pages: [{pageName: "tipInit"}]}
+
+	];
+	
+	
 	vm.popUp = vm.popUpTypes[vm.currentPopUpIndex];
 
 	vm.profileImages = [];
@@ -76,10 +83,16 @@ myApp.service('PopUpService', ['$http', '$q', 'FileUploader', 'ProfileService', 
 	this.setPage= function(index){
 		vm.currentPageIndex = index;
 	}
+	this.getPage= function(){
+		return vm.popUpTypes[vm.currentPopUpIndex].pages[vm.currentPageIndex].pageName;
+	}
 	this.setPopUp= function(index){
 		vm.popUp =  vm.popUpTypes[index];
 
 		vm.currentPopUpIndex = index;
+	}
+	this.getPopUp = function(){
+		return vm.popUp;
 	}
 
 	this.showPage = function (pageName) {
@@ -112,6 +125,30 @@ myApp.service('PopUpService', ['$http', '$q', 'FileUploader', 'ProfileService', 
 		vm.showPopUp = true;
 		vm.currentPopUp = 'profile';
 	}
+
+	this.openPopUp = function(popUpName, popUpPage){
+		
+
+		for(var a = 0; a < vm.popUpTypes.length;a++){
+			if(vm.popUpTypes[a].name == popUpName){
+				vm.currentPopUpIndex = a;
+				break;
+			}	
+		}
+
+		var popUpLength = vm.popUpTypes[vm.currentPopUpIndex].pages.length;
+		for(var i =0; i < popUpLength; i++){
+			if(vm.popUpTypes[vm.currentPopUpIndex].pages[i].pageName == popUpPage){
+				vm.currentPageIndex = i;
+				break;
+			}
+		}
+
+		vm.showPopUp = true;
+		vm.currentPopUp = popUpName;
+		
+	}
+
 	this.getShowPopUp = function(popUpName){
 		if(popUpName == vm.currentPopUp){
 
