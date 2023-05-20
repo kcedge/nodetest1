@@ -15,12 +15,16 @@ module.exports = {dbSettings: function () {
 	   url = "mongodb://mphelperDbUser:mphelper91!@ec2-54-174-236-80.compute-1.amazonaws.com:27017/mphelperDb";
 	}
 	else {
-	    url = "mongodb+srv://edgecasey:gizmo2000@cluster0.wcphr2t.mongodb.net/krazyl3gzDb"
+
+		newUrl = "mongodb+srv://edgecasey:gizmo2000@cluster0.wcphr2t.mongodb.net/?retryWrites=true&w=majority";
+	    url = "mongodb+srv://edgecasey:gizmo2000@cluster0.wcphr2t.mongodb.net/krazyl3gzDb";
+
+
 	}
 
 	return {
 	    runningProd: runningProd,
-	    url: url
+	    url: newUrl
 	}
     }
 };
