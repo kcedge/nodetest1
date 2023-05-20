@@ -182,11 +182,11 @@ var url = dbConfig.dbSettings().url;
 var MongoClient = mongodb.MongoClient;
 
 
-var mongoUtil = require( './mongoUtil' );
-mongoUtil.connectToServer(app, function( err, client ) {
-  if (err) console.log(err);
-  // start the rest of your app here
-} );
+// var mongoUtil = require( './mongoUtil' );
+// mongoUtil.connectToServer(app, function( err, client ) {
+//   if (err) console.log(err);
+//   // start the rest of your app here
+// } );
 
 // // Create a MongoDB connection pool and start the application
 // // after the database connection is ready
