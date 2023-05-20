@@ -33,7 +33,7 @@ angular.module("myApp").controller('notificationController',
 
 			NotificationService.getNotifications($scope.user).then(function(response){
 				$scope.user.notifications = response;
-				$scope.notificationCount = $scope.user.notifications.length;
+				$scope.notificationCount = $scope.getNotificationCount();
 				
 			})
 
@@ -43,6 +43,30 @@ angular.module("myApp").controller('notificationController',
 	});
 
 	$scope.notificationActive = false;
+
+	$scope.getNotificationCount = function(){
+		var count =0;
+		for(var i = 0; i < $scope.user.notifications.length; i++){
+			if(!$scope.user.notifications[i].is_read){
+				count++;
+			}
+		}
+		return count;
+	}
+	$scope.notificationClicked = function(notification){
+		var note = notification
+		notification.is_read = true;
+		NotificationService.updateNotification(notification).then(function(response){
+			if(note.profileDetails[0]!= null && note.profileDetails[0].username){
+				window.location.href = "/profile/"  + note.profileDetails[0].username;
+			}
+		});
+
+
+	}
+
+
+
 	$scope.notificationWidgetClick = function(){
 		$scope.notificationActive = !$scope.notificationActive;
 	}

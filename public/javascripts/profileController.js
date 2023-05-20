@@ -28,8 +28,13 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 			$scope.userData = response;
 
 			var $p = $(".profileColorBar").css('background-color', $scope.userData.profileColor);
-			$scope.profileImagesUploaded = $scope.userData.profileImageJson;
-			$scope.profileBannerImagesUploaded = $scope.userData.profileBannerImageJson;
+			$scope.userData.profileImagesUploaded = $scope.userData.profileImageJson;
+			$scope.userData.profileBannerImagesUploaded = $scope.userData.profileBannerImageJson;
+
+		
+
+
+
 			if(typeof $scope.userData.interests == 'string'){
 				$scope.userData.interests =  JSON.parse($scope.userData.interests);
 			}
@@ -163,8 +168,13 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 			}
 
 			var $p = $(".profileColorBar").css('background-color', $scope.userData.profileColor);
-			$scope.profileImagesUploaded = ProfileService.getProfileImagesByType('profilePicture');
-			$scope.profileBannerImagesUploaded = ProfileService.getProfileImagesByType('profileBanner');
+			// $scope.profileImagesUploaded = ProfileService.getProfileImagesByType('profilePicture');
+			// $scope.profileBannerImagesUploaded = ProfileService.getProfileImagesByType('profileBanner');
+			$scope.userData.profileImagesUploaded = ProfileService.getProfileImagesByType('profilePicture');
+			$scope.userData.profileBannerImagesUploaded = ProfileService.getProfileImagesByType('profileBanner');
+			
+			
+			
 			$scope.userData.interestTags = ProfileService.getProfileInterests();
 			$scope.userData.roleTags = ProfileService.getProfileRoles();
 			ProfileService.getFollowers($scope.user.profileDetails[0]).then(function(response){
@@ -579,14 +589,8 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 		return feedName == $scope.feed;
 	}
 	$scope.feedAddClicked = function(){
-		if($scope.feed != 'add'){
-			$scope.feed = 'add';//MOVE TO POPUP
-			$scope.feed = 'myFeed';
+		PopUpService.openPopUp('tip','tipInit');
 
-		}
-		else{
-			$scope.feed = 'myFeed';
-		}
 	}
 	$scope.myFeedClicked = function(){
 		if($scope.feed != 'myFeed'){
@@ -770,12 +774,12 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 	    if (!runningProduction) {
 		imagePath = "resources/images/" + response;
 	    }
-	    $scope.profileImagesUploaded.push({image:imagePath,isProfile:true});
+	    $scope.userData.profileImagesUploaded.push({image:imagePath,isProfile:true});
 	    //$sc
 	    $scope.queue = [];
 
 
-		var images = $scope.profileImagesUploaded.concat($scope.profileBannerImagesUploaded);
+		var images = $scope.userData.profileImagesUploaded.concat($scope.profileBannerImagesUploaded);
 
 
 	    var profileImageJson = JSON.stringify(images);
@@ -787,5 +791,12 @@ function ($scope, $rootScope, $http, ProfileService, PopUpService, CommentsServi
 	    console.info('onCompleteAll');
 	};
 
+
+	$scope.showTrendingWidget = false;
+	ProfileService.getTrendingWidgetFile().then(function(response){
+			$scope.showTrendingWidget = true;
+
+
+		})
     }]);
 

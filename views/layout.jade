@@ -92,6 +92,7 @@ html(lang="en" ng-app='myApp')
                         script(src='javascripts/devDashController.js')
                         script(src='javascripts/popUpController.js')
                         script(src='javascripts/notificationController.js')
+                        script(src='javascripts/trendingWidgetController.js')
                         script(src='javascripts/popUpService.js')
                         script(src='javascripts/FeedService.js')
                         script(src='javascripts/NotificationService.js')
@@ -130,6 +131,9 @@ html(lang="en" ng-app='myApp')
                                 #notification.clickableLink(ng-repeat="notification in user.notifications" ng-click="notificationClicked(notification)")
                                         div#notificationContent
                                                 span {{notification.content}}
+                                        #notificationInfo
+                                                span {{notification.profileDetails[0].username}}
+                                                span#userFlag.profileIcon(class='fi fi-{{notification.profileDetails[0].country  | lowercase}}' title="{{notification.profileDetails[0].country}}")
                                         #notificationTIme
                                                 time.row.small.pull-right(style='margin-left:5px;'){{notification.created_dt|date:"MM/dd/yyyy 'at' h:mma"}}
                 block body
@@ -213,21 +217,29 @@ html(lang="en" ng-app='myApp')
 
                                                                                 button.btn-xs(ng-click="item.remove()") remove {{item.file.name}}   
                                                                                         span.glyphicon.glyphicon-remove
+                                                                                                                div.buttonWrapper            
+                                                                button.btn.btn-xs.row.profilePictureUploadButton(ng-show="profileImageUploader.queue.length > 0" ng-click="profileUploadClicked()" ng-disabled="!profileImageUploader.getNotUploadedItems().length")
+                                                                        span.glyphicon.glyphicon-upload
+                                                                                &nbsp Upload         
                                                                 //- .progress       
                                                                 //-         .progress-bar(role="progressbar" ng-style="{width:profileImageUploader.progress s+ '%'}" style="width:0%;")
-                                                                .profilePictureHorizonalScroll.frame
+                                                                div#photoUserMessage(ng-if= "(userData.profileImagesUploaded.length > 0)") Your primary photo is selected using the top left corner
+                                                                .profilePictureHorizonalScroll.frame#scrollParent
                                                                         .profilePictureThumbsWidget
-                                                                                .thumbnailWrapper.marginBottom10(ng-repeat='profileImg in profileImagesUploaded')
+                                                                                .thumbnailWrapper.marginBottom10(ng-repeat='profileImg in userData.profileImagesUploaded')
                                                                                         img.img-thumbnail.imageThumbNailProfile( class='imageAttached{{$index}}' ng-src='{{profileImg.image}}' ng-show='{{profileImg.isProfile}}' ng-click='editImageClicked($index);')
                                                                                         #imgUploadButtonsDiv.row(ng-show="profileImg" style='margin-bottom:5px;')
                                                                                                 //- button.editButtonStyle.clickable(ng-click="editProfileImgClicked(profileImg)" )
                                                                                                 //-         span.glyphicon.glyphicon-pencil
                                                                                                 button.editButtonStyle.clickable(ng-click="removeProfileImgClicked(profileImg)" )
                                                                                                         span.glyphicon.glyphicon-remove-circle
-                                                                div.buttonWrapper            
-                                                                        button.btn.btn-xs.row.profilePictureUploadButton(ng-show="profileImageUploader.queue.length > 0" ng-click="profileUploadClicked()" ng-disabled="!profileImageUploader.getNotUploadedItems().length")
-                                                                                span.glyphicon.glyphicon-upload
-                                                                                        &nbsp Upload
+                                                                                        #primaryInputDiv
+                                                                                                input#primaryInput(type="checkbox" ng-click="primaryClicked(profileImg)" ng-model="profileImg.primary")
+                                                                div#arrowButtonsProfileImg
+                                                                        span#leftArrowProfileImg.glyphButton.glyphicon.glyphicon.glyphicon-triangle-left(ng-mousedown="pannerMouseDown('left')" ng-mouseup="pannerMouseUp('left')" class="panner" data-scroll-modifier='-1')                                                                      
+                                                                        span#rightArrowProfileImg.glyphButton.glyphicon.glyphicon.glyphicon-triangle-right(ng-mousedown="pannerMouseDown('right')" ng-mouseup="pannerMouseUp('right')" class="panner" data-scroll-modifier='1')
+
+
                                                         div.bannerInputWrapper.row  
                                                                 .row
                                                                         h7 Make your profile more yours with a banner.  Wide images work best :)
@@ -240,17 +252,20 @@ html(lang="en" ng-app='myApp')
 
                                                                                 button.btn-xs(ng-click="item.remove()") remove {{item.file.name}}   
                                                                                         span.glyphicon.glyphicon-remove
+                                                                                
+
                                                                 //- .progress       
                                                                 //-         .progress-bar(role="progressbar" ng-style="{width:profileBannerImageUploader.progress + '%'}" style="width:0%;")
                                                                 .profilePictureHorizonalScroll.frame
-                                                                        .profilePictureThumbsWidget
-                                                                                .thumbnailWrapper.row.marginBottom10(ng-repeat='img in profileBannerImagesUploaded')
+                                                                        .profilePictureThumbsWidget#scrollParent
+                                                                                .thumbnailWrapper.row.marginBottom10(ng-repeat='img in userData.profileBannerImagesUploaded')
                                                                                         img.img-thumbnail.imageThumbNailProfileBanner(class='imageAttached{{$index}}' ng-src='{{img.image}}' ng-show='{{img.isProfile}}' ng-click='editImageClicked($index);')
                                                                                         #imgUploadButtonsDiv.row(ng-show="img" style='margin-bottom:5px;')
                                                                                                 //- button.editButtonStyle.clickable(ng-click="editProfileBannerImgClicked(img)" )
                                                                                                 //-         span.glyphicon.glyphicon-pencil
                                                                                                 button.editButtonStyle.clickable(ng-click="removeProfileBannerImgClicked(img)" )
                                                                                                         span.glyphicon.glyphicon-remove-circle
+                
                                                                 div.buttonWrapper           
                                                                         button.btn.btn-xs.row.profilePictureUploadButton#bannerUpload(ng-show="profileBannerImageUploader.queue.length > 0" ng-click="profileBannerUploadClicked()" ng-disabled="!profileBannerImageUploader.getNotUploadedItems().length")
                                                                                 span.glyphicon.glyphicon-upload
@@ -279,7 +294,7 @@ html(lang="en" ng-app='myApp')
                                                                         ul#interests(class='col-sm-12 col-md-12 col-lg-12 col-xs-12')
                                                                                 li.interestTags(ng-repeat="tag in userData.interestTags")
                                                                                         span.interestTag {{tag.text}} 
-                                                                                                a.remove-button.clickableLink(ng-click="removeInterestTagProfile()") x
+                                                                                                a.remove-button.clickableLink(ng-click="removeInterestTagProfile(tag)") x
                                                         //- div#roleInputWrapper.row
                                                         //-         tags-input#profileRoleTagInput(ng-model='roleTags' placeholder="What are some roles you want to fill? Ex: Singer, Engineer, Agent")
                                                         //-                                 auto-complete(source='getRoleTags($query)' autocomplete="on" ) 
@@ -323,6 +338,7 @@ html(lang="en" ng-app='myApp')
                                                                                 li.interestTags(ng-repeat="link in userData.links")
                                                                                         span.interestTag {{link.url}} 
                                                                                                 a.remove-button.clickableLink(ng-click="removeLinkProfile(link)") x
+                                                                                        
                                                         .row#profileColorInput 
                                                                 span.label.label-default Profile Color:
                                                                 input(type="color" ng-change="colorChanged()" id="colorPicker" ng-model="userData.profileColor" )
@@ -343,6 +359,106 @@ html(lang="en" ng-app='myApp')
                                                  
                                         div.popUpMessageForUser 
                                                 span {{popUpMessageForUser}}
+                        .div.row.loginPopup(ng-show="showPopUp('tip')")
+                                .div.formPopup#popupForm.col-lg-10.col-md-10.col-sm-10.col-xs-10
+                                        form.formContainer()
+                                                .row#dismissPopUp
+                                                                a.clickableLink(ng-click="dismissClicked('profile')" style="float:right") Dismiss
+                                                .tipFields(ng-show="showPage('tipInit')")
+                                                        .row
+                                                                h2 What is on your mind?	
+                                                        #tipsFormWrapper.contentWrapper
 
+                                                        input.form-control(type='text' id='tipTitleEditInput' placeholder='Title')
+                                                        #editDescriptionWrapper
+                                                                //h6 Description
+                                                                textarea#textAreaEditTip.form-control.tipDescInput(placeholder="Tip Description" required)
+                                                        #editDescriptionButtonWrapper(style="display:inline-block")
+                                                                button.btn(ng-click="editAddDescription()" style="float:left")
+                                                                        span.glyphicon.glyphicon-plus
+                                                                button.btn(ng-click="editSubtractDescription()" style="float:left")
+                                                                        span.glyphicon.glyphicon-minus
+                                                                #noteWrapper(style="float:left;margin-left:5%;width:80%;")
+                                                                                span(style="font-style:italic;") Note: For now, images are displayed in the order they are uploaded.  If you want an image between paragraphs, add a description.  The first image uploaded is displayed after the first description, the second image after the second description.. and so on.
+                                                        #editImagesContainer(class="row")
+                                                                .col-xs-2.col-sm-2.col-md-2.col-lg-2#image(ng-repeat="tipImage in imageContainer" style='margin-left:3%' class='form-group')
+                                                                                img( ng-src="{{tipImage.imageFileName}}" style='width:100%;padding-top:2px;')
+                                                                                select.imageSectionInput(name="imageSectionSelect" type="select")
+                                                                                                        option(value="imageSection" ng-repeat="imageSection in imageSectionSelectionArray"){{imageSection}}
+                                                                                #removeImage.keyButton(ng-click="removeImage()")
+                                                                                                +btn-xs("Delete")
+                                                        #uploadedImagesWrapper(style='display:inline-block;')
+                                                                #imageWrapper(style='float:left; width:130px; height:130px' ng-repeat='tipPart in tipImageArray' )
+                                                                        img.img-thumbnail.imageThumbNail(class='imageAttached{{$index}}' ng-show="tipPart.hasImage" ng-src='{{tipPart.imageFileName}}' ng-click='editImageClicked($index);')
+                                                                #imageSelectedData(style='')
+                                                                        {{imageSelectedData}}
+                                                                        button.btn.btn-danger.btn-xs(ng-show = 'tipImageArray.length>0' ng-click='removeSelectedImage()' ng-disabled='!imageSelected')
+                                                                                span.glyphicon.glyphicon-remove-sign
+                                                                                span &nbsp Remove
+                                                        .imageUploaderInputWrapper(style="margin-top:5px;")
+                                                                .headerImageInput(style="font-size:small;color:#777777")
+                                                                        span Image Uploader
+                                                                        span(style='float:right') {{fileErrorMessage}}
+                                                                .inputWrapper						
+                                                                        input.inputClass(type="file",nv-file-select uploader="uploader")
+                                                                        ul
+                                                                                li(ng-repeat="item in uploader.queue")
+                                                                                        {{item.file.name}}
+                                                                                        //button.btn.btn-success.btn-xs(ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess")
+                                                                                        //	span.glyphicon.glyphicon-upload
+                                                                                        //button.btn.btn-warning.btn-xs(ng-click="item.cancel()" ng-disabled="item.isUploading")
+                                                                                        //	span.glyphicon.glyphicon-ban-circle
+                                                                                        button.btn.btn-default.btn-xs(ng-click="item.remove()" style=";color:black;margin-left:5px;")
+                                                                                                span.glyphicon.glyphicon-remove
+                                                                .progress
+                                                                        .progress-bar(role="progressbar" ng-style="{width:uploader.progress + '%'}" style="width:0%;")
+                                                                #imgUploadButtonsDiv(ng-show="uploader.queue.length > 0" style='margin-bottom:5px;')
+                                                                        button.btn.btn-danger.btn-xs(ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length" )
+                                                                                                        span.glyphicon.glyphicon-trash 
+                                                                                                        &nbsp Remove all
+                                                                        button.btn.btn-warning.btn-xs(ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading" style='margin-left:5px;')
+                                                                                                        span.glyphicon.glyphicon-ban-circle 
+                                                                                                        &nbsp Cancel
+                                                                        button.btn.btn-success.btn-xs(ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length" style='margin-left:5px;')
+                                                                                                        span.glyphicon.glyphicon-upload
+                                                                                                        &nbsp Upload
+                                                                                                         
+                                                        .filterBoxStyle(style='display:inline-block;width:100%;')
+                                                               
+                                                        .viedoLinkInputWrapper(style="margin-top:5px;" ng-show='true')
+                                                                h7 Link Video							
+                                                                        +input("text","editVideoLink","https://www.youtube.com/","")
+                                                
+
+                                                       
+                                                .tipFields(ng-show="showPage('tipLocalVideo')")
+                                                        .row
+                                                                h2 Add a video	
+                                                        #tipsFormWrapper.contentWrapper
+                                                        form(action="/upload-video" method="POST" enctrype="multipart/form-data")
+                                                                .form-group     
+                                                                        label Select Video 
+                                                                        input(type="file" name="video" accept="video/*" class="form-control-file" required)
+                                                                .form-group 
+                                                                        label Thumbnail 
+                                                                        input(type="file" name="thumbnail" accept="image/*" class="form-control-file")
+                                                                .form-group 
+                                                                        label Title 
+                                                                        input(type="text" name="title"  class="form-control")
+                                                                .form-group 
+                                                                        label Description 
+                                                                        input(type="text" name="description"  class="form-control")        
+                                                               
+                                                        .viedoLinkInputWrapper(style="margin-top:5px;" ng-show='false')
+                                                                h7 Link Video							
+                                                                        +input("text","editVideoLink","https://www.youtube.com/","")
+                                                .backAndSubmitWrapperPopUp(style='display:inline-block;width:100%')
+                                                                .backToTipsButtonDiv(style='float:left' ng-click="backPage()")
+                                                                        +btn-primary("Back")
+                                                                .nextButtonDiv(style='float:right' ng-click="nextPage()")
+                                                                        +submit-primary("Next")
+                                                                .submitButtonDiv.submitTipButtonPopup( ng-click="editSubmitButtonClicked()")
+                                                                        +submit-primary("Submit")
+                                                                
 
 

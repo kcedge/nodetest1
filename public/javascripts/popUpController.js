@@ -20,13 +20,26 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 					$scope.userData = {};
 				}
 
-				$scope.profileImagesUploaded = ProfileService.getProfileImagesByType('profilePicture');
-				$scope.profileBannerImagesUploaded = ProfileService.getProfileImagesByType('profileBanner');
+				$scope.userData.profileImagesUploaded = ProfileService.getProfileImagesByType('profilePicture');
+				$scope.userData.profileBannerImagesUploaded = ProfileService.getProfileImagesByType('profileBanner');
 
 				$scope.allProfileImages = ProfileService.getProfileImages();
 
 				$scope.userData.interestTags = ProfileService.getProfileInterests();
 				$scope.userData.roleTags = ProfileService.getProfileRoles();
+
+				
+				//Set primary check
+				for(var i =0; i <$scope.userData.profileImagesUploaded.length;i++){
+					if($scope.userData.profileImagesUploaded[i].image == $scope.user.profileDetails[0].primaryImg){
+						$scope.userData.profileImagesUploaded[i].primary = true;
+					}
+					else{
+						$scope.userData.profileImagesUploaded[i].primary = false;
+					}
+				}
+
+
 
 				$scope.userNameSet = ($scope.userData.username != "" && $scope.userData.username != undefined);
 				if (!$scope.userNameSet && user.local != undefined) {
@@ -76,10 +89,10 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 		}
 		$scope.userData = {};
 		$scope.profileImageUploader = PopUpService.getProfileImageUploader();
-		$scope.profileImagesUploaded = PopUpService.getProfileImagesUploaded();
+		// $scope.profileImagesUploaded = PopUpService.getProfileImagesUploaded();
 
 		$scope.profileBannerImageUploader = PopUpService.getProfileBannerImageUploader();
-		$scope.profileBannerImagesUploaded = PopUpService.getProfileBannerImagesUploaded();
+		// $scope.profileBannerImagesUploaded = PopUpService.getProfileBannerImagesUploaded();
 
 		$scope.userData = {};
 		$scope.popUpMessageForUser = "";
@@ -116,6 +129,19 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 				}
 			}
 		}
+
+
+		$scope.removeInterestTagProfile= function(interest){
+			var found = {};
+			for(var i = 0; i < $scope.userData.interests.length; i++){
+				if($scope.userData.interests[i]._id == interest._id){
+					found = $scope.userData.interests.splice(i,1);
+					break;
+				}
+			}
+		}
+
+
 		$scope.isOtherUrl = function(){
 			if(typeof $scope.userLink.userLinkTypeSelected == 'string' && $scope.userLink.userLinkTypeSelected!=""){
 				return $scope.userLink.userLinkTypeSelected == "Other"
@@ -449,7 +475,73 @@ angular.module("myApp").controller('popUpController', ['$scope', '$rootScope', '
 			return autoCompleteInterests;
 		}
 
+
 		
+		var scrollHandle = 0,
+        scrollStep = 5,
+        parent = $("#scrollParent");
+
+
+		$scope.pannerMouseDown = function(direction){
+			var modifier = null;
+			if(direction == "left"){
+				modifier = -1;
+				$("#leftArrowProfileImg").addClass('active');
+			}
+			if(direction == "right"){
+				modifier = 1;
+				$("#rightArrowProfileImg").addClass('active');
+			}
+
+			var mod = parseInt(modifier, 10);        			
+			$(this).addClass('active');
+			startScrolling(mod, scrollStep);
+		}
+
+		$scope.pannerMouseUp = function(direction){
+			stopScrolling();
+			if(direction == "left"){
+				modifer = -1;
+				$("#leftArrowProfileImg").removeClass('active');
+			}
+			if(direction == "right"){
+				modifer = 1;
+				$("#rightArrowProfileImg").removeClass('active');
+			}
+		}
+
+	
+		//Actual handling of the scrolling
+		function startScrolling(modifier, step) {
+			if (scrollHandle === 0) {
+				scrollHandle = setInterval(function () {
+					var newOffset = parent.scrollLeft() + (scrollStep * modifier);
+					
+					parent.scrollLeft(newOffset);
+				}, 10);
+			}
+		}
+
+		function stopScrolling() {
+			clearInterval(scrollHandle);
+			scrollHandle = 0;
+		}
+		
+
+		$scope.primaryClicked = function(profileImg){
+			//deselect if needed
+			for(var i = 0; i < $scope.userData.profileImagesUploaded.length;i++){
+				$scope.userData.profileImagesUploaded[i].primary = false;
+			}
+			for(var i = 0; i < $scope.userData.profileImagesUploaded.length;i++){
+				if(profileImg.image == $scope.userData.profileImagesUploaded[i].image)
+					$scope.userData.profileImagesUploaded[i].primary = true;
+			}
+
+			$scope.userData.primaryImg = profileImg.image;
+
+
+		}
 
 		// $scope.getIntrestTags = function (query) {
 		// 	var autoCompleteInterests = $scope.interests.filter(obj => {

@@ -15,7 +15,7 @@ myApp.service('PopUpService', ['$http', '$q', 'FileUploader', 'ProfileService', 
 	vm.popUpTypes = [
 		{ name: "email", pages: [{ name: "email" }] }, 
 		{ name: "profile", pages: [{ pageName: "profileInit" }, { pageName: "profileImgr" }, {pageName: "interests"}, {pageName: "profileLinks"}] },
-		{ name : "tip", pages: [{pageName: "tipInit"}]}
+		{ name : "tip", pages: [{pageName: "tipInit"},{pageName: "tipLocalVideo"}]}
 
 	];
 	
@@ -96,13 +96,17 @@ myApp.service('PopUpService', ['$http', '$q', 'FileUploader', 'ProfileService', 
 	}
 
 	this.showPage = function (pageName) {
-
-		var popUpPageName = vm.popUpTypes[vm.currentPopUpIndex].pages[vm.currentPageIndex].pageName;
-		if (pageName == popUpPageName) {
-			return true;
+		if(vm.popUpTypes[vm.currentPopUpIndex].pages.length > vm.currentPageIndex){
+			var popUpPageName = vm.popUpTypes[vm.currentPopUpIndex].pages[vm.currentPageIndex].pageName;
+			if (pageName == popUpPageName) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
-		else {
-			return false;
+		else{
+			vm.currentPageIndex = 0;
 		}
 	}
 
@@ -123,7 +127,15 @@ myApp.service('PopUpService', ['$http', '$q', 'FileUploader', 'ProfileService', 
 	
 	this.openPopUp = function(popUpName){
 		vm.showPopUp = true;
-		vm.currentPopUp = 'profile';
+		vm.currentPopUp = popUpName;
+		for(var a = 0; a < vm.popUpTypes.length;a++){
+			if(vm.popUpTypes[a].name == popUpName){
+				vm.currentPopUpIndex = a;
+				break;
+			}	
+		}
+		vm.popUp = vm.popUpTypes[vm.currentPopUpIndex];
+		vm.currentPageIndex = 0;
 	}
 
 	this.openPopUp = function(popUpName, popUpPage){
@@ -143,6 +155,7 @@ myApp.service('PopUpService', ['$http', '$q', 'FileUploader', 'ProfileService', 
 				break;
 			}
 		}
+		vm.popUp = vm.popUpTypes[vm.currentPopUpIndex];
 
 		vm.showPopUp = true;
 		vm.currentPopUp = popUpName;
@@ -196,7 +209,7 @@ myApp.service('PopUpService', ['$http', '$q', 'FileUploader', 'ProfileService', 
 
 
 	vm.nextPage = function () {
-		if (vm.currentPageIndex != vm.popUp.pages.length - 1) {
+		if (vm.currentPageIndex != vm.popUp.pages.length){
 			vm.currentPageIndex++;
 		}
 	}

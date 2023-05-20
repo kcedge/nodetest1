@@ -40,6 +40,7 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 					else {
 						var profileImages = vm.user.profileDetails[0].profileImages;
 					}
+					
 					return profileImages;
 				}
 				else if (typeof json === "object") {
@@ -141,8 +142,42 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 		}
 
 	}
+
+	var digestUserLinks = function(data){
+		if(data.links){
+			for(var i = 0; i < data.links.length;i++){
+				if(data.links[i].userLinkTypeSelected == null){
+					data.links[i].iconImg = 'http.png';
+				}
+				else{
+					if(data.links[i].userLinkTypeSelected == "Soundcloud"){
+						data.links[i].iconImg = 'soundcloud.png';
+
+					}
+					else if(data.links[i].userLinkTypeSelected == "Twitter"){
+						data.links[i].iconImg = 'twitter.png';
+
+					}
+					else if(data.links[i].userLinkTypeSelected == "Tik Tok"){
+						data.links[i].iconImg = 'tiktok.png';
+
+					}
+					else if(data.links[i].userLinkTypeSelected == "Facebook"){
+						data.links[i].iconImg = 'facebook2.png';
+
+					}
+					else if(data.links[i].userLinkTypeSelected == "Other"){
+						data.links[i].iconImg = 'http.png';
+
+					}
+				}
+			}
+		}
+	}
+
 	this.getProfileInterests = function () {
 		if (vm.user.profileDetails[0].interests != null && typeof vm.user.profileDetails[0].interests != 'string') {
+
 			return vm.user.profileDetails[0].interests;
 		}
 		if (typeof vm.user.profileDetails[0].interests == 'string') {
@@ -206,7 +241,12 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 			}
 			$http(req).then(function success(response) {
 				vm.user.followers = response.data;
-				deffered.resolve(response.data);
+				for(var i = 0; i < vm.user.followers.length;i++){
+					vm.user.followers[i] = vm.processUserData( vm.user.followers[i])
+				}
+
+
+				deffered.resolve(vm.user.followers);
 			});
 		}
 		else {
@@ -238,7 +278,12 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 			}
 			$http(req).then(function success(response) {
 				vm.user.followings = response.data;
-				deffered.resolve(response.data);
+
+				for(var i = 0; i < vm.user.followings.length;i++){
+					vm.user.followings[i] = vm.processUserData( vm.user.followings[i])
+				}
+
+				deffered.resolve(vm.user.followings);
 
 
 			});
@@ -273,8 +318,9 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 				setUserName(vm.user);//set username in one spot
 
 				vm.user = processUserJsonData(vm.user);
-
-
+				if(vm.user.profileDetails[0].links.length > 0){
+					digestUserLinks(vm.user.profileDetails[0]);
+				}
 				deffered.resolve(vm.user);
 				return vm.user;
 			})
@@ -377,6 +423,10 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 				console.log(response);
 
 				var data = vm.processUserData(response.data[0]);
+				if(data.links!=null && data.links.length > 0){
+					digestUserLinks(data);
+				}
+
 				deffered.resolve(data);
 
 			})
@@ -786,6 +836,32 @@ myApp.service('ProfileService', ['$http', '$q', function ($http, $q) {
 				return "no data";
 			});
 	};
+
+	//get file for right widget
+	vm.rightWidgetHtml = "";
+	vm.getTrendingWidgetFile = function(){		
+		let deffered = $q.defer();
+		var xhr= new XMLHttpRequest();
+		xhr.open('GET', 'trendingWidget', true);
+		xhr.onreadystatechange= function() {
+		if (this.readyState!==4) return;
+		if (this.status!==200) return; // or whatever error handling you want
+			// document.getElementById('y').innerHTML= this.responseText;
+			$('#trendingWidget').html(this.responseText);
+			var html = this.responseText
+			vm.rightWidgetHtml = html;
+			deffered.resolve(html);
+		
+		};
+		xhr.send();
+		return deffered.promise;
+	}
+
+	vm.getTrendingWidgetHtml = function(){
+		return vm.rightWidgetHtml;
+	}
+
+
 
 }]);
 

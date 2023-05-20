@@ -489,6 +489,19 @@ module.exports = function (router, passport) {
 		});
 	});
 
+	router.get('/trendingWidget', function (req, res) {
+		const options = {
+			//root: path.join(__dirname)
+		};
+		
+		res.sendFile(path.resolve('views/trendingWidget.html'), options, function (err) {
+			if (err) {
+				next(err);
+			} else {
+			}
+		});
+	});
+
 
 
 

@@ -507,7 +507,8 @@ module.exports = function (router, passport) {
 
 			var collection = db.collection('profileCollection');
 			if (true) {
-				collection.update({ userId: ObjectId(user._id) }, { $set: { username: userData.username, bio: userData.bio, country: userData.country, soundcloud: userData.soundcloud, interests: userData.interests, roles: userData.roles, profileColor: userData.profileColor, links: userData.links } }, { upsert: true }, function (err, db) {
+			var collection = db.collection('profileCollection');
+				collection.update({ userId: ObjectId(user._id) }, { $set: { username: userData.username, bio: userData.bio, country: userData.country, soundcloud: userData.soundcloud, interests: userData.interests, roles: userData.roles, profileColor: userData.profileColor, links: userData.links, primaryImg: userData.primaryImg } }, { upsert: true }, function (err, db) {
 					if (err) {
 						console.log('Unable to edit profile', err);
 						res.send('Banner image save failed');
@@ -879,7 +880,29 @@ module.exports = function (router, passport) {
 		}
 	});
 
+	router.post('/updateNotification' , function(req,res,next){
+		try{
+			var notification = req.body.notification;
+			const db = req.app.locals.db;
 
+			var collection = db.collection('notificationCollection');
+			if (true) {
+				collection.update({ _id: ObjectId(notification._id) }, { $set: { is_read: notification.is_read } }, function (err, db) {
+					if (err) {
+						console.log('Unable to edit notification', err);
+						res.send('profileMetaDataJson save failed');
+					}
+					else {
+						res.send('Notification Updated');
+					}
+				})
+			}
+		
+		}
+		catch{
+
+		}
+	});
 	router.get('/getNotificationsUserProfile/:id', function (req, res, next) {
 		try {
 			const db = req.app.locals.db;
@@ -887,22 +910,51 @@ module.exports = function (router, passport) {
 			console.log('Getting the notification for')
 			console.log(id);
 			//	const id = new ObjectID(req.params.id);
+			
+			var notificationCollection = db.collection('notificationCollection');
+			var profileCollection = db.collection('profileCollection');
 
-			const info = db.collection('notificationCollection').find({ receiver: ObjectId(id) }).toArray(function (err, items) {
-				if (err) {
-					res.status(500).send('error retreiving data');
-				}
-				//console.log('ITEMS');
-				//console.log(items);
-				res.send(items);
-			});
+			//Sender Info
 
+			notificationCollection.aggregate([{ $lookup: { from: 'profileCollection', localField: 'sender', foreignField: '_id', as: 'profileDetails' } }])
+				.toArray(function(err, userItems){
 
-		}
+					var uItems = userItems;
+					var notificationItems = [];
+
+					for(var i = 0; i < uItems.length;i++){
+						if(userItems[i].receiver == id){		
+								notificationItems.push(userItems[i]);
+						}
+					}
+			
+					res.send(notificationItems.reverse())
+
+				});
+			}
 		catch (e) {
 			var e = e;
 		}
 	});
+
+	router.get('/getTopTrendingUsers', function (req, res, next) {
+		console.log(req);
+		console.log("getTopTrendingUsers");
+		try {
+			console.log('get getTopTrendingUsers');
+			const db = req.app.locals.db;
+			var cursorArray = db.collection('profileCollection').find({}).toArray(function (err, items) {
+				
+				res.send(items);
+			});
+	
+		}
+		catch {
+	
+		}
+	
+	})
+	
 
 
 

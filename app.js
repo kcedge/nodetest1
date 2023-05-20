@@ -42,7 +42,6 @@ mongoose.Promise = require('bluebird');
 
 // New Code
 var mongo = require('mongodb');
-var monk = require('monk');
 
 var dbConfig = require('./config/configDb');
 console.log("db Config");
@@ -110,6 +109,7 @@ require('./routes/index')(app,passport);
 require('./routes/comments')(app,passport);
 require('./routes/profile')(app,passport);
 require('./routes/sampleLibRoutes')(app,passport);
+
 //require('./routes/auth')(app,passport);
 var authRouter = require('./routes/auth');
 app.use('/', authRouter);

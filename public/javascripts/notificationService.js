@@ -20,6 +20,30 @@ myApp.service('NotificationService', ['$http', '$q', 'ProfileService','CommentsS
 
 	}
 
+	vm.updateNotification = function(notification){
+		let deffered = $q.defer();
+		var req = {
+			method: 'POST',
+			url: '/updateNotification',
+			headers: {
+				'Content-Type': "application/json"
+			},
+			data: {
+				notification: notification
+			}
+		}
+		
+		$http(req).then(function (response) {
+			deffered.resolve(response.data);
+			
+		})
+
+		return deffered.promise;
+
+	};
+
+
+
 
 
 

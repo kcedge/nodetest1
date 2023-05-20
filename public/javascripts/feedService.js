@@ -475,4 +475,28 @@ myApp.service('FeedService', ['$http', '$q', 'ProfileService','CommentsService',
     }
 
 
+
+	//Trending
+	vm.getTopTrendingUsers = function(){
+
+		let deffered = $q.defer();
+
+		var req = {
+            method: 'GET',
+            url: '/getTopTrendingUsers',
+            headers: {
+                'Content-Type': "application/json"
+            }
+        }
+		$http(req).then(function success(response) {
+
+			console.log('topTrending received');
+			deffered.resolve(response.data);
+
+		});
+		return deffered.promise;
+
+	}
+
+
 }]);

@@ -1,0 +1,81 @@
+<!-- 
+
+	<div id="#header" class="navBarHeader">
+		
+	</div> -->
+<div id="navBarRightWidgetWapper">
+	<div id="trendingWidgetWrapper">
+		<label class="label label-info"> Trending Users</label>
+		<select class="navBarDropdown" ng-model="filterPeriodTopUsersDropDown">
+			<option ng-repeat="sortFilter in rightBarSortFiltersArray" ng-value='sortFilter'>{{sortFilter}}</option>
+		</select>
+		<div class="tipTableWrapper">
+			<div ng-repeat="user in topTrendingUsers | orderBy : 'totalpoints':true | limitTo:10"
+				ng-show="user.username" class="list-unstyled row hover">
+				<div ng-click="userNavBarClicked(user)" ng-mouseover="rightBarWidgetMouseOver(user)"
+					ng-mouseleave="navBarHoverRightMouseLeave(user)" class="rightBarNavItem row">
+					<div ng-show="true" style="" class="div navBarTopDiv row">
+						<div style="padding-left:5px;margin-top:-5px;" class="div usernameAndFlag">
+							<div class="div"><span id="navProfileTitle"
+									style="font-style: italic;background-color: white;padding: 5px;border-radius: 5px;opacity: 1;">{{user.username}}</span>
+							</div>
+							<div class="div"><span id="flagDisplay" class="fi fi-{{user.country  | lowercase}}"> </span>
+							</div>
+						</div>
+					</div>
+					<div ng-show="true" style="height:5px;" class="div row animated navBarBottomUserProfileRow">
+						<div ng-show="user.profileImageJson.length &gt; 0" class="imgNavWrapper"><img
+								ng-src="{{user.profileImageJson[0].image}}" style=""
+								class="thumbnail hover hidden-xs col-sm-12 col-md-12 col-lg-12" /></div>
+						<div ng-show="user.profileImageJson.length &gt; 0" class="imgNavWrapper"><img
+								ng-src="{{user.bannerImageJson[0].image}}" style=""
+								class="thumbnail hover hidden-xs col-sm-12 col-md-12 col-lg-12" /></div>
+					</div>
+					<div id="navBarUserProfileInfo" ng-show="user.hoverRightActive" class="div row navBarBottomRowUser">
+						<div style="margin-left:-5px" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<h4 style="margin-bottom:5px;" class="nameWrapper"><span
+									ng-bind-html="user.profileMetaDataJson.firstName  | to_trusted"></span><span
+									ng-bind-html="user.profileMetaDataJson.lastName  | to_trusted"
+									style="margin-left:2px;"></span></h4>
+							<h6 ng-bind-html="user.profileMetaDataJson.city  | to_trusted"
+								style="margin-top:-3px;margin-left:2px;"></h6><span
+								ng-bind-html="user.profileMetaDataJson.bio  | to_trusted"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="trendingPostWidget">
+		<label class="label label-info"> Trending Posts</label>
+		<select class="navBarDropdown" ng-model="filterPeriodTopUsersDropDown">
+			<option ng-repeat="sortFilter in rightBarSortFiltersArray" ng-value='sortFilter'>{{sortFilter}}</option>
+		</select>
+		<div class="trendingPostCotnentWrapper">
+			<div ng-repeat="tip in tipArrayData | orderBy : 'tipPoints':true | limitTo:10" ng-show="true" class="list-unstyled row hover">
+				<div ng-click="tipNavBarClicked(tip)" ng-mouseleave="navBarHoverRightMouseLeave(tip)" class="rightBarNavItem row">
+				  <div ng-mouseover="rightBarWidgetMouseOver(tip)" style="" class="div navBarTopDiv row">
+					<div style="padding-left:5px;margin-top:-5px;" class="div col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+					  <div class="div col-xs-11 col-sm-11 col-md-11 col-lg-11 tipTitleWrapperNavBar"><span id="navTipTitle" class="navTipTitle" style="font-style: italic;background-color: white;padding: 5px;border-radius: 5px;opacity: 1;">{{tip.tipTitle}}</span></div>
+					  <div class="div col-xs-1 col-sm-1 col-md-1 col-lg-1"><span style="float:right" class="navTipPoints">{{tip.tipPoints}}</span></div>
+					</div>
+				  </div>
+				  <div ng-show="true" style="height:125px;" class="div row navBarImgContainer">
+					<div ng-show="tip.imageDataJson.length &gt; 0" style="padding:0px;" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 imgNavWrapper"><img ng-src="{{getImageSrc(tip,0)}}" style="max-height: 100px;margin-top:10px;padding:0px;" class="thumbnail hover hidden-xs col-sm-12 col-md-12 col-lg-12"/></div>
+					<div ng-show="tip.imageDataJson.length &gt; 1" style="padding:0px;" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 imgNavWrapper"><img ng-src="{{getImageSrc(tip,1)}}" style="max-height: 100px;margin-top:10px;padding:0px;" class="thumbnail hover hidden-xs col-sm-12 col-md-12 col-lg-12"/></div>
+				  </div>
+				  <div ng-show="true" class="div row tipDescNavBar">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					  <div id="navDescWrapper" ng-bind-html="getTipDescription(tip)  | to_trusted" style="margin-left:-10px;padding-right: 10px;"></div>
+					</div>
+				  </div>
+				  <div ng-show="true" style="height:125px;" class="div row">
+					
+				  </div>
+				</div>
+				
+			  </div>
+		</div>
+
+	</div>
+</div>
