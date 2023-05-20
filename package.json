@@ -10,6 +10,7 @@
     "angular-countries-flags": "^0.0.5",
     "angular-country-picker": "^2.3.0",
     "aws-sdk": "^2.229.1",
+    "aws-sdk-js-codemod": "^0.14.1",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.5.3",
     "body-parser": "^1.15.2",
