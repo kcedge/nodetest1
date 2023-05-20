@@ -24,7 +24,7 @@ module.exports = {dbSettings: function () {
 
 	return {
 	    runningProd: runningProd,
-	    url: newUrl
+	    url: url
 	}
     }
 };

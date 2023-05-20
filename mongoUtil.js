@@ -8,9 +8,18 @@ module.exports = {
 
   connectToServer: function(app, callback ) {
     MongoClient.connect( url,  { useNewUrlParser: true }, function( err, client ) {
-       app.locals.db = client.db('krazyl3gzDb');
-      _db  = client.db('krazyl3gzDb');
-      return callback( err );
+        if(!err){
+        app.locals.db = client.db('krazyl3gzDb');
+        _db  = client.db('krazyl3gzDb');
+        return callback( client );
+       }
+       else{
+        console.log("CONNECTION FAILED");
+        console.log(err);
+        console.log("client:" + client)
+        
+        return callback(err);
+       }
     } );
   },
 
